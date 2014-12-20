@@ -1,0 +1,8 @@
+Release/
+Debug/
+bin/
+
+# Ignore VSC++ 2013 files
+*.opensdf
+*.sdf
+*.suo
