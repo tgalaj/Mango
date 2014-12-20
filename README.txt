@@ -1,0 +1,1 @@
+==== Tomasz Galaj's portfolio for RTRClass Blog ====
