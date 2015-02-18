@@ -7,6 +7,8 @@
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
+#define GL_VERSION_MAJOR 4
+#define GL_VERSION_MINOR 5
 
 static void mouseButtonCB(GLFWwindow* window, int button, int action, int mods)
 {
@@ -60,19 +62,31 @@ int main(void)
 	
 	/* Initialize the library */
 	if (!glfwInit())
+	{
+		fprintf(stderr, "GLFW init failed!\n");
 		return -1;
+	}
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Hello World", NULL, NULL);
 
 	if (!window)
 	{
-		glfwTerminate();
+		std::string glVersion = std::to_string(GL_VERSION_MAJOR) + "." + std::to_string(GL_VERSION_MINOR);
+		fprintf(stderr, "Window creation failed! OpenGL %s not supported!\n", glVersion.c_str());
+		system("pause");
 		return -1;
 	}
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
+
+	glewExperimental = GL_TRUE;
 
 	GLenum err = glewInit();
 	if (err != GLEW_OK)
@@ -83,8 +97,6 @@ int main(void)
 		return -1;
 	}
 
-	glewExperimental = GL_TRUE;
-
 	fprintf(stdout, "OpenGL version: %s\n", glGetString(GL_VERSION));
 	fprintf(stdout, "OpenGL vendor: %s\n", glGetString(GL_VENDOR));
 	fprintf(stdout, "OpenGL renderer: %s\n", glGetString(GL_RENDERER));
@@ -94,7 +106,7 @@ int main(void)
 	glClearColor(0.25, 0.25, 0.25, 1.0);
 
 	/* Init GUI */
-	TwInit(TW_OPENGL, nullptr);
+	TwInit(TW_OPENGL_CORE, nullptr);
 	TwWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	TwBar* myBar = TwNewBar("Hello bar");
@@ -111,29 +123,7 @@ int main(void)
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
-		/* Render here */
-		float ratio;
-		int width, height;
-		glfwGetFramebufferSize(window, &width, &height);
-		ratio = width / (float)height;
-
-		glViewport(0, 0, width, height);
 		glClear(GL_COLOR_BUFFER_BIT);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glRotatef((float)glfwGetTime() * 50.f, 0.f, 0.f, 1.f);
-
-		glBegin(GL_TRIANGLES);
-		glColor3f(1.f, 0.f, 0.f);
-		glVertex3f(-0.6f, -0.4f, 0.f);
-		glColor3f(0.f, 1.f, 0.f);
-		glVertex3f(0.6f, -0.4f, 0.f);
-		glColor3f(0.f, 0.f, 1.f);
-		glVertex3f(0.f, 0.6f, 0.f);
-		glEnd();
 
 		TwDraw();
 
@@ -144,6 +134,7 @@ int main(void)
 		glfwPollEvents();
 	}
 
+	glfwDestroyWindow(window);
 	glfwTerminate();
 	TwTerminate();
 	return 0;
