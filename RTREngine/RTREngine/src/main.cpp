@@ -83,6 +83,9 @@ int main(void)
 		return -1;
 	}
 
+	/* Set input mode */
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
@@ -119,13 +122,19 @@ int main(void)
 	glfwSetScrollCallback(window, (GLFWscrollfun)mouseScrollCB);
 	glfwSetKeyCallback(window, (GLFWkeyfun)keyCB);
 	glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun)onResize);
-
+	
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		TwDraw();
+
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+			printf("Guzik W!\n");
+
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+			printf("Guzik A!\n");
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
