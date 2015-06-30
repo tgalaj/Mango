@@ -3,9 +3,11 @@
 #include <SDL2\SDL.h>
 #include <SDL2\SDL_opengl.h>
 #include <gl\GLU.h>
+#include <GL\glew.h>
 
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
@@ -60,113 +62,136 @@
 
 int main(int argc, char* args[])
 {
-	SDL_Window*  window        = nullptr;
-    SDL_Surface* screenSurface = nullptr;
-	
-	/* Initialize the SDL library */
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		fprintf(stderr, "SDL could not initialize! SDL error :%s\n", SDL_GetError());
+    SDL_GLContext  glContext     = nullptr;
+    SDL_Window*    window        = nullptr;
+
+    /* Initialize the SDL library */
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        fprintf(stderr, "SDL could not initialize! SDL error :%s\n", SDL_GetError());
+
         system("pause");
-		return -1;
-	}
+        return -1;
+    }
 
-	/*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);*/
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, GL_VERSION_MAJOR);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, GL_VERSION_MINOR);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
 
-	/* Create a windowed mode window and its OpenGL context */
-    window = SDL_CreateWindow("Hello SDL!", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+    /* Create a windowed mode window and its OpenGL context */
+    window = SDL_CreateWindow("Hello SDL!", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
-	if (!window)
-	{
+    if (!window)
+    {
         fprintf(stderr, "Window could not be created! SDL error :%s\n", SDL_GetError());
 
-		/*std::string glVersion = std::to_string(GL_VERSION_MAJOR) + "." + std::to_string(GL_VERSION_MINOR);
-		fprintf(stderr, "Window creation failed! OpenGL %s not supported!\n", glVersion.c_str());*/
-		system("pause");
-		return -1;
-	}
+        std::string glVersion = std::to_string(GL_VERSION_MAJOR) + "." + std::to_string(GL_VERSION_MINOR);
+        fprintf(stderr, "Window creation failed! OpenGL %s not supported!\n", glVersion.c_str());
 
-    /* Get window surface */
-    screenSurface = SDL_GetWindowSurface(window);
+        system("pause");
+        return -1;
+    }
 
-    //Fill the surface white
-    SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
+    /* Create GL context */
+    glContext = SDL_GL_CreateContext(window);
 
-    //Update the surface
-    SDL_UpdateWindowSurface(window);
+    if(!glContext)
+    {
+        fprintf(stderr, "OpenGL context could not be created! SDL error: %s\n", SDL_GetError());
 
-    //Wait two seconds
-    SDL_Delay(2000);
+        system("pause");
+        return -1;
+    }
 
-	/* Set input mode */
-	//glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+    /* Init GLEW */
+    glewExperimental = GL_TRUE;
+    GLenum glewError = glewInit();
 
-	/* Make the window's context current */
-	//glfwMakeContextCurrent(window);
+    if(GLEW_OK != glewError)
+    {
+        fprintf(stderr, "GLEW could not be initialized! GLEW error: %s\n", glewGetErrorString(glewError));
 
-	glewExperimental = GL_TRUE;
+        system("pause");
+        return -1;
+    }
 
-	GLenum err = glewInit();
-	if (err != GLEW_OK)
-	{
-		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-		//glfwTerminate();
-		system("pause");
-		return -1;
-	}
+    fprintf(stdout, "OpenGL version: %s\n", glGetString(GL_VERSION));
+    fprintf(stdout, "OpenGL vendor: %s\n", glGetString(GL_VENDOR));
+    fprintf(stdout, "OpenGL renderer: %s\n", glGetString(GL_RENDERER));
 
-	fprintf(stdout, "OpenGL version: %s\n", glGetString(GL_VERSION));
-	fprintf(stdout, "OpenGL vendor: %s\n", glGetString(GL_VENDOR));
-	fprintf(stdout, "OpenGL renderer: %s\n", glGetString(GL_RENDERER));
+    /* Turn on VSYNC */
+    if(SDL_GL_SetSwapInterval(1) < 0)
+    {
+        fprintf(stderr, "Warning: Unable to set VSync! SDL error: %s\n", glewGetErrorString(glewError));
+    }
 
-	/* Init renderer options */
-	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-	glClearColor(0.25, 0.25, 0.25, 1.0);
+    /* Init renderer options */
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    glClearColor(0.25, 0.25, 0.25, 1.0);
 
-	/* Init GUI */
-	TwInit(TW_OPENGL_CORE, nullptr);
-	TwWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    /* Init GUI */
+    TwInit(TW_OPENGL_CORE, nullptr);
+    TwWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	TwBar* myBar = TwNewBar("Hello bar");
+    TwBar* myBar = TwNewBar("Hello bar");
 
-	int my_var = 10;
-	TwAddVarRW(myBar, "Var name", TW_TYPE_INT32, &my_var, "");
+    int my_var = 10;
+    TwAddVarRW(myBar, "Var name", TW_TYPE_INT32, &my_var, "");
 
-	/*glfwSetMouseButtonCallback(window, (GLFWmousebuttonfun)mouseButtonCB);
-	glfwSetCursorPosCallback(window, (GLFWcursorposfun)mousePosCB);
-	glfwSetScrollCallback(window, (GLFWscrollfun)mouseScrollCB);
-	glfwSetKeyCallback(window, (GLFWkeyfun)keyCB);
-	glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun)onResize);*/
-	
-	/* Loop until the user closes the window */
-	//while (!glfwWindowShouldClose(window))
-	//{
-	//	glClear(GL_COLOR_BUFFER_BIT);
+    /*glfwSetMouseButtonCallback(window, (GLFWmousebuttonfun)mouseButtonCB);
+    glfwSetCursorPosCallback(window, (GLFWcursorposfun)mousePosCB);
+    glfwSetScrollCallback(window, (GLFWscrollfun)mouseScrollCB);
+    glfwSetKeyCallback(window, (GLFWkeyfun)keyCB);
+    glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun)onResize);*/
+    
+    bool quit = false;
+    SDL_Event e;
+    SDL_StartTextInput();
 
-	//	TwDraw();
+    /* Loop until the user closes the window */
+    while(!quit)
+    {
+        while(SDL_PollEvent(&e) != 0)
+        {
+            bool handled = TwEventSDL(&e, SDL_MAJOR_VERSION, SDL_MINOR_VERSION);
+            if(!handled)
+            {
+                if(e.type == SDL_QUIT)
+                {
+                    quit = true;
+                }
+                else 
+                if(e.type == SDL_TEXTINPUT)
+                {
+                    /* Handle keypress with current mouse position */
+                    int x = 0, y = 0;
+                    SDL_GetMouseState(&x, &y);
+                    printf("Mouse pos: (%d, %d)             \r", x, y);
+                }
+            }
+        }
 
-	//	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	//		printf("Guzik W!\n");
+        /* update */
 
-	//	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-	//		printf("Guzik A!\n");
+        /* render */
+        glClear(GL_COLOR_BUFFER_BIT);
 
-	//	/* Swap front and back buffers */
-	//	glfwSwapBuffers(window);
+        TwDraw();
 
-	//	/* Poll for and process events */
-	//	glfwPollEvents();
-	//}
+        /* Swap buffers */
+        SDL_GL_SwapWindow(window);
+    }
 
-    //Destroy window
+    TwTerminate();
+
+    SDL_StopTextInput();
+
+    /* Destroy window */
     SDL_DestroyWindow(window);
+    window = nullptr;
 
-    //Quit SDL subsystems
+    /* Quit SDL subsystems */
     SDL_Quit();
-
-	TwTerminate();
 	return 0;
 }
