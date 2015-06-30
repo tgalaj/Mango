@@ -1,11 +1,8 @@
 #include <GL\glew.h>
-#include <GUI\AntTweakBar.h>
 #include <SDL2\SDL.h>
 #include <SDL2\SDL_opengl.h>
-#include <gl\GLU.h>
-#include <GL\glew.h>
 
-#include <GUI\imgui_impl_sdl2.h>
+#include <GUI\AntTweakBar.h>
 
 #include <cstdio>
 #include <cstdlib>
@@ -15,48 +12,6 @@
 #define WINDOW_HEIGHT 480
 #define GL_VERSION_MAJOR 4
 #define GL_VERSION_MINOR 5
-
-void drawGUI(SDL_Window* window)
-{
-    bool done = ImGui_ImplSdl_NewFrame(window);
-    bool show_test_window = true;
-    bool show_another_window = false;
-    ImVec4 clear_color = ImColor(114, 144, 154);
-
-    // 1. Show a simple window
-    // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
-    {
-        static float f = 0.0f;
-        ImGui::Text("Hello, world!");
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-        ImGui::ColorEdit3("clear color", (float*)&clear_color);
-        if (ImGui::Button("Test Window")) show_test_window ^= 1;
-        if (ImGui::Button("Another Window")) show_another_window ^= 1;
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    }
-
-    // 2. Show another simple window, this time using an explicit Begin/End pair
-    if (show_another_window)
-    {
-        ImGui::SetNextWindowSize(ImVec2(200,100), ImGuiSetCond_FirstUseEver);
-        ImGui::Begin("Another Window", &show_another_window);
-        ImGui::Text("Hello");
-        ImGui::End();
-    }
-
-    // 3. Show the ImGui test window. Most of the sample code is in ImGui::ShowTestWindow()
-    if (show_test_window)
-    {
-        ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
-        ImGui::ShowTestWindow(&show_test_window);
-    }
-
-    // Rendering
-    glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
-    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-    glClear(GL_COLOR_BUFFER_BIT);
-    ImGui::Render();
-}
 
 int main(int argc, char* args[])
 {
@@ -132,18 +87,10 @@ int main(int argc, char* args[])
     TwInit(TW_OPENGL_CORE, nullptr);
     TwWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    ImGui_ImplSDL2_Init(window);
-
     TwBar* myBar = TwNewBar("Hello bar");
 
     int my_var = 10;
     TwAddVarRW(myBar, "Var name", TW_TYPE_INT32, &my_var, "");
-
-    /*glfwSetMouseButtonCallback(window, (GLFWmousebuttonfun)mouseButtonCB);
-    glfwSetCursorPosCallback(window, (GLFWcursorposfun)mousePosCB);
-    glfwSetScrollCallback(window, (GLFWscrollfun)mouseScrollCB);
-    glfwSetKeyCallback(window, (GLFWkeyfun)keyCB);
-    glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun)onResize);*/
     
     bool quit = false;
     SDL_Event e;
@@ -177,14 +124,12 @@ int main(int argc, char* args[])
         /* render */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        drawGUI(window);
         TwDraw();
 
         /* Swap buffers */
         SDL_GL_SwapWindow(window);
     }
 
-    ImGui_ImplSDL2_Shutdown();
     TwTerminate();
 
     SDL_StopTextInput();
