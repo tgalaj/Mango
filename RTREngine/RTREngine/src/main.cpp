@@ -3,12 +3,11 @@
 #include <SDL2\SDL_opengl.h>
 
 #include <GUI\AntTweakBar.h>
+#include <entityx\entityx.h>
 
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-
-#include <entityx\entityx.h>
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
@@ -42,10 +41,7 @@ int main(int argc, char* args[])
 
     if (!window)
     {
-        fprintf(stderr, "Window could not be created! SDL error :%s\n", SDL_GetError());
-
-        std::string glVersion = std::to_string(GL_VERSION_MAJOR) + "." + std::to_string(GL_VERSION_MINOR);
-        fprintf(stderr, "Window creation failed! OpenGL %s not supported!\n", glVersion.c_str());
+        fprintf(stderr, "Window could not be created! SDL error : %s\n", SDL_GetError());
 
         system("pause");
         return -1;
@@ -57,6 +53,9 @@ int main(int argc, char* args[])
     if(!glContext)
     {
         fprintf(stderr, "OpenGL context could not be created! SDL error: %s\n", SDL_GetError());
+
+        std::string glVersion = std::to_string(GL_VERSION_MAJOR) + "." + std::to_string(GL_VERSION_MINOR);
+        fprintf(stderr, "Window creation failed! OpenGL %s not supported! Please consider updating your graphics card drivers.\n", glVersion.c_str());
 
         system("pause");
         return -1;
