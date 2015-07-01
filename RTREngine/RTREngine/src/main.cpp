@@ -8,6 +8,8 @@
 #include <cstdlib>
 #include <cstring>
 
+#include <entityx\entityx.h>
+
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
 #define GL_VERSION_MAJOR 4
@@ -15,6 +17,9 @@
 
 int main(int argc, char* args[])
 {
+    entityx::EntityX ex;
+    entityx::Entity entity = ex.entities.create();
+
     SDL_GLContext  glContext     = nullptr;
     SDL_Window*    window        = nullptr;
 
