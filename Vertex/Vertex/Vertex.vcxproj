@@ -11,19 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BaseGame.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="src\BaseGame.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="VertexEngineCore.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="src\Model.cpp" />
+    <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\VertexEngineCore.cpp" />
+    <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseGame.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="VertexEngineCore.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="src\BaseGame.h" />
+    <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\Renderer.h" />
+    <ClInclude Include="src\VertexEngineCore.h" />
+    <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9DF5F709-0864-4185-BE40-2FDD4F0B26EC}</ProjectGuid>
