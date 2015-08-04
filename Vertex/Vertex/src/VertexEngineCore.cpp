@@ -1,7 +1,7 @@
 #include "VertexEngineCore.h"
 
 
-VertexEngineCore::VertexEngineCore()
+VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsigned int height)
 {
     /* Init GLEW */
     glewExperimental = GL_TRUE;
@@ -11,6 +11,8 @@ VertexEngineCore::VertexEngineCore()
     {
         fprintf(stderr, "GLEW could not be initialized! GLEW error: %s\n", glewGetErrorString(glewError));
     }
+
+    window = new Window(title, width, height);
 }
 
 VertexEngineCore::~VertexEngineCore()
@@ -68,6 +70,6 @@ void VertexEngineCore::start()
         glClear(GL_COLOR_BUFFER_BIT);
 
         /* Swap buffers */
-        SDL_GL_SwapWindow(window);
+        SDL_GL_SwapWindow(window->m_sdlWindow);
     }
 }

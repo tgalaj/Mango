@@ -2,7 +2,7 @@
 
 int main(int argc, char* args[])
 {
-    VertexEngineCore vec;
+    VertexEngineCore vec("Hello Vertex!", 800, 600);
     vec.setVSync(true);
     vec.start();
 

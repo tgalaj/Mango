@@ -30,10 +30,10 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CoreAssetManager.cpp">
+    <ClCompile Include="src\CoreAssetManager.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="CoreInput.cpp">
+    <ClCompile Include="src\CoreInput.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexEngineCore.cpp">
@@ -51,49 +51,49 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
+    <ClCompile Include="src\Scene.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="SceneNode.cpp">
+    <ClCompile Include="src\SceneNode.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="src\Camera.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="PerspectiveCamera.cpp">
+    <ClCompile Include="src\PerspectiveCamera.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="OrthographicCamera.cpp">
+    <ClCompile Include="src\OrthographicCamera.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionalLight.cpp">
+    <ClCompile Include="src\DirectionalLight.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="GeomPrimitive.cpp">
+    <ClCompile Include="src\GeomPrimitive.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Light.cpp">
+    <ClCompile Include="src\Light.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
+    <ClCompile Include="src\Material.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleEffect.cpp">
+    <ClCompile Include="src\ParticleEffect.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="PointLight.cpp">
+    <ClCompile Include="src\PointLight.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="PostprocessEffect.cpp">
+    <ClCompile Include="src\PostprocessEffect.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
+    <ClCompile Include="src\Shader.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="SpotLight.cpp">
+    <ClCompile Include="src\SpotLight.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
+    <ClCompile Include="src\Texture.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,10 +101,10 @@
     <ClInclude Include="src\BaseGame.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="CoreAssetManager.h">
+    <ClInclude Include="src\CoreAssetManager.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="CoreInput.h">
+    <ClInclude Include="src\CoreInput.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\VertexEngineCore.h">
@@ -119,49 +119,49 @@
     <ClInclude Include="src\Renderer.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
+    <ClInclude Include="src\Scene.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="SceneNode.h">
+    <ClInclude Include="src\SceneNode.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="src\Camera.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="PerspectiveCamera.h">
+    <ClInclude Include="src\PerspectiveCamera.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="OrthographicCamera.h">
+    <ClInclude Include="src\OrthographicCamera.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="DirectionalLight.h">
+    <ClInclude Include="src\DirectionalLight.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="GeomPrimitive.h">
+    <ClInclude Include="src\GeomPrimitive.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
+    <ClInclude Include="src\Light.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
+    <ClInclude Include="src\Material.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleEffect.h">
+    <ClInclude Include="Psrc\articleEffect.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="PointLight.h">
+    <ClInclude Include="src\PointLight.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="PostprocessEffect.h">
+    <ClInclude Include="src\PostprocessEffect.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="src\Shader.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="SpotLight.h">
+    <ClInclude Include="src\SpotLight.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
+    <ClInclude Include="src\Texture.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>

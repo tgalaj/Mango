@@ -8,7 +8,7 @@
 class VertexEngineCore final
 {
 public:
-    VertexEngineCore();
+    VertexEngineCore(const char *title, unsigned int width, unsigned int height);
     ~VertexEngineCore();
 
     VertexEngineCore(const VertexEngineCore&) = delete;
