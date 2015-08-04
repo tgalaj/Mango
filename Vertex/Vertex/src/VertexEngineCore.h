@@ -5,6 +5,8 @@
 #define MIN_GL_VERSION_MAJOR 4
 #define MIN_GL_VERSION_MINOR 4
 
+class Window;
+
 class VertexEngineCore final
 {
 public:
