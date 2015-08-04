@@ -41,6 +41,8 @@ Window::Window     (const char *title, int width, int height, Uint32 flags)
 
         m_isGood = false;
     }
+
+    glClearColor(0.25f, 0.0f, 0.0f, 1.0f);
 }
 
 Window::~Window()

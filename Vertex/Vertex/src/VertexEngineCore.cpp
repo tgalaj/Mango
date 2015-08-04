@@ -3,16 +3,16 @@
 
 VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsigned int height)
 {
+    window = new Window(title, width, height);
+
     /* Init GLEW */
     glewExperimental = GL_TRUE;
     GLenum glewError = glewInit();
 
-    if(GLEW_OK != glewError)
+    if (GLEW_OK != glewError)
     {
         fprintf(stderr, "GLEW could not be initialized! GLEW error: %s\n", glewGetErrorString(glewError));
     }
-
-    window = new Window(title, width, height);
 }
 
 VertexEngineCore::~VertexEngineCore()
