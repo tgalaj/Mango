@@ -13,7 +13,7 @@ class Window final
 {
     friend class VertexEngineCore;
 
-    Window(const char *title, int width, int height, Uint32 flags = 0);
+    Window(const char *title, int width, int height, Uint32 flags);
     ~Window();
 
     Window(const Window&) = delete;

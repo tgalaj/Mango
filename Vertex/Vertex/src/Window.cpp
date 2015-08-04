@@ -21,7 +21,7 @@ Window::Window     (const char *title, int width, int height, Uint32 flags)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
 
     /* Create a windowed mode window and its OpenGL context */
-    m_sdlWindow = SDL_CreateWindow("Hello Vertex Engine!", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | flags);
+    m_sdlWindow = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | flags);
 
     if (!m_sdlWindow)
     {
@@ -41,8 +41,6 @@ Window::Window     (const char *title, int width, int height, Uint32 flags)
 
         m_isGood = false;
     }
-
-    glClearColor(0.25f, 0.0f, 0.0f, 1.0f);
 }
 
 Window::~Window()

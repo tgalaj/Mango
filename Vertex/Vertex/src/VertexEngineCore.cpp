@@ -1,23 +1,36 @@
 #include "VertexEngineCore.h"
 
 
-VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsigned int height)
+VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsigned int height, Uint32 flags)
 {
-    window = new Window(title, width, height);
+    window = new Window(title, width, height, flags);
+    glClearColor(0.22f, 0.33f, 0.66f, 1.0f);
 
-    /* Init GLEW */
-    glewExperimental = GL_TRUE;
-    GLenum glewError = glewInit();
-
-    if (GLEW_OK != glewError)
+    if (window->m_isGood)
     {
-        fprintf(stderr, "GLEW could not be initialized! GLEW error: %s\n", glewGetErrorString(glewError));
+        /* Init GLEW */
+        glewExperimental = GL_TRUE;
+        GLenum glewError = glewInit();
+
+        if (GLEW_OK != glewError)
+        {
+            fprintf(stderr, "Some serious errors occured. Can't initialize Vertex Engine unless these errors are fixed.\n");
+        }
+    }
+    else
+    {
+        fprintf(stderr, "GLEW could not be initialized! GLEW error: %s\n");
     }
 }
 
 VertexEngineCore::~VertexEngineCore()
 {
     delete window;
+}
+
+void VertexEngineCore::setClearColor(float r, float g, float b, float a)
+{
+    glClearColor(r, g, b, a);
 }
 
 void VertexEngineCore::setVSync(bool enabled)
@@ -31,6 +44,8 @@ void VertexEngineCore::setVSync(bool enabled)
 
 void VertexEngineCore::start()
 {
+    //TODO: create Pr0 game loop
+
     bool quit = false;
     SDL_Event e;
    // SDL_StartTextInput();
@@ -49,6 +64,7 @@ void VertexEngineCore::start()
                 {
                     int x = 0, y = 0;
 
+                    /* TODO: Replace switch with CoreInputManager class */
                     switch(e.key.keysym.sym)
                     {
                         case SDLK_SPACE:
@@ -64,9 +80,11 @@ void VertexEngineCore::start()
                 }
         }
 
-        /* update */
+        /* todo: game update */
+        printf("update\n");
 
-        /* render */
+        /* TODO: renderer part render */
+        printf("render\n");
         glClear(GL_COLOR_BUFFER_BIT);
 
         /* Swap buffers */
