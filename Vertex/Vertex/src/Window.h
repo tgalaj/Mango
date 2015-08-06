@@ -16,7 +16,7 @@ class Window final
     Window(const char *title, int width, int height, Uint32 flags);
     ~Window();
 
-    Window(const Window&) = delete;
+    Window(const Window&)            = delete;
     Window& operator=(const Window&) = delete;
 
     SDL_GLContext m_glContext;

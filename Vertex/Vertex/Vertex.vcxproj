@@ -13,7 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CoreAssetManager.cpp" />
-    <ClCompile Include="src\CoreInput.cpp" />
+    <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\DirectionalLight.cpp" />
     <ClCompile Include="src\GeomPrimitive.cpp" />
     <ClCompile Include="src\Light.cpp" />
@@ -39,7 +39,7 @@
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CoreAssetManager.h" />
-    <ClInclude Include="src\CoreInput.h" />
+    <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\DirectionalLight.h" />
     <ClInclude Include="src\GeomPrimitive.h" />
     <ClInclude Include="src\Light.h" />

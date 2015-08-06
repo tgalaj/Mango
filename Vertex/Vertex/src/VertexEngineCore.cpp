@@ -50,9 +50,6 @@ void VertexEngineCore::start()
     unsigned int loops          = 0;
     float        interpolation  = 0.0f;
     bool         quit           = false;
-    SDL_Event    e;
-
-   // SDL_StartTextInput();
 
     /* Loop until the user closes the window */
     while(!quit)
@@ -60,32 +57,7 @@ void VertexEngineCore::start()
         loops = 0;
 
         /* Process input */
-        /* TODO: Replace switch with CoreInputManager class */
-        while(SDL_PollEvent(&e) != 0)
-        {
-                if(e.type == SDL_QUIT)
-                {
-                    quit = true;
-                }
-                else 
-                if(e.type == SDL_KEYDOWN)
-                {
-                    int x = 0, y = 0;
-
-                    switch(e.key.keysym.sym)
-                    {
-                        case SDLK_SPACE:
-                            /* Handle keypress with current mouse position */
-                            SDL_GetMouseState(&x, &y);
-                            printf("Mouse pos: (%d, %d)             \r", x, y);
-                            break;
-                        case SDLK_ESCAPE:
-                            quit = true;
-                            break;
-                    }
-                    
-                }
-        }
+        quit = Input::update();
 
         while (Time::getTimeMs() > next_game_tick && loops < MAX_FRAMESKIP)
         {

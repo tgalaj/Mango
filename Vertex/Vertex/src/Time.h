@@ -2,12 +2,11 @@
 
 #include <SDL2\SDL.h>
 
-class Time
+class Time final
 {
 public:
-    Time();
-    ~Time();
-
+    Time()                       = delete;
+    ~Time()                      = delete;
     Time(const Time&)            = delete;
     Time& operator=(const Time&) = delete;
 

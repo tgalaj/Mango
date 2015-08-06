@@ -33,9 +33,6 @@
     <ClCompile Include="src\CoreAssetManager.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\CoreInput.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="src\VertexEngineCore.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -99,15 +96,15 @@
     <ClCompile Include="src\Time.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Input.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseGame.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\CoreAssetManager.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CoreInput.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\VertexEngineCore.h">
@@ -168,6 +165,9 @@
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Time.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Input.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
