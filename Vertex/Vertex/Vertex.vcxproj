@@ -31,6 +31,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\VertexEngineCore.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="src\BaseGame.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Renderer.h" />
+    <ClInclude Include="src\Time.h" />
     <ClInclude Include="src\VertexEngineCore.h" />
     <ClInclude Include="src\Window.h" />
     <ClInclude Include="src\Texture.h" />

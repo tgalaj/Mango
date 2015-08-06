@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Window.h"
+#include "Time.h"
 
 #define MIN_GL_VERSION_MAJOR 4
 #define MIN_GL_VERSION_MINOR 4
@@ -22,5 +23,9 @@ public:
 
 private:
     Window *window;
+
+    const unsigned int TICKS_PER_SECOND;
+    const unsigned int SKIP_TICKS;
+    const unsigned int MAX_FRAMESKIP;
 };
 

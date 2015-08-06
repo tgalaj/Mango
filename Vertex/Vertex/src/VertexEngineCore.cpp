@@ -1,7 +1,9 @@
 #include "VertexEngineCore.h"
 
-
 VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsigned int height, Uint32 flags)
+    : TICKS_PER_SECOND(25),
+      SKIP_TICKS      (1000 / TICKS_PER_SECOND),
+      MAX_FRAMESKIP   (5)
 {
     window = new Window(title, width, height, flags);
     glClearColor(0.22f, 0.33f, 0.66f, 1.0f);
@@ -44,15 +46,21 @@ void VertexEngineCore::setVSync(bool enabled)
 
 void VertexEngineCore::start()
 {
-    //TODO: create Pr0 game loop
+    unsigned int next_game_tick = Time::getTimeMs();
+    unsigned int loops          = 0;
+    float        interpolation  = 0.0f;
+    bool         quit           = false;
+    SDL_Event    e;
 
-    bool quit = false;
-    SDL_Event e;
    // SDL_StartTextInput();
 
     /* Loop until the user closes the window */
     while(!quit)
     {
+        loops = 0;
+
+        /* Process input */
+        /* TODO: Replace switch with CoreInputManager class */
         while(SDL_PollEvent(&e) != 0)
         {
                 if(e.type == SDL_QUIT)
@@ -64,7 +72,6 @@ void VertexEngineCore::start()
                 {
                     int x = 0, y = 0;
 
-                    /* TODO: Replace switch with CoreInputManager class */
                     switch(e.key.keysym.sym)
                     {
                         case SDLK_SPACE:
@@ -80,11 +87,20 @@ void VertexEngineCore::start()
                 }
         }
 
-        /* todo: game update */
-        printf("update\n");
+        while (Time::getTimeMs() > next_game_tick && loops < MAX_FRAMESKIP)
+        {
+            /* Game update */
+            /* TODO: Attach base game class methods */
+            //printf("update\n");
+            next_game_tick += SKIP_TICKS;
+            ++loops;
+        }
 
-        /* TODO: renderer part render */
-        printf("render\n");
+        /* Render */
+        interpolation = float(Time::getTimeMs() + SKIP_TICKS - next_game_tick) / float(SKIP_TICKS);
+
+        /* TODO: renderer part  */
+        //printf("render with interpolation\n");
         glClear(GL_COLOR_BUFFER_BIT);
 
         /* Swap buffers */
