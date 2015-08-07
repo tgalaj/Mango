@@ -2,6 +2,9 @@
 
 #include <SDL2\SDL.h>
 
+#include <iterator>
+#include <unordered_map>
+
 class Input final
 {
 public:
@@ -152,14 +155,35 @@ public:
     static bool getKeyDown(KeyCode key);
     static bool getKeyUp  (KeyCode key);
 
+    /**
+     * @brief Check if mouse button is pressed
+     * @param int button accepted values for this param
+     *                   are in range [0, 2]. Other values
+     *                   will have no effect.
+     */
     static bool getMouseButtonDown(int button);
-    static bool getMouseUp        (int button);
+
+    /**
+    * @brief Check if mouse button is pressed
+    * @param int button accepted values for this param
+    *                   are in range [0, 2]. Other values
+    *                   will have no effect.
+    */
+    static bool getMouseButtonUp  (int button);
 
     static bool getMouseButtonDown(KeyCode key);
-    static bool getMouseUp        (KeyCode key);
+    static bool getMouseButtonUp  (KeyCode key);
 
 private:
     friend class VertexEngineCore;
+    
+    /**
+     * States are as follows:
+     * -1: no state defined
+     *  0: key down
+     *  1: key up
+     */
+    static std::unordered_map<KeyCode, char> keyStates;
 
     static bool update();
 

@@ -59,6 +59,15 @@ void VertexEngineCore::start()
         /* Process input */
         quit = Input::update();
 
+        if (Input::getMouseButtonDown(Input::Mouse2))
+            printf("Left button!\n");
+
+        if (Input::getMouseButtonDown(Input::Return))
+            printf("Return!\n");
+
+        if (Input::getKeyUp(Input::Escape))
+            quit = true;
+
         while (Time::getTimeMs() > next_game_tick && loops < MAX_FRAMESKIP)
         {
             /* Game update */
