@@ -99,6 +99,9 @@
     <ClCompile Include="src\Input.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\SimpleGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseGame.h">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="src\Input.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SimpleGame.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,10 +1,14 @@
 #include "VertexEngineCore.h"
 
-VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsigned int height, Uint32 flags)
+VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsigned int height, BaseGame *game, Uint32 flags)
     : TICKS_PER_SECOND(25),
       SKIP_TICKS      (1000 / TICKS_PER_SECOND),
       MAX_FRAMESKIP   (5)
 {
+    /* Set game. */
+    this->game = game;
+
+    /* Init window and GL context. */
     window = new Window(title, width, height, flags);
     glClearColor(0.22f, 0.33f, 0.66f, 1.0f);
 
@@ -58,21 +62,13 @@ void VertexEngineCore::start()
 
         /* Process input */
         quit = Input::update();
+        game->processInput();
 
-        if (Input::getMouseButtonDown(Input::Mouse2))
-            printf("Left button!\n");
-
-        if (Input::getMouseButtonDown(Input::Return))
-            printf("Return!\n");
-
-        if (Input::getKeyUp(Input::Escape))
-            quit = true;
-
+        /* Game update */
         while (Time::getTimeMs() > next_game_tick && loops < MAX_FRAMESKIP)
         {
-            /* Game update */
-            /* TODO: Attach base game class methods */
-            //printf("update\n");
+            game->update();
+
             next_game_tick += SKIP_TICKS;
             ++loops;
         }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BaseGame.h"
 #include "Input.h"
 #include "Time.h"
 #include "Window.h"
@@ -12,7 +13,7 @@ class Window;
 class VertexEngineCore final
 {
 public:
-    VertexEngineCore(const char *title, unsigned int width, unsigned int height, Uint32 flags = 0);
+    VertexEngineCore(const char *title, unsigned int width, unsigned int height, BaseGame *game, Uint32 flags = 0);
     ~VertexEngineCore();
 
     VertexEngineCore(const VertexEngineCore&)            = delete;
@@ -23,7 +24,8 @@ public:
     void start();
 
 private:
-    Window *window;
+    BaseGame *game;
+    Window   *window;
 
     const unsigned int TICKS_PER_SECOND;
     const unsigned int SKIP_TICKS;

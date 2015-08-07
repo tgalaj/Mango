@@ -26,6 +26,7 @@
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneNode.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\SimpleGame.cpp" />
     <ClCompile Include="src\SpotLight.cpp" />
     <ClCompile Include="src\BaseGame.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -39,6 +40,7 @@
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CoreAssetManager.h" />
+    <ClInclude Include="src\SimpleGame.h" />
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\DirectionalLight.h" />
     <ClInclude Include="src\GeomPrimitive.h" />
@@ -97,12 +99,14 @@
     <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <SourcePath>$(VC_SourcePath);</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <SourcePath>$(VC_SourcePath);</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
