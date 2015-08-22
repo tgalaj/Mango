@@ -1,6 +1,7 @@
 Release/
 Debug/
 bin/
+models/
 
 # Ignore VSC++ 2013 files
 *.opensdf
