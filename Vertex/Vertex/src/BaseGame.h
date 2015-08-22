@@ -10,6 +10,6 @@ public:
     BaseGame& operator=(const BaseGame&) = delete;
 
     virtual void processInput() = 0;
-    virtual void update() = 0;
+    virtual void update()       = 0;
 };
 

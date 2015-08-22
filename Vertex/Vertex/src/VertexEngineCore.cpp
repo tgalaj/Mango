@@ -1,13 +1,12 @@
 #include "VertexEngineCore.h"
 
-VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsigned int height, BaseGame *game, Uint32 flags)
+bool VertexEngineCore::quit = false;
+
+VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsigned int height, Uint32 flags)
     : TICKS_PER_SECOND(25),
       SKIP_TICKS      (1000 / TICKS_PER_SECOND),
       MAX_FRAMESKIP   (5)
 {
-    /* Set game. */
-    this->game = game;
-
     /* Init window and GL context. */
     window = new Window(title, width, height, flags);
     glClearColor(0.22f, 0.33f, 0.66f, 1.0f);
@@ -32,6 +31,10 @@ VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsign
 VertexEngineCore::~VertexEngineCore()
 {
     delete window;
+    window = nullptr;
+
+    delete game;
+    game = nullptr;
 }
 
 void VertexEngineCore::setClearColor(float r, float g, float b, float a)
@@ -48,12 +51,19 @@ void VertexEngineCore::setVSync(bool enabled)
     }
 }
 
-void VertexEngineCore::start()
+void VertexEngineCore::quitApp()
 {
+    VertexEngineCore::quit = true;
+}
+
+void VertexEngineCore::start(BaseGame *game)
+{
+    /* Set game. */
+    this->game = game;
+
     unsigned int next_game_tick = Time::getTimeMs();
     unsigned int loops          = 0;
     float        interpolation  = 0.0f;
-    bool         quit           = false;
 
     /* Loop until the user closes the window */
     while(!quit)

@@ -63,6 +63,11 @@
     <ClInclude Include="src\Window.h" />
     <ClInclude Include="src\Texture.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\AllShaders.glsl" />
+    <None Include="res\shaders\Basic.frag" />
+    <None Include="res\shaders\Basic.vert" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9DF5F709-0864-4185-BE40-2FDD4F0B26EC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

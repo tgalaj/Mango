@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "VertexEngineCore.h"
 
 Window::Window     (const char *title, int width, int height, Uint32 flags) 
       : m_width    (width), 
