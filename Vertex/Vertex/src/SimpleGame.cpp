@@ -1,16 +1,24 @@
 #include "SimpleGame.h"
 #include "VertexEngineCore.h"
 #include "CoreAssetManager.h"
-#include "Shader.h"
 
 SimpleGame::SimpleGame()
 {
-    
+    shader = new Shader("res/shaders/AllShaders.glsl");
+    shader->link();
+    shader->apply();
+
+    model = new Model();
+    model->genCube(0.5f);
 }
 
 SimpleGame::~SimpleGame()
 {
+    delete shader;
+    shader = nullptr;
 
+    delete model;
+    model = nullptr;
 }
 
 void SimpleGame::processInput()
@@ -29,11 +37,6 @@ void SimpleGame::processInput()
     if (Input::getKeyDown(Input::S))
         CoreAssetManager::loadFile("res/shaders/Basic.vert");
 
-    if (Input::getKeyDown(Input::D))
-    {
-        Shader s("res/shaders/AllShaders.glsl");
-    }
-
     if (Input::getKeyDown(Input::V))
         VertexEngineCore::setVSync(vsync = !vsync);
 
@@ -44,4 +47,5 @@ void SimpleGame::processInput()
 void SimpleGame::update()
 {
     printf("Game update!!\r");
+    model->render();
 }

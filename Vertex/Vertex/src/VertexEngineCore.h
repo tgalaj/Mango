@@ -24,13 +24,13 @@ public:
     void start(BaseGame *game);
 
 private:
+    static bool quit;
+
     BaseGame *game;
     Window   *window;
 
     const unsigned int TICKS_PER_SECOND;
     const unsigned int SKIP_TICKS;
     const unsigned int MAX_FRAMESKIP;
-
-    static bool quit;
 };
 
