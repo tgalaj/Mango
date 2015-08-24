@@ -1,10 +1,12 @@
 #pragma once
 #include "Camera.h"
-class PerspectiveCamera :
-    public Camera
+class PerspectiveCamera final : public Camera
 {
 public:
     PerspectiveCamera();
     ~PerspectiveCamera();
+
+private:
+    float fieldOfView;
 };
 

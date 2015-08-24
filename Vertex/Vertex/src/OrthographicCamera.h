@@ -1,10 +1,12 @@
 #pragma once
 #include "Camera.h"
-class OrthographicCamera :
-    public Camera
+class OrthographicCamera final : public Camera
 {
 public:
     OrthographicCamera();
     ~OrthographicCamera();
+
+private:
+    float zoom;
 };
 
