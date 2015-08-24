@@ -1,7 +1,5 @@
 #include "Model.h"
 #include "GeomPrimitive.h"
-#include <glm\glm.hpp>
-#include <vector>
 
 Model::Model() : draw_mode(GL_TRIANGLES)
 {
@@ -32,40 +30,41 @@ void Model::render()
     glBindVertexArray(vao_id);
 
     glDrawElements(draw_mode, indices_count, GL_UNSIGNED_BYTE, nullptr);
-
+    
     glBindVertexArray(0);
 }
 
 void Model::genCube(float radius)
 {
-    std::vector<glm::vec3> positions, normals;
-    std::vector<glm::vec2> texcoords;
-    std::vector<GLubyte>   indices;
+    VEBuffers buffers;
 
-    GeomPrimitive::genCube(positions, normals, texcoords, indices, radius);
+    GeomPrimitive::genCube(buffers, radius);
+    setBuffers(buffers);
 
-    indices_count = indices.size();
+    indices_count = buffers.indices.size();
+}
 
-    /* TODO: below set up throw to the helper function */
+void Model::setBuffers(VEBuffers &buffers)
+{
     glBindVertexArray(vao_id);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[POSITION]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(positions), &positions[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, buffers.positions.size() * sizeof(buffers.positions[0]), buffers.positions.data(), GL_STATIC_DRAW);
     glEnableVertexAttribArray(0 /*index*/);
     glVertexAttribPointer    (0 /*index*/, 3 /*size*/, GL_FLOAT, GL_FALSE, 0 /*stride*/, nullptr);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[NORMAL]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(normals), &normals[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, buffers.normals.size() * sizeof(buffers.normals[0]), buffers.normals.data(), GL_STATIC_DRAW);
     glEnableVertexAttribArray(1 /*index*/);
     glVertexAttribPointer    (1 /*index*/, 3 /*size*/, GL_FLOAT, GL_FALSE, 0 /*stride*/, nullptr);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[TEXCOORD]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(texcoords), &texcoords[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, buffers.texcoords.size() * sizeof(buffers.texcoords[0]), buffers.texcoords.data(), GL_STATIC_DRAW);
     glEnableVertexAttribArray(2 /*index*/);
     glVertexAttribPointer    (2 /*index*/, 2 /*size*/, GL_FLOAT, GL_FALSE, 0 /*stride*/, nullptr);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_ids[INDEX]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffers.indices.size() * sizeof(buffers.indices[0]), buffers.indices.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(0);
 }

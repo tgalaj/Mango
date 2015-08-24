@@ -1,7 +1,16 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <glm\glm.hpp>
 #include <string>
+#include <vector>
+
+struct VEBuffers
+{
+    std::vector<glm::vec3> positions, normals;
+    std::vector<glm::vec2> texcoords; 
+    std::vector<GLubyte>   indices;
+};
 
 class Model
 {
@@ -28,5 +37,7 @@ private:
     GLenum draw_mode;
 
     enum { POSITION, NORMAL, TEXCOORD, INDEX };
+
+    void setBuffers(VEBuffers &buffers);
 };
 

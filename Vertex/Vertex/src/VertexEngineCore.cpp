@@ -89,6 +89,7 @@ void VertexEngineCore::start(BaseGame *game)
         /* TODO: renderer part  */
         //printf("render with interpolation\n");
         glClear(GL_COLOR_BUFFER_BIT);
+        game->render();
 
         /* Swap buffers */
         SDL_GL_SwapWindow(window->m_sdlWindow);

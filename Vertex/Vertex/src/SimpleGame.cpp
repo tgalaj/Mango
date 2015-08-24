@@ -9,7 +9,7 @@ SimpleGame::SimpleGame()
     shader->apply();
 
     model = new Model();
-    model->genCube(0.5f);
+    model->genCube(1.0f);
 }
 
 SimpleGame::~SimpleGame()
@@ -47,5 +47,10 @@ void SimpleGame::processInput()
 void SimpleGame::update()
 {
     printf("Game update!!\r");
+}
+
+void SimpleGame::render()
+{
+    printf("Game render!!\r");
     model->render();
 }

@@ -12,7 +12,7 @@ void main()
     o_normal   = normal;
     o_texcoord = texcoord;
 
-    gl_Position = vec4(position.xy, -0.5f, 1.0f);
+    gl_Position = vec4(position, 1.0f);
 }
 
 #FS
@@ -24,5 +24,5 @@ out vec4 fragColor;
 
 void main()
 {
-    fragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    fragColor = vec4(o_texcoord, 0.0f, 1.0f);
 }

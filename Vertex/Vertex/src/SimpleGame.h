@@ -12,6 +12,7 @@ public:
 
     void processInput() override;
     void update()       override;
+    void render()       override;
 
 private:
     Shader *shader;

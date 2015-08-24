@@ -1,53 +1,53 @@
 #include "GeomPrimitive.h"
 
-void GeomPrimitive::genCube(std::vector<glm::vec3> &positions, std::vector<glm::vec3> &normals, std::vector<glm::vec2> &texcoords, std::vector<GLubyte> &indices, float radius)
+void GeomPrimitive::genCube(VEBuffers &buffers, float radius)
 {
     float r2 = radius * 0.5f;
 
-    positions = { 
-                    glm::vec3(-r2, -r2,  r2), 
-                    glm::vec3( r2, -r2,  r2),
-                    glm::vec3( r2,  r2,  r2),
-                    glm::vec3(-r2,  r2,  r2),     
-                    
-                    glm::vec3( r2, -r2, -r2),
-                    glm::vec3(-r2, -r2, -r2),
-                    glm::vec3(-r2,  r2, -r2),
-                    glm::vec3( r2,  r2, -r2)
-                };
+    buffers.positions = { 
+                            glm::vec3(-r2, -r2,  r2), 
+                            glm::vec3( r2, -r2,  r2),
+                            glm::vec3( r2,  r2,  r2),
+                            glm::vec3(-r2,  r2,  r2),     
+                            
+                            glm::vec3(-r2, -r2, -r2),
+                            glm::vec3( r2, -r2, -r2),
+                            glm::vec3( r2,  r2, -r2),
+                            glm::vec3(-r2,  r2, -r2)
+                        };
 
-    normals   = { 
-                    glm::vec3(), 
-                    glm::vec3(),
-                    glm::vec3(),
-                    glm::vec3(),
+    buffers.normals   = { 
+                            glm::normalize(glm::vec3(-1.0f, -1.0f,  1.0f)), 
+                            glm::normalize(glm::vec3( 1.0f, -1.0f,  1.0f)),
+                            glm::normalize(glm::vec3( 1.0f,  1.0f,  1.0f)),
+                            glm::normalize(glm::vec3(-1.0f,  1.0f,  1.0f)),
+                            
+                            glm::normalize(glm::vec3(-1.0f, -1.0f, -1.0f)),
+                            glm::normalize(glm::vec3( 1.0f, -1.0f, -1.0f)),
+                            glm::normalize(glm::vec3( 1.0f,  1.0f, -1.0f)),
+                            glm::normalize(glm::vec3(-1.0f,  1.0f, -1.0f))
+                        };
 
-                    glm::vec3(),
-                    glm::vec3(),
-                    glm::vec3(),
-                    glm::vec3()
-                };
+    buffers.texcoords = { 
+                            glm::vec2(0.0f, 0.0f),
+                            glm::vec2(1.0f, 0.0f),
+                            glm::vec2(1.0f, 1.0f),
+                            glm::vec2(0.0f, 1.0f),
+                        
+                            glm::vec2(0.0f, 0.0f),
+                            glm::vec2(1.0f, 0.0f),
+                            glm::vec2(1.0f, 1.0f),
+                            glm::vec2(0.0f, 1.0f)
+                        };
 
-    texcoords = { 
-                    glm::vec2(0.0f, 0.0f),
-                    glm::vec2(1.0f, 0.0f),
-                    glm::vec2(0.0f, 1.0f),
-                    glm::vec2(1.0f, 1.0f),
-
-                    glm::vec2(0.0f, 0.0f),
-                    glm::vec2(1.0f, 0.0f),
-                    glm::vec2(0.0f, 1.0f),
-                    glm::vec2(1.0f, 1.0f)
-                };
-
-    indices   = { 
-                    1, 2, 3, 3, 2, 4, //front
-                    2, 5, 4, 4, 5, 8, //right
-                    5, 6, 8, 8, 6, 7, //back
-                    6, 1, 7, 7, 1, 3, //left
-                    3, 4, 7, 7, 4, 8, //up
-                    6, 5, 1, 1, 5, 2  //bottom
-                };
+    buffers.indices   = { 
+                            0, 1, 2, 2, 3, 0, //front
+                            1, 5, 6, 6, 2, 1, //right
+                            7, 6, 5, 5, 4, 7, //back
+                            4, 0, 3, 3, 7, 4, //left
+                            3, 2, 6, 6, 7, 3, //top
+                            4, 5, 1, 1, 0, 4  //bottom
+                        };
 }
 
 

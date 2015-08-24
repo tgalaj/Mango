@@ -2,6 +2,8 @@
 #include "CoreAssetManager.h"
 #include "VertexEngineCore.h"
 
+//TODO: improve error messages to let programmer know better where is the issue
+
 Shader::Shader(std::string const &filename) : program_id(0), isLinked(false)
 {
     std::string shaderVersion = "#version " + std::to_string(MIN_GL_VERSION_MAJOR) + std::to_string(MIN_GL_VERSION_MAJOR) + "0\n\n";
@@ -88,8 +90,6 @@ Shader::Shader(std::string const &filename) : program_id(0), isLinked(false)
 
         glAttachShader(program_id, shaderObject);
         glDeleteShader(shaderObject);
-
-        //std::cout << "Successfully attached " << shader.first << " to a program!\n";
     }
 }
 
