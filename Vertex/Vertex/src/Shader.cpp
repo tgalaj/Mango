@@ -1,6 +1,7 @@
 #include "Shader.h"
 #include "CoreAssetManager.h"
 #include "VertexEngineCore.h"
+#include <glm\gtc\type_ptr.hpp>
 
 //TODO: improve error messages to let programmer know better where is the issue
 
@@ -140,4 +141,10 @@ void Shader::apply()
     {
         glUseProgram(program_id);
     }
+}
+
+void Shader::setUniformMatrix4fv(std::string uniformName, glm::mat4 &matrix)
+{
+    GLuint uniformLoc = glGetUniformLocation(program_id, uniformName.c_str());
+    glUniformMatrix4fv(uniformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
 }

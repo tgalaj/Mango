@@ -9,7 +9,9 @@ SimpleGame::SimpleGame()
     shader->apply();
 
     model = new Model();
-    model->genCube(1.0f);
+    model->genCube(3.0f);
+
+    cam = new PerspectiveCamera(60.0f, 800, 600, 0.01f, 50.0f);
 }
 
 SimpleGame::~SimpleGame()
@@ -40,17 +42,27 @@ void SimpleGame::processInput()
     if (Input::getKeyDown(Input::V))
         VertexEngineCore::setVSync(vsync = !vsync);
 
+    if (Input::getKeyDown(Input::V))
+        VertexEngineCore::setVSync(vsync = !vsync);
+
+    if(Input::getKeyDown(Input::KeypadMinus))
+        cam->fieldOfView -= 0.1f;
+
+    if(Input::getKeyDown(Input::KeypadPlus))
+        cam->fieldOfView += 0.1f;
+
     if (Input::getKeyDown(Input::Escape))
         VertexEngineCore::quitApp();
 }
 
 void SimpleGame::update()
 {
-    printf("Game update!!\r");
+    printf("Camera fov = %.2f\r", cam->fieldOfView);
+    cam->update();
 }
 
 void SimpleGame::render()
 {
-    printf("Game render!!\r");
+    shader->setUniformMatrix4fv("viewProj", cam->getViewProjection());
     model->render();
 }

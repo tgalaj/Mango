@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GL\glew.h>
+#include <glm\glm.hpp>
 
 #include <map>
 #include <string>
@@ -13,6 +14,8 @@ public:
 
     bool link();
     void apply();
+
+    void setUniformMatrix4fv(std::string uniformName, glm::mat4 &matrix);
 
 protected:
 

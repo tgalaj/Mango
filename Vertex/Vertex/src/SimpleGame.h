@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseGame.h"
+#include "PerspectiveCamera.h"
 #include "Shader.h"
 #include "Model.h"
 
@@ -17,4 +18,5 @@ public:
 private:
     Shader *shader;
     Model  *model;
+    PerspectiveCamera *cam;
 };
