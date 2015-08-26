@@ -26,7 +26,7 @@ public:
     void genTorus(float innerRadius = 1.0f, float outerRadius = 2.0f, unsigned int slices = 10, unsigned int stacks = 10);
     void genCone();
     void genSphere();
-    void genCylinder();
+    void genCylinder(float height = 3.0f, float r = 1.5f, unsigned int slices = 10);
     void genPlane();
     void genQuad();
 

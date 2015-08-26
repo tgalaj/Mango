@@ -56,6 +56,18 @@ void Model::genTorus(float innerRadius, float outerRadius, unsigned int slices, 
     indices_count = buffers.indices.size();
 }
 
+void Model::genCylinder(float height, float r, unsigned int slices)
+{
+    VEBuffers buffers;
+
+    GeomPrimitive::genCylinder(buffers, height, r, slices);
+    setBuffers(buffers);
+
+    draw_mode = GL_TRIANGLE_STRIP;
+
+    indices_count = buffers.indices.size();
+}
+
 void Model::setBuffers(VEBuffers &buffers)
 {
     glBindVertexArray(vao_id);

@@ -113,4 +113,45 @@ void GeomPrimitive::genTorus(VEBuffers &buffers, float innerRadius, float outerR
     }
  }
 
+//TODO: gen indices + change drawing func to glDrawElements
+void GeomPrimitive::genCylinder(VEBuffers &buffers, float height, float r, unsigned int slices)
+{
+    glm::vec3 p1 = glm::vec3(0.0f) + glm::vec3(0.0f, height * 0.5f, 0.0f);
+    glm::vec3 p2 = p1 - glm::vec3(0.0f, height, 0.0f);
+
+    glm::vec3 n = p2 - p1;
+    glm::vec3 a = glm::vec3(n.x + 1.0f, n.y, n.z);
+
+    glm::vec3 b = glm::cross(a, n);
+              a = glm::cross(n, b);
+
+    a = glm::normalize(a);
+    b = glm::normalize(b);
+
+    glm::vec3 p;
+
+    float theta = 0.0f;
+    float thetaInc = glm::two_pi<float>() / (float) slices;
+    
+    GLushort idx = 0;
+
+    for (unsigned int sideCount = 0; sideCount <= slices; ++sideCount, theta += thetaInc)
+    {
+        n = glm::cos(theta) * a + glm::sin(theta) * b;
+        n = glm::normalize(n);
+
+        p = p2 + r * n;
+        buffers.positions.push_back(p);
+        buffers.normals.push_back(n);
+        buffers.texcoords.push_back(glm::vec2(sideCount / (float) slices, 1.0f));
+        buffers.indices.push_back(idx++);
+
+        p = p1 + r * n;
+        buffers.positions.push_back(p);
+        buffers.normals.push_back(n);
+        buffers.texcoords.push_back(glm::vec2(sideCount / (float)slices, 0.0f));
+        buffers.indices.push_back(idx++);
+    }
+}
+
 
