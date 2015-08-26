@@ -1,3 +1,5 @@
+//TODO: Lightning needs serious improvement in the future.
+
 #VS
 
 layout(location = 0) in vec3 position;
