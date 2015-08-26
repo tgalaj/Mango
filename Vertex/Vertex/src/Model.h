@@ -9,7 +9,7 @@ struct VEBuffers
 {
     std::vector<glm::vec3> positions, normals;
     std::vector<glm::vec2> texcoords; 
-    std::vector<GLubyte>   indices;
+    std::vector<GLushort>   indices;
 };
 
 class Model
@@ -23,7 +23,7 @@ public:
 
     /* Primitives */
     void genCube(float radius = 1.0f);
-    void genTorus();
+    void genTorus(float innerRadius = 1.0f, float outerRadius = 2.0f, unsigned int slices = 10, unsigned int stacks = 10);
     void genCone();
     void genSphere();
     void genCylinder();

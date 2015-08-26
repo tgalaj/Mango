@@ -65,6 +65,9 @@ void VertexEngineCore::start(BaseGame *game)
     unsigned int loops          = 0;
     float        interpolation  = 0.0f;
 
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_FRAMEBUFFER_SRGB);
+
     /* Loop until the user closes the window */
     while(!quit)
     {
@@ -88,7 +91,7 @@ void VertexEngineCore::start(BaseGame *game)
 
         /* TODO: renderer part  */
         //printf("render with interpolation\n");
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         game->render();
 
         /* Swap buffers */

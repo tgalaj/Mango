@@ -9,7 +9,8 @@ SimpleGame::SimpleGame()
     shader->apply();
 
     model = new Model();
-    model->genCube(3.0f);
+    model->genTorus(1.0f, 2.0f, 32, 32);
+    //model->genCube(3.0f);
 
     cam = new PerspectiveCamera(60.0f, 800, 600, 0.01f, 50.0f);
 }
@@ -57,12 +58,17 @@ void SimpleGame::processInput()
 
 void SimpleGame::update()
 {
+    float r = 5.0f;
+    float t = Time::getTime();
+
     printf("Camera fov = %.2f\r", cam->fieldOfView);
+    cam->setPosition(r*cos(t), 0, r*sin(t));
     cam->update();
 }
 
 void SimpleGame::render()
 {
+    shader->setUniformMatrix4fv("view", cam->getView());
     shader->setUniformMatrix4fv("viewProj", cam->getViewProjection());
     model->render();
 }

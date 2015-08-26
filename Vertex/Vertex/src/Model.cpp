@@ -29,7 +29,7 @@ void Model::render()
 {
     glBindVertexArray(vao_id);
 
-    glDrawElements(draw_mode, indices_count, GL_UNSIGNED_BYTE, nullptr);
+    glDrawElements(draw_mode, indices_count, GL_UNSIGNED_SHORT, nullptr);
     
     glBindVertexArray(0);
 }
@@ -40,6 +40,18 @@ void Model::genCube(float radius)
 
     GeomPrimitive::genCube(buffers, radius);
     setBuffers(buffers);
+
+    indices_count = buffers.indices.size();
+}
+
+void Model::genTorus(float innerRadius, float outerRadius, unsigned int slices, unsigned int stacks)
+{
+    VEBuffers buffers;
+
+    GeomPrimitive::genTorus(buffers, innerRadius, outerRadius, slices, stacks);
+    setBuffers(buffers);
+
+    draw_mode = GL_TRIANGLE_STRIP;
 
     indices_count = buffers.indices.size();
 }
