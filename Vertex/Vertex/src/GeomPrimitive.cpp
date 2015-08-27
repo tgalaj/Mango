@@ -113,45 +113,169 @@ void GeomPrimitive::genTorus(VEBuffers &buffers, float innerRadius, float outerR
     }
  }
 
-//TODO: gen indices + change drawing func to glDrawElements
 void GeomPrimitive::genCylinder(VEBuffers &buffers, float height, float r, unsigned int slices)
 {
-    glm::vec3 p1 = glm::vec3(0.0f) + glm::vec3(0.0f, height * 0.5f, 0.0f);
-    glm::vec3 p2 = p1 - glm::vec3(0.0f, height, 0.0f);
+    float halfHeight = height * 0.5f;
+    glm::vec3 p1 = glm::vec3(0.0f, halfHeight, 0.0f);
+    glm::vec3 p2 = -p1;
 
-    glm::vec3 n = p2 - p1;
-    glm::vec3 a = glm::vec3(n.x + 1.0f, n.y, n.z);
-
-    glm::vec3 b = glm::cross(a, n);
-              a = glm::cross(n, b);
-
-    a = glm::normalize(a);
-    b = glm::normalize(b);
-
-    glm::vec3 p;
-
-    float theta = 0.0f;
     float thetaInc = glm::two_pi<float>() / (float) slices;
-    
-    GLushort idx = 0;
+    float theta    = 0.0f;
+    float sign     = -1.0f;
 
+    /* Center bottom */
+    buffers.positions.push_back(p2);
+    buffers.normals.push_back  (glm::vec3(0.0f, -1.0f, 0.0f));
+    buffers.texcoords.push_back(glm::vec2(0.0f, 0.0f));
+
+    /* Bottom */
     for (unsigned int sideCount = 0; sideCount <= slices; ++sideCount, theta += thetaInc)
     {
-        n = glm::cos(theta) * a + glm::sin(theta) * b;
-        n = glm::normalize(n);
+        buffers.positions.push_back(glm::vec3(glm::cos(theta) * r, -halfHeight, -glm::sin(theta) * r));
+        buffers.normals.push_back  (glm::vec3(0.0f, -1.0f, 0.0f));
+        buffers.texcoords.push_back(glm::vec2(0.0f, 0.0f));
+    }
 
-        p = p2 + r * n;
-        buffers.positions.push_back(p);
-        buffers.normals.push_back(n);
-        buffers.texcoords.push_back(glm::vec2(sideCount / (float) slices, 1.0f));
-        buffers.indices.push_back(idx++);
+    /* Center top */
+    buffers.positions.push_back(p1);
+    buffers.normals.push_back  (glm::vec3(0.0f, 1.0f, 0.0f));
+    buffers.texcoords.push_back(glm::vec2(1.0f, 1.0f));
 
-        p = p1 + r * n;
-        buffers.positions.push_back(p);
-        buffers.normals.push_back(n);
-        buffers.texcoords.push_back(glm::vec2(sideCount / (float)slices, 0.0f));
-        buffers.indices.push_back(idx++);
+    /* Top */
+    for (unsigned int sideCount = 0; sideCount <= slices; ++sideCount, theta += thetaInc)
+    {
+        buffers.positions.push_back(glm::vec3(glm::cos(theta) * r, halfHeight, -glm::sin(theta) * r));
+        buffers.normals.push_back  (glm::vec3(0.0f, 1.0f, 0.0f));
+        buffers.texcoords.push_back(glm::vec2(1.0f, 1.0f));
+    }
+
+    /* Sides */
+    for (unsigned int sideCount = 0; sideCount <= slices; ++sideCount, theta += thetaInc)
+    {
+        sign = -1.0f;
+
+        for(int i = 0; i < 2; ++i)
+        {
+            buffers.positions.push_back(glm::vec3(glm::cos(theta) * r, halfHeight * sign, -glm::sin(theta) * r));
+            buffers.normals.push_back  (glm::vec3(glm::cos(theta), 0.0f, -glm::sin(theta)));
+            buffers.texcoords.push_back(glm::vec2(sideCount / (float)slices, (sign + 1.0f) * 0.5f));
+
+            sign = 1.0f;
+        }
+    }
+
+    GLushort centerIdx = 0;
+    GLushort idx       = 1;
+
+    /* Indices Bottom */
+    for (unsigned int sideCount = 0; sideCount < slices; ++sideCount)
+    {
+        buffers.indices.push_back(centerIdx);
+        buffers.indices.push_back(idx + 1);
+        buffers.indices.push_back(idx);
+
+        ++idx;
+    }
+    ++idx;
+
+    /* Indices Top */
+    centerIdx = idx;
+    ++idx;
+
+    for (unsigned int sideCount = 0; sideCount < slices; ++sideCount)
+    {
+        buffers.indices.push_back(centerIdx);
+        buffers.indices.push_back(idx);
+        buffers.indices.push_back(idx + 1);
+
+        ++idx;
+    }
+    ++idx;
+
+    /* Indices Sides */
+    for (unsigned int sideCount = 0; sideCount < slices; ++sideCount)
+    {
+        buffers.indices.push_back(idx);
+        buffers.indices.push_back(idx + 2);
+        buffers.indices.push_back(idx + 1);
+
+        buffers.indices.push_back(idx + 2);
+        buffers.indices.push_back(idx + 3);
+        buffers.indices.push_back(idx + 1);
+
+        idx += 2;
     }
 }
 
+void GeomPrimitive::genCone(VEBuffers &buffers, float height, float r, unsigned int slices, unsigned int stacks)
+{
+    float halfHeight = height * 0.5f;
+    glm::vec3 p = glm::vec3(0.0f, halfHeight, 0.0f);
 
+    float thetaInc = glm::two_pi<float>() / (float) slices;
+    float theta    = 0.0f;
+    float sign     = -1.0f;
+
+    /* Center bottom */
+    buffers.positions.push_back(-p);
+    buffers.normals.push_back  (glm::vec3(0.0f, -1.0f, 0.0f));
+    buffers.texcoords.push_back(glm::vec2(0.0f, 0.0f));
+
+    /* Bottom */
+    for (unsigned int sideCount = 0; sideCount <= slices; ++sideCount, theta += thetaInc)
+    {
+        buffers.positions.push_back(glm::vec3(glm::cos(theta) * r, -halfHeight, -glm::sin(theta) * r));
+        buffers.normals.push_back  (glm::vec3(0.0f, -1.0f, 0.0f));
+        buffers.texcoords.push_back(glm::vec2(0.0f, 0.0f));
+    }
+
+    /* Sides */
+    float l = glm::sqrt(height * height + r * r);
+
+    for (unsigned int stackCount = 0; stackCount <= stacks; ++stackCount)
+    {
+        float level = stackCount / (float) stacks;
+
+        for (unsigned int sliceCount = 0; sliceCount <= slices; ++sliceCount, theta += thetaInc)
+        {
+            buffers.positions.push_back(glm::vec3(glm::cos(theta) * r * (1.0f - level), 
+                                                  -halfHeight + 2.0f * halfHeight * level,
+                                                  -glm::sin(theta) * r * (1.0f - level)));
+            buffers.normals.push_back  (glm::vec3(glm::cos(theta) * height / l, r / l, -glm::sin(theta) * height / l));
+            buffers.texcoords.push_back(glm::vec2(sliceCount / (float)slices, level));
+        }
+    }
+
+    GLushort centerIdx = 0;
+    GLushort idx       = 1;
+
+    /* Indices Bottom */
+    for (unsigned int sliceCount = 0; sliceCount < slices; ++sliceCount)
+    {
+        buffers.indices.push_back(centerIdx);
+        buffers.indices.push_back(idx + 1);
+        buffers.indices.push_back(idx);
+
+        ++idx;
+    }
+    ++idx;
+
+    /* Indices Sides */
+    for (unsigned int stackCount = 0; stackCount < stacks; ++stackCount)
+    {
+        for (unsigned int sliceCount = 0; sliceCount < slices; ++sliceCount)
+        {
+            buffers.indices.push_back(idx);
+            buffers.indices.push_back(idx + 1);
+            buffers.indices.push_back(idx + slices + 1);
+
+            buffers.indices.push_back(idx + 1);
+            buffers.indices.push_back(idx + slices + 2);
+            buffers.indices.push_back(idx + slices + 1);
+
+            ++idx;
+        }
+
+        ++idx;
+    }
+}

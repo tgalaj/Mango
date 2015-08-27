@@ -30,7 +30,7 @@ void Model::render()
     glBindVertexArray(vao_id);
 
     glDrawElements(draw_mode, indices_count, GL_UNSIGNED_SHORT, nullptr);
-    
+
     glBindVertexArray(0);
 }
 
@@ -63,7 +63,15 @@ void Model::genCylinder(float height, float r, unsigned int slices)
     GeomPrimitive::genCylinder(buffers, height, r, slices);
     setBuffers(buffers);
 
-    draw_mode = GL_TRIANGLE_STRIP;
+    indices_count = buffers.indices.size();
+}
+
+void Model::genCone(float height, float r, unsigned int slices, unsigned int stacks)
+{
+    VEBuffers buffers;
+
+    GeomPrimitive::genCone(buffers, height, r, slices, stacks);
+    setBuffers(buffers);
 
     indices_count = buffers.indices.size();
 }

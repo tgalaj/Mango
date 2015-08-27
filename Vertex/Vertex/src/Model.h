@@ -24,7 +24,7 @@ public:
     /* Primitives */
     void genCube(float radius = 1.0f);
     void genTorus(float innerRadius = 1.0f, float outerRadius = 2.0f, unsigned int slices = 10, unsigned int stacks = 10);
-    void genCone();
+    void genCone(float height = 3.0f, float r = 1.5f, unsigned int slices = 10, unsigned int stacks = 10);
     void genSphere();
     void genCylinder(float height = 3.0f, float r = 1.5f, unsigned int slices = 10);
     void genPlane();

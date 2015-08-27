@@ -11,7 +11,8 @@ SimpleGame::SimpleGame()
     model = new Model();
     //model->genTorus(1.0f, 2.0f, 32, 32);
     //model->genCube(3.0f);
-    model->genCylinder(3, 1, 6);
+    //model->genCylinder(3, 1, 22);
+    model->genCone(3.0f, 1.5f, 22, 22);
 
     cam = new PerspectiveCamera(60.0f, 800, 600, 0.01f, 50.0f);
 }
@@ -69,7 +70,7 @@ void SimpleGame::update()
     float t = Time::getTime();
 
     printf("Camera fov = %.2f\r", cam->fieldOfView);
-    cam->setPosition(r*cos(t), 4, r*sin(t));
+    cam->setPosition(r*cos(t), sin(t)*4, r*sin(t));
     cam->update();
 }
 
