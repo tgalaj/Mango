@@ -27,8 +27,8 @@ public:
     void genCone(float height = 3.0f, float r = 1.5f, unsigned int slices = 10, unsigned int stacks = 10);
     void genSphere();
     void genCylinder(float height = 3.0f, float r = 1.5f, unsigned int slices = 10);
-    void genPlane();
-    void genQuad();
+    void genPlane(float width = 1.0f, float height = 1.0f, unsigned int slices = 5, unsigned int stacks = 5);
+    void genQuad(float width = 1.0f, float height = 1.0f);
 
 private:
     GLuint vao_id;

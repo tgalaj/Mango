@@ -279,3 +279,69 @@ void GeomPrimitive::genCone(VEBuffers &buffers, float height, float r, unsigned 
         ++idx;
     }
 }
+
+void GeomPrimitive::genQuad(VEBuffers & buffers, float width, float height)
+{
+    float halfWidth  = width * 0.5f;
+    float halfHeight = height * 0.5f;
+
+    buffers.positions.push_back(glm::vec3(-halfWidth, 0.0f, -halfHeight));
+    buffers.positions.push_back(glm::vec3(-halfWidth, 0.0f,  halfHeight));
+    buffers.positions.push_back(glm::vec3( halfWidth, 0.0f, -halfHeight));
+    buffers.positions.push_back(glm::vec3( halfWidth, 0.0f,  halfHeight));
+
+    buffers.normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+    buffers.normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+    buffers.normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+    buffers.normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+
+    buffers.texcoords.push_back(glm::vec2(0.0f, 1.0f));
+    buffers.texcoords.push_back(glm::vec2(0.0f, 0.0f));
+    buffers.texcoords.push_back(glm::vec2(1.0f, 1.0f));
+    buffers.texcoords.push_back(glm::vec2(1.0f, 0.0f));
+
+    buffers.indices.push_back(0);
+    buffers.indices.push_back(1);
+    buffers.indices.push_back(2);
+    buffers.indices.push_back(3);
+}
+
+void GeomPrimitive::genPlane(VEBuffers & buffers, float width, float height, unsigned int slices, unsigned int stacks)
+{
+    float widthInc  = width  / (float) slices;
+    float heightInc = height / (float) stacks;
+
+    float w = -width * 0.5f;
+    float h = -height * 0.5f;
+
+    for (unsigned int j = 0; j <= stacks; ++j, h += heightInc)
+    {
+        for (unsigned int i = 0; i <= slices; ++i, w += widthInc)
+        {
+            buffers.positions.push_back(glm::vec3(w, 0.0f, h));
+            buffers.normals.push_back  (glm::vec3(0.0f, 1.0f, 0.0f));
+            buffers.texcoords.push_back(glm::vec2(i / (float) slices, j / (float) stacks));
+        }
+        w = -width * 0.5f;
+    }
+
+    GLushort idx = 0;
+
+    for (unsigned int j = 0; j < stacks; ++j)
+    {
+        for (unsigned int i = 0; i < slices; ++i)
+        {
+            buffers.indices.push_back(idx);
+            buffers.indices.push_back(idx + slices + 1);
+            buffers.indices.push_back(idx + 1);
+
+            buffers.indices.push_back(idx + 1);
+            buffers.indices.push_back(idx + slices + 1);
+            buffers.indices.push_back(idx + slices + 2);
+
+            ++idx;
+        }
+
+        ++idx;
+    }
+}

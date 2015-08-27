@@ -12,7 +12,9 @@ SimpleGame::SimpleGame()
     //model->genTorus(1.0f, 2.0f, 32, 32);
     //model->genCube(3.0f);
     //model->genCylinder(3, 1, 22);
-    model->genCone(3.0f, 1.5f, 22, 22);
+    //model->genCone(3.0f, 1.5f, 22, 22);
+    //model->genQuad(8, 8);
+    model->genPlane(5, 5, 8, 8);
 
     cam = new PerspectiveCamera(60.0f, 800, 600, 0.01f, 50.0f);
 }

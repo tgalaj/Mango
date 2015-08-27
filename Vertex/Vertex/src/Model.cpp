@@ -66,6 +66,28 @@ void Model::genCylinder(float height, float r, unsigned int slices)
     indices_count = buffers.indices.size();
 }
 
+void Model::genPlane(float width, float height, unsigned int slices, unsigned int stacks)
+{
+    VEBuffers buffers;
+
+    GeomPrimitive::genPlane(buffers, width, height, slices, stacks);
+    setBuffers(buffers);
+
+    indices_count = buffers.indices.size();
+}
+
+void Model::genQuad(float width, float height)
+{
+    VEBuffers buffers;
+
+    GeomPrimitive::genQuad(buffers, width, height);
+    setBuffers(buffers);
+
+    draw_mode = GL_TRIANGLE_STRIP;
+
+    indices_count = buffers.indices.size();
+}
+
 void Model::genCone(float height, float r, unsigned int slices, unsigned int stacks)
 {
     VEBuffers buffers;
