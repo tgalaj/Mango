@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 /// OpenGL Mathematics (glm.g-truc.net)
 ///
-/// Copyright (c) 2005 - 2014 G-Truc Creation (www.g-truc.net)
+/// Copyright (c) 2005 - 2015 G-Truc Creation (www.g-truc.net)
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
@@ -31,24 +31,22 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 namespace glm{
-namespace detail
-{
 
-}//namespace detail
-
-	template <>
-	GLM_FUNC_QUALIFIER tvec4<float, lowp>::tvec4()
-#		ifndef GLM_FORCE_NO_CTOR_INIT
-			: data(_mm_setzero_ps())
-#		endif
-	{}
+#	if !GLM_HAS_DEFAULTED_FUNCTIONS
+		template <>
+		GLM_FUNC_QUALIFIER tvec4<float, lowp>::tvec4()
+#			ifndef GLM_FORCE_NO_CTOR_INIT
+				: data(_mm_setzero_ps())
+#			endif
+		{}
 	
-	template <>
-	GLM_FUNC_QUALIFIER tvec4<float, mediump>::tvec4()
-#		ifndef GLM_FORCE_NO_CTOR_INIT
-			: data(_mm_setzero_ps())
-#		endif
-	{}
+		template <>
+		GLM_FUNC_QUALIFIER tvec4<float, mediump>::tvec4()
+#			ifndef GLM_FORCE_NO_CTOR_INIT
+				: data(_mm_setzero_ps())
+#			endif
+		{}
+#	endif//!GLM_HAS_DEFAULTED_FUNCTIONS
 
 	template <>
 	GLM_FUNC_QUALIFIER tvec4<float, lowp>::tvec4(float s) :

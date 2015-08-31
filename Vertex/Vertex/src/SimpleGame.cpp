@@ -10,12 +10,15 @@ SimpleGame::SimpleGame()
 
     model = new Model();
     //model->genTorus(1.0f, 2.0f, 32, 32);
-    //model->genCube(3.0f);
+    model->genCube(3.0f);
     //model->genCylinder(3, 1, 22);
     //model->genCone(3.0f, 1.5f, 22, 22);
-    //model->genQuad(8, 8);
+    //model->genQuad(5, 5);
     //model->genPlane(5, 5, 8, 8);
-    model->genSphere(1.5f, 20);
+    //model->genSphere(1.5f, 20);
+
+    texture = new Texture();
+    texture->createTexture2D("res/texture/aztec.jpg");
 
     cam = new PerspectiveCamera(60.0f, 800, 600, 0.01f, 50.0f);
 }
@@ -27,6 +30,9 @@ SimpleGame::~SimpleGame()
 
     delete model;
     model = nullptr;
+
+    delete texture;
+    texture = nullptr;
 }
 
 void SimpleGame::processInput()
@@ -79,6 +85,7 @@ void SimpleGame::update()
 
 void SimpleGame::render()
 {
+    texture->bind();
     shader->setUniformMatrix4fv("view", cam->getView());
     shader->setUniformMatrix4fv("viewProj", cam->getViewProjection());
     model->render();

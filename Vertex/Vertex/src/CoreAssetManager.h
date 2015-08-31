@@ -1,5 +1,7 @@
 #pragma once
 
+#include <FreeImage.h>
+
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -34,5 +36,14 @@ public:
      *          is an empty string.
      */
     static std::map<std::string, std::string> loadShaderCode(const std::string &filename);
+
+    /**
+     * @brief   Loads a file that contains an image data.
+     * @param   std::string Relative path, with file name
+     *          and extension, to the file that needs to be 
+     *          loaded.
+     * @returns Pointer to FIBITMAP that contains image's data.
+     */
+    static FIBITMAP* loadTexture(const std::string &filename);
 };
 

@@ -4,6 +4,7 @@
 #include "PerspectiveCamera.h"
 #include "Shader.h"
 #include "Model.h"
+#include "Texture.h"
 
 class SimpleGame : public BaseGame
 {
@@ -19,4 +20,5 @@ private:
     Shader *shader;
     Model  *model;
     PerspectiveCamera *cam;
+    Texture *texture;
 };

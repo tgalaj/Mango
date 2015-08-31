@@ -30,6 +30,8 @@ in vec2 o_texcoord;
 
 out vec4 fragColor;
 
+uniform sampler2D diffuseSampler;
+
 //Dir light properties
 vec4 lightPos       = vec4(0.0f, 10.0f, -10.0f, 1.0f);
 vec3 lightIntensity = vec3(1.0f);
@@ -81,5 +83,5 @@ vec3 spotlightAds()
 
 void main()
 {      
-	fragColor = vec4(ads() * vec3(0.6, 0.2, 0.0), 1.0f);
+	fragColor = texture(diffuseSampler, o_texcoord) * vec4(ads() , 1.0f);
 }

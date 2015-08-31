@@ -101,3 +101,42 @@ std::map<std::string, std::string> CoreAssetManager::loadShaderCode(const std::s
         return codes;
     }
 }
+
+FIBITMAP* CoreAssetManager::loadTexture(const std::string & filename)
+{
+    /* Image format */
+    FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
+
+    /* Pointer to the image */
+    FIBITMAP *dib = nullptr;
+
+    /* Check the file signature and deduce its format */
+    fif = FreeImage_GetFileType(filename.c_str(), 0);
+
+    /* If still unknown, try to guess the file format from the file extension */
+    if (fif == FIF_UNKNOWN)
+    {
+        fif = FreeImage_GetFIFFromFilename(filename.c_str());
+    }
+
+    /* If still unknown, set status to false */
+    if (fif == FIF_UNKNOWN)
+    {
+        fprintf(stderr, "Error while loading texture %s. Can't deduce file format.\n", filename.c_str());
+        return nullptr;
+    }
+
+    /* Check if FreeImage supports loading the file */
+    if (FreeImage_FIFSupportsReading(fif))
+    {
+        dib = FreeImage_Load(fif, filename.c_str());
+    }
+
+    if (!dib)
+    {
+        fprintf(stderr, "Error while loading texture %s. Vertex Engine doesn't support such files.\n", filename.c_str());
+        return nullptr;
+    }
+
+    return dib;
+}
