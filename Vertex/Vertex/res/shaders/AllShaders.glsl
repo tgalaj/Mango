@@ -81,5 +81,5 @@ vec3 spotlightAds()
 
 void main()
 {      
-	fragColor = vec4(ads() * vec3(o_texcoord, 0.0), 1.0f);
+	fragColor = vec4(ads() * vec3(0.6, 0.2, 0.0), 1.0f);
 }

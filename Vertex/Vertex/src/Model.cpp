@@ -88,11 +88,21 @@ void Model::genQuad(float width, float height)
     indices_count = buffers.indices.size();
 }
 
-void Model::genCone(float height, float r, unsigned int slices, unsigned int stacks)
+void Model::genCone(float height, float radius, unsigned int slices, unsigned int stacks)
 {
     VEBuffers buffers;
 
-    GeomPrimitive::genCone(buffers, height, r, slices, stacks);
+    GeomPrimitive::genCone(buffers, height, radius, slices, stacks);
+    setBuffers(buffers);
+
+    indices_count = buffers.indices.size();
+}
+
+void Model::genSphere(float radius, unsigned int slices)
+{
+    VEBuffers buffers;
+
+    GeomPrimitive::genSphere(buffers, radius, slices);
     setBuffers(buffers);
 
     indices_count = buffers.indices.size();

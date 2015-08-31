@@ -14,7 +14,8 @@ SimpleGame::SimpleGame()
     //model->genCylinder(3, 1, 22);
     //model->genCone(3.0f, 1.5f, 22, 22);
     //model->genQuad(8, 8);
-    model->genPlane(5, 5, 8, 8);
+    //model->genPlane(5, 5, 8, 8);
+    model->genSphere(1.5f, 20);
 
     cam = new PerspectiveCamera(60.0f, 800, 600, 0.01f, 50.0f);
 }

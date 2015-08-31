@@ -345,3 +345,41 @@ void GeomPrimitive::genPlane(VEBuffers & buffers, float width, float height, uns
         ++idx;
     }
 }
+
+void GeomPrimitive::genSphere(VEBuffers & buffers, float r, unsigned int slices)
+{
+    float deltaPhi = glm::two_pi<float>() / static_cast<float>(slices);
+    
+    unsigned int parallels = slices * 0.5f;
+
+    for (unsigned int i = 0; i <= parallels; ++i)
+    {
+        for (unsigned int j = 0; j <= slices; ++j)
+        {
+            buffers.positions.push_back(glm::vec3(r * glm::sin(deltaPhi * i) * glm::sin(deltaPhi * j),
+                                                  r * glm::cos(deltaPhi * i),
+                                                  r * glm::sin(deltaPhi * i) * glm::cos(deltaPhi * j)));
+
+            buffers.normals.push_back(glm::vec3(r * glm::sin(deltaPhi * i) * glm::sin(deltaPhi * j) / r,
+                                                r * glm::cos(deltaPhi * i) / r,
+                                                r * glm::sin(deltaPhi * i) * glm::cos(deltaPhi * j) / r));
+
+            buffers.texcoords.push_back(glm::vec2(j / static_cast<float>(slices), 
+                                                  1.0f - i / static_cast<float>(parallels)));
+        }
+    }
+
+    for (unsigned int i = 0; i < parallels; ++i)
+    {
+        for (unsigned int j = 0; j < slices; ++j)
+        {
+            buffers.indices.push_back( i      * (slices + 1) +  j);
+            buffers.indices.push_back((i + 1) * (slices + 1) +  j);
+            buffers.indices.push_back((i + 1) * (slices + 1) + (j + 1));
+
+            buffers.indices.push_back( i      * (slices + 1) +  j);
+            buffers.indices.push_back((i + 1) * (slices + 1) + (j + 1));
+            buffers.indices.push_back( i      * (slices + 1) + (j + 1));
+        }
+    }
+}

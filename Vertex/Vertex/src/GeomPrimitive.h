@@ -17,5 +17,6 @@ private:
     static void genCone    (VEBuffers &buffers, float height, float r, unsigned int slices, unsigned int stacks);
     static void genQuad    (VEBuffers &buffers, float width, float height);
     static void genPlane   (VEBuffers &buffers, float width, float height, unsigned int slices, unsigned int stacks);
+    static void genSphere  (VEBuffers &buffers, float r, unsigned int slices);
 };
 
