@@ -9,8 +9,8 @@ SimpleGame::SimpleGame()
     shader->apply();
 
     model = new Model();
-    //model->genTorus(1.0f, 2.0f, 32, 32);
-    model->genCube(3.0f);
+    model->genTorus(1.0f, 2.0f, 32, 32);
+    //model->genCube(3.0f);
     //model->genCylinder(3, 1, 22);
     //model->genCone(3.0f, 1.5f, 22, 22);
     //model->genQuad(5, 5);
@@ -18,7 +18,7 @@ SimpleGame::SimpleGame()
     //model->genSphere(1.5f, 20);
 
     texture = new Texture();
-    texture->createTexture2D("res/texture/aztec.jpg");
+    texture->createTexture2D("res/texture/wood.jpg");
 
     cam = new PerspectiveCamera(60.0f, 800, 600, 0.01f, 50.0f);
 }
