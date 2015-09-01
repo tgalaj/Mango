@@ -22,7 +22,7 @@ Camera::~Camera()
 {
 }
 
-void Camera::lookAt(glm::vec3 &point)
+void Camera::lookAt(glm::vec3 & point)
 {
     lookAtPoint = point;
 }
@@ -72,7 +72,7 @@ void Camera::setViewport(float width, float height)
 
 glm::mat4 Camera::getViewProjection()
 {
-    return projection*view;
+    return projection * view;
 }
 
 glm::mat4 Camera::getView()

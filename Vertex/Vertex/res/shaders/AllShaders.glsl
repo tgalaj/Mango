@@ -10,6 +10,7 @@ out vec3 o_position;
 out vec3 o_normal;
 out vec2 o_texcoord;
 
+uniform mat4 model;
 uniform mat4 view;
 uniform mat4 viewProj;
 
@@ -19,7 +20,7 @@ void main()
 	o_position = vec3(view * vec4(position, 1.0f));
     o_texcoord = texcoord;
 
-    gl_Position = viewProj * vec4(position, 1.0f);
+    gl_Position = viewProj * model * vec4(position, 1.0f);
 }
 
 #FS

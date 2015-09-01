@@ -11,16 +11,16 @@ class Window final
 {
     friend class VertexEngineCore;
 
-    Window(const char *title, int width, int height, Uint32 flags);
+    Window(const char * title, int width, int height, Uint32 flags);
     ~Window();
 
-    Window(const Window&)            = delete;
-    Window& operator=(const Window&) = delete;
+    Window(const Window &)            = delete;
+    Window & operator=(const Window &) = delete;
 
-    SDL_GLContext m_glContext;
-    SDL_Window   *m_sdlWindow;
-    unsigned int  m_width;
-    unsigned int  m_height;
-    bool          m_isGood;
+    SDL_GLContext  m_glContext;
+    SDL_Window   * m_sdlWindow;
+    unsigned int   m_width;
+    unsigned int   m_height;
+    bool           m_isGood;
 };
 

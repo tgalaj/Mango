@@ -5,7 +5,7 @@
 
 //TODO: improve error messages to let programmer know better where is the issue
 
-Shader::Shader(std::string const &filename) : program_id(0), isLinked(false)
+Shader::Shader(std::string const & filename) : program_id(0), isLinked(false)
 {
     std::string shaderVersion = "#version " + std::to_string(MIN_GL_VERSION_MAJOR) + std::to_string(MIN_GL_VERSION_MAJOR) + "0\n\n";
 

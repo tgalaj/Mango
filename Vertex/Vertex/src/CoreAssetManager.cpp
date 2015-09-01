@@ -4,7 +4,7 @@ CoreAssetManager::~CoreAssetManager()
 {
 }
 
-std::string CoreAssetManager::loadFile(const std::string &filename)
+std::string CoreAssetManager::loadFile(const std::string & filename)
 {
     std::string filetext;
     std::string line;
@@ -31,7 +31,7 @@ std::string CoreAssetManager::loadFile(const std::string &filename)
     }
 }
 
-std::map<std::string, std::string> CoreAssetManager::loadShaderCode(const std::string &filename)
+std::map<std::string, std::string> CoreAssetManager::loadShaderCode(const std::string & filename)
 {
     std::map<std::string, std::string> codes { 
                                                  { "VS",  "" },
@@ -134,7 +134,7 @@ FIBITMAP* CoreAssetManager::loadTexture(const std::string & filename)
 
     if (!dib)
     {
-        fprintf(stderr, "Error while loading texture %s. Vertex Engine doesn't support such files.\n", filename.c_str());
+        fprintf(stderr, "Error while loading texture %s. Vertex Engine doesn't support such files or file name is incorrect.\n", filename.c_str());
         return nullptr;
     }
 

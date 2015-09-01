@@ -2,6 +2,8 @@
 #include "VertexEngineCore.h"
 #include "CoreAssetManager.h"
 
+#include <glm\gtc\matrix_transform.hpp>
+
 SimpleGame::SimpleGame()
 {
     shader = new Shader("res/shaders/AllShaders.glsl");
@@ -9,7 +11,11 @@ SimpleGame::SimpleGame()
     shader->apply();
 
     model = new Model();
-    model->genTorus(1.0f, 2.0f, 32, 32);
+    model->loadModel(std::string("res/models/nanosuit/nanosuit.obj"));
+    //model->genTorus(1.0f, 2.0f, 32, 32);
+
+    //model2 = new Model();
+    //model2->genQuad(5, 5);
     //model->genCube(3.0f);
     //model->genCylinder(3, 1, 22);
     //model->genCone(3.0f, 1.5f, 22, 22);
@@ -17,10 +23,10 @@ SimpleGame::SimpleGame()
     //model->genPlane(5, 5, 8, 8);
     //model->genSphere(1.5f, 20);
 
-    texture = new Texture();
-    texture->createTexture2D("res/texture/wood.jpg");
+    model->setTexture("res/texture/rooftiles.jpg");
+    //model2->setTexture("res/texture/stone.jpg");
 
-    cam = new PerspectiveCamera(60.0f, 800, 600, 0.01f, 50.0f);
+    cam = new PerspectiveCamera(60.0f, 800, 600, 0.01f, 105000.0f);
 }
 
 SimpleGame::~SimpleGame()
@@ -31,8 +37,8 @@ SimpleGame::~SimpleGame()
     delete model;
     model = nullptr;
 
-    delete texture;
-    texture = nullptr;
+    //delete model2;
+    //model2 = nullptr;
 }
 
 void SimpleGame::processInput()
@@ -58,10 +64,10 @@ void SimpleGame::processInput()
         VertexEngineCore::setVSync(vsync = !vsync);
 
     if(Input::getKeyDown(Input::KeypadMinus))
-        cam->fieldOfView -= 0.1f;
+        cam->fieldOfView -= 1.0f;
 
     if(Input::getKeyDown(Input::KeypadPlus))
-        cam->fieldOfView += 0.1f;
+        cam->fieldOfView += 1.0f;
 
     if (Input::getKeyDown(Input::U))
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -75,7 +81,7 @@ void SimpleGame::processInput()
 
 void SimpleGame::update()
 {
-    float r = 5.0f;
+    float r = 10.0f;
     float t = Time::getTime();
 
     printf("Camera fov = %.2f\r", cam->fieldOfView);
@@ -85,8 +91,13 @@ void SimpleGame::update()
 
 void SimpleGame::render()
 {
-    texture->bind();
+    glm::mat4 m(1.0f);
+    m = glm::translate(m, glm::vec3(0.0f, -1.75f, 0.0f));
+    m = glm::scale(m, glm::vec3(0.2f, 0.2f, 0.2f));
+
+    shader->setUniformMatrix4fv("model", m);
     shader->setUniformMatrix4fv("view", cam->getView());
     shader->setUniformMatrix4fv("viewProj", cam->getViewProjection());
     model->render();
+    //model2->render();
 }

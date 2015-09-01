@@ -10,8 +10,8 @@ class Input final
 public:
     Input()                        = delete;
     ~Input()                       = delete;
-    Input(const Input&)            = delete;
-    Input& operator=(const Input&) = delete;
+    Input(const Input &)            = delete;
+    Input & operator=(const Input &) = delete;
 
     static enum KeyCode
     {

@@ -2,7 +2,7 @@
 
 bool VertexEngineCore::quit = false;
 
-VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsigned int height, Uint32 flags)
+VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsigned int height, Uint32 flags)
     : TICKS_PER_SECOND(25),
       SKIP_TICKS      (1000 / TICKS_PER_SECOND),
       MAX_FRAMESKIP   (5)
@@ -56,7 +56,7 @@ void VertexEngineCore::quitApp()
     VertexEngineCore::quit = true;
 }
 
-void VertexEngineCore::start(BaseGame *game)
+void VertexEngineCore::start(BaseGame * game)
 {
     /* Set game. */
     this->game = game;

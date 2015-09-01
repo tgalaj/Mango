@@ -9,13 +9,13 @@
 class Shader
 {
 public:
-    Shader(std::string const &filename);
+    Shader(std::string const & filename);
     ~Shader();
 
     bool link();
     void apply();
 
-    void setUniformMatrix4fv(std::string uniformName, glm::mat4 &matrix);
+    void setUniformMatrix4fv(std::string uniformName, glm::mat4 & matrix);
 
 protected:
 

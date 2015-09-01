@@ -1,7 +1,7 @@
 #include "GeomPrimitive.h"
 #include <glm\gtc\constants.hpp>
 
-void GeomPrimitive::genCube(VEBuffers &buffers, float radius)
+void GeomPrimitive::genCube(VEBuffers & buffers, float radius)
 {
     float r2 = radius * 0.5f;
 
@@ -113,7 +113,7 @@ void GeomPrimitive::genCube(VEBuffers &buffers, float radius)
                         };
 }
 
-void GeomPrimitive::genTorus(VEBuffers &buffers, float innerRadius, float outerRadius, unsigned int slices, unsigned int stacks)
+void GeomPrimitive::genTorus(VEBuffers & buffers, float innerRadius, float outerRadius, unsigned int slices, unsigned int stacks)
 {
     float phi   = 0.0f;
     float theta = 0.0f;
@@ -175,7 +175,7 @@ void GeomPrimitive::genTorus(VEBuffers &buffers, float innerRadius, float outerR
     }
  }
 
-void GeomPrimitive::genCylinder(VEBuffers &buffers, float height, float r, unsigned int slices)
+void GeomPrimitive::genCylinder(VEBuffers & buffers, float height, float r, unsigned int slices)
 {
     float halfHeight = height * 0.5f;
     glm::vec3 p1 = glm::vec3(0.0f, halfHeight, 0.0f);
@@ -269,7 +269,7 @@ void GeomPrimitive::genCylinder(VEBuffers &buffers, float height, float r, unsig
     }
 }
 
-void GeomPrimitive::genCone(VEBuffers &buffers, float height, float r, unsigned int slices, unsigned int stacks)
+void GeomPrimitive::genCone(VEBuffers & buffers, float height, float r, unsigned int slices, unsigned int stacks)
 {
     float halfHeight = height * 0.5f;
     glm::vec3 p = glm::vec3(0.0f, halfHeight, 0.0f);

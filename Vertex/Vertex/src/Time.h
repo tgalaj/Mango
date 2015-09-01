@@ -7,8 +7,8 @@ class Time final
 public:
     Time()                       = delete;
     ~Time()                      = delete;
-    Time(const Time&)            = delete;
-    Time& operator=(const Time&) = delete;
+    Time(const Time &)            = delete;
+    Time & operator=(const Time &) = delete;
 
     /**
      * @brief Returns time since SDL initialization.

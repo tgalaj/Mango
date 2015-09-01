@@ -3,7 +3,8 @@
 unsigned int Texture::next_free_to_unit = GL_TEXTURE0;
 
 Texture::Texture() 
-    :  to_id          (0),
+    :  type_name      ("texture_diffuse"),
+       to_id          (0),
        to_unit        (0),
        to_type        (GL_TEXTURE_2D),
        width          (0),
@@ -66,8 +67,9 @@ void Texture::createTexture2D(std::string filename, GLint base_level)
     glTexParameteri (to_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri (to_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
+    //todo - meshes should organize texture units themselves
     to_unit = next_free_to_unit;
-    ++next_free_to_unit;
+    //++next_free_to_unit;
 
     /* Release FreeImage data */
     FreeImage_Unload(dib);
@@ -77,4 +79,9 @@ void Texture::bind()
 {
     glActiveTexture(to_unit);
     glBindTexture(to_type, to_id);
+}
+
+void Texture::setTypeName(std::string & name)
+{
+    type_name = name;
 }

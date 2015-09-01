@@ -16,9 +16,12 @@ public:
     void createTexture2D(std::string filename, GLint base_level = 0);
     void bind();
 
+    void setTypeName(std::string & name);
+
 private:
     static GLuint next_free_to_unit;
 
+    std::string type_name;
     GLuint to_id;
     GLuint to_unit;
     GLuint to_type;

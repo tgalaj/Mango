@@ -1,7 +1,7 @@
 #include "Window.h"
 #include "VertexEngineCore.h"
 
-Window::Window     (const char *title, int width, int height, Uint32 flags) 
+Window::Window     (const char * title, int width, int height, Uint32 flags) 
       : m_width    (width), 
         m_height   (height),
         m_glContext(nullptr),

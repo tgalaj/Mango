@@ -21,7 +21,7 @@ public:
      *                      needs to be loaded.
      * @returns Full file's source as a std::string.
      */
-    static std::string loadFile (const std::string &filename);
+    static std::string loadFile (const std::string & filename);
 
     /**
      * @brief   Loads a file that contains multiple shaders 
@@ -35,7 +35,7 @@ public:
      *          is no shader code for a specific stage, value 
      *          is an empty string.
      */
-    static std::map<std::string, std::string> loadShaderCode(const std::string &filename);
+    static std::map<std::string, std::string> loadShaderCode(const std::string & filename);
 
     /**
      * @brief   Loads a file that contains an image data.
@@ -44,6 +44,6 @@ public:
      *          loaded.
      * @returns Pointer to FIBITMAP that contains image's data.
      */
-    static FIBITMAP* loadTexture(const std::string &filename);
+    static FIBITMAP* loadTexture(const std::string & filename);
 };
 

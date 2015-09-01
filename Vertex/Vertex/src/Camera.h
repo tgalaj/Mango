@@ -11,7 +11,7 @@ public:
     virtual void update() = 0; //TODO: think about solution that doesn't require calling this method
 
     /* Setters */
-    virtual void lookAt            (glm::vec3 &point);
+    virtual void lookAt            (glm::vec3 & point);
     virtual void setPosition       (float x, float y, float z);
     virtual void setUpVector       (float x, float y, float z);
     virtual void setNearPlane      (float near);

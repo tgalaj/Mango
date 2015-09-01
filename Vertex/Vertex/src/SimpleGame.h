@@ -17,8 +17,8 @@ public:
     void render()       override;
 
 private:
-    Shader *shader;
-    Model  *model;
-    PerspectiveCamera *cam;
-    Texture *texture;
+    Shader * shader;
+    Model  * model;
+    Model  * model2;
+    PerspectiveCamera * cam;
 };

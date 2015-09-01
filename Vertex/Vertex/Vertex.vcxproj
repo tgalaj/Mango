@@ -18,6 +18,7 @@
     <ClCompile Include="src\GeomPrimitive.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\Material.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\OrthographicCamera.cpp" />
     <ClCompile Include="src\ParticleEffect.cpp" />
     <ClCompile Include="src\PerspectiveCamera.cpp" />
@@ -40,6 +41,7 @@
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CoreAssetManager.h" />
+    <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\SimpleGame.h" />
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\DirectionalLight.h" />
