@@ -30,9 +30,9 @@ void Mesh::render()
 {
     glBindVertexArray(vao_id);
 
-    for (auto & texture : textures)
+    for (GLuint i = 0; i < textures.size(); ++i)
     {
-        texture->bind();
+        textures[i]->bind(GL_TEXTURE0 + i);
     }
 
     glDrawElements(draw_mode, indices_count, GL_UNSIGNED_SHORT, nullptr);

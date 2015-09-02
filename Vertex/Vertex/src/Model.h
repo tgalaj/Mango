@@ -32,8 +32,8 @@ private:
     enum ModelType { VE_PRIMITIVE, VE_MODEL };
     ModelType model_type;
 
-    void processNode(aiNode * node, const aiScene * scene);
-    Mesh * processMesh(aiMesh * mesh, const aiScene * scene);
-    std::vector<Texture *> loadMaterialTextures(aiMaterial * mat, aiTextureType type, std::string type_name);
+    void processNode(aiNode * node, const aiScene * scene, aiString & directory);
+    Mesh * processMesh(aiMesh * mesh, const aiScene * scene, aiString & directory);
+    std::vector<Texture *> loadMaterialTextures(aiMaterial * mat, aiTextureType type, std::string type_name, aiString & directory);
 };
 

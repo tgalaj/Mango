@@ -34,7 +34,7 @@ out vec4 fragColor;
 uniform sampler2D diffuseSampler;
 
 //Dir light properties
-vec4 lightPos       = vec4(0.0f, 10.0f, -10.0f, 1.0f);
+vec4 lightPos       = vec4(0.0f, -10.0f, -10.0f, 1.0f);
 vec3 lightIntensity = vec3(1.0f);
 vec3 Kd             = vec3(1.0f);
 vec3 Ka             = vec3(1.0f);
@@ -48,6 +48,8 @@ vec3 spotDir       = vec3(0.0f) - spotPosition;
 float spotExponent = 0.5f;
 float cutoff       = 20.0f; //degrees
 
+vec4 color = texture(diffuseSampler, o_texcoord);
+
 vec3 ads()
 {
 	vec3 n = normalize(o_normal);
@@ -55,7 +57,7 @@ vec3 ads()
 	vec3 v = normalize(-o_position);
 	vec3 h = normalize(v + s);
 
-	return lightIntensity * (Ka + Kd * max(dot(s, n), 0.0f) + Ks * pow(max(dot(h, n), 0.0f), shininess));
+	return lightIntensity * (Ka * color.xyz + Kd * color.xyz * max(dot(s, n), 0.0f) + Ks * pow(max(dot(h, n), 0.0f), shininess));
 }
 
 vec3 spotlightAds()
@@ -84,5 +86,5 @@ vec3 spotlightAds()
 
 void main()
 {      
-	fragColor = texture(diffuseSampler, o_texcoord) * vec4(ads() , 1.0f);
+	fragColor = vec4(ads() , 1.0f);
 }

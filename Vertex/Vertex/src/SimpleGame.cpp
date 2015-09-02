@@ -12,21 +12,10 @@ SimpleGame::SimpleGame()
 
     model = new Model();
     model->loadModel(std::string("res/models/nanosuit/nanosuit.obj"));
-    //model->genTorus(1.0f, 2.0f, 32, 32);
+    //model->genTorus();
+    //model->setTexture("res/texture/wood.jpg");
 
-    //model2 = new Model();
-    //model2->genQuad(5, 5);
-    //model->genCube(3.0f);
-    //model->genCylinder(3, 1, 22);
-    //model->genCone(3.0f, 1.5f, 22, 22);
-    //model->genQuad(5, 5);
-    //model->genPlane(5, 5, 8, 8);
-    //model->genSphere(1.5f, 20);
-
-    model->setTexture("res/texture/rooftiles.jpg");
-    //model2->setTexture("res/texture/stone.jpg");
-
-    cam = new PerspectiveCamera(60.0f, 800, 600, 0.01f, 105000.0f);
+    cam = new PerspectiveCamera(60.0f, 1024, 768, 0.01f, 50.0f);
 }
 
 SimpleGame::~SimpleGame()
@@ -36,9 +25,6 @@ SimpleGame::~SimpleGame()
 
     delete model;
     model = nullptr;
-
-    //delete model2;
-    //model2 = nullptr;
 }
 
 void SimpleGame::processInput()
@@ -81,11 +67,11 @@ void SimpleGame::processInput()
 
 void SimpleGame::update()
 {
-    float r = 10.0f;
+    float r = 4.0f;
     float t = Time::getTime();
 
     printf("Camera fov = %.2f\r", cam->fieldOfView);
-    cam->setPosition(r*cos(t), sin(t)*4, r*sin(t));
+    cam->setPosition(r*cos(t), sin(t)*0, r*sin(t));
     cam->update();
 }
 
@@ -99,5 +85,4 @@ void SimpleGame::render()
     shader->setUniformMatrix4fv("view", cam->getView());
     shader->setUniformMatrix4fv("viewProj", cam->getViewProjection());
     model->render();
-    //model2->render();
 }

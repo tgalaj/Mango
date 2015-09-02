@@ -19,6 +19,5 @@ public:
 private:
     Shader * shader;
     Model  * model;
-    Model  * model2;
     PerspectiveCamera * cam;
 };

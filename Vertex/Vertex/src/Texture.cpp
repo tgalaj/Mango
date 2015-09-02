@@ -1,11 +1,8 @@
 #include "Texture.h"
 
-unsigned int Texture::next_free_to_unit = GL_TEXTURE0;
-
 Texture::Texture() 
     :  type_name      ("texture_diffuse"),
        to_id          (0),
-       to_unit        (0),
        to_type        (GL_TEXTURE_2D),
        width          (0),
        height         (0),
@@ -23,15 +20,11 @@ Texture::~Texture()
     }
 }
 
-GLuint Texture::getTextureUnit()
-{
-    return to_unit;
-}
-
 void Texture::createTexture2D(std::string filename, GLint base_level)
 {
     /* Pointer to the image */
     FIBITMAP *dib = CoreAssetManager::loadTexture(filename);
+              dib = FreeImage_ConvertTo32Bits(dib);
 
     /* Pointer to image data */
     BYTE *bits = nullptr;
@@ -45,8 +38,8 @@ void Texture::createTexture2D(std::string filename, GLint base_level)
         return;
 
     to_type         = GL_TEXTURE_2D;
-    format          = bpp == 24 ? GL_BGR : bpp == 8 ? GL_LUMINANCE : 0;
-    internal_format = bpp == 24 ? GL_RGB : GL_DEPTH_COMPONENT;
+    format          = GL_BGRA;
+    internal_format = GL_RGBA8;
 
     /* Generate GL texture object */
     glGenTextures   (1, &to_id);
@@ -67,17 +60,13 @@ void Texture::createTexture2D(std::string filename, GLint base_level)
     glTexParameteri (to_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri (to_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-    //todo - meshes should organize texture units themselves
-    to_unit = next_free_to_unit;
-    //++next_free_to_unit;
-
     /* Release FreeImage data */
     FreeImage_Unload(dib);
 }
 
-void Texture::bind()
+void Texture::bind(GLenum unit)
 {
-    glActiveTexture(to_unit);
+    glActiveTexture(unit);
     glBindTexture(to_type, to_id);
 }
 

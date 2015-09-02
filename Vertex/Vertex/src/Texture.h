@@ -12,9 +12,8 @@ public:
     Texture();
     ~Texture();
 
-    GLuint getTextureUnit();
     void createTexture2D(std::string filename, GLint base_level = 0);
-    void bind();
+    void bind(GLenum unit = GL_TEXTURE0);
 
     void setTypeName(std::string & name);
 
@@ -23,13 +22,11 @@ private:
 
     std::string type_name;
     GLuint to_id;
-    GLuint to_unit;
-    GLuint to_type;
+    GLenum to_type;
     GLuint width;
     GLuint height;
     GLint  base_level;
     GLenum format;
-    GLenum internal_format;
-
+    GLint internal_format;
 };
 
