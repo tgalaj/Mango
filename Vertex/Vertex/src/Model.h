@@ -14,7 +14,11 @@ public:
     virtual ~Model();
 
     void loadModel(std::string & filename);
-    void render();
+    void render(Shader & shader);
+    
+    void setPosition(glm::vec3 & position);
+    void setRotation(glm::vec3 & axis, float angleDegrees);
+    void setScale   (glm::vec3 & scale);
 
     /* Primitives */
     void genCone    (float height      = 3.0f, float r             = 1.5f, unsigned int slices = 10, unsigned int stacks = 10);
@@ -28,8 +32,11 @@ public:
     void setTexture(std::string filename);
 
 private:
-    std::vector<Mesh *> meshes;
     enum ModelType { VE_PRIMITIVE, VE_MODEL };
+
+    std::vector<Mesh *> meshes;
+    glm::mat4 modelMatrix;
+
     ModelType model_type;
 
     void processNode(aiNode * node, const aiScene * scene, aiString & directory);

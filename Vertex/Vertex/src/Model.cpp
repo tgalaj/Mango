@@ -1,7 +1,10 @@
 #include "Model.h"
 #include "GeomPrimitive.h"
 
+#include <glm\gtc\matrix_transform.hpp>
+
 Model::Model() 
+    : modelMatrix (glm::mat4(1.0f))
 {
     meshes.reserve(4);
 }
@@ -135,12 +138,29 @@ std::vector<Texture*> Model::loadMaterialTextures(aiMaterial * mat, aiTextureTyp
     return textures;
 }
 
-void Model::render()
+void Model::render(Shader & shader)
 {
+    shader.setUniformMatrix4fv("model", modelMatrix);
+
     for (auto & mesh : meshes)
     {
-        mesh->render();
+        mesh->render(shader);
     }
+}
+
+void Model::setPosition(glm::vec3 & position)
+{
+    modelMatrix = glm::translate(modelMatrix, position);
+}
+
+void Model::setRotation(glm::vec3 & axis, float angleDegrees)
+{
+    modelMatrix = glm::rotate(modelMatrix, glm::radians(angleDegrees), axis);
+}
+
+void Model::setScale(glm::vec3 & scale)
+{
+    modelMatrix = glm::scale(modelMatrix, scale);
 }
 
 void Model::genCone(float height, float radius, unsigned int slices, unsigned int stacks)

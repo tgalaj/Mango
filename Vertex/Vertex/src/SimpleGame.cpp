@@ -12,6 +12,9 @@ SimpleGame::SimpleGame()
 
     model = new Model();
     model->loadModel(std::string("res/models/nanosuit/nanosuit.obj"));
+    model->setPosition(glm::vec3(0.0f, -1.75f, 0.0f));
+    model->setScale(glm::vec3(0.2f));
+
     //model->genTorus();
     //model->setTexture("res/texture/wood.jpg");
 
@@ -77,12 +80,7 @@ void SimpleGame::update()
 
 void SimpleGame::render()
 {
-    glm::mat4 m(1.0f);
-    m = glm::translate(m, glm::vec3(0.0f, -1.75f, 0.0f));
-    m = glm::scale(m, glm::vec3(0.2f, 0.2f, 0.2f));
-
-    shader->setUniformMatrix4fv("model", m);
     shader->setUniformMatrix4fv("view", cam->getView());
     shader->setUniformMatrix4fv("viewProj", cam->getViewProjection());
-    model->render();
+    model->render(*shader);
 }

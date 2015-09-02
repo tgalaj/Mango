@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Texture.h"
+#include "Shader.h"
 
 struct VEBuffers
 {
@@ -22,7 +23,7 @@ public:
 private:
     friend class Model;
 
-    void render();
+    void render(Shader & shader);
     void setBuffers(VEBuffers & buffers);
 
     std::vector<Texture *> textures;
