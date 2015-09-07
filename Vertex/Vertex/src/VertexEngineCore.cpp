@@ -1,15 +1,12 @@
 #include "VertexEngineCore.h"
 
-bool VertexEngineCore::quit = false;
+bool         VertexEngineCore::quit = false;
+unsigned int VertexEngineCore::fps    = 0;
 
 VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsigned int height, Uint32 flags)
-    : TICKS_PER_SECOND(25),
-      SKIP_TICKS      (1000 / TICKS_PER_SECOND),
-      MAX_FRAMESKIP   (5)
 {
     /* Init window and GL context. */
     window = new Window(title, width, height, flags);
-    glClearColor(0.22f, 0.33f, 0.66f, 1.0f);
 
     if (window->m_isGood)
     {
@@ -20,6 +17,13 @@ VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsig
         if (GLEW_OK != glewError)
         {
             fprintf(stderr, "Some serious errors occured. Can't initialize Vertex Engine unless these errors are fixed.\n");
+        }
+        else
+        {
+            glClearColor(0.22f, 0.33f, 0.66f, 1.0f);
+            renderer = new Renderer();
+
+            CoreServices::provide(renderer);
         }
     }
     else
@@ -35,6 +39,9 @@ VertexEngineCore::~VertexEngineCore()
 
     delete game;
     game = nullptr;
+
+    delete renderer;
+    renderer = nullptr;
 }
 
 void VertexEngineCore::setClearColor(float r, float g, float b, float a)
@@ -56,42 +63,51 @@ void VertexEngineCore::quitApp()
     VertexEngineCore::quit = true;
 }
 
+unsigned int VertexEngineCore::getFPS()
+{
+    return fps;
+}
+
 void VertexEngineCore::start(BaseGame * game)
 {
     /* Set game. */
     this->game = game;
 
-    unsigned int next_game_tick = Time::getTimeMs();
-    unsigned int loops          = 0;
-    float        interpolation  = 0.0f;
+    unsigned int last_loop_time = Time::getTimeMs();
+    unsigned int now            = 0;
+    unsigned int elapsed        = 0;
+    unsigned int last_fps_time  = 0;
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_FRAMEBUFFER_SRGB);
+    float delta = 0.0f;
 
-    /* Loop until the user closes the window */
+    /* Loop until the game ends */
     while(!quit)
     {
-        loops = 0;
+        now            = Time::getTimeMs();
+        elapsed        = now - last_loop_time;
+        last_loop_time = now;
+        delta          = elapsed / static_cast<float>(1000);
+
+        /* Update FPS counter */
+        last_fps_time += elapsed;
+        ++fps;
+
+        if (last_fps_time >= 1000)
+        {
+            //SDL_SetWindowTitle(window->m_sdlWindow, (std::to_string(fps) + " FPS").c_str());
+            last_fps_time = 0;
+            fps = 0;
+        }
 
         /* Process input */
         quit = Input::update();
         game->processInput();
 
         /* Game update */
-        while (Time::getTimeMs() > next_game_tick && loops < MAX_FRAMESKIP)
-        {
-            game->update();
-
-            next_game_tick += SKIP_TICKS;
-            ++loops;
-        }
+        game->update(delta);
 
         /* Render */
-        interpolation = float(Time::getTimeMs() + SKIP_TICKS - next_game_tick) / float(SKIP_TICKS);
-
-        /* TODO: renderer part  */
-        //printf("render with interpolation\n");
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        renderer->render();
         game->render();
 
         /* Swap buffers */

@@ -10,7 +10,7 @@ out vec3 o_position;
 out vec3 o_normal;
 out vec2 o_texcoord;
 
-uniform mat4 model;
+uniform mat4 world;
 uniform mat4 view;
 uniform mat4 viewProj;
 
@@ -20,7 +20,7 @@ void main()
 	o_position = vec3(view * vec4(position, 1.0f));
     o_texcoord = texcoord;
 
-    gl_Position = viewProj * model * vec4(position, 1.0f);
+    gl_Position = viewProj * world * vec4(position, 1.0f);
 }
 
 #FS
@@ -34,7 +34,7 @@ out vec4 fragColor;
 uniform sampler2D diffuseSampler;
 
 //Dir light properties
-vec4 lightPos       = vec4(0.0f, -10.0f, -10.0f, 1.0f);
+vec4 lightPos       = vec4(10.0f, 50.0f, -10.0f, 1.0f);
 vec3 lightIntensity = vec3(1.0f);
 vec3 Kd             = vec3(1.0f);
 vec3 Ka             = vec3(1.0f);

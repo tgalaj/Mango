@@ -8,7 +8,7 @@ public:
     Camera();
     virtual ~Camera();
 
-    virtual void update() = 0; //TODO: think about solution that doesn't require calling this method
+    virtual void update() = 0;
 
     /* Setters */
     virtual void lookAt            (glm::vec3 & point);

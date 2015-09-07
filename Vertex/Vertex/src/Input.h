@@ -7,6 +7,8 @@
 
 class Input final
 {
+    friend class VertexEngineCore;
+
 public:
     Input()                        = delete;
     ~Input()                       = delete;
@@ -174,9 +176,7 @@ public:
     static bool getMouseButtonDown(KeyCode key);
     static bool getMouseButtonUp  (KeyCode key);
 
-private:
-    friend class VertexEngineCore;
-    
+private:    
     /**
      * States are as follows:
      * -1: no state defined

@@ -9,8 +9,8 @@ public:
     BaseGame(const BaseGame &)             = delete;
     BaseGame & operator=(const BaseGame &) = delete;
 
-    virtual void processInput() = 0;
-    virtual void update()       = 0;
-    virtual void render()       = 0;
+    virtual void processInput()            = 0;
+    virtual void update(float delta)       = 0;
+    virtual void render()                  = 0;
 };
 

@@ -39,7 +39,7 @@ void Texture::createTexture2D(std::string filename, GLint base_level)
 
     to_type         = GL_TEXTURE_2D;
     format          = GL_BGRA;
-    internal_format = GL_RGBA8;
+    internal_format = GL_SRGB8;
 
     /* Generate GL texture object */
     glGenTextures   (1, &to_id);

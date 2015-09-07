@@ -23,7 +23,7 @@ public:
 private:
     friend class Model;
 
-    void render(Shader & shader);
+    void render(Shader * shader);
     void setBuffers(VEBuffers & buffers);
 
     std::vector<Texture *> textures;

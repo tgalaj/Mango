@@ -26,7 +26,7 @@ Mesh::~Mesh()
     }
 }
 
-void Mesh::render(Shader & shader)
+void Mesh::render(Shader * shader)
 {
     glBindVertexArray(vao_id);
 

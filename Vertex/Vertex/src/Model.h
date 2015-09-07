@@ -6,19 +6,16 @@
 #include <string>
 
 #include "Mesh.h"
+#include "SceneNode.h"
 
-class Model
+class Model : public SceneNode
 {
 public:
     Model();
     virtual ~Model();
 
-    void loadModel(std::string & filename);
-    void render(Shader & shader);
-    
-    void setPosition(glm::vec3 & position);
-    void setRotation(glm::vec3 & axis, float angleDegrees);
-    void setScale   (glm::vec3 & scale);
+    void loadModel(std::string filename);
+    void render(Shader * shader);
 
     /* Primitives */
     void genCone    (float height      = 3.0f, float r             = 1.5f, unsigned int slices = 10, unsigned int stacks = 10);
@@ -35,7 +32,6 @@ private:
     enum ModelType { VE_PRIMITIVE, VE_MODEL };
 
     std::vector<Mesh *> meshes;
-    glm::mat4 modelMatrix;
 
     ModelType model_type;
 

@@ -26,3 +26,13 @@ void PerspectiveCamera::update()
 
     viewProjection = projection * view;
 }
+
+void PerspectiveCamera::setFieldOfView(float fov)
+{
+    fieldOfView = fov;
+}
+
+float PerspectiveCamera::getFieldOfView()
+{
+    return fieldOfView;
+}

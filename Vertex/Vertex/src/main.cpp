@@ -4,7 +4,6 @@
 int main(int argc, char * args[])
 {
     VertexEngineCore vec("Hello Vertex!", 1024, 768);
-    VertexEngineCore::setVSync(true);
     vec.start(new SimpleGame());
     
 	return 0;

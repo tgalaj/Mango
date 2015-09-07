@@ -8,7 +8,10 @@ public:
 
     void update() override;
 
-//todo private:
+    void setFieldOfView(float fov);
+    float getFieldOfView();
+
+private:
     float fieldOfView;
 };
 

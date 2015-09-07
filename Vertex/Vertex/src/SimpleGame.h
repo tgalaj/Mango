@@ -12,12 +12,14 @@ public:
     SimpleGame();
     ~SimpleGame();
 
-    void processInput() override;
-    void update()       override;
-    void render()       override;
+    void processInput()      override;
+    void update(float delta) override;
+    void render()            override;
 
 private:
     Shader * shader;
     Model  * model;
+    Model  * model2;
+    Model  * model3;
     PerspectiveCamera * cam;
 };
