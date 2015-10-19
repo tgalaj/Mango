@@ -5,34 +5,41 @@
 class Camera
 {
 public:
+    friend class Scene;
+
     Camera();
     virtual ~Camera();
 
     virtual void update() = 0;
 
     /* Setters */
-    virtual void lookAt            (glm::vec3 & point);
-    virtual void setPosition       (float x, float y, float z);
-    virtual void setUpVector       (float x, float y, float z);
-    virtual void setNearPlane      (float near);
-    virtual void setFarPlane       (float far);
-    virtual void setNearAndFarPlane(float near, float far);
-    virtual void setViewport       (float width, float height);
+    void lookAt            (glm::vec3 & point);
+    void setPosition       (float x, float y, float z);
+    void setUpVector       (float x, float y, float z);
+    void setNearPlane      (float near);
+    void setFarPlane       (float far);
+    void setNearAndFarPlane(float near, float far);
+    void setViewport       (float width, float height);
+    void setFieldOfView    (float fov);
+    void setZoom           (float zoom);
 
     /* Getters */
-    virtual glm::mat4 getViewProjection();
-    virtual glm::mat4 getView();
-    virtual glm::mat4 getProjection();
-                      
-    virtual glm::vec3 getDirection();
-    virtual glm::vec3 getUpVector();
-    virtual glm::vec3 getPosition();
+    glm::mat4 getViewProjection();
+    glm::mat4 getView();
+    glm::mat4 getProjection();
+              
+    glm::vec3 getDirection();
+    glm::vec3 getUpVector();
+    glm::vec3 getPosition();
 
-    virtual float getNearPlane();
-    virtual float getFarPlane();
+    float getNearPlane();
+    float getFarPlane();
 
-    virtual float geViewportWidth();
-    virtual float geViewportHeight();
+    float geViewportWidth();
+    float geViewportHeight();
+
+    float getFieldOfView();
+    float getZoom();
 
 protected:
     glm::mat4 viewProjection;
@@ -46,5 +53,8 @@ protected:
 
     float nearPlane, farPlane;
     float viewportWidth, viewportHeight;
+    float fieldOfView, zoom;
+
+    bool isDirty;
 };
 

@@ -37,9 +37,12 @@ void Texture::createTexture2D(std::string filename, GLint base_level)
     if (bits == 0 || width == 0 || height == 0)
         return;
 
+    GLboolean isSRGB = false;
+    glGetBooleanv(GL_FRAMEBUFFER_SRGB, &isSRGB);
+
     to_type         = GL_TEXTURE_2D;
     format          = GL_BGRA;
-    internal_format = GL_SRGB8;
+    internal_format = isSRGB ? GL_SRGB8 : GL_RGB8;
 
     /* Generate GL texture object */
     glGenTextures   (1, &to_id);

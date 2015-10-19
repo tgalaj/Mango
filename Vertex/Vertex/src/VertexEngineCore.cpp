@@ -1,9 +1,9 @@
 #include "VertexEngineCore.h"
 
-bool         VertexEngineCore::quit = false;
-unsigned int VertexEngineCore::fps    = 0;
-
 VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsigned int height, Uint32 flags)
+    : quit       (false),
+      fps        (0),
+      fpsToReturn(0)
 {
     /* Init window and GL context. */
     window = new Window(title, width, height, flags);
@@ -30,6 +30,8 @@ VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsig
     {
         fprintf(stderr, "GLEW could not be initialized! GLEW error: %s\n");
     }
+
+    CoreServices::provide(this);
 }
 
 VertexEngineCore::~VertexEngineCore()
@@ -44,11 +46,6 @@ VertexEngineCore::~VertexEngineCore()
     renderer = nullptr;
 }
 
-void VertexEngineCore::setClearColor(float r, float g, float b, float a)
-{
-    glClearColor(r, g, b, a);
-}
-
 void VertexEngineCore::setVSync(bool enabled)
 {
     /* Turn on/off VSYNC */
@@ -58,6 +55,11 @@ void VertexEngineCore::setVSync(bool enabled)
     }
 }
 
+void VertexEngineCore::setScene(Scene * scene)
+{
+    this->scene = scene;
+}
+
 void VertexEngineCore::quitApp()
 {
     VertexEngineCore::quit = true;
@@ -65,7 +67,7 @@ void VertexEngineCore::quitApp()
 
 unsigned int VertexEngineCore::getFPS()
 {
-    return fps;
+    return fpsToReturn;
 }
 
 void VertexEngineCore::start(BaseGame * game)
@@ -95,20 +97,21 @@ void VertexEngineCore::start(BaseGame * game)
         if (last_fps_time >= 1000)
         {
             //SDL_SetWindowTitle(window->m_sdlWindow, (std::to_string(fps) + " FPS").c_str());
+            fpsToReturn   = fps;
             last_fps_time = 0;
-            fps = 0;
+            fps           = 0;
         }
 
         /* Process input */
         quit = Input::update();
         game->processInput();
 
-        /* Game update */
+        /* Game & scene update */
         game->update(delta);
+        scene->update();
 
         /* Render */
         renderer->render();
-        game->render();
 
         /* Swap buffers */
         SDL_GL_SwapWindow(window->m_sdlWindow);

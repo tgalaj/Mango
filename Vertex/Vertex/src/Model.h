@@ -11,11 +11,14 @@
 class Model : public SceneNode
 {
 public:
+    friend class Renderer;
+
     Model();
     virtual ~Model();
 
     void loadModel(std::string filename);
-    void render(Shader * shader);
+    void setMaterial(Shader * _shader);
+    void render();
 
     /* Primitives */
     void genCone    (float height      = 3.0f, float r             = 1.5f, unsigned int slices = 10, unsigned int stacks = 10);
@@ -32,7 +35,7 @@ private:
     enum ModelType { VE_PRIMITIVE, VE_MODEL };
 
     std::vector<Mesh *> meshes;
-
+    Shader * shader;
     ModelType model_type;
 
     void processNode(aiNode * node, const aiScene * scene, aiString & directory);

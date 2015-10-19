@@ -25,14 +25,6 @@ void PerspectiveCamera::update()
     projection = glm::perspective(glm::radians(fieldOfView), viewportWidth/viewportHeight, nearPlane, farPlane);
 
     viewProjection = projection * view;
-}
 
-void PerspectiveCamera::setFieldOfView(float fov)
-{
-    fieldOfView = fov;
-}
-
-float PerspectiveCamera::getFieldOfView()
-{
-    return fieldOfView;
+    isDirty = false;
 }

@@ -12,7 +12,10 @@ Camera::Camera()
       nearPlane     (0.0f),
       farPlane      (10.0f),
       viewportWidth (480.0f),
-      viewportHeight(640.0f)
+      viewportHeight(640.0f),
+      fieldOfView   (0.0f),
+      zoom          (0.0f),
+      isDirty       (true)
 {
 
 }
@@ -25,26 +28,31 @@ Camera::~Camera()
 void Camera::lookAt(glm::vec3 & point)
 {
     lookAtPoint = point;
+    isDirty     = true;
 }
 
 void Camera::setPosition(float x, float y, float z)
 {
     position = glm::vec3(x, y, z);
+    isDirty  = true;
 }
 
 void Camera::setUpVector(float x, float y, float z)
 {
-    up = glm::vec3(x, y, z);
+    up      = glm::vec3(x, y, z);
+    isDirty = true;
 }
 
 void Camera::setNearPlane(float near)
 {
     nearPlane = near;
+    isDirty   = true;
 }
 
 void Camera::setFarPlane(float far)
 {
     farPlane = far;
+    isDirty  = true;
 }
 
 void Camera::setNearAndFarPlane(float near, float far)
@@ -62,12 +70,27 @@ void Camera::setNearAndFarPlane(float near, float far)
         nearPlane = far;
         farPlane  = near;
     }
+
+    isDirty = true;
 }
 
 void Camera::setViewport(float width, float height)
 {
     viewportWidth  = width;
     viewportHeight = height;
+    isDirty        = true;
+}
+
+void Camera::setFieldOfView(float fov)
+{
+    fieldOfView = fov;
+    isDirty     = true;
+}
+
+void Camera::setZoom(float zoom)
+{
+    this->zoom = zoom;
+    isDirty    = true;
 }
 
 glm::mat4 Camera::getViewProjection()
@@ -118,4 +141,14 @@ float Camera::geViewportWidth()
 float Camera::geViewportHeight()
 {
     return viewportHeight;
+}
+
+float Camera::getFieldOfView()
+{
+    return fieldOfView;
+}
+
+float Camera::getZoom()
+{
+    return zoom;
 }

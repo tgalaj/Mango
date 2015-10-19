@@ -39,6 +39,7 @@ void SceneNode::setScale(glm::vec3 & scale)
 
 void SceneNode::addChild(SceneNode * child)
 {
+    //isDirty = true;
     children.push_back(child);
 }
 

@@ -7,11 +7,5 @@ public:
     ~PerspectiveCamera();
 
     void update() override;
-
-    void setFieldOfView(float fov);
-    float getFieldOfView();
-
-private:
-    float fieldOfView;
 };
 

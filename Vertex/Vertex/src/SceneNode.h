@@ -6,6 +6,8 @@
 class SceneNode
 {
 public:
+    friend class Scene;
+
     SceneNode();
     virtual ~SceneNode();
 

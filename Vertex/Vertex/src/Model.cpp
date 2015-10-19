@@ -6,6 +6,7 @@
 Model::Model() 
 {
     meshes.reserve(4);
+    setMaterial(new Shader("res/shaders/AllShaders.glsl"));
 }
 
 Model::~Model()
@@ -15,6 +16,9 @@ Model::~Model()
         delete mesh;
         mesh = nullptr;
     }
+
+    delete shader;
+    shader = nullptr;
 }
 
 void Model::loadModel(std::string filename)
@@ -35,6 +39,19 @@ void Model::loadModel(std::string filename)
     aiString directory = aiString(filename.substr(0, filename.rfind("/")));
 
     processNode(scene->mRootNode, scene, directory);
+}
+
+void Model::setMaterial(Shader * _shader)
+{
+    if (shader)
+    {
+        delete shader;
+        shader = nullptr;
+    }
+
+    shader = _shader;
+
+    shader->link();
 }
 
 void Model::processNode(aiNode * node, const aiScene * scene, aiString & directory)
@@ -137,7 +154,7 @@ std::vector<Texture*> Model::loadMaterialTextures(aiMaterial * mat, aiTextureTyp
     return textures;
 }
 
-void Model::render(Shader * shader)
+void Model::render()
 {
     shader->setUniformMatrix4fv("world", worldTransform);
 

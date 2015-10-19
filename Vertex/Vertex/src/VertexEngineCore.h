@@ -3,9 +3,9 @@
 #include "BaseGame.h"
 #include "CoreServices.h"
 #include "Input.h"
+#include "Scene.h"
 #include "Time.h"
 #include "Window.h"
-//#include "Renderer.h"
 
 #define MIN_GL_VERSION_MAJOR 4
 #define MIN_GL_VERSION_MINOR 4
@@ -19,20 +19,20 @@ public:
     VertexEngineCore(const VertexEngineCore &)             = delete;
     VertexEngineCore & operator=(const VertexEngineCore &) = delete;
 
-    static void         setClearColor(float r, float g, float b, float a);
-    static void         setVSync(bool enabled);
-    static void         quitApp();
-    static unsigned int getFPS();
+    void         setVSync(bool enabled);
+    void         setScene(Scene * scene);
+    void         quitApp();
+    unsigned int getFPS();
 
     void start(BaseGame * game);
 
 private:
-    static bool quit;
-
     BaseGame * game;
-    Window   * window;
     Renderer * renderer;
+    Scene    * scene;
+    Window   * window;
 
-    static unsigned int fps;
+    unsigned int fps, fpsToReturn;
+    bool quit;
 };
 

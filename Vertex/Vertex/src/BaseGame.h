@@ -11,6 +11,5 @@ public:
 
     virtual void processInput()            = 0;
     virtual void update(float delta)       = 0;
-    virtual void render()                  = 0;
 };
 

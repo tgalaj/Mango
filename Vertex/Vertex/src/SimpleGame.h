@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Model.h"
 #include "Texture.h"
+#include "Scene.h"
 
 class SimpleGame : public BaseGame
 {
@@ -14,12 +15,7 @@ public:
 
     void processInput()      override;
     void update(float delta) override;
-    void render()            override;
 
 private:
-    Shader * shader;
-    Model  * model;
-    Model  * model2;
-    Model  * model3;
-    PerspectiveCamera * cam;
+    Scene  * scene;
 };

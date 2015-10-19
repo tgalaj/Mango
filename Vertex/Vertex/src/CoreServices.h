@@ -10,11 +10,14 @@ public:
     CoreServices();
     ~CoreServices();
 
-    static Renderer * getRenderer();
+    static VertexEngineCore * const getCore();
+    static Renderer         * const getRenderer();
 
 private:
-    static void provide(Renderer * _renderer);
+    static void provide(VertexEngineCore * _core);
+    static void provide(Renderer         * _renderer);
     
-    static Renderer * renderer;
+    static VertexEngineCore * core;
+    static Renderer         * renderer;
 };
 
