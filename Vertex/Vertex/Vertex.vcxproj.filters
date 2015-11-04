@@ -199,8 +199,5 @@
     <None Include="res\shaders\Basic.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="res\shaders\AllShaders.glsl">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>

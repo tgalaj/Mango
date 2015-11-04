@@ -4,8 +4,13 @@ CoreAssetManager::~CoreAssetManager()
 {
 }
 
-std::string CoreAssetManager::loadFile(const std::string & filename)
+const std::string CoreAssetManager::loadFile(const std::string & filename)
 {
+    if(filename.empty())
+    {
+        return "";
+    }
+
     std::string filetext;
     std::string line;
 
@@ -16,7 +21,7 @@ std::string CoreAssetManager::loadFile(const std::string & filename)
         fprintf(stderr, "Could not open file %s", filename.c_str());
         inFile.close();
 
-        return nullptr;
+        return "";
     }
     else
     {

@@ -68,7 +68,6 @@
     <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\AllShaders.glsl" />
     <None Include="res\shaders\Basic.frag" />
     <None Include="res\shaders\Basic.vert" />
   </ItemGroup>

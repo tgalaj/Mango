@@ -9,20 +9,25 @@ SimpleGame::SimpleGame()
     scene = new Scene(new PerspectiveCamera(60.0f, 1024, 768, 0.01f, 50.0f));
     CoreServices::getCore()->setScene(scene);
 
+    mat = new Shader("res/shaders/Basic.vert", "res/shaders/Basic.frag");
+
     Model * model = new Model();
     model->loadModel("res/models/nanosuit/nanosuit.obj");
     model->setPosition(glm::vec3(0.0f, -1.75f, 0.0f));
     model->setScale(glm::vec3(0.2f));
+    model->setMaterial(mat);
 
     Model * model2 = new Model();
     model2->genPlane(5, 5, 15, 15);
     model2->setTexture("res/texture/rooftiles.jpg");
     model2->setScale(glm::vec3(5.0f));
+    model2->setMaterial(mat);
 
     Model * model3 = new Model();
     model3->genCone(1.0, 0.5, 12, 12);
     model3->setTexture("res/texture/aztec.jpg");
     model3->setPosition(glm::vec3(-1.0f, 0.51f, 1.0f));
+    model3->setMaterial(mat);
 
     //model->genTorus();
     //model->setTexture("res/texture/wood.jpg");
@@ -37,6 +42,9 @@ SimpleGame::~SimpleGame()
 {
     delete scene;
     scene = nullptr;
+
+    delete mat;
+    mat = nullptr;
 }
 
 void SimpleGame::processInput()

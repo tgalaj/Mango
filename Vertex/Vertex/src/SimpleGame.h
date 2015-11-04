@@ -18,4 +18,5 @@ public:
 
 private:
     Scene  * scene;
+    Shader * mat;
 };

@@ -21,7 +21,7 @@ public:
      *                      needs to be loaded.
      * @returns Full file's source as a std::string.
      */
-    static std::string loadFile (const std::string & filename);
+    static const std::string loadFile (const std::string & filename);
 
     /**
      * @brief   Loads a file that contains multiple shaders 

@@ -6,7 +6,7 @@
 Model::Model() 
 {
     meshes.reserve(4);
-    setMaterial(new Shader("res/shaders/AllShaders.glsl"));
+    //setMaterial(new Shader("res/shaders/Basic.vert", "res/shaders/Basic.frag"));
 }
 
 Model::~Model()
@@ -16,9 +16,6 @@ Model::~Model()
         delete mesh;
         mesh = nullptr;
     }
-
-    delete shader;
-    shader = nullptr;
 }
 
 void Model::loadModel(std::string filename)
@@ -43,12 +40,6 @@ void Model::loadModel(std::string filename)
 
 void Model::setMaterial(Shader * _shader)
 {
-    if (shader)
-    {
-        delete shader;
-        shader = nullptr;
-    }
-
     shader = _shader;
 
     shader->link();
