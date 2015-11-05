@@ -15,6 +15,7 @@ public:
 
     void processInput()      override;
     void update(float delta) override;
+    void onGUI()             override;
 
 private:
     Scene  * scene;

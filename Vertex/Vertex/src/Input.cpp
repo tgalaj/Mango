@@ -1,4 +1,5 @@
 #include "Input.h"
+#include <imgui\imgui_impl_sdl.h>
 
 bool Input::getKeyDown(KeyCode key)
 {
@@ -92,7 +93,8 @@ bool Input::update()
 
     while (SDL_PollEvent(&e) != 0)
     {
-        
+        ImGui_ImplSdl_ProcessEvent(&e);
+
         if (e.type == SDL_QUIT)
         {
             return true;

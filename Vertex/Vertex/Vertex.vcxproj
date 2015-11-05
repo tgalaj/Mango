@@ -11,6 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\imgui\imgui.cpp" />
+    <ClCompile Include="include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="include\imgui\imgui_impl_sdl.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CoreAssetManager.cpp" />
     <ClCompile Include="src\CoreServices.cpp" />
@@ -30,7 +34,6 @@
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\SimpleGame.cpp" />
     <ClCompile Include="src\SpotLight.cpp" />
-    <ClCompile Include="src\BaseGame.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
@@ -40,6 +43,13 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\imgui\imconfig.h" />
+    <ClInclude Include="include\imgui\imgui.h" />
+    <ClInclude Include="include\imgui\imgui_impl_sdl.h" />
+    <ClInclude Include="include\imgui\imgui_internal.h" />
+    <ClInclude Include="include\imgui\stb_rect_pack.h" />
+    <ClInclude Include="include\imgui\stb_textedit.h" />
+    <ClInclude Include="include\imgui\stb_truetype.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CoreAssetManager.h" />
     <ClInclude Include="src\CoreServices.h" />

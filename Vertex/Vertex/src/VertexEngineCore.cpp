@@ -1,4 +1,5 @@
 #include "VertexEngineCore.h"
+#include <imgui\imgui_impl_sdl.h>
 
 VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsigned int height, Uint32 flags)
     : quit       (false),
@@ -25,6 +26,9 @@ VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsig
 
             CoreServices::provide(renderer);
         }
+
+        /* Init ImGUI */
+        ImGui_ImplSdl_Init(window->m_sdlWindow);
     }
     else
     {
@@ -106,12 +110,19 @@ void VertexEngineCore::start(BaseGame * game)
         quit = Input::update();
         game->processInput();
 
-        /* Game & scene update */
+        /* Game & scene update & ImGUI */
         game->update(delta);
         scene->update();
 
+        ImGui_ImplSdl_NewFrame(window->m_sdlWindow);
+        game->onGUI();
+
         /* Render */
         renderer->render();
+
+        /* Render UI */
+        glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
+        ImGui::Render();
 
         /* Swap buffers */
         SDL_GL_SwapWindow(window->m_sdlWindow);

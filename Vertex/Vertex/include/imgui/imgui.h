@@ -1,4 +1,4 @@
-// ImGui library v1.46 WIP
+// ImGui library v1.47 WIP
 // Headers
 
 // See imgui.cpp file for documentation.
@@ -17,7 +17,7 @@
 #include <stdlib.h>         // NULL, malloc, free, qsort, atoi
 #include <string.h>         // memset, memmove, memcpy, strlen, strchr, strcpy, strcmp
 
-#define IMGUI_VERSION       "1.46 WIP"
+#define IMGUI_VERSION       "1.47 WIP"
 
 // Define assertion handler.
 #ifndef IM_ASSERT
@@ -386,7 +386,7 @@ namespace ImGui
     IMGUI_API ImVec2        CalcTextSize(const char* text, const char* text_end = NULL, bool hide_text_after_double_hash = false, float wrap_width = -1.0f);
     IMGUI_API void          CalcListClipping(int items_count, float items_height, int* out_items_display_start, int* out_items_display_end);    // calculate coarse clipping for large list of evenly sized items. Prefer using the ImGuiListClipper higher-level helper if you can.
 
-    IMGUI_API bool          BeginChildFrame(ImGuiID id, const ImVec2& size);                    // helper to create a child window / scrolling region that looks like a normal widget frame
+    IMGUI_API bool          BeginChildFrame(ImGuiID id, const ImVec2& size, ImGuiWindowFlags extra_flags = 0);	// helper to create a child window / scrolling region that looks like a normal widget frame
     IMGUI_API void          EndChildFrame();
 
     IMGUI_API ImVec4        ColorConvertU32ToFloat4(ImU32 in);
@@ -416,9 +416,11 @@ namespace ImGui
     IMGUI_API void          CaptureKeyboardFromApp();                                           // manually enforce imgui setting the io.WantCaptureKeyboard flag next frame (your application needs to handle it). e.g. capture keyboard when your widget is being hovered.
     IMGUI_API void          CaptureMouseFromApp();                                              // manually enforce imgui setting the io.WantCaptureMouse flag next frame (your application needs to handle it).
 
-    // Helpers functions to access the MemAllocFn/MemFreeFn pointers in ImGui::GetIO()
+    // Helpers functions to access functions pointers in ImGui::GetIO()
     IMGUI_API void*         MemAlloc(size_t sz);
     IMGUI_API void          MemFree(void* ptr);
+    IMGUI_API const char*   GetClipboardText();
+    IMGUI_API void          SetClipboardText(const char* text);
 
     // Internal state/context access - if you want to use multiple ImGui context, or share context between modules (e.g. DLL), or allocate the memory yourself
     IMGUI_API const char*   GetVersion();
@@ -887,6 +889,7 @@ struct ImGuiTextBuffer
     int                 size() const { return Buf.Size - 1; }
     bool                empty() { return Buf.Size >= 2; }
     void                clear() { Buf.clear(); Buf.push_back(0); }
+    const char*         c_str() const { return Buf.Data; }
     IMGUI_API void      append(const char* fmt, ...) IM_PRINTFARGS(2);
     IMGUI_API void      appendv(const char* fmt, va_list args);
 };
@@ -950,7 +953,7 @@ struct ImGuiTextEditCallbackData
     ImGuiKey            EventKey;       // Key pressed (Up/Down/TAB)            // Read-only
     char*               Buf;            // Current text                         // Read-write (pointed data only)
     int                 BufSize;        //                                      // Read-only
-    bool                BufDirty;       // Set if you modify Buf directly       // Write
+    bool                BufDirty;       // Must set if you modify Buf directly  // Write
     int                 CursorPos;      //                                      // Read-write
     int                 SelectionStart; //                                      // Read-write (== to SelectionEnd when no selection)
     int                 SelectionEnd;   //                                      // Read-write
@@ -1112,7 +1115,7 @@ struct ImDrawList
     IMGUI_API void  AddCircleFilled(const ImVec2& centre, float radius, ImU32 col, int num_segments = 12);
     IMGUI_API void  AddText(const ImVec2& pos, ImU32 col, const char* text_begin, const char* text_end = NULL);
     IMGUI_API void  AddText(const ImFont* font, float font_size, const ImVec2& pos, ImU32 col, const char* text_begin, const char* text_end = NULL, float wrap_width = 0.0f, const ImVec4* cpu_fine_clip_rect = NULL);
-    IMGUI_API void  AddImage(ImTextureID user_texture_id, const ImVec2& a, const ImVec2& b, const ImVec2& uv0, const ImVec2& uv1, ImU32 col = 0xFFFFFFFF);
+    IMGUI_API void  AddImage(ImTextureID user_texture_id, const ImVec2& a, const ImVec2& b, const ImVec2& uv0 = ImVec2(0,0), const ImVec2& uv1 = ImVec2(1,1), ImU32 col = 0xFFFFFFFF);
     IMGUI_API void  AddPolyline(const ImVec2* points, const int num_points, ImU32 col, bool closed, float thickness, bool anti_aliased);
     IMGUI_API void  AddConvexPolyFilled(const ImVec2* points, const int num_points, ImU32 col, bool anti_aliased);
     IMGUI_API void  AddBezierCurve(const ImVec2& pos0, const ImVec2& cp0, const ImVec2& cp1, const ImVec2& pos1, ImU32 col, float thickness, int num_segments = 0);

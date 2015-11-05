@@ -28,6 +28,9 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{39b4f142-5384-4fd7-8d20-6044468ae240}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\imgui">
+      <UniqueIdentifier>{89a3d258-a339-4045-b933-e4cb75abb7de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -37,9 +40,6 @@
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexEngineCore.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BaseGame.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer.cpp">
@@ -110,6 +110,18 @@
     </ClCompile>
     <ClCompile Include="src\CoreServices.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui.cpp">
+      <Filter>Resource Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_demo.cpp">
+      <Filter>Resource Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_draw.cpp">
+      <Filter>Resource Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_impl_sdl.cpp">
+      <Filter>Resource Files\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +202,27 @@
     </ClInclude>
     <ClInclude Include="src\CoreServices.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imconfig.h">
+      <Filter>Resource Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui.h">
+      <Filter>Resource Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui_impl_sdl.h">
+      <Filter>Resource Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui_internal.h">
+      <Filter>Resource Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\stb_rect_pack.h">
+      <Filter>Resource Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\stb_textedit.h">
+      <Filter>Resource Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\stb_truetype.h">
+      <Filter>Resource Files\imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
