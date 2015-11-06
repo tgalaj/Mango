@@ -23,7 +23,7 @@ Window::Window     (const char * title, int width, int height, Uint32 flags)
 
     /* Create a windowed mode window and its OpenGL context */
     m_sdlWindow = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | flags);
-
+    
     if (!m_sdlWindow)
     {
         fprintf(stderr, "Window could not be created! SDL error : %s\n", SDL_GetError());

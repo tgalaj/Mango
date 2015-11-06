@@ -19,8 +19,6 @@ PerspectiveCamera::~PerspectiveCamera()
 
 void PerspectiveCamera::update()
 {
-    direction  = lookAtPoint - position;
-
     view       = glm::lookAt(position, lookAtPoint, up);
     projection = glm::perspective(glm::radians(fieldOfView), viewportWidth/viewportHeight, nearPlane, farPlane);
 

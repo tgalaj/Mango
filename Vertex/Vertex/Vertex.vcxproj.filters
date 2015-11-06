@@ -123,6 +123,9 @@
     <ClCompile Include="include\imgui\imgui_impl_sdl.cpp">
       <Filter>Resource Files\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="src\FreeCamera.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseGame.h">
@@ -223,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="include\imgui\stb_truetype.h">
       <Filter>Resource Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FreeCamera.h">
+      <Filter>Header Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

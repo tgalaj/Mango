@@ -11,6 +11,7 @@ public:
     virtual ~Camera();
 
     virtual void update() = 0;
+    virtual void processInput(float deltaTime) {};
 
     /* Setters */
     void lookAt            (glm::vec3 & point);

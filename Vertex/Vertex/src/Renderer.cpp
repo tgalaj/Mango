@@ -1,8 +1,8 @@
 #include "Renderer.h"
 
 Renderer::Renderer()
-    : currentShader        (nullptr),
-    shouldUpdateCamUniforms(true)
+    : currentShader          (nullptr),
+      shouldUpdateCamUniforms(true)
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_FRAMEBUFFER_SRGB);

@@ -1,6 +1,16 @@
 #include "Input.h"
 #include <imgui\imgui_impl_sdl.h>
 
+Input::KeyCode Input::getKeyDown()
+{
+    return keyDown;
+}
+
+Input::KeyCode Input::getKeyUp()
+{
+    return keyUp;
+}
+
 bool Input::getKeyDown(KeyCode key)
 {
     return keyStates[key] == 0;
@@ -9,6 +19,16 @@ bool Input::getKeyDown(KeyCode key)
 bool Input::getKeyUp(KeyCode key)
 {
     return keyStates[key] == 1;
+}
+
+int Input::getMouseX()
+{
+    return mouseX;
+}
+
+int Input::getMouseY()
+{
+    return mouseY;
 }
      
 bool Input::getMouseButtonDown(int button)
@@ -86,9 +106,13 @@ bool Input::update()
     static SDL_Event e;
 
     /* Reset key states */
+    keyDown = None;
+    keyUp = None;
+
     for (auto it = std::begin(keyStates); it != std::end(keyStates); ++it)
     {
-        it->second = -1;
+        if(it->second != 0)
+            it->second = -1;
     }
 
     while (SDL_PollEvent(&e) != 0)
@@ -102,16 +126,20 @@ bool Input::update()
         else
         if (e.type == SDL_KEYDOWN)
         {
+            keyDown = (KeyCode)e.key.keysym.sym;
             setKeyDown(e.key.keysym.sym);
         }
         else
         if (e.type == SDL_KEYUP)
         {
+            keyUp = (KeyCode)e.key.keysym.sym;
             setKeyUp(e.key.keysym.sym);
         }
         else
         if (e.type == SDL_MOUSEBUTTONDOWN)
         {
+            mouseX = e.button.x;
+            mouseY = e.button.y;
             setMouseDown(e.button.button);
         }
         else
@@ -119,10 +147,22 @@ bool Input::update()
         {
             setMouseUp(e.button.button);
         }
+        else
+        if (e.type == SDL_MOUSEMOTION)
+        {
+            mouseX = e.button.x;
+            mouseY = e.button.y;
+        }
     }
 
     return false;
 }
+
+Input::KeyCode Input::keyDown = Input::None;
+Input::KeyCode Input::keyUp   = Input::None;
+
+int Input::mouseX = 0;
+int Input::mouseY = 0;
 
 std::unordered_map<Input::KeyCode, char> Input::keyStates
 {

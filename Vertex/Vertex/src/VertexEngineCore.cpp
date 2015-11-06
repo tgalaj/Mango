@@ -108,6 +108,7 @@ void VertexEngineCore::start(BaseGame * game)
 
         /* Process input */
         quit = Input::update();
+        renderer->cam->processInput(delta);
         game->processInput();
 
         /* Game & scene update & ImGUI */

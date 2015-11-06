@@ -10,9 +10,9 @@ class Input final
     friend class VertexEngineCore;
 
 public:
-    Input()                        = delete;
-    ~Input()                       = delete;
-    Input(const Input &)            = delete;
+    Input()                          = delete;
+    ~Input()                         = delete;
+    Input(const Input &)             = delete;
     Input & operator=(const Input &) = delete;
 
     static enum KeyCode
@@ -154,8 +154,14 @@ public:
         MouseRight     = SDL_BUTTON_RIGHT
     };
 
+    static KeyCode getKeyDown();
+    static KeyCode getKeyUp();
+
     static bool getKeyDown(KeyCode key);
     static bool getKeyUp  (KeyCode key);
+
+    static int getMouseX();
+    static int getMouseY();
 
     /**
      * @brief Check if mouse button is pressed
@@ -184,6 +190,10 @@ private:
      *  1: key up
      */
     static std::unordered_map<KeyCode, char> keyStates;
+    static KeyCode keyDown;
+    static KeyCode keyUp;
+    static int mouseX;
+    static int mouseY;
 
     static bool update();
 

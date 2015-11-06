@@ -1,13 +1,14 @@
 #include "SimpleGame.h"
 #include "VertexEngineCore.h"
 #include "CoreAssetManager.h"
+#include "FreeCamera.h"
 
 #include <glm\gtc\matrix_transform.hpp>
 #include <imgui\imgui_impl_sdl.h>
 
 SimpleGame::SimpleGame()
 {
-    scene = new Scene(new PerspectiveCamera(60.0f, 1024, 768, 0.01f, 50.0f));
+    scene = new Scene(new FreeCamera(60.0f, 1024, 768, 0.01f, 50.0f));
     CoreServices::getCore()->setScene(scene);
 
     mat = new Shader("res/shaders/Basic.vert", "res/shaders/Basic.frag");
@@ -52,12 +53,6 @@ void SimpleGame::processInput()
 {
     static bool vsync = true;
 
-    if (Input::getKeyDown(Input::A))
-        CoreServices::getRenderer()->setClearColor(0.0, 1.0, 0.0, 1.0);
-
-    if (Input::getKeyDown(Input::W))
-        CoreServices::getRenderer()->setClearColor(1.0, 0.0, 0.0, 1.0);
-
     if (Input::getKeyDown(Input::V))
         CoreServices::getCore()->setVSync(vsync = !vsync);
 
@@ -79,12 +74,6 @@ void SimpleGame::processInput()
 
 void SimpleGame::update(float delta)
 {
-    float r = 4.0f;
-    static float t = 0;
-    t += delta;
-
-    CoreServices::getRenderer()->getCamera()->setPosition(r*cos(t), sin(t)*0, r*sin(t));
-
     printf("FPS = %d      \r", CoreServices::getCore()->getFPS());
 }
 
