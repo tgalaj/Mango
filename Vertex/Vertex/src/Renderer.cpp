@@ -6,6 +6,8 @@ Renderer::Renderer()
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_FRAMEBUFFER_SRGB);
+
+    glClearColor(0.22f, 0.33f, 0.66f, 1.0f);
 }
 
 Renderer::~Renderer()

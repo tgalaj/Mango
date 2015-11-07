@@ -34,7 +34,7 @@ VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsig
             }
             #endif
 
-            glClearColor(0.22f, 0.33f, 0.66f, 1.0f);
+            /* Set up Core Services */
             renderer = new Renderer();
 
             CoreServices::provide(renderer);
