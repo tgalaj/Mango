@@ -54,6 +54,7 @@
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CoreAssetManager.h" />
     <ClInclude Include="src\CoreServices.h" />
+    <ClInclude Include="src\DebugOutputGL.h" />
     <ClInclude Include="src\FreeCamera.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\SimpleGame.h" />

@@ -74,7 +74,7 @@ void SimpleGame::processInput()
 
 void SimpleGame::update(float delta)
 {
-    printf("FPS = %d      \r", CoreServices::getCore()->getFPS());
+    
 }
 
 bool show_test_window = true;

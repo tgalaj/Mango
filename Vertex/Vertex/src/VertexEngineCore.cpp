@@ -1,3 +1,4 @@
+#include "DebugOutputGL.h"
 #include "VertexEngineCore.h"
 #include <imgui\imgui_impl_sdl.h>
 
@@ -21,6 +22,18 @@ VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsig
         }
         else
         {
+            #ifdef _DEBUG
+            if (GLEW_ARB_debug_output)
+            {
+                /* Create OpenGL debug context */
+                glEnable(GL_DEBUG_OUTPUT);
+
+                /* Register callback */
+                glDebugMessageCallback(DebugOutputGL::GLerrorCallback, NULL /*userParam*/);
+                glDebugMessageControl(GL_DONT_CARE /*source*/, GL_DONT_CARE /*type*/, GL_DONT_CARE /*severity*/, 0 /*count*/, nullptr /*ids*/, GL_TRUE /*enabled*/);
+            }
+            #endif
+
             glClearColor(0.22f, 0.33f, 0.66f, 1.0f);
             renderer = new Renderer();
 
