@@ -21,7 +21,7 @@ void ShaderManager::createShader(const std::string & shaderName,
                                  const std::string & tessellationEvaluationShaderFilename, 
                                  const std::string & computeShaderFilename)
 {
-    if(shaders.find(shaderName) == shaders.end())
+    if(!shaders.count(shaderName))
     {
         shaders[shaderName] = new Shader(vertexShaderFilename,
                                          fragmentShaderFilename,
@@ -34,7 +34,7 @@ void ShaderManager::createShader(const std::string & shaderName,
 
 Shader * const ShaderManager::getShader(const std::string & shaderName)
 {
-    if(shaders.at(shaderName) != nullptr)
+    if(shaders.count(shaderName))
     {
         return shaders.at(shaderName);
     }

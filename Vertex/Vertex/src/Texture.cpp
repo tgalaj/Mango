@@ -1,4 +1,5 @@
 #include "Texture.h"
+#include "CoreAssetManager.h"
 
 Texture::Texture() 
     :  type_name      ("texture_diffuse"),
@@ -9,7 +10,6 @@ Texture::Texture()
        base_level     (0)
 {
 }
-
 
 Texture::~Texture()
 {

@@ -18,26 +18,19 @@ Mesh::~Mesh()
     {
         glDeleteBuffers(sizeof(vbo_ids) / sizeof(GLuint), vbo_ids);
     }
-
-    for (auto & texture : textures)
-    {
-        delete texture;
-        texture = nullptr;
-    }
 }
 
 void Mesh::render(Shader * shader)
 {
-    glBindVertexArray(vao_id);
-
     for (GLuint i = 0; i < textures.size(); ++i)
     {
+        shader->setUniform1i("material." + textures[i]->getTypeName(), i);
         textures[i]->bind(GL_TEXTURE0 + i);
     }
 
-    glDrawElements(draw_mode, indices_count, GL_UNSIGNED_SHORT, nullptr);
+    glBindVertexArray(vao_id);
 
-    glBindVertexArray(0);
+    glDrawElements(draw_mode, indices_count, GL_UNSIGNED_SHORT, nullptr);
 }
 
 void Mesh::setBuffers(VEBuffers & buffers)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseGame.h"
+#include "CoreAssetManager.h"
 #include "CoreServices.h"
 #include "Input.h"
 #include "Scene.h"
@@ -28,11 +29,12 @@ public:
     void start(BaseGame * game);
 
 private:
-    BaseGame      * game;
-    Renderer      * renderer;
-    Scene         * scene;
-    ShaderManager * shaderManager;
-    Window        * window;
+    BaseGame         * game;
+    CoreAssetManager * assetManager;
+    Renderer         * renderer;
+    Scene            * scene;
+    ShaderManager    * shaderManager;
+    Window           * window;
 
     unsigned int fps, fpsToReturn;
     bool quit;

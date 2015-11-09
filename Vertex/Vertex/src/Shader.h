@@ -14,7 +14,10 @@ public:
 
     virtual ~Shader();
 
-    void setUniformMatrix4fv(std::string uniformName, glm::mat4 & matrix);
+    void setUniform1f(const std::string & uniformName, float value);
+    void setUniform1i(const std::string & uniformName, int value);
+    void setUniform1i(const std::string & uniformName, unsigned int value);
+    void setUniformMatrix4fv(const std::string & uniformName, glm::mat4 & matrix);
 
 protected:
     Shader(const std::string & vertexShaderFilename,
@@ -32,6 +35,6 @@ private:
 
     bool link();
     void apply();
-    void setupUniforms(const std::string * shadersSourceCodes, unsigned int count);
+    bool getUniformLocation(const std::string & uniform_name);
 };
 

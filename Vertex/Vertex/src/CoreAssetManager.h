@@ -8,11 +8,14 @@
 #include <regex>
 #include <string>
 
+#include "Model.h"
+
 class CoreAssetManager final
 {
 public:
-    CoreAssetManager() = delete;
-    virtual ~CoreAssetManager();
+    friend class Shader;
+    friend class Texture;
+    friend class VertexEngineCore;
 
     /**
      * @brief   Loads a file in a text mode.
@@ -22,6 +25,16 @@ public:
      * @returns Full file's source as a std::string.
      */
     static const std::string loadFile (const std::string & filename);
+
+    static Texture * const createTexture2D(const std::string & filename, GLint base_level = 0);
+    static Model   * const createModel(const std::string & filename);
+
+private:
+    CoreAssetManager() {};
+    ~CoreAssetManager();
+
+    static std::map<std::string, Texture *> loadedTextures;
+    static std::map<std::string, std::vector<Mesh *>> loadedMeshes;
 
     /**
      * @brief   Loads a file that contains multiple shaders 

@@ -42,9 +42,9 @@ VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsig
             /* Set up Core Services */
             renderer      = new Renderer();
             shaderManager = new ShaderManager();
+            assetManager  = new CoreAssetManager();
 
             CoreServices::provide(renderer);
-            CoreServices::provide(shaderManager);
         }
 
         /* Init ImGUI */
@@ -70,6 +70,12 @@ VertexEngineCore::~VertexEngineCore()
 
     delete renderer;
     renderer = nullptr;
+
+    delete shaderManager;
+    shaderManager = nullptr;
+
+    delete assetManager;
+    assetManager = nullptr;
 }
 
 void VertexEngineCore::setVSync(bool enabled)

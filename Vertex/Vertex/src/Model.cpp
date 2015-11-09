@@ -1,6 +1,7 @@
 #include "Model.h"
 #include "GeomPrimitive.h"
-#include "CoreServices.h"
+#include "ShaderManager.h"
+#include "CoreAssetManager.h"
 
 #include <glm\gtc\matrix_transform.hpp>
 
@@ -12,11 +13,6 @@ Model::Model()
 
 Model::~Model()
 {
-    for (auto & mesh : meshes)
-    {
-        delete mesh;
-        mesh = nullptr;
-    }
 }
 
 void Model::loadModel(std::string filename)
@@ -37,11 +33,6 @@ void Model::loadModel(std::string filename)
     aiString directory = aiString(filename.substr(0, filename.rfind("/")));
 
     processNode(scene->mRootNode, scene, directory);
-}
-
-void Model::setMaterial(const std::string & shaderName)
-{
-    shader = CoreServices::getShaderManager()->getShader(shaderName);
 }
 
 void Model::processNode(aiNode * node, const aiScene * scene, aiString & directory)
@@ -128,17 +119,33 @@ std::vector<Texture*> Model::loadMaterialTextures(aiMaterial * mat, aiTextureTyp
             fullPath.Append("/");
             fullPath.Append(str.C_Str());
 
-            Texture * texture = new Texture();
+            Texture * texture = CoreAssetManager::createTexture2D(fullPath.C_Str());//new Texture();
             texture->setTypeName(type_name);
-            texture->createTexture2D(fullPath.C_Str());
+            //texture->createTexture2D(fullPath.C_Str());
             textures.push_back(texture);
         }
     }
     else
     {
-        Texture * t = new Texture();
-        t->createTexture2D("res/texture/default.jpg");
-        textures.push_back(t);
+        Texture * texture = nullptr;;
+        
+        if (type_name == "texture_diffuse")
+        {
+            texture = CoreAssetManager::createTexture2D("res/texture/diff_default.jpg");
+        }
+        else 
+        if (type_name == "texture_specular")
+        {
+            texture = CoreAssetManager::createTexture2D("res/texture/spec_default.jpg");
+        }
+        else
+        if (type_name == "texture_normal")
+        {
+            texture = CoreAssetManager::createTexture2D("res/texture/normal_default.jpg");
+        }
+
+        texture->setTypeName(type_name);
+        textures.push_back(texture);
     }
 
     return textures;
@@ -167,7 +174,9 @@ void Model::genCone(float height, float radius, unsigned int slices, unsigned in
 
     meshes.clear();
     meshes.push_back(mesh);
-    setTexture("res/texture/default.jpg");
+    setTexture("res/texture/diff_default.jpg");
+    setTexture("res/texture/spec_default.jpg", SPECULAR);
+    //setTexture("res/texture/normal_default.jpg", NORMAL);
 }
 
 void Model::genCube(float radius)
@@ -183,7 +192,9 @@ void Model::genCube(float radius)
 
     meshes.clear();
     meshes.push_back(mesh);
-    setTexture("res/texture/default.jpg");
+    setTexture("res/texture/diff_default.jpg");
+    setTexture("res/texture/spec_default.jpg", SPECULAR);
+    //setTexture("res/texture/normal_default.jpg", NORMAL);
 }
 
 void Model::genCylinder(float height, float r, unsigned int slices)
@@ -199,7 +210,9 @@ void Model::genCylinder(float height, float r, unsigned int slices)
 
     meshes.clear();
     meshes.push_back(mesh);
-    setTexture("res/texture/default.jpg");
+    setTexture("res/texture/diff_default.jpg");
+    setTexture("res/texture/spec_default.jpg", SPECULAR);
+    //setTexture("res/texture/normal_default.jpg", NORMAL);
 }
 
 void Model::genPlane(float width, float height, unsigned int slices, unsigned int stacks)
@@ -215,7 +228,9 @@ void Model::genPlane(float width, float height, unsigned int slices, unsigned in
 
     meshes.clear();
     meshes.push_back(mesh);
-    setTexture("res/texture/default.jpg");
+    setTexture("res/texture/diff_default.jpg");
+    setTexture("res/texture/spec_default.jpg", SPECULAR);
+    //setTexture("res/texture/normal_default.jpg", NORMAL);
 }
 
 void Model::genSphere(float radius, unsigned int slices)
@@ -231,7 +246,9 @@ void Model::genSphere(float radius, unsigned int slices)
 
     meshes.clear();
     meshes.push_back(mesh);
-    setTexture("res/texture/default.jpg");
+    setTexture("res/texture/diff_default.jpg");
+    setTexture("res/texture/spec_default.jpg", SPECULAR);
+    //setTexture("res/texture/normal_default.jpg", NORMAL);
 }
 
 void Model::genTorus(float innerRadius, float outerRadius, unsigned int slices, unsigned int stacks)
@@ -248,7 +265,9 @@ void Model::genTorus(float innerRadius, float outerRadius, unsigned int slices, 
 
     meshes.clear();
     meshes.push_back(mesh);
-    setTexture("res/texture/default.jpg");
+    setTexture("res/texture/diff_default.jpg");
+    setTexture("res/texture/spec_default.jpg", SPECULAR);
+    //setTexture("res/texture/normal_default.jpg", NORMAL);
 }
 
 void Model::genQuad(float width, float height)
@@ -265,24 +284,52 @@ void Model::genQuad(float width, float height)
 
     meshes.clear();
     meshes.push_back(mesh);
-    setTexture("res/texture/default.jpg");
+    setTexture("res/texture/diff_default.jpg");
+    setTexture("res/texture/spec_default.jpg", SPECULAR);
+    //setTexture("res/texture/normal_default.jpg", NORMAL);
 }
 
-void Model::setTexture(std::string filename)
+void Model::setMaterial(const std::string & shaderName)
+{
+    shader = ShaderManager::getShader(shaderName);
+}
+
+void Model::setTexture(const std::string & filename, TextureType texType)
 {
     if (meshes.size() > 0 && model_type == VE_PRIMITIVE)
     {
-        Texture * t = new Texture();
-        t->createTexture2D(filename);
+        Texture * t = CoreAssetManager::createTexture2D(filename);//new Texture();
+        //t->createTexture2D(filename);
+        
+        int idx = 0;
 
-        if (meshes[0]->textures.size() > 0)
+        switch (texType)
         {
-            meshes[0]->textures[0] = t;
+            case DIFFUSE:
+                t->setTypeName(std::string("texture_diffuse"));
+                idx = 0;
+                break;
+            case SPECULAR:
+                t->setTypeName(std::string("texture_specular"));
+                idx = 1;
+                break;
+            case NORMAL:
+                t->setTypeName(std::string("texture_normal"));
+                idx = 2;
+                break;
+            case EMISSION:
+                t->setTypeName(std::string("texture_emission"));
+                idx = 3;
+                break;
+        }
+
+        if (meshes[0]->textures.size() > idx)
+        {
+            meshes[0]->textures[idx] = t;
         }
         else
         {
             meshes[0]->textures.push_back(t);
         }
-
     }
 }

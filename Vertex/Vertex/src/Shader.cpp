@@ -124,9 +124,6 @@ Shader::Shader(const std::string & vertexShaderFilename,
     }
 
     link();
-
-    /* Automatically get uniforms used in shaders. */
-    setupUniforms(shaderCodes, sizeof(shaderCodes) / sizeof(std::string));
 }
 
 Shader::~Shader()
@@ -178,52 +175,78 @@ void Shader::apply()
     }
 }
 
-void Shader::setupUniforms(const std::string * shadersSourceCodes, unsigned int count)
+bool Shader::getUniformLocation(const std::string & uniform_name)
 {
-    size_t found_pos = 0;
-    size_t offset    = 0;
-
-    for (unsigned int i = 0; i < count; ++i)
+    GLint uniform_location = glGetUniformLocation(program_id, uniform_name.c_str());
+    
+    if (uniform_location != -1)
     {
-        found_pos = 0;
-        offset    = 0;
+        uniformsLocations[uniform_name] = uniform_location;
+        return true;
+    }
+    else
+    {
+        fprintf(stderr, "Error! Can't find uniform %s\n", uniform_name.c_str());
+        return false;
+    }
+}
 
-        while (found_pos != std::string::npos)
+void Shader::setUniform1f(const std::string & uniformName, float value)
+{
+    if (uniformsLocations.count(uniformName))
+    {
+        glUniform1f(uniformsLocations[uniformName], value);
+    }
+    else
+    {
+        if (getUniformLocation(uniformName))
         {
-            /* Find <uniform> keyword. */
-            found_pos = (shadersSourceCodes + i)->find("uniform", offset);
-            offset    = found_pos + 8;
-
-            if (found_pos != std::string::npos)
-            {
-                /* Find space between uniform name and it's type. */
-                found_pos = (shadersSourceCodes + i)->find(" ", offset);
-                offset = found_pos + 1;
-
-                /* Find semicolon. */
-                size_t semicolon_pos = (shadersSourceCodes + i)->find(";", found_pos);
-        
-                /* Get uniform's name and it's location. */
-                std::string uniform_name     = (shadersSourceCodes + i)->substr(offset, semicolon_pos - offset);
-                GLint       uniform_location = glGetUniformLocation(program_id, uniform_name.c_str());
-
-                if (uniform_location != -1)
-                {
-                    uniformsLocations[uniform_name] = uniform_location;
-                }
-                else
-                {
-                    fprintf(stderr, "Error! Can't find uniform %s\n", uniform_name);
-                }
-            }
+            glUniform1f(uniformsLocations[uniformName], value);
         }
     }
 }
 
-void Shader::setUniformMatrix4fv(std::string uniformName, glm::mat4 & matrix)
+void Shader::setUniform1i(const std::string & uniformName, int value)
 {
-    if (uniformsLocations[uniformName])
+    if (uniformsLocations.count(uniformName))
+    {
+        glUniform1i(uniformsLocations[uniformName], value);
+    }
+    else
+    {
+        if (getUniformLocation(uniformName))
+        {
+            glUniform1i(uniformsLocations[uniformName], value);
+        }
+    }
+}
+
+void Shader::setUniform1i(const std::string & uniformName, unsigned int value)
+{
+    if (uniformsLocations.count(uniformName))
+    {
+        glUniform1i(uniformsLocations.at(uniformName), value);
+    }
+    else
+    {
+        if (getUniformLocation(uniformName))
+        {
+            glUniform1i(uniformsLocations[uniformName], value);
+        }
+    }
+}
+
+void Shader::setUniformMatrix4fv(const std::string & uniformName, glm::mat4 & matrix)
+{
+    if (uniformsLocations.count(uniformName))
     {
         glUniformMatrix4fv(uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
+    }
+    else
+    {
+        if (getUniformLocation(uniformName))
+        {
+            glUniformMatrix4fv(uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
+        }
     }
 }

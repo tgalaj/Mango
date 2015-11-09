@@ -1,7 +1,28 @@
 #include "CoreAssetManager.h"
+#include "Texture.h"
+
+std::map<std::string, Texture *> CoreAssetManager::loadedTextures;
+std::map<std::string, std::vector<Mesh *>> CoreAssetManager::loadedMeshes;
 
 CoreAssetManager::~CoreAssetManager()
 {
+    for (auto it = loadedTextures.begin(); it != loadedTextures.end(); ++it)
+    {
+        delete it->second;
+        it->second = nullptr;
+    }
+
+    for (auto it = loadedMeshes.begin(); it != loadedMeshes.end(); ++it)
+    {
+        for (auto & mesh : it->second)
+        {
+            delete mesh;
+            mesh = nullptr;
+        }
+    }
+
+    loadedTextures.clear();
+    loadedMeshes.clear();
 }
 
 const std::string CoreAssetManager::loadFile(const std::string & filename)
@@ -34,6 +55,39 @@ const std::string CoreAssetManager::loadFile(const std::string & filename)
 
         return filetext;
     }
+}
+
+Texture * const CoreAssetManager::createTexture2D(const std::string & filename, GLint base_level)
+{
+    if (loadedTextures.count(filename))
+    {
+        return loadedTextures.at(filename);
+    }
+    else
+    {
+        Texture * t = new Texture();
+        t->createTexture2D(filename, base_level);
+        loadedTextures[filename] = t;
+
+        return t;
+    }
+}
+
+Model * const CoreAssetManager::createModel(const std::string & filename)
+{
+    Model * model = new Model();
+
+    if (loadedMeshes.count(filename))
+    {
+        model->meshes = loadedMeshes.at(filename);
+    }
+    else
+    {
+        model->loadModel(filename);
+        loadedMeshes[filename] = model->meshes;
+    }
+
+    return model;
 }
 
 std::map<std::string, std::string> CoreAssetManager::loadShaderCode(const std::string & filename)

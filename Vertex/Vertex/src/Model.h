@@ -12,13 +12,14 @@ class Model : public SceneNode
 {
 public:
     friend class Renderer;
+    friend class CoreAssetManager;
+
+    enum TextureType { DIFFUSE, SPECULAR, NORMAL, EMISSION };
 
     Model();
     virtual ~Model();
 
-    void loadModel(std::string filename);
     void setMaterial(const std::string & shaderName);
-    void render();
 
     /* Primitives */
     void genCone    (float height      = 3.0f, float r             = 1.5f, unsigned int slices = 10, unsigned int stacks = 10);
@@ -29,7 +30,7 @@ public:
     void genTorus   (float innerRadius = 1.0f, float outerRadius   = 2.0f, unsigned int slices = 10, unsigned int stacks = 10);
     void genQuad    (float width       = 1.0f, float height        = 1.0f);
     
-    void setTexture(std::string filename);
+    void setTexture(const std::string & filename, TextureType texType = DIFFUSE);
 
 private:
     enum ModelType { VE_PRIMITIVE, VE_MODEL };
@@ -41,5 +42,8 @@ private:
     void processNode(aiNode * node, const aiScene * scene, aiString & directory);
     Mesh * processMesh(aiMesh * mesh, const aiScene * scene, aiString & directory);
     std::vector<Texture *> loadMaterialTextures(aiMaterial * mat, aiTextureType type, std::string type_name, aiString & directory);
+
+    void render();
+    void loadModel(std::string filename);
 };
 

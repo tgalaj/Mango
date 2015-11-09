@@ -1,5 +1,5 @@
 #include "Renderer.h"
-#include "CoreServices.h"
+#include "ShaderManager.h"
 
 Renderer::Renderer()
     : currentShader          (nullptr),
@@ -11,9 +11,9 @@ Renderer::Renderer()
     glClearColor(0.22f, 0.33f, 0.66f, 1.0f);
 
     /* Initialize engine's default shaders */
-    CoreServices::getShaderManager()->createShader("ve_basic",
-                                                   "res/shaders/Basic.vert", 
-                                                   "res/shaders/Basic.frag");
+    ShaderManager::createShader("ve_basic",
+                                "res/shaders/Basic.vert", 
+                                "res/shaders/Basic.frag");
 }
 
 Renderer::~Renderer()
