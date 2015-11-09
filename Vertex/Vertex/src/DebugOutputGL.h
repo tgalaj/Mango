@@ -18,12 +18,14 @@ public:
                                           const GLchar * msg,
                                           const void   * data)
     {
+        if(severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+            return;
         printf(
                "\n\n********** GL Debug Output **********\n"
                " Source:     %s\n"
                " Type:       %s\n"
                " Severity:   %s\n"
-               " Debug call: %s"
+               " Debug call: %s\n"
                "*************************************",
                getStringForSource(source).c_str(),
                getStringForType(type).c_str(),
@@ -60,7 +62,7 @@ private:
         switch (type)
         {
             case GL_DEBUG_TYPE_ERROR:
-                return"Error";
+                return "Error";
             case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
                 return "Deprecated behavior";
             case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:

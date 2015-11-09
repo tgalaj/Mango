@@ -126,6 +126,9 @@
     <ClCompile Include="src\FreeCamera.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\ShaderManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseGame.h">
@@ -231,6 +234,9 @@
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\DebugOutputGL.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShaderManager.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>

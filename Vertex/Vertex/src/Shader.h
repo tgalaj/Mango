@@ -9,20 +9,20 @@
 class Shader
 {
 public:
-    friend class Model;
     friend class Renderer;
+    friend class ShaderManager;
 
+    virtual ~Shader();
+
+    void setUniformMatrix4fv(std::string uniformName, glm::mat4 & matrix);
+
+protected:
     Shader(const std::string & vertexShaderFilename,
            const std::string & fragmentShaderFilename,
            const std::string & geometryShaderFilename               = "",
            const std::string & tessellationControlShaderFilename    = "",
            const std::string & tessellationEvaluationShaderFilename = "",
            const std::string & computeShaderFilename                = "");
-    ~Shader();
-
-    void setUniformMatrix4fv(std::string uniformName, glm::mat4 & matrix);
-
-protected:
 
 private:
     std::map<std::string, GLint> uniformsLocations;

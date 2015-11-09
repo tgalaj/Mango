@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "CoreServices.h"
 
 Renderer::Renderer()
     : currentShader          (nullptr),
@@ -8,6 +9,11 @@ Renderer::Renderer()
     glEnable(GL_FRAMEBUFFER_SRGB);
 
     glClearColor(0.22f, 0.33f, 0.66f, 1.0f);
+
+    /* Initialize engine's default shaders */
+    CoreServices::getShaderManager()->createShader("ve_basic",
+                                                   "res/shaders/Basic.vert", 
+                                                   "res/shaders/Basic.frag");
 }
 
 Renderer::~Renderer()
@@ -30,7 +36,7 @@ void Renderer::render()
 
     for (auto & model : models)
     {
-        if (model->shader != currentShader)
+        if (model->shader != currentShader && model->shader != nullptr)
         {
             currentShader = model->shader;
             currentShader->apply();

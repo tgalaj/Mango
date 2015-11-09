@@ -17,7 +17,7 @@ public:
     virtual ~Model();
 
     void loadModel(std::string filename);
-    void setMaterial(Shader * _shader);
+    void setMaterial(const std::string & shaderName);
     void render();
 
     /* Primitives */

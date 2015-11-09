@@ -18,7 +18,12 @@ VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsig
 
         if (GLEW_OK != glewError)
         {
+            fprintf(stderr, "GLEW could not be initialized! GLEW error: %s\n", glewGetErrorString(glewError));
             fprintf(stderr, "Some serious errors occured. Can't initialize Vertex Engine unless these errors are fixed.\n");
+            
+            printf("Press any key to continue...");
+            getchar();
+            exit(EXIT_FAILURE);
         }
         else
         {
@@ -29,15 +34,17 @@ VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsig
                 glEnable(GL_DEBUG_OUTPUT);
 
                 /* Register callback */
-                glDebugMessageCallback(DebugOutputGL::GLerrorCallback, NULL /*userParam*/);
-                glDebugMessageControl(GL_DONT_CARE /*source*/, GL_DONT_CARE /*type*/, GL_DONT_CARE /*severity*/, 0 /*count*/, nullptr /*ids*/, GL_TRUE /*enabled*/);
+                glDebugMessageCallback(DebugOutputGL::GLerrorCallback, nullptr /*userParam*/);
+                glDebugMessageControl(GL_DONT_CARE /*source*/, GL_DONT_CARE /*type*/, GL_DEBUG_SEVERITY_MEDIUM /*severity*/, 0 /*count*/, nullptr /*ids*/, GL_TRUE /*enabled*/);
             }
             #endif
 
             /* Set up Core Services */
-            renderer = new Renderer();
+            renderer      = new Renderer();
+            shaderManager = new ShaderManager();
 
             CoreServices::provide(renderer);
+            CoreServices::provide(shaderManager);
         }
 
         /* Init ImGUI */
@@ -45,7 +52,9 @@ VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsig
     }
     else
     {
-        fprintf(stderr, "GLEW could not be initialized! GLEW error: %s\n");
+        printf("Press any key to continue...");
+        getchar();
+        exit(EXIT_FAILURE);
     }
 
     CoreServices::provide(this);
@@ -113,7 +122,6 @@ void VertexEngineCore::start(BaseGame * game)
 
         if (last_fps_time >= 1000)
         {
-            //SDL_SetWindowTitle(window->m_sdlWindow, (std::to_string(fps) + " FPS").c_str());
             fpsToReturn   = fps;
             last_fps_time = 0;
             fps           = 0;

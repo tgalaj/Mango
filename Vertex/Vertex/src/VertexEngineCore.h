@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "Scene.h"
 #include "Time.h"
+#include "ShaderManager.h"
 #include "Window.h"
 
 #define MIN_GL_VERSION_MAJOR 4
@@ -27,10 +28,11 @@ public:
     void start(BaseGame * game);
 
 private:
-    BaseGame * game;
-    Renderer * renderer;
-    Scene    * scene;
-    Window   * window;
+    BaseGame      * game;
+    Renderer      * renderer;
+    Scene         * scene;
+    ShaderManager * shaderManager;
+    Window        * window;
 
     unsigned int fps, fpsToReturn;
     bool quit;

@@ -33,6 +33,7 @@
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneNode.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\SimpleGame.cpp" />
     <ClCompile Include="src\SpotLight.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="src\DebugOutputGL.h" />
     <ClInclude Include="src\FreeCamera.h" />
     <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\ShaderManager.h" />
     <ClInclude Include="src\SimpleGame.h" />
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\DirectionalLight.h" />

@@ -1,12 +1,13 @@
 #include "Model.h"
 #include "GeomPrimitive.h"
+#include "CoreServices.h"
 
 #include <glm\gtc\matrix_transform.hpp>
 
 Model::Model() 
 {
     meshes.reserve(4);
-    //setMaterial(new Shader("res/shaders/Basic.vert", "res/shaders/Basic.frag"));
+    setMaterial("ve_basic");
 }
 
 Model::~Model()
@@ -38,11 +39,9 @@ void Model::loadModel(std::string filename)
     processNode(scene->mRootNode, scene, directory);
 }
 
-void Model::setMaterial(Shader * _shader)
+void Model::setMaterial(const std::string & shaderName)
 {
-    shader = _shader;
-
-    shader->link();
+    shader = CoreServices::getShaderManager()->getShader(shaderName);
 }
 
 void Model::processNode(aiNode * node, const aiScene * scene, aiString & directory)
