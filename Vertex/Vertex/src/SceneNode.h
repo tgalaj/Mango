@@ -3,7 +3,9 @@
 #include <glm\glm.hpp>
 #include <deque>
 
-class SceneNode
+#include "watch_ptr.h"
+
+class SceneNode : public Watchable
 {
 public:
     friend class Scene;

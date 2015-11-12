@@ -9,7 +9,6 @@ SceneNode::SceneNode()
 {
 }
 
-
 SceneNode::~SceneNode()
 {
     for (auto & child : children)

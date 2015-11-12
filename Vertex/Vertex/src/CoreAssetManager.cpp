@@ -2,7 +2,8 @@
 #include "Texture.h"
 
 std::map<std::string, Texture *> CoreAssetManager::loadedTextures;
-std::map<std::string, std::vector<Mesh *>> CoreAssetManager::loadedMeshes;
+std::map<std::string, Model *> CoreAssetManager::loadedModels;
+std::vector<watch_ptr<Watchable> *> CoreAssetManager::watchables;
 
 CoreAssetManager::~CoreAssetManager()
 {
@@ -12,17 +13,15 @@ CoreAssetManager::~CoreAssetManager()
         it->second = nullptr;
     }
 
-    for (auto it = loadedMeshes.begin(); it != loadedMeshes.end(); ++it)
+    for (auto & w : watchables)
     {
-        for (auto & mesh : it->second)
-        {
-            delete mesh;
-            mesh = nullptr;
-        }
+        delete w->get();
+        delete w;
     }
 
     loadedTextures.clear();
-    loadedMeshes.clear();
+    loadedModels.clear();
+    watchables.clear();
 }
 
 const std::string CoreAssetManager::loadFile(const std::string & filename)
@@ -77,14 +76,17 @@ Model * const CoreAssetManager::createModel(const std::string & filename)
 {
     Model * model = new Model();
 
-    if (loadedMeshes.count(filename))
+    watch_ptr<Watchable> * watchable = new watch_ptr<Watchable>(model);
+    watchables.push_back(watchable);
+
+    if (loadedModels.count(filename))
     {
-        model->meshes = loadedMeshes.at(filename);
+        model->meshes = loadedModels.at(filename)->meshes;
     }
     else
     {
         model->loadModel(filename);
-        loadedMeshes[filename] = model->meshes;
+        loadedModels[filename] = model;
     }
 
     return model;
