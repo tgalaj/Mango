@@ -92,6 +92,16 @@ Model * const CoreAssetManager::createModel(const std::string & filename)
     return model;
 }
 
+Model * const CoreAssetManager::createModel()
+{
+    Model * model = new Model();
+
+    watch_ptr<Watchable> * watchable = new watch_ptr<Watchable>(model);
+    watchables.push_back(watchable);
+
+    return model;
+}
+
 std::map<std::string, std::string> CoreAssetManager::loadShaderCode(const std::string & filename)
 {
     std::map<std::string, std::string> codes { 

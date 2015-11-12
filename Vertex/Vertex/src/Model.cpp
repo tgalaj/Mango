@@ -19,7 +19,6 @@ Model::~Model()
 
 void Model::loadModel(std::string filename)
 {
-    printf("Loading %s", filename.c_str());
     model_type = VE_MODEL;
 
     Assimp::Importer importer;

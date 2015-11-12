@@ -16,7 +16,6 @@ public:
 
     enum TextureType { DIFFUSE, SPECULAR, NORMAL, EMISSION };
 
-    Model();
     virtual ~Model();
 
     void setMaterial(const std::string & shaderName);
@@ -33,6 +32,8 @@ public:
     void setTexture(const std::string & filename, TextureType texType = DIFFUSE);
 
 private:
+    Model();
+
     enum ModelType { VE_PRIMITIVE, VE_MODEL };
 
     std::vector<Mesh *> meshes;

@@ -29,6 +29,7 @@ public:
 
     static Texture * const createTexture2D(const std::string & filename, GLint base_level = 0);
     static Model   * const createModel(const std::string & filename);
+    static Model   * const createModel();
 
 private:
     CoreAssetManager() {};

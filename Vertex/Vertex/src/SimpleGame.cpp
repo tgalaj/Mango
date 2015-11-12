@@ -14,33 +14,33 @@ SimpleGame::SimpleGame()
     Model * model = CoreAssetManager::createModel("res/models/nanosuit/nanosuit.obj");
     model->setPosition(glm::vec3(0.0f, -1.75f, 0.0f));
     model->setScale(glm::vec3(0.2f));
-
+    
     Model * model4 = CoreAssetManager::createModel("res/models/nanosuit/nanosuit.obj");
     model4->setPosition(glm::vec3(2.0f, -1.75f, 0.0f));
     model4->setScale(glm::vec3(0.2f));
-
+    
     Model * model5 = CoreAssetManager::createModel("res/models/nanosuit/nanosuit.obj");
     model5->setPosition(glm::vec3(-2.0f, -1.75f, 0.0f));
     model5->setScale(glm::vec3(0.2f));
 
-    //Model * model2 = new Model();
-    //model2->genPlane(5, 5, 15, 15);
-    //model2->setTexture("res/texture/rooftiles.jpg");
-    //model2->setScale(glm::vec3(5.0f));
-    //
-    //Model * model3 = new Model();
-    //model3->genCone(1.0, 0.5, 12, 12);
-    //model3->setPosition(glm::vec3(-1.0f, 0.51f, 1.0f));
-    //
-    ////model->genTorus();
-    ////model->setTexture("res/texture/wood.jpg");
-    //
-    //model->addChild(model2);
-    //model2->addChild(model3);
-
+    Model * model2 = CoreAssetManager::createModel();
+    model2->genPlane(5, 5, 15, 15);
+    model2->setTexture("res/texture/rooftiles.jpg");
+    model2->setScale(glm::vec3(5.0f));
+    
+    Model * model3 = CoreAssetManager::createModel();
+    model3->genCone(1.0, 0.5, 12, 12);
+    model3->setPosition(glm::vec3(-1.0f, 0.51f, 1.0f));
+    
+    //model->genTorus();
+    //model->setTexture("res/texture/wood.jpg");
+    
+    model->addChild(model2);
+    model2->addChild(model3);
+    
     scene->addChild(model);
-    //scene->addChild(model4);
-    //scene->addChild(model5);
+    scene->addChild(model4);
+    scene->addChild(model5);
 }
 
 SimpleGame::~SimpleGame()
