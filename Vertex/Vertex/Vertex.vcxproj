@@ -22,7 +22,6 @@
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\DirectionalLight.cpp" />
     <ClCompile Include="src\GeomPrimitive.cpp" />
-    <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\OrthographicCamera.cpp" />
@@ -64,7 +63,6 @@
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\DirectionalLight.h" />
     <ClInclude Include="src\GeomPrimitive.h" />
-    <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\OrthographicCamera.h" />
     <ClInclude Include="src\ParticleEffect.h" />

@@ -1,3 +1,4 @@
+#include "CoreServices.h"
 #include "Model.h"
 #include "GeomPrimitive.h"
 #include "ShaderManager.h"
@@ -8,13 +9,11 @@
 Model::Model() 
 {
     meshes.reserve(4);
-    setMaterial("ve_basic");
+    setShader("ve_basic");
 }
 
 Model::~Model()
 {
-    printf("Model dtor\n");
-    getchar();
 }
 
 void Model::loadModel(std::string filename)
@@ -155,6 +154,7 @@ std::vector<Texture*> Model::loadMaterialTextures(aiMaterial * mat, aiTextureTyp
 
 void Model::render()
 {
+    shader->setUniformMatrix3fv("normalMatrix", normalMatrix);
     shader->setUniformMatrix4fv("world", worldTransform);
 
     for (auto & mesh : meshes)
@@ -291,9 +291,25 @@ void Model::genQuad(float width, float height)
     //setTexture("res/texture/normal_default.jpg", NORMAL);
 }
 
-void Model::setMaterial(const std::string & shaderName)
+void Model::setShader(const std::string & shaderName)
 {
     shader = ShaderManager::getShader(shaderName);
+}
+
+void Model::setShininess(int meshIndex, float shininess)
+{
+    if (meshIndex < meshes.size())
+    {
+        meshes[meshIndex]->material.shininess = shininess;
+    }
+}
+
+void Model::setDiffuseColor(int meshIndex, glm::vec3 diffuseColor)
+{
+    if (meshIndex < meshes.size())
+    {
+        meshes[meshIndex]->material.diffuse_color = diffuseColor;
+    }
 }
 
 void Model::setTexture(const std::string & filename, TextureType texType)

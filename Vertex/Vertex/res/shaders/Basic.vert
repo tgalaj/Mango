@@ -7,13 +7,15 @@ out vec3 o_normal;
 out vec2 o_texcoord;
 
 uniform mat4 world;
-uniform mat4 view;
+//uniform mat4 view;
 uniform mat4 viewProj;
+
+uniform mat3 normalMatrix;
 
 void main()
 {
-    o_normal   = mat3(view) * normal;
-	o_position = vec3(view * vec4(position, 1.0f));
+	o_position = vec3(world * vec4(position, 1.0f));
+    o_normal   = normalMatrix * normal;
     o_texcoord = texcoord;
 
     gl_Position = viewProj * world * vec4(position, 1.0f);

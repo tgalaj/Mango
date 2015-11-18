@@ -18,7 +18,9 @@ public:
 
     virtual ~Model();
 
-    void setMaterial(const std::string & shaderName);
+    void setShader      (const std::string & shaderName);
+    void setShininess   (int meshIndex, float shininess);
+    void setDiffuseColor(int meshIndex, glm::vec3 diffuseColor);
 
     /* Primitives */
     void genCone    (float height      = 3.0f, float r             = 1.5f, unsigned int slices = 10, unsigned int stacks = 10);

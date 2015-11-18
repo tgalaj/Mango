@@ -4,6 +4,9 @@
 
 #include "Camera.h"
 #include "Model.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 
 class Renderer final
 {
@@ -21,12 +24,16 @@ private:
 
     std::deque<Model *> models;
 
+    std::vector<DirectionalLight *> dirLights;
+    std::vector<PointLight *>       pointLights;
+    std::vector<SpotLight *>        spotLights;
+
     Camera * cam;
     Shader * currentShader;
 
     bool shouldUpdateCamUniforms;
 
     void render();
-    void addModel(Model * m);
+    void setupLightsUniforms();
 };
 

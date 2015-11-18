@@ -14,9 +14,12 @@ public:
 
     virtual ~Shader();
 
-    void setUniform1f(const std::string & uniformName, float value);
-    void setUniform1i(const std::string & uniformName, int value);
-    void setUniform1i(const std::string & uniformName, unsigned int value);
+    void setUniform1f       (const std::string & uniformName, float value);
+    void setUniform1i       (const std::string & uniformName, int value);
+    void setUniform1ui      (const std::string & uniformName, unsigned int value);
+    void setUniform2fv      (const std::string & uniformName, glm::vec2 & vector);
+    void setUniform3fv      (const std::string & uniformName, glm::vec3 & vector);
+    void setUniformMatrix3fv(const std::string & uniformName, glm::mat3 & matrix);
     void setUniformMatrix4fv(const std::string & uniformName, glm::mat4 & matrix);
 
 protected:

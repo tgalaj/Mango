@@ -21,9 +21,12 @@ public:
     void update(glm::mat4 & parentTransform, bool dirty);
 
 protected:
-    std::deque<SceneNode *> children;
+    //std::deque<SceneNode *> children;
+    std::deque<watch_ptr<SceneNode> *> children;
     glm::mat4 localTransform;
     glm::mat4 worldTransform;
+
+    glm::mat3 normalMatrix;
 
     bool isDirty;
 };

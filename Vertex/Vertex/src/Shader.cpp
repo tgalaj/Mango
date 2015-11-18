@@ -221,17 +221,62 @@ void Shader::setUniform1i(const std::string & uniformName, int value)
     }
 }
 
-void Shader::setUniform1i(const std::string & uniformName, unsigned int value)
+void Shader::setUniform1ui(const std::string & uniformName, unsigned int value)
 {
     if (uniformsLocations.count(uniformName))
     {
-        glUniform1i(uniformsLocations.at(uniformName), value);
+        glUniform1ui(uniformsLocations.at(uniformName), value);
     }
     else
     {
         if (getUniformLocation(uniformName))
         {
-            glUniform1i(uniformsLocations[uniformName], value);
+            glUniform1ui(uniformsLocations[uniformName], value);
+        }
+    }
+}
+
+void Shader::setUniform2fv(const std::string & uniformName, glm::vec2 & vector)
+{
+    if (uniformsLocations.count(uniformName))
+    {
+        glUniform2fv(uniformsLocations[uniformName], 1, glm::value_ptr(vector));
+    }
+    else
+    {
+        if (getUniformLocation(uniformName))
+        {
+            glUniform2fv(uniformsLocations[uniformName], 1, glm::value_ptr(vector));
+        }
+    }
+}
+
+void Shader::setUniform3fv(const std::string & uniformName, glm::vec3 & vector)
+{
+    if (uniformsLocations.count(uniformName))
+    {
+        glUniform3fv(uniformsLocations[uniformName], 1, glm::value_ptr(vector));
+    }
+    else
+    {
+        if (getUniformLocation(uniformName))
+        {
+            glUniform3fv(uniformsLocations[uniformName], 1, glm::value_ptr(vector));
+        }
+    }
+}
+
+void Shader::setUniformMatrix3fv(const std::string & uniformName, glm::mat3 & matrix)
+{
+    if (uniformsLocations.count(uniformName))
+    {
+        glUniformMatrix3fv(uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
+    }
+    else
+    {
+        if (getUniformLocation(uniformName))
+        {
+            glUniformMatrix3fv(uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
         }
     }
 }

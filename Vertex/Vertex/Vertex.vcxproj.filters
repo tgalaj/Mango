@@ -78,9 +78,6 @@
     <ClCompile Include="src\GeomPrimitive.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Light.cpp">
-      <Filter>Source Files\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="src\Material.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
@@ -177,9 +174,6 @@
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\GeomPrimitive.h">
-      <Filter>Header Files\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Light.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Material.h">

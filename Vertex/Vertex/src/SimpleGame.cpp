@@ -2,6 +2,7 @@
 #include "VertexEngineCore.h"
 #include "CoreAssetManager.h"
 #include "FreeCamera.h"
+#include "PointLight.h"
 
 #include <glm\gtc\matrix_transform.hpp>
 #include <imgui\imgui_impl_sdl.h>
@@ -41,6 +42,17 @@ SimpleGame::SimpleGame()
     scene->addChild(model);
     scene->addChild(model4);
     scene->addChild(model5);
+    
+    SpotLight * sl          = new SpotLight();
+    sl->ambient             = glm::vec3(0.0f);
+    sl->diffuse             = glm::vec3(1.0f, 1.0f, 0.8f);
+    sl->position            = glm::vec3(0.0f, 5.74f, 0.0f);
+    sl->direction           = glm::vec3(0.0f, -1.0f, 0.0f);
+    sl->constantAttenuation = 1.0f;
+    sl->innerCutOffAngle    = 12.5f;
+    sl->outerCutOffAngle    = 17.5f;
+
+    scene->addChild(sl);
 }
 
 SimpleGame::~SimpleGame()
@@ -74,7 +86,6 @@ void SimpleGame::processInput()
 
 void SimpleGame::update(float delta)
 {
-    
 }
 
 bool show_test_window = true;

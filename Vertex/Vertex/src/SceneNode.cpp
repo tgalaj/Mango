@@ -5,6 +5,7 @@
 SceneNode::SceneNode()
     : localTransform(glm::mat4(1.0f)),
       worldTransform(glm::mat4(1.0f)),
+      normalMatrix(glm::mat3(1.0f)),
       isDirty(true)
 {
 }
@@ -13,8 +14,10 @@ SceneNode::~SceneNode()
 {
     for (auto & child : children)
     {
+        //delete child;
+        //child = nullptr;
+        delete child->get();
         delete child;
-        child = nullptr;
     }
 }
 
@@ -39,7 +42,7 @@ void SceneNode::setScale(glm::vec3 & scale)
 void SceneNode::addChild(SceneNode * child)
 {
     //isDirty = true;
-    children.push_back(child);
+    children.push_back(new watch_ptr<SceneNode>(child));
 }
 
 void SceneNode::update(glm::mat4 & parentTransform, bool dirty)
@@ -49,11 +52,13 @@ void SceneNode::update(glm::mat4 & parentTransform, bool dirty)
     if (dirty)
     {
         worldTransform = parentTransform * localTransform;
+        normalMatrix   = glm::mat3(glm::transpose(glm::inverse(worldTransform)));
+
         isDirty = false;
     }
 
     for (auto & child : children)
     {
-        child->update(worldTransform, dirty);
+        child->get()->update(worldTransform, dirty);
     }
 }

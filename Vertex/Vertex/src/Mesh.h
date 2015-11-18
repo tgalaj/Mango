@@ -4,6 +4,7 @@
 #include <glm\glm.hpp>
 #include <vector>
 
+#include "Material.h"
 #include "Texture.h"
 #include "Shader.h"
 
@@ -27,6 +28,7 @@ private:
     void setBuffers(VEBuffers & buffers);
 
     std::vector<Texture *> textures;
+    Material material;
 
     GLuint vao_id;
     GLuint vbo_ids[4];
