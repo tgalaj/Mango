@@ -1,6 +1,8 @@
 Release/
 Debug/
 bin/
+**/models/*
+!**/models/nanosuit/
 
 # Ignore VSC++ 2013 files
 *.opensdf

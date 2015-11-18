@@ -1,10 +1,14 @@
+#include "DebugOutputGL.h"
 #include "VertexEngineCore.h"
+#include <imgui\imgui_impl_sdl.h>
 
-
-VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsigned int height, Uint32 flags)
+VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsigned int height, Uint32 flags)
+    : quit       (false),
+      fps        (0),
+      fpsToReturn(0)
 {
+    /* Init window and GL context. */
     window = new Window(title, width, height, flags);
-    glClearColor(0.22f, 0.33f, 0.66f, 1.0f);
 
     if (window->m_isGood)
     {
@@ -14,23 +18,64 @@ VertexEngineCore::VertexEngineCore(const char *title, unsigned int width, unsign
 
         if (GLEW_OK != glewError)
         {
+            fprintf(stderr, "GLEW could not be initialized! GLEW error: %s\n", glewGetErrorString(glewError));
             fprintf(stderr, "Some serious errors occured. Can't initialize Vertex Engine unless these errors are fixed.\n");
+            
+            printf("Press any key to continue...");
+            getchar();
+            exit(EXIT_FAILURE);
         }
+        else
+        {
+            #ifdef _DEBUG
+            if (GLEW_ARB_debug_output)
+            {
+                /* Create OpenGL debug context */
+                glEnable(GL_DEBUG_OUTPUT);
+
+                /* Register callback */
+                glDebugMessageCallback(DebugOutputGL::GLerrorCallback, nullptr /*userParam*/);
+                glDebugMessageControl(GL_DONT_CARE /*source*/, GL_DONT_CARE /*type*/, GL_DEBUG_SEVERITY_MEDIUM /*severity*/, 0 /*count*/, nullptr /*ids*/, GL_TRUE /*enabled*/);
+            }
+            #endif
+
+            /* Set up Core Services */
+            renderer      = new Renderer();
+            shaderManager = new ShaderManager();
+            assetManager  = new CoreAssetManager();
+
+            CoreServices::provide(renderer);
+        }
+
+        /* Init ImGUI */
+        ImGui_ImplSdl_Init(window->m_sdlWindow);
     }
     else
     {
-        fprintf(stderr, "GLEW could not be initialized! GLEW error: %s\n");
+        printf("Press any key to continue...");
+        getchar();
+        exit(EXIT_FAILURE);
     }
+
+    CoreServices::provide(this);
 }
 
 VertexEngineCore::~VertexEngineCore()
 {
     delete window;
-}
+    window = nullptr;
 
-void VertexEngineCore::setClearColor(float r, float g, float b, float a)
-{
-    glClearColor(r, g, b, a);
+    delete game;
+    game = nullptr;
+
+    delete renderer;
+    renderer = nullptr;
+
+    delete shaderManager;
+    shaderManager = nullptr;
+
+    delete assetManager;
+    assetManager = nullptr;
 }
 
 void VertexEngineCore::setVSync(bool enabled)
@@ -42,50 +87,70 @@ void VertexEngineCore::setVSync(bool enabled)
     }
 }
 
-void VertexEngineCore::start()
+void VertexEngineCore::setScene(Scene * scene)
 {
-    //TODO: create Pr0 game loop
+    this->scene = scene;
+}
 
-    bool quit = false;
-    SDL_Event e;
-   // SDL_StartTextInput();
+void VertexEngineCore::quitApp()
+{
+    VertexEngineCore::quit = true;
+}
 
-    /* Loop until the user closes the window */
+unsigned int VertexEngineCore::getFPS()
+{
+    return fpsToReturn;
+}
+
+void VertexEngineCore::start(BaseGame * game)
+{
+    /* Set game. */
+    this->game = game;
+
+    unsigned int last_loop_time = Time::getTimeMs();
+    unsigned int now            = 0;
+    unsigned int elapsed        = 0;
+    unsigned int last_fps_time  = 0;
+
+    float delta = 0.0f;
+
+    /* Loop until the game ends */
     while(!quit)
     {
-        while(SDL_PollEvent(&e) != 0)
-        {
-                if(e.type == SDL_QUIT)
-                {
-                    quit = true;
-                }
-                else 
-                if(e.type == SDL_KEYDOWN)
-                {
-                    int x = 0, y = 0;
+        now            = Time::getTimeMs();
+        elapsed        = now - last_loop_time;
+        last_loop_time = now;
+        delta          = elapsed / static_cast<float>(1000);
 
-                    /* TODO: Replace switch with CoreInputManager class */
-                    switch(e.key.keysym.sym)
-                    {
-                        case SDLK_SPACE:
-                            /* Handle keypress with current mouse position */
-                            SDL_GetMouseState(&x, &y);
-                            printf("Mouse pos: (%d, %d)             \r", x, y);
-                            break;
-                        case SDLK_ESCAPE:
-                            quit = true;
-                            break;
-                    }
-                    
-                }
+        /* Update FPS counter */
+        last_fps_time += elapsed;
+        ++fps;
+
+        if (last_fps_time >= 1000)
+        {
+            fpsToReturn   = fps;
+            last_fps_time = 0;
+            fps           = 0;
         }
 
-        /* todo: game update */
-        printf("update\n");
+        /* Process input */
+        quit = Input::update();
+        renderer->cam->processInput(delta);
+        game->processInput();
 
-        /* TODO: renderer part render */
-        printf("render\n");
-        glClear(GL_COLOR_BUFFER_BIT);
+        /* Game & scene update & ImGUI */
+        game->update(delta);
+        scene->update();
+
+        ImGui_ImplSdl_NewFrame(window->m_sdlWindow);
+        game->onGUI();
+
+        /* Render */
+        renderer->render();
+
+        /* Render UI */
+        glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
+        ImGui::Render();
 
         /* Swap buffers */
         SDL_GL_SwapWindow(window->m_sdlWindow);
