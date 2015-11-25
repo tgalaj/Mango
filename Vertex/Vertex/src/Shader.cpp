@@ -195,13 +195,13 @@ void Shader::setUniform1f(const std::string & uniformName, float value)
 {
     if (uniformsLocations.count(uniformName))
     {
-        glUniform1f(uniformsLocations[uniformName], value);
+        glProgramUniform1f(program_id, uniformsLocations[uniformName], value);
     }
     else
     {
         if (getUniformLocation(uniformName))
         {
-            glUniform1f(uniformsLocations[uniformName], value);
+            glProgramUniform1f(program_id, uniformsLocations[uniformName], value);
         }
     }
 }
@@ -210,13 +210,13 @@ void Shader::setUniform1i(const std::string & uniformName, int value)
 {
     if (uniformsLocations.count(uniformName))
     {
-        glUniform1i(uniformsLocations[uniformName], value);
+        glProgramUniform1i(program_id, uniformsLocations[uniformName], value);
     }
     else
     {
         if (getUniformLocation(uniformName))
         {
-            glUniform1i(uniformsLocations[uniformName], value);
+            glProgramUniform1i(program_id, uniformsLocations[uniformName], value);
         }
     }
 }
@@ -225,13 +225,13 @@ void Shader::setUniform1ui(const std::string & uniformName, unsigned int value)
 {
     if (uniformsLocations.count(uniformName))
     {
-        glUniform1ui(uniformsLocations.at(uniformName), value);
+        glProgramUniform1ui(program_id, uniformsLocations.at(uniformName), value);
     }
     else
     {
         if (getUniformLocation(uniformName))
         {
-            glUniform1ui(uniformsLocations[uniformName], value);
+            glProgramUniform1ui(program_id, uniformsLocations[uniformName], value);
         }
     }
 }
@@ -240,13 +240,13 @@ void Shader::setUniform2fv(const std::string & uniformName, glm::vec2 & vector)
 {
     if (uniformsLocations.count(uniformName))
     {
-        glUniform2fv(uniformsLocations[uniformName], 1, glm::value_ptr(vector));
+        glProgramUniform2fv(program_id, uniformsLocations[uniformName], 1, glm::value_ptr(vector));
     }
     else
     {
         if (getUniformLocation(uniformName))
         {
-            glUniform2fv(uniformsLocations[uniformName], 1, glm::value_ptr(vector));
+            glProgramUniform2fv(program_id, uniformsLocations[uniformName], 1, glm::value_ptr(vector));
         }
     }
 }
@@ -255,13 +255,13 @@ void Shader::setUniform3fv(const std::string & uniformName, glm::vec3 & vector)
 {
     if (uniformsLocations.count(uniformName))
     {
-        glUniform3fv(uniformsLocations[uniformName], 1, glm::value_ptr(vector));
+        glProgramUniform3fv(program_id, uniformsLocations[uniformName], 1, glm::value_ptr(vector));
     }
     else
     {
         if (getUniformLocation(uniformName))
         {
-            glUniform3fv(uniformsLocations[uniformName], 1, glm::value_ptr(vector));
+            glProgramUniform3fv(program_id, uniformsLocations[uniformName], 1, glm::value_ptr(vector));
         }
     }
 }
@@ -270,13 +270,13 @@ void Shader::setUniformMatrix3fv(const std::string & uniformName, glm::mat3 & ma
 {
     if (uniformsLocations.count(uniformName))
     {
-        glUniformMatrix3fv(uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
+        glProgramUniformMatrix3fv(program_id, uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
     }
     else
     {
         if (getUniformLocation(uniformName))
         {
-            glUniformMatrix3fv(uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
+            glProgramUniformMatrix3fv(program_id, uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
         }
     }
 }
@@ -285,13 +285,13 @@ void Shader::setUniformMatrix4fv(const std::string & uniformName, glm::mat4 & ma
 {
     if (uniformsLocations.count(uniformName))
     {
-        glUniformMatrix4fv(uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
+        glProgramUniformMatrix4fv(program_id, uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
     }
     else
     {
         if (getUniformLocation(uniformName))
         {
-            glUniformMatrix4fv(uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
+            glProgramUniformMatrix4fv(program_id, uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
         }
     }
 }

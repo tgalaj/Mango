@@ -120,9 +120,8 @@ std::vector<Texture*> Model::loadMaterialTextures(aiMaterial * mat, aiTextureTyp
             fullPath.Append("/");
             fullPath.Append(str.C_Str());
 
-            Texture * texture = CoreAssetManager::createTexture2D(fullPath.C_Str());//new Texture();
+            Texture * texture = CoreAssetManager::createTexture2D(fullPath.C_Str());
             texture->setTypeName(type_name);
-            //texture->createTexture2D(fullPath.C_Str());
             textures.push_back(texture);
         }
     }
@@ -298,7 +297,7 @@ void Model::setShader(const std::string & shaderName)
 
 void Model::setShininess(int meshIndex, float shininess)
 {
-    if (meshIndex < meshes.size())
+    if (static_cast<unsigned int>(meshIndex) < meshes.size())
     {
         meshes[meshIndex]->material.shininess = shininess;
     }
@@ -306,7 +305,7 @@ void Model::setShininess(int meshIndex, float shininess)
 
 void Model::setDiffuseColor(int meshIndex, glm::vec3 diffuseColor)
 {
-    if (meshIndex < meshes.size())
+    if (static_cast<unsigned int>(meshIndex) < meshes.size())
     {
         meshes[meshIndex]->material.diffuse_color = diffuseColor;
     }
@@ -316,10 +315,9 @@ void Model::setTexture(const std::string & filename, TextureType texType)
 {
     if (meshes.size() > 0 && model_type == VE_PRIMITIVE)
     {
-        Texture * t = CoreAssetManager::createTexture2D(filename);//new Texture();
-        //t->createTexture2D(filename);
+        Texture * t = CoreAssetManager::createTexture2D(filename);
         
-        int idx = 0;
+        unsigned int idx = 0;
 
         switch (texType)
         {

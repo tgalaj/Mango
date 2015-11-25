@@ -33,15 +33,17 @@ SimpleGame::SimpleGame()
     model3->genCone(1.0, 0.5, 12, 12);
     model3->setPosition(glm::vec3(-1.0f, 0.51f, 1.0f));
 
-    //Model * knife = CoreAssetManager::createModel("res/models/damagedknife/Model/knife6.obj");
-    //knife->setPosition(glm::vec3(0.0, 0.0, 3.0f));
+    #ifndef _DEBUG
+        Model * knife = CoreAssetManager::createModel("res/models/damagedknife/Model/knife6.obj");
+        knife->setPosition(glm::vec3(0.0, 0.0, 3.0f));
+        scene->addChild(knife);
+    #endif
     //model->genTorus();
     //model->setTexture("res/texture/wood.jpg");
     
     model->addChild(model2);
     model2->addChild(model3);
     
-    //scene->addChild(knife);
     scene->addChild(model);
     scene->addChild(model4);
     scene->addChild(model5);

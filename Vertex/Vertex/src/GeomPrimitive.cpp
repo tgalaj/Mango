@@ -412,7 +412,7 @@ void GeomPrimitive::genSphere(VEBuffers & buffers, float r, unsigned int slices)
 {
     float deltaPhi = glm::two_pi<float>() / static_cast<float>(slices);
     
-    unsigned int parallels = slices * 0.5f;
+    unsigned int parallels = static_cast<unsigned int>(slices * 0.5f);
 
     for (unsigned int i = 0; i <= parallels; ++i)
     {

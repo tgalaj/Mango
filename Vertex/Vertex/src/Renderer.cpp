@@ -14,9 +14,6 @@ Renderer::Renderer()
     ShaderManager::createShader("ve_basic",
                                 "res/shaders/Basic.vert", 
                                 "res/shaders/Basic.frag");
-
-    currentShader = ShaderManager::getShader("ve_basic");
-    currentShader->apply();
 }
 
 Renderer::~Renderer()
@@ -37,7 +34,10 @@ void Renderer::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    setupLightsUniforms();
+    if (currentShader)
+    {
+        setupLightsUniforms();
+    }
 
     for (auto & model : models)
     {
@@ -62,7 +62,7 @@ void Renderer::setupLightsUniforms()
     currentShader->setUniform1ui("pointUsed", pointLights.size());
     currentShader->setUniform1ui("spotUsed",  spotLights.size());
 
-    for (int i = 0; i < dirLights.size(); ++i)
+    for (size_t i = 0; i < dirLights.size(); ++i)
     {
         std::string idx = std::to_string(i);
 
@@ -72,7 +72,7 @@ void Renderer::setupLightsUniforms()
         currentShader->setUniform3fv("dirLights[" + idx + "].specular",  dirLights[i]->specular);
     }
 
-    for (int i = 0; i < pointLights.size(); ++i)
+    for (size_t i = 0; i < pointLights.size(); ++i)
     {
         std::string idx = std::to_string(i);
 
@@ -86,7 +86,7 @@ void Renderer::setupLightsUniforms()
                                                                                         pointLights[i]->quadraticAttenuation));
     }
 
-    for (int i = 0; i < spotLights.size(); ++i)
+    for (size_t i = 0; i < spotLights.size(); ++i)
     {
         std::string idx = std::to_string(i);
 

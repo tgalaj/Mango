@@ -69,8 +69,8 @@ void FreeCamera::processInput(float deltaTime)
         }
 
         SDL_GetRelativeMouseState(&currMouseX, &currMouseY);
-        float x_offset = currMouseX;
-        float y_offset = -currMouseY;
+        float x_offset = static_cast<float>(currMouseX);
+        float y_offset = static_cast<float>(-currMouseY);
 
         x_offset *= mouseSensitivity;
         y_offset *= mouseSensitivity;
@@ -95,7 +95,7 @@ void FreeCamera::processInput(float deltaTime)
     if (Input::getMouseButtonUp(Input::Mouse2))
     {
         SDL_SetRelativeMouseMode(SDL_FALSE);
-        SDL_WarpMouseInWindow(nullptr, viewportWidth * 0.5f, viewportHeight * 0.5f);
+        SDL_WarpMouseInWindow(nullptr, static_cast<int>(viewportWidth * 0.5f), static_cast<int>(viewportHeight * 0.5f));
 
         isFirstMouseClick = true;
     }

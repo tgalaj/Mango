@@ -45,28 +45,28 @@ void Texture::createTexture2D(std::string filename, GLint base_level)
     internal_format = isSRGB ? GL_SRGB8 : GL_RGB8;
 
     /* Generate GL texture object */
-    glGenTextures     (1, &to_id);
-    glBindTexture     (to_type, to_id);
-    glTexStorage2D    (to_type, 
-                       base_level > 0 ? 2 : base_level + 2, 
-                       internal_format, 
-                       width, 
-                       height);
-    glTexSubImage2D   (to_type, 
-                       0 /*level*/, 
-                       0 /*xoffset*/, 
-                       0 /*yoffset*/, 
-                       width, 
-                       height, 
-                       format, 
-                       GL_UNSIGNED_BYTE, 
-                       bits);
+    glCreateTextures   (to_type, 1, &to_id);
+    glTextureStorage2D (to_id, 
+                        base_level > 0 ? 2 : base_level + 2, 
+                        internal_format, 
+                        width, 
+                        height);
+    glTextureSubImage2D(to_id,
+                        0 /*level*/, 
+                        0 /*xoffset*/, 
+                        0 /*yoffset*/, 
+                        width, 
+                        height, 
+                        format, 
+                        GL_UNSIGNED_BYTE, 
+                        bits);
 
-    glGenerateMipmap(to_type);
-    glTexParameteri (to_type, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri (to_type, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri (to_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri (to_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glGenerateTextureMipmap(to_id);
+
+    glTextureParameteri(to_id, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(to_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTextureParameteri(to_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTextureParameteri(to_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
     /* Release FreeImage data */
     FreeImage_Unload(dib);
@@ -74,8 +74,7 @@ void Texture::createTexture2D(std::string filename, GLint base_level)
 
 void Texture::bind(GLenum unit)
 {
-    glActiveTexture(unit);
-    glBindTexture(to_type, to_id);
+    glBindTextureUnit(unit, to_id);
 }
 
 void Texture::setTypeName(std::string & name)
