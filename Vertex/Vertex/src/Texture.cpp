@@ -45,17 +45,22 @@ void Texture::createTexture2D(std::string filename, GLint base_level)
     internal_format = isSRGB ? GL_SRGB8 : GL_RGB8;
 
     /* Generate GL texture object */
-    glGenTextures   (1, &to_id);
-    glBindTexture   (to_type, to_id);
-    glTexImage2D    (to_type, 
-                     base_level, 
-                     internal_format, 
-                     width, 
-                     height, 
-                     0 /* border */, 
-                     format,
-                     GL_UNSIGNED_BYTE, 
-                     bits);
+    glGenTextures     (1, &to_id);
+    glBindTexture     (to_type, to_id);
+    glTexStorage2D    (to_type, 
+                       base_level > 0 ? 2 : base_level + 2, 
+                       internal_format, 
+                       width, 
+                       height);
+    glTexSubImage2D   (to_type, 
+                       0 /*level*/, 
+                       0 /*xoffset*/, 
+                       0 /*yoffset*/, 
+                       width, 
+                       height, 
+                       format, 
+                       GL_UNSIGNED_BYTE, 
+                       bits);
 
     glGenerateMipmap(to_type);
     glTexParameteri (to_type, GL_TEXTURE_WRAP_S, GL_REPEAT);

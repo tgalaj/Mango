@@ -32,13 +32,16 @@ SimpleGame::SimpleGame()
     Model * model3 = CoreAssetManager::createModel();
     model3->genCone(1.0, 0.5, 12, 12);
     model3->setPosition(glm::vec3(-1.0f, 0.51f, 1.0f));
-    
+
+    //Model * knife = CoreAssetManager::createModel("res/models/damagedknife/Model/knife6.obj");
+    //knife->setPosition(glm::vec3(0.0, 0.0, 3.0f));
     //model->genTorus();
     //model->setTexture("res/texture/wood.jpg");
     
     model->addChild(model2);
     model2->addChild(model3);
     
+    //scene->addChild(knife);
     scene->addChild(model);
     scene->addChild(model4);
     scene->addChild(model5);
@@ -52,7 +55,11 @@ SimpleGame::SimpleGame()
     sl->innerCutOffAngle    = 12.5f;
     sl->outerCutOffAngle    = 17.5f;
 
+    DirectionalLight * dir = new DirectionalLight();
+    dir->direction = glm::vec3(1.0f, -1.0f, -1.0f);
+
     scene->addChild(sl);
+    scene->addChild(dir);
 }
 
 SimpleGame::~SimpleGame()
@@ -65,7 +72,7 @@ void SimpleGame::processInput()
 {
     static bool vsync = true;
 
-    if (Input::getKeyDown(Input::V))
+    if (Input::getKeyUp(Input::V))
         CoreServices::getCore()->setVSync(vsync = !vsync);
 
     if(Input::getKeyDown(Input::KeypadMinus))

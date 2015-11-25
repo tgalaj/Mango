@@ -27,7 +27,7 @@ VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsig
         }
         else
         {
-            #ifdef _DEBUG
+            //#ifdef _DEBUG
             if (GLEW_ARB_debug_output)
             {
                 /* Create OpenGL debug context */
@@ -37,7 +37,7 @@ VertexEngineCore::VertexEngineCore(const char * title, unsigned int width, unsig
                 glDebugMessageCallback(DebugOutputGL::GLerrorCallback, nullptr /*userParam*/);
                 glDebugMessageControl(GL_DONT_CARE /*source*/, GL_DONT_CARE /*type*/, GL_DEBUG_SEVERITY_MEDIUM /*severity*/, 0 /*count*/, nullptr /*ids*/, GL_TRUE /*enabled*/);
             }
-            #endif
+            //#endif
 
             /* Set up Core Services */
             renderer      = new Renderer();
