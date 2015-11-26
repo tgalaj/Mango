@@ -10,9 +10,9 @@ out vec4 fragColor;
 
 struct Material
 {
-	sampler2D texture_diffuse;
-	sampler2D texture_specular;
-	sampler2D texture_normal;
+	layout(binding = 0) sampler2D texture_diffuse;
+	layout(binding = 1) sampler2D texture_specular;
+	layout(binding = 2) sampler2D texture_normal;
 	vec3 diffuseColor;
 	float shininess;
 };

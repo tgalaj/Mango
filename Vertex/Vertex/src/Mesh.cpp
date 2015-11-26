@@ -24,7 +24,6 @@ void Mesh::render(Shader * shader)
 {
     for (GLuint i = 0; i < textures.size(); ++i)
     {
-        shader->setUniform1i("material." + textures[i]->getTypeName(), i);
         textures[i]->bind(i);
     }
 

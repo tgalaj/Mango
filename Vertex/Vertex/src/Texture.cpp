@@ -25,6 +25,8 @@ void Texture::createTexture2D(std::string filename, GLint base_level)
     /* Pointer to the image */
     FIBITMAP *dib = CoreAssetManager::loadTexture(filename);
               dib = FreeImage_ConvertTo32Bits(dib);
+    
+    FreeImage_FlipVertical(dib);
 
     /* Pointer to image data */
     BYTE *bits = nullptr;

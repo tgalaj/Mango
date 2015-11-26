@@ -81,7 +81,12 @@ Model * const CoreAssetManager::createModel(const std::string & filename)
 
     if (loadedModels.count(filename))
     {
-        model->meshes = loadedModels.at(filename)->meshes;
+        model->meshes.resize(loadedModels.at(filename)->meshes.size());
+
+        for (unsigned i = 0; i < loadedModels.at(filename)->meshes.size(); ++i)
+        {
+            model->meshes[i] = loadedModels.at(filename)->meshes[i]->clone();
+        }
     }
     else
     {

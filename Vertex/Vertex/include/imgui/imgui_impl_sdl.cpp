@@ -64,7 +64,6 @@ void ImGui_ImplSdl_RenderDrawLists(ImDrawData* draw_data)
     };
 
     glUseProgram(g_ShaderHandle);
-    glUniform1i(g_AttribLocationTex, 0);
     glUniformMatrix4fv(g_AttribLocationProjMtx, 1, GL_FALSE, &ortho_projection[0][0]);
     glBindVertexArray(g_VaoHandle);
 
@@ -193,7 +192,7 @@ bool ImGui_ImplSdl_CreateDeviceObjects()
     glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
 
     const GLchar *vertex_shader =
-        "#version 440\n"
+        "#version 450\n"
         "uniform mat4 ProjMtx;\n"
         "in vec2 Position;\n"
         "in vec2 UV;\n"
@@ -208,8 +207,8 @@ bool ImGui_ImplSdl_CreateDeviceObjects()
         "}\n";
 
     const GLchar* fragment_shader =
-        "#version 440\n"
-        "uniform sampler2D Texture;\n"
+        "#version 450\n"
+        "layout(binding = 0) uniform sampler2D Texture;\n"
         "in vec2 Frag_UV;\n"
         "in vec4 Frag_Color;\n"
         "out vec4 Out_Color;\n"

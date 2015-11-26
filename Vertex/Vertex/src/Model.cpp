@@ -313,7 +313,7 @@ void Model::setDiffuseColor(int meshIndex, glm::vec3 diffuseColor)
 
 void Model::setTexture(const std::string & filename, TextureType texType)
 {
-    if (meshes.size() > 0 && model_type == VE_PRIMITIVE)
+    if (meshes.size() > 0)
     {
         Texture * t = CoreAssetManager::createTexture2D(filename);
         
