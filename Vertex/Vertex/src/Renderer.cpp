@@ -3,7 +3,10 @@
 
 Renderer::Renderer()
     : currentShader          (nullptr),
-      shouldUpdateCamUniforms(true)
+      shouldUpdateCamUniforms(true),
+      cachedDirCount         (-1),
+      cachedPointCount       (-1),
+      cachedSpotCount        (-1)
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_FRAMEBUFFER_SRGB);
@@ -58,48 +61,75 @@ void Renderer::render()
 
 void Renderer::setupLightsUniforms()
 {
-    currentShader->setUniform1ui("dirUsed",   dirLights.size());
-    currentShader->setUniform1ui("pointUsed", pointLights.size());
-    currentShader->setUniform1ui("spotUsed",  spotLights.size());
+    if (cachedDirCount != dirLights.size())
+    {
+        currentShader->setUniform1ui("dirUsed",   dirLights.size());
+        cachedDirCount = dirLights.size();
+    }
+
+    if (cachedPointCount != pointLights.size())
+    {
+        currentShader->setUniform1ui("pointUsed", pointLights.size());
+        cachedPointCount = pointLights.size();
+    }
+
+    if (cachedSpotCount != spotLights.size())
+    {
+        currentShader->setUniform1ui("spotUsed",  spotLights.size());
+        cachedSpotCount = spotLights.size();
+    }
 
     for (size_t i = 0; i < dirLights.size(); ++i)
     {
-        std::string idx = std::to_string(i);
+        if(dirLights[i]->isDirty)
+        {
+            std::string idx = std::to_string(i);
 
-        currentShader->setUniform3fv("dirLights[" + idx + "].direction", dirLights[i]->direction);
-        currentShader->setUniform3fv("dirLights[" + idx + "].ambient",   dirLights[i]->ambient);
-        currentShader->setUniform3fv("dirLights[" + idx + "].diffuse",   dirLights[i]->diffuse);
-        currentShader->setUniform3fv("dirLights[" + idx + "].specular",  dirLights[i]->specular);
+            currentShader->setUniform3fv("dirLights[" + idx + "].direction", dirLights[i]->direction);
+            currentShader->setUniform3fv("dirLights[" + idx + "].ambient",   dirLights[i]->ambient);
+            currentShader->setUniform3fv("dirLights[" + idx + "].diffuse",   dirLights[i]->diffuse);
+            currentShader->setUniform3fv("dirLights[" + idx + "].specular",  dirLights[i]->specular);
+
+            dirLights[i]->isDirty = false;
+        }
     }
 
     for (size_t i = 0; i < pointLights.size(); ++i)
     {
-        std::string idx = std::to_string(i);
+        if(pointLights[i]->isDirty)
+        {
+            std::string idx = std::to_string(i);
 
-        currentShader->setUniform3fv("pointLights[" + idx + "].position",  pointLights[i]->position);
-        currentShader->setUniform3fv("pointLights[" + idx + "].ambient",   pointLights[i]->ambient);
-        currentShader->setUniform3fv("pointLights[" + idx + "].diffuse",   pointLights[i]->diffuse);
-        currentShader->setUniform3fv("pointLights[" + idx + "].specular",  pointLights[i]->specular);
+            currentShader->setUniform3fv("pointLights[" + idx + "].position",  pointLights[i]->position);
+            currentShader->setUniform3fv("pointLights[" + idx + "].ambient",   pointLights[i]->ambient);
+            currentShader->setUniform3fv("pointLights[" + idx + "].diffuse",   pointLights[i]->diffuse);
+            currentShader->setUniform3fv("pointLights[" + idx + "].specular",  pointLights[i]->specular);
 
-        currentShader->setUniform3fv("pointLights[" + idx + "].attenuations", glm::vec3(pointLights[i]->constantAttenuation, 
-                                                                                        pointLights[i]->linearAttenuation,
-                                                                                        pointLights[i]->quadraticAttenuation));
+            currentShader->setUniform3fv("pointLights[" + idx + "].attenuations", glm::vec3(pointLights[i]->constantAttenuation, 
+                                                                                            pointLights[i]->linearAttenuation,
+                                                                                            pointLights[i]->quadraticAttenuation));
+            pointLights[i]->isDirty = false;
+        }
     }
 
     for (size_t i = 0; i < spotLights.size(); ++i)
     {
-        std::string idx = std::to_string(i);
+        if(spotLights[i]->isDirty)
+        {
+            std::string idx = std::to_string(i);
 
-        currentShader->setUniform3fv("spotLights[" + idx + "].position",  spotLights[i]->position);
-        currentShader->setUniform3fv("spotLights[" + idx + "].direction", spotLights[i]->direction);
-        currentShader->setUniform3fv("spotLights[" + idx + "].ambient",   spotLights[i]->ambient);
-        currentShader->setUniform3fv("spotLights[" + idx + "].diffuse",   spotLights[i]->diffuse);
-        currentShader->setUniform3fv("spotLights[" + idx + "].specular",  spotLights[i]->specular);
+            currentShader->setUniform3fv("spotLights[" + idx + "].position",  spotLights[i]->position);
+            currentShader->setUniform3fv("spotLights[" + idx + "].direction", spotLights[i]->direction);
+            currentShader->setUniform3fv("spotLights[" + idx + "].ambient",   spotLights[i]->ambient);
+            currentShader->setUniform3fv("spotLights[" + idx + "].diffuse",   spotLights[i]->diffuse);
+            currentShader->setUniform3fv("spotLights[" + idx + "].specular",  spotLights[i]->specular);
 
-        currentShader->setUniform3fv("spotLights[" + idx + "].attenuations", glm::vec3(spotLights[i]->constantAttenuation, 
-                                                                                       spotLights[i]->linearAttenuation,
-                                                                                       spotLights[i]->quadraticAttenuation));
-        currentShader->setUniform2fv("spotLights[" + idx + "].angles",       glm::vec2(glm::cos(glm::radians(spotLights[i]->innerCutOffAngle)), 
-                                                                                       glm::cos(glm::radians(spotLights[i]->outerCutOffAngle))));
+            currentShader->setUniform3fv("spotLights[" + idx + "].attenuations", glm::vec3(spotLights[i]->constantAttenuation, 
+                                                                                           spotLights[i]->linearAttenuation,
+                                                                                           spotLights[i]->quadraticAttenuation));
+            currentShader->setUniform2fv("spotLights[" + idx + "].angles",       glm::vec2(glm::cos(glm::radians(spotLights[i]->innerCutOffAngle)), 
+                                                                                           glm::cos(glm::radians(spotLights[i]->outerCutOffAngle))));
+            spotLights[i]->isDirty = false;
+        }
     }
 }

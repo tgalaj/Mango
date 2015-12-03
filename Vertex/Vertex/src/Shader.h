@@ -5,12 +5,14 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 class Shader
 {
 public:
     friend class Renderer;
     friend class ShaderManager;
+    friend class Mesh;
 
     virtual ~Shader();
 
@@ -31,7 +33,11 @@ protected:
            const std::string & computeShaderFilename                = "");
 
 private:
+    struct UBO;
+
+    std::map<std::string, UBO *> uniformBlocksMembers;
     std::map<std::string, GLint> uniformsLocations;
+    std::vector<UBO *>           uniformBlocks;
 
     GLuint program_id;
     bool isLinked;
@@ -39,5 +45,25 @@ private:
     bool link();
     void apply();
     bool getUniformLocation(const std::string & uniform_name);
+    bool setupUnifomBuffers();
+    void updateUBOs();
+
+    /* TODO: Decouple UBO from Shader class */
+    struct UBO
+    {
+        std::map<std::string /* name */, GLint /* offset */> uniformMembersOffsets;
+        
+        GLuint    ubo_id     = -1;
+        GLuint    block_id   = -1;
+        GLint     block_size = 0;
+        GLubyte * data       = nullptr;
+        bool isDirty         = true;
+
+        ~UBO()
+        {
+            free(data);
+            data = nullptr;
+        }
+    };
 };
 

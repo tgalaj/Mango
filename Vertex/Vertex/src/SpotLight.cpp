@@ -11,7 +11,8 @@ SpotLight::SpotLight()
       linearAttenuation   (0.0f),
       quadraticAttenuation(0.0f),
       innerCutOffAngle    (12.5f),
-      outerCutOffAngle    (17.5f)
+      outerCutOffAngle    (17.5f),
+      isDirty             (true)
 {
 }
 

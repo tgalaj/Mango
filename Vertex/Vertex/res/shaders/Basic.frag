@@ -17,8 +17,6 @@ struct Material
 	float shininess;
 };
 
-uniform Material material;
-
 struct DirLight
 {
 	vec3 direction;
@@ -27,22 +25,6 @@ struct DirLight
 	vec3 diffuse;
 	vec3 specular;
 };
-
-uniform DirLight dirLights[MAX_DIR_LIGHTS];
-uniform uint dirUsed;
-
-struct PointLight
-{
-	vec3 position;
-	vec3 attenuations;
-	
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
-};
-
-uniform PointLight pointLights[MAX_POINT_LIGHTS];
-uniform uint pointUsed;
 
 struct SpotLight
 {
@@ -57,9 +39,28 @@ struct SpotLight
 	vec2 angles; //angles[0] - innerCutOff, angles[1] - outerCutOff
 };
 
-uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
-uniform uint spotUsed;
+struct PointLight
+{
+	vec3 position;
+	vec3 attenuations;
+	
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+};
+	
+layout(std140) uniform Lights
+{
+	DirLight dirLights[MAX_DIR_LIGHTS];
+	PointLight pointLights[MAX_POINT_LIGHTS];
+	SpotLight spotLights[MAX_SPOT_LIGHTS];
+	
+	uint dirUsed;
+	uint pointUsed;
+	uint spotUsed;
+};
 
+uniform Material material;
 uniform vec3 camPos;
 
 vec3 calcDirLight(DirLight light, vec3 normal, vec3 viewDir)

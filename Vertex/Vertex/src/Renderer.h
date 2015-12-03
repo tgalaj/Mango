@@ -28,6 +28,10 @@ private:
     std::vector<PointLight *>       pointLights;
     std::vector<SpotLight *>        spotLights;
 
+    short cachedDirCount;
+    short cachedPointCount;
+    short cachedSpotCount;
+
     Camera * cam;
     Shader * currentShader;
 

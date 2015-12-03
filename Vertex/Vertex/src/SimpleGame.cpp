@@ -75,8 +75,9 @@ SimpleGame::SimpleGame()
             scene->addChild(m);
         }
     }
+
     DirectionalLight * dir = new DirectionalLight();
-    dir->direction = glm::vec3(1.0f, 1.0f, -1.0f);
+    dir->setDirection(glm::vec3(1, -1.0f, 0));
 
     //scene->addChild(sl);
     scene->addChild(dir);
