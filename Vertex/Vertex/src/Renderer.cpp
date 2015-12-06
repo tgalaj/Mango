@@ -37,18 +37,17 @@ void Renderer::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (currentShader)
-    {
-        setupLightsUniforms();
-    }
-
     for (auto & model : models)
     {
         if (model->shader != currentShader && model->shader != nullptr)
         {
             currentShader = model->shader;
             currentShader->apply();
+        }
 
+        if (currentShader)
+        {
+            currentShader->unlockUBOs();
             setupLightsUniforms();
         }
 
@@ -56,6 +55,11 @@ void Renderer::render()
         currentShader->setUniformMatrix4fv("viewProj", cam->getViewProjection());
 
         model->render();
+
+        if (currentShader)
+        {
+            currentShader->lockUBOs();
+        }
     }
 }
 

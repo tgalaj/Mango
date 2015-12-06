@@ -30,6 +30,8 @@ Shader::Shader(const std::string & vertexShaderFilename,
                                        computeShaderFilename
                                      };
 
+    bool status = true;
+
     /* Check if compute shader's source code is the only one available. */
     if (!shaderCodes[5].empty())
     {
@@ -38,6 +40,8 @@ Shader::Shader(const std::string & vertexShaderFilename,
             if (!shaderCode.empty())
             {
                 fprintf(stderr, "Compute shader can't be created due to presence of other shader source codes.\n");
+                printf("Press any key to continue...\n");
+                getchar();
                 return;
             }
         }
@@ -48,6 +52,8 @@ Shader::Shader(const std::string & vertexShaderFilename,
     if (program_id == 0)
     {
         fprintf(stderr, "Error while creating program object.\n");
+        printf("Press any key to continue...\n");
+        getchar();
         return;
     }
 
@@ -81,6 +87,7 @@ Shader::Shader(const std::string & vertexShaderFilename,
         if (shaderType == 0)
         {
             fprintf(stderr, "Error! Wrong shader type.\n");
+            status = false;
             continue;
         }
 
@@ -89,6 +96,7 @@ Shader::Shader(const std::string & vertexShaderFilename,
         if (shaderObject == 0)
         {
             fprintf(stderr, "Error while creating %s.\n", filenames[i].c_str());
+            status = false;
             continue;
         }
 
@@ -118,6 +126,7 @@ Shader::Shader(const std::string & vertexShaderFilename,
                 free(log);
             }
 
+            status = false;
             continue;
         }
 
@@ -126,9 +135,14 @@ Shader::Shader(const std::string & vertexShaderFilename,
     }
 
     link();
-    setupUnifomBuffers();
 
-    //getchar();
+    if (!status)
+    {
+        printf("Press any key to continue...\n");
+        getchar();
+    }
+
+    setupUnifomBuffers();
 }
 
 Shader::~Shader()
@@ -228,7 +242,7 @@ bool Shader::setupUnifomBuffers()
 
         GLint blockSize;
         glGetActiveUniformBlockiv(program_id, uniformBlock, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
-        ubo->block_size = blockSize;
+        ubo->block_size = (blockSize + alignment - 1) - (blockSize + alignment - 1) % alignment;
 
         GLint numberOfUniformsInBlock;
         glGetActiveUniformBlockiv(program_id, uniformBlock, GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &numberOfUniformsInBlock);
@@ -260,15 +274,15 @@ bool Shader::setupUnifomBuffers()
         }
 
         /* Init Uniform Buffer */
-        ubo->data = (GLubyte *) malloc(ubo->block_size);
+        GLenum flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
 
-        glGenBuffers(1, &ubo->ubo_id);
-        glBindBuffer(GL_UNIFORM_BUFFER, ubo->ubo_id);
-        glBufferData(GL_UNIFORM_BUFFER, blockSize, NULL, GL_DYNAMIC_DRAW);
-        
-        glUniformBlockBinding(program_id, ubo->block_id, binding);
-        glBindBufferRange(GL_UNIFORM_BUFFER, binding, ubo->ubo_id, 0, ubo->block_size);
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        glCreateBuffers(1, &ubo->ubo_id);
+        glNamedBufferStorage(ubo->ubo_id, ubo->block_size * ubo->num_backing_buffers, NULL, flags);
+        ubo->data = (GLubyte *)glMapNamedBufferRange(ubo->ubo_id, 0 /* offset */, ubo->block_size * ubo->num_backing_buffers, flags);
+        ubo->binding_index = binding;
+
+        glUniformBlockBinding(program_id, ubo->block_id, ubo->binding_index);
+        glBindBufferRange(GL_UNIFORM_BUFFER, ubo->binding_index, ubo->ubo_id, ubo->block_size * ubo->ring_index, ubo->block_size);
         uniformBlocks.push_back(ubo);
 
         ++binding;
@@ -277,16 +291,25 @@ bool Shader::setupUnifomBuffers()
     return true;
 }
 
-void Shader::updateUBOs()
+void Shader::unlockUBOs()
 {
     for (auto & ubo : uniformBlocks)
     {
-        if (ubo->isDirty)
+        if(!ubo->isDirty)
         {
-            glBindBuffer(GL_UNIFORM_BUFFER, ubo->ubo_id);
-            glBufferSubData(GL_UNIFORM_BUFFER, 0, ubo->block_size, ubo->data);
-            glBindBuffer(GL_UNIFORM_BUFFER, 0);
+            ubo->unlockBuffer();
+            glBindBufferRange(GL_UNIFORM_BUFFER, ubo->binding_index, ubo->ubo_id, ubo->block_size * ubo->ring_index, ubo->block_size);
+        }
+    }
+}
 
+void Shader::lockUBOs()
+{
+    for (auto & ubo : uniformBlocks)
+    {
+        if(ubo->isDirty)
+        {
+            ubo->lockBuffer();
             ubo->isDirty = false;
         }
     }
@@ -300,7 +323,11 @@ void Shader::setUniform1f(const std::string & uniformName, float value)
     }
     else if (uniformBlocksMembers.count(uniformName))
     {
-        memcpy(uniformBlocksMembers[uniformName]->data + uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName], &value, sizeof(GLfloat));
+        GLubyte * data = uniformBlocksMembers[uniformName]->data + 
+                         uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName] + 
+                         uniformBlocksMembers[uniformName]->ring_index * uniformBlocksMembers[uniformName]->block_size;
+
+        memcpy(data, &value, sizeof(GLfloat));
 
         uniformBlocksMembers[uniformName]->isDirty = true;
     }
@@ -321,7 +348,11 @@ void Shader::setUniform1i(const std::string & uniformName, int value)
     }
     else if (uniformBlocksMembers.count(uniformName))
     {
-        memcpy(uniformBlocksMembers[uniformName]->data + uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName], &value, sizeof(GLint));
+        GLubyte * data = uniformBlocksMembers[uniformName]->data + 
+                         uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName] + 
+                         uniformBlocksMembers[uniformName]->ring_index * uniformBlocksMembers[uniformName]->block_size;
+
+        memcpy(data, &value, sizeof(GLint));
 
         uniformBlocksMembers[uniformName]->isDirty = true;
     }
@@ -342,7 +373,11 @@ void Shader::setUniform1ui(const std::string & uniformName, unsigned int value)
     }
     else if (uniformBlocksMembers.count(uniformName))
     {
-        memcpy(uniformBlocksMembers[uniformName]->data + uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName], &value, sizeof(GLuint));
+        GLubyte * data = uniformBlocksMembers[uniformName]->data + 
+                         uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName] + 
+                         uniformBlocksMembers[uniformName]->ring_index * uniformBlocksMembers[uniformName]->block_size;
+
+        memcpy(data, &value, sizeof(GLuint));
 
         uniformBlocksMembers[uniformName]->isDirty = true;
     }
@@ -363,7 +398,11 @@ void Shader::setUniform2fv(const std::string & uniformName, glm::vec2 & vector)
     }
     else if (uniformBlocksMembers.count(uniformName))
     {
-        memcpy(uniformBlocksMembers[uniformName]->data + uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName], glm::value_ptr(vector), sizeof(glm::vec2));
+        GLubyte * data = uniformBlocksMembers[uniformName]->data + 
+                         uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName] + 
+                         uniformBlocksMembers[uniformName]->ring_index * uniformBlocksMembers[uniformName]->block_size;
+
+        memcpy(data, glm::value_ptr(vector), sizeof(glm::vec2));
 
         uniformBlocksMembers[uniformName]->isDirty = true;
     }
@@ -384,7 +423,11 @@ void Shader::setUniform3fv(const std::string & uniformName, glm::vec3 & vector)
     }
     else if (uniformBlocksMembers.count(uniformName))
     {
-        memcpy(uniformBlocksMembers[uniformName]->data + uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName], glm::value_ptr(vector), sizeof(glm::vec3));
+        GLubyte * data = uniformBlocksMembers[uniformName]->data + 
+                         uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName] + 
+                         uniformBlocksMembers[uniformName]->ring_index * uniformBlocksMembers[uniformName]->block_size;
+
+        memcpy(data, glm::value_ptr(vector), sizeof(glm::vec3));
 
         uniformBlocksMembers[uniformName]->isDirty = true;
     }
@@ -405,9 +448,13 @@ void Shader::setUniformMatrix3fv(const std::string & uniformName, glm::mat3 & ma
     }
     else if (uniformBlocksMembers.count(uniformName))
     {
-        memcpy(uniformBlocksMembers[uniformName]->data + uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName] + 0,  &matrix[0][0], sizeof(glm::vec3));
-        memcpy(uniformBlocksMembers[uniformName]->data + uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName] + 16, &matrix[1][0], sizeof(glm::vec3));
-        memcpy(uniformBlocksMembers[uniformName]->data + uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName] + 32, &matrix[2][0], sizeof(glm::vec3));
+        GLubyte * data = uniformBlocksMembers[uniformName]->data + 
+                         uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName] + 
+                         uniformBlocksMembers[uniformName]->ring_index * uniformBlocksMembers[uniformName]->block_size;
+
+        memcpy(data + 0,  &matrix[0][0], sizeof(glm::vec3));
+        memcpy(data + 16, &matrix[1][0], sizeof(glm::vec3));
+        memcpy(data + 32, &matrix[2][0], sizeof(glm::vec3));
 
         uniformBlocksMembers[uniformName]->isDirty = true;
     }
@@ -428,7 +475,11 @@ void Shader::setUniformMatrix4fv(const std::string & uniformName, glm::mat4 & ma
     }
     else if (uniformBlocksMembers.count(uniformName))
     {
-        memcpy(uniformBlocksMembers[uniformName]->data + uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName], glm::value_ptr(matrix), sizeof(glm::mat4));
+        GLubyte * data = uniformBlocksMembers[uniformName]->data + 
+                         uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName] + 
+                         uniformBlocksMembers[uniformName]->ring_index * uniformBlocksMembers[uniformName]->block_size;
+
+        memcpy(data, glm::value_ptr(matrix), sizeof(glm::mat4));
 
         uniformBlocksMembers[uniformName]->isDirty = true;
     }

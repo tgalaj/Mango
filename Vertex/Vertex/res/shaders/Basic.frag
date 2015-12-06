@@ -49,16 +49,23 @@ struct PointLight
 	vec3 specular;
 };
 	
-layout(std140) uniform Lights
-{
-	DirLight dirLights[MAX_DIR_LIGHTS];
-	PointLight pointLights[MAX_POINT_LIGHTS];
-	SpotLight spotLights[MAX_SPOT_LIGHTS];
-	
-	uint dirUsed;
-	uint pointUsed;
-	uint spotUsed;
-};
+//layout(std140) uniform Lights
+//{
+//	DirLight dirLights[MAX_DIR_LIGHTS];
+//	PointLight pointLights[MAX_POINT_LIGHTS];
+//	SpotLight spotLights[MAX_SPOT_LIGHTS];
+//	
+//	uint dirUsed;
+//	uint pointUsed;
+//	uint spotUsed;
+//};
+
+uniform DirLight dirLights[MAX_DIR_LIGHTS];
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
+uniform uint dirUsed;
+uniform uint pointUsed;
+uniform uint spotUsed;
 
 uniform Material material;
 uniform vec3 camPos;
@@ -75,7 +82,7 @@ vec3 calcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 	float spec = pow(max(dot(viewDir, reflectedDir), 0.0f), material.shininess);
 	
 	/* Combine */
-	vec3 ambient  = light.ambient  * vec3(texture(material.texture_diffuse, o_texcoord));
+	vec3 ambient  = light.ambient  * vec3(texture(material.texture_diffuse, o_texcoord)) * material.diffuseColor;
 	vec3 diffuse  = light.diffuse  * vec3(texture(material.texture_diffuse, o_texcoord))  * diff * material.diffuseColor;
 	vec3 specular = light.specular * vec3(texture(material.texture_specular, o_texcoord)) * spec;
 	

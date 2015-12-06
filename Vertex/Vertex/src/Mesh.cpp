@@ -29,7 +29,6 @@ void Mesh::render(Shader * shader)
 
     shader->setUniform1f ("material.shininess", material.shininess);
     shader->setUniform3fv("material.diffuseColor", material.diffuse_color);
-    shader->updateUBOs();
 
     glBindVertexArray(vao_id);
     
