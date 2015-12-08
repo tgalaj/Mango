@@ -27,8 +27,11 @@ void Mesh::render(Shader * shader)
         textures[i]->bind(i);
     }
 
-    shader->setUniform1f ("material.shininess", material.shininess);
-    shader->setUniform3fv("material.diffuseColor", material.diffuse_color);
+    if(textures.size() > 0)
+    {
+        shader->setUniform1f ("material.shininess", material.shininess);
+        shader->setUniform3fv("material.diffuseColor", material.diffuse_color);
+    }
 
     glBindVertexArray(vao_id);
     

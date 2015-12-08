@@ -22,13 +22,20 @@ Scene::~Scene()
     cam = nullptr;
 }
 
-void Scene::addChild(SceneNode * child)
+void Scene::addChild(SceneNode * child, bool reflective)
 {
     children.push_back(child);
 
     if (Model * m = dynamic_cast<Model *>(child))
     {
-        CoreServices::getRenderer()->models.push_back(m);
+        if(reflective)
+        {
+            CoreServices::getRenderer()->addReflectiveModel(m);
+        }
+        else
+        {
+            CoreServices::getRenderer()->models.push_back(m);
+        }
     }
 
     if (DirectionalLight * light = dynamic_cast<DirectionalLight *>(child))

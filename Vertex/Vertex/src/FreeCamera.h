@@ -14,6 +14,12 @@ public:
     void setMoveSpeed(float _moveSpeed);
     void setMouseSensitivity(float _mouseSensitivity);
 
+    float getYaw();
+    float getPitch();
+
+    void setYaw(float _yaw);
+    void setPitch(float _pitch);
+
 private:
     float moveSpeed;
     float mouseSensitivity;

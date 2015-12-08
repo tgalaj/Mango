@@ -147,6 +147,9 @@
     <ClCompile Include="src\ReflectionsDemo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Skybox.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseGame.h">
@@ -269,12 +272,27 @@
     <ClInclude Include="src\ReflectionsDemo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Skybox.h">
+      <Filter>Header Files\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="res\shaders\Basic.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\Skybox.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\Skybox.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\Reflection.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\Reflection.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

@@ -38,6 +38,7 @@
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\SimpleGame.cpp" />
+    <ClCompile Include="src\Skybox.cpp" />
     <ClCompile Include="src\SpotLight.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Model.cpp" />
@@ -80,6 +81,7 @@
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\SceneNode.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\Skybox.h" />
     <ClInclude Include="src\SpotLight.h" />
     <ClInclude Include="src\BaseGame.h" />
     <ClInclude Include="src\Model.h" />
@@ -93,6 +95,10 @@
   <ItemGroup>
     <None Include="res\shaders\Basic.frag" />
     <None Include="res\shaders\Basic.vert" />
+    <None Include="res\shaders\Reflection.frag" />
+    <None Include="res\shaders\Reflection.vert" />
+    <None Include="res\shaders\Skybox.frag" />
+    <None Include="res\shaders\Skybox.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9DF5F709-0864-4185-BE40-2FDD4F0B26EC}</ProjectGuid>

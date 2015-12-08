@@ -16,7 +16,6 @@ public:
     /* Setters */
     void lookAt            (glm::vec3 & point);
     void setPosition       (float x, float y, float z);
-    void setDirection      (float x, float y, float z);
     void setUpVector       (float x, float y, float z);
     void setNearPlane      (float near);
     void setFarPlane       (float far);

@@ -19,6 +19,7 @@ private:
     ~Texture();
 
     void createTexture2D(std::string filename, GLint base_level);
+    void createCubeMapTexture(const std::string * filenames, GLint base_level);
 
     std::string type_name;
     GLuint to_id;

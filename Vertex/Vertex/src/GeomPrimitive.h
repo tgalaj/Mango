@@ -9,9 +9,11 @@ public:
     ~GeomPrimitive() = delete;
 
     friend class Model;
+    friend class Skybox;
 
 private:
     static void genCube    (VEBuffers & buffers, float radius);
+    static void genCubeMap (VEBuffers & buffers, float radius);
     static void genTorus   (VEBuffers & buffers, float innerRadius, float outerRadius, unsigned int slices, unsigned int stacks);
     static void genCylinder(VEBuffers & buffers, float height, float r, unsigned int slices);
     static void genCone    (VEBuffers & buffers, float height, float r, unsigned int slices, unsigned int stacks);

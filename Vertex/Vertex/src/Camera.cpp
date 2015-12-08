@@ -37,12 +37,6 @@ void Camera::setPosition(float x, float y, float z)
     isDirty  = true;
 }
 
-void Camera::setDirection(float x, float y, float z)
-{
-    direction = glm::vec3(x, y, z);
-    isDirty   = true;
-}
-
 void Camera::setUpVector(float x, float y, float z)
 {
     up      = glm::vec3(x, y, z);

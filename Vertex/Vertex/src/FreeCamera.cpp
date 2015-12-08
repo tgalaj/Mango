@@ -110,3 +110,39 @@ void FreeCamera::setMouseSensitivity(float _mouseSensitivity)
 {
     mouseSensitivity = _mouseSensitivity;
 }
+
+float FreeCamera::getYaw()
+{
+    return yaw;
+}
+
+float FreeCamera::getPitch()
+{
+    return pitch;
+}
+
+void FreeCamera::setYaw(float _yaw)
+{
+    yaw = _yaw;
+
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+    direction = glm::normalize(direction);
+
+    isDirty = true;
+}
+
+void FreeCamera::setPitch(float _pitch)
+{
+    pitch = _pitch;
+
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+    direction = glm::normalize(direction);
+
+    isDirty = true;
+}

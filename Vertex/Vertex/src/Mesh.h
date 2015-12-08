@@ -26,6 +26,7 @@ public:
 private:
     friend class Model;
     friend class CoreAssetManager;
+    friend class Renderer;
 
     Mesh * clone() const
     {

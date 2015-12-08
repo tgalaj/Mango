@@ -11,8 +11,8 @@
 class Model : public SceneNode
 {
 public:
-    friend class Renderer;
     friend class CoreAssetManager;
+    friend class Renderer;
 
     enum TextureType { DIFFUSE, SPECULAR, NORMAL, EMISSION };
 
