@@ -28,6 +28,16 @@ Renderer::Renderer()
     ShaderManager::createShader("ve_reflective",
                                 "res/shaders/Reflection.vert", 
                                 "res/shaders/Reflection.frag");
+
+    ShaderManager::createShader("ve_basic_layered",
+                                "res/shaders/Layered.vert", 
+                                "res/shaders/Basic.frag",
+                                "res/shaders/Layered.geom");
+
+    ShaderManager::createShader("ve_skybox_layered",
+                                "res/shaders/SkyboxLayered.vert", 
+                                "res/shaders/Skybox.frag",
+                                "res/shaders/SkyboxLayered.geom");
 }
 
 Renderer::~Renderer()
@@ -79,44 +89,43 @@ void Renderer::render()
         glBindFramebuffer(GL_FRAMEBUFFER, reflectiveTextures[i]->fbo_id);
         glViewport(0, 0, reflectiveTextures[i]->cube_size, reflectiveTextures[i]->cube_size);
 
-        for(int j = 0; j < 6; ++j)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        if (skybox)
         {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + j, reflectiveTextures[i]->to_color_id, 0);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            currentShader = ShaderManager::getShader("ve_skybox_layered");
+            currentShader->apply();
+        
+            currentShader->setUniformMatrix4fv("wvp", skybox->world);
+            currentShader->setUniformMatrix4fv("mvps[0]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[0], glm::vec3(0, -1, 0)));
+            currentShader->setUniformMatrix4fv("mvps[1]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[1], glm::vec3(0, -1, 0)));
+            currentShader->setUniformMatrix4fv("mvps[2]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[2], glm::vec3(0, -1, 0)));
+            currentShader->setUniformMatrix4fv("mvps[3]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[3], glm::vec3(0, -1, 0)));
+            currentShader->setUniformMatrix4fv("mvps[4]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[4], glm::vec3(0, -1, 0)));
+            currentShader->setUniformMatrix4fv("mvps[5]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[5], glm::vec3(0, -1, 0)));
 
-            if (skybox)
-            {
-                currentShader = ShaderManager::getShader("ve_skybox");
-                currentShader->apply();
+            skybox->render(currentShader, cam);
+        }
 
-                currentShader->setUniformMatrix4fv("wvp", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[j], glm::vec3(0, -1, 0)) * skybox->world);
-                skybox->render(currentShader, cam);
-            }
+        currentShader = ShaderManager::getShader("ve_basic_layered");
+        currentShader->apply();
 
-            for (auto & model : models)
-            {
-                if (model->shader != currentShader && model->shader != nullptr)
-                {
-                    currentShader = model->shader;
-                    currentShader->apply();
-                }
+        if (currentShader)
+        {
+            setupLightsUniforms();
+        }
 
-                if (currentShader)
-                {
-                    currentShader->unlockUBOs();
-                    setupLightsUniforms();
-                }
-               
-                currentShader->setUniform3fv      ("camPos", glm::vec3(reflectiveModels[i]->worldTransform[3]));
-                currentShader->setUniformMatrix4fv("viewProj", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[j], glm::vec3(0, -1, 0)) );
+        currentShader->setUniform3fv("camPos", glm::vec3(reflectiveModels[i]->worldTransform[3]));
+        currentShader->setUniformMatrix4fv("mvps[0]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[0], glm::vec3(0, -1, 0)));
+        currentShader->setUniformMatrix4fv("mvps[1]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[1], glm::vec3(0, -1, 0)));
+        currentShader->setUniformMatrix4fv("mvps[2]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[2], glm::vec3(0, -1, 0)));
+        currentShader->setUniformMatrix4fv("mvps[3]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[3], glm::vec3(0, -1, 0)));
+        currentShader->setUniformMatrix4fv("mvps[4]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[4], glm::vec3(0, -1, 0)));
+        currentShader->setUniformMatrix4fv("mvps[5]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[5], glm::vec3(0, -1, 0)));
 
-                model->render();
-
-                if (currentShader)
-                {
-                    currentShader->lockUBOs();
-                }
-            }
+        for (auto & model : models)
+        {
+            model->render(currentShader);
         }
     }
 
@@ -142,7 +151,7 @@ void Renderer::render()
         currentShader->setUniform3fv("camPos", cam->getPosition());
         currentShader->setUniformMatrix4fv("viewProj", cam->getViewProjection());
 
-        model->render();
+        model->render(currentShader);
 
         if (currentShader)
         {
@@ -172,7 +181,7 @@ void Renderer::render()
             glActiveTexture(GL_TEXTURE7);
             glBindTexture(GL_TEXTURE_CUBE_MAP, reflectiveTextures[i]->to_color_id);
 
-            reflectiveModels[i]->render();
+            reflectiveModels[i]->render(currentShader);
             glActiveTexture(GL_TEXTURE0);
         }
     }
@@ -180,28 +189,28 @@ void Renderer::render()
 
 void Renderer::setupLightsUniforms()
 {
-    if (cachedDirCount != dirLights.size())
-    {
+    //if (cachedDirCount != dirLights.size())
+    //{
         currentShader->setUniform1ui("dirUsed",   dirLights.size());
         cachedDirCount = dirLights.size();
-    }
+    //}
 
-    if (cachedPointCount != pointLights.size())
-    {
+    //if (cachedPointCount != pointLights.size())
+    //{
         currentShader->setUniform1ui("pointUsed", pointLights.size());
         cachedPointCount = pointLights.size();
-    }
+    //}
 
-    if (cachedSpotCount != spotLights.size())
-    {
+    //if (cachedSpotCount != spotLights.size())
+    //{
         currentShader->setUniform1ui("spotUsed",  spotLights.size());
         cachedSpotCount = spotLights.size();
-    }
+    //}
 
     for (size_t i = 0; i < dirLights.size(); ++i)
     {
-        if(dirLights[i]->isDirty)
-        {
+        //if(dirLights[i]->isDirty)
+        //{
             std::string idx = std::to_string(i);
 
             currentShader->setUniform3fv("dirLights[" + idx + "].direction", dirLights[i]->direction);
@@ -210,13 +219,13 @@ void Renderer::setupLightsUniforms()
             currentShader->setUniform3fv("dirLights[" + idx + "].specular",  dirLights[i]->specular);
 
             dirLights[i]->isDirty = false;
-        }
+        //}
     }
 
     for (size_t i = 0; i < pointLights.size(); ++i)
     {
-        if(pointLights[i]->isDirty)
-        {
+        //if(pointLights[i]->isDirty)
+        //{
             std::string idx = std::to_string(i);
 
             currentShader->setUniform3fv("pointLights[" + idx + "].position",  pointLights[i]->position);
@@ -228,13 +237,13 @@ void Renderer::setupLightsUniforms()
                                                                                             pointLights[i]->linearAttenuation,
                                                                                             pointLights[i]->quadraticAttenuation));
             pointLights[i]->isDirty = false;
-        }
+        //}
     }
 
     for (size_t i = 0; i < spotLights.size(); ++i)
     {
-        if(spotLights[i]->isDirty)
-        {
+        //if(spotLights[i]->isDirty)
+        //{
             std::string idx = std::to_string(i);
 
             currentShader->setUniform3fv("spotLights[" + idx + "].position",  spotLights[i]->position);
@@ -249,7 +258,7 @@ void Renderer::setupLightsUniforms()
             currentShader->setUniform2fv("spotLights[" + idx + "].angles",       glm::vec2(glm::cos(glm::radians(spotLights[i]->innerCutOffAngle)), 
                                                                                            glm::cos(glm::radians(spotLights[i]->outerCutOffAngle))));
             spotLights[i]->isDirty = false;
-        }
+        //}
     }
 }
 

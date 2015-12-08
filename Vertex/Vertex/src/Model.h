@@ -46,7 +46,7 @@ private:
     Mesh * processMesh(aiMesh * mesh, const aiScene * scene, aiString & directory);
     std::vector<Texture *> loadMaterialTextures(aiMaterial * mat, aiTextureType type, std::string type_name, aiString & directory);
 
-    void render();
+    void render(Shader * shader);
     void loadModel(std::string filename);
 };
 

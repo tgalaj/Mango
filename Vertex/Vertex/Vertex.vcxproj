@@ -95,10 +95,15 @@
   <ItemGroup>
     <None Include="res\shaders\Basic.frag" />
     <None Include="res\shaders\Basic.vert" />
+    <None Include="res\shaders\Layered.frag" />
+    <None Include="res\shaders\Layered.geom" />
+    <None Include="res\shaders\Layered.vert" />
     <None Include="res\shaders\Reflection.frag" />
     <None Include="res\shaders\Reflection.vert" />
     <None Include="res\shaders\Skybox.frag" />
     <None Include="res\shaders\Skybox.vert" />
+    <None Include="res\shaders\SkyboxLayered.geom" />
+    <None Include="res\shaders\SkyboxLayered.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9DF5F709-0864-4185-BE40-2FDD4F0B26EC}</ProjectGuid>

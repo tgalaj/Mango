@@ -93,7 +93,7 @@ void ReflectionsDemo::processInput()
 
 void ReflectionsDemo::update(float delta)
 {
-    printf("FPS =  %d     \r", CoreServices::getCore()->getFPS());
+    printf("FPS =  %.3f     \r", 1000.0f / CoreServices::getCore()->getFPS());
     empty->setRotation(glm::vec3(0, 1, 0), 7.0f * delta);
 }
 

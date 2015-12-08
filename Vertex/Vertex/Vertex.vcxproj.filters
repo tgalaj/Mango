@@ -295,5 +295,20 @@
     <None Include="res\shaders\Reflection.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="res\shaders\Layered.geom">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\Layered.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\Layered.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\SkyboxLayered.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\SkyboxLayered.geom">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

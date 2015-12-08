@@ -151,7 +151,7 @@ std::vector<Texture*> Model::loadMaterialTextures(aiMaterial * mat, aiTextureTyp
     return textures;
 }
 
-void Model::render()
+void Model::render(Shader * shader)
 {
     shader->setUniformMatrix3fv("normalMatrix", normalMatrix);
     shader->setUniformMatrix4fv("world", worldTransform);
