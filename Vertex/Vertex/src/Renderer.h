@@ -55,65 +55,71 @@ private:
 
     struct ReflectiveObj
     {
-        GLuint to_id, fbo_id, rbo_id;
+        GLuint to_color_id, to_depth_id, fbo_id;
         int cube_size;
         glm::mat4 proj;
 
         ReflectiveObj()
         {
             cube_size = 512;
-            proj = glm::perspective(90.0f, 1.0f, 0.1f, 100.0f);
+            float half_size = cube_size * 0.5f;
+            proj = glm::perspective(2.0f * glm::atan(half_size / (half_size - 0.5f)), 1.0f, 0.01f, 1000.0f);
 
-            to_id  = 0;
+            to_color_id = 0;
+            to_depth_id = 0;
             fbo_id = 0;
-            rbo_id = 0;
 
-            glGenTextures(1, &to_id);
-            glBindTexture(GL_TEXTURE_CUBE_MAP, to_id);
+            glGenFramebuffers(1, &fbo_id);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo_id);
+
+            glGenTextures(1, &to_color_id);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, to_color_id);
+
+            glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_RGBA8, cube_size, cube_size);
+
             glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-            for (int i = 0; i < 6; ++i)
-            {
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, cube_size, cube_size, 0, GL_RGBA, GL_FLOAT, NULL);
-            }
+            glGenTextures(1, &to_depth_id);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, to_depth_id);
+            
+            glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_DEPTH_COMPONENT32F, cube_size, cube_size);
+                       
+            glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-            glGenFramebuffers(1, &fbo_id);
-            glBindFramebuffer(GL_FRAMEBUFFER, fbo_id);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, to_color_id, 0);
+            //glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, to_color_id, 0);
+            //glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, to_depth_id, 0);
 
-            glGenRenderbuffers(1, &rbo_id);
-            glBindRenderbuffer(GL_RENDERBUFFER, rbo_id);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, cube_size, cube_size);
-            //glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo_id);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, to_id, 0);
-
-            //glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            //glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+            GLenum color_attachments[] = { GL_COLOR_ATTACHMENT0 };
+            glDrawBuffers(1, color_attachments);
         }
 
         ~ReflectiveObj()
         {
-            if (to_id != 0)
+            if (to_color_id != 0)
             {
-                glDeleteTextures(1, &to_id);
-                to_id = 0;
+                glDeleteTextures(1, &to_color_id);
+                to_color_id = 0;
+            }
+
+            if (to_depth_id != 0)
+            {
+                glDeleteTextures(1, &to_depth_id);
+                to_depth_id = 0;
             }
 
             if (fbo_id != 0)
             {
                 glDeleteFramebuffers(1, &fbo_id);
                 fbo_id = 0;
-            }
-
-            if (rbo_id != 0)
-            {
-                glDeleteRenderbuffers(1, &rbo_id);
-                rbo_id = 0;
             }
         }
     };

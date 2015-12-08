@@ -6,7 +6,7 @@ in vec3 o_position;
 in vec3 o_normal;
 in vec2 o_texcoord;
 
-out vec4 fragColor;
+layout(location = 0) out vec4 fragColor;
 
 struct Material
 {

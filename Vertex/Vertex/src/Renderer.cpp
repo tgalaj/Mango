@@ -81,8 +81,17 @@ void Renderer::render()
 
         for(int j = 0; j < 6; ++j)
         {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + j, reflectiveTextures[i]->to_id, 0);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + j, reflectiveTextures[i]->to_color_id, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            if (skybox)
+            {
+                currentShader = ShaderManager::getShader("ve_skybox");
+                currentShader->apply();
+
+                currentShader->setUniformMatrix4fv("wvp", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[j], glm::vec3(0, -1, 0)) * skybox->world);
+                skybox->render(currentShader, cam);
+            }
 
             for (auto & model : models)
             {
@@ -161,7 +170,7 @@ void Renderer::render()
         for (int i = 0; i < reflectiveModels.size(); ++i)
         {
             glActiveTexture(GL_TEXTURE7);
-            glBindTexture(GL_TEXTURE_CUBE_MAP, reflectiveTextures[i]->to_id);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, reflectiveTextures[i]->to_color_id);
 
             reflectiveModels[i]->render();
             glActiveTexture(GL_TEXTURE0);

@@ -17,14 +17,16 @@ ReflectionsDemo::ReflectionsDemo()
     scene = new Scene(cam);
     CoreServices::getCore()->setScene(scene);
 
-    sphere = CoreAssetManager::createModel();
+    empty = new SceneNode();
+
+    Model * sphere = CoreAssetManager::createModel();
     sphere->genSphere(4.0f, 50);
     //sphere->genCube(4);
     sphere->setTexture("res/texture/white_4x4.jpg");
     sphere->setDiffuseColor(0, glm::vec3(1, 0, 0));
 
     int numCubes = 10000;
-    float radius = 120.0f;
+    float radius = 121.0f;
     float alpha  = glm::two_pi<float>() / numCubes;
 
     for(int i = 0; i < numCubes; ++i)
@@ -35,13 +37,14 @@ ReflectionsDemo::ReflectionsDemo()
         cube->setDiffuseColor(0, glm::ballRand(1.0f));
         //cube->setPosition(glm::vec3(radius * glm::cos(alpha * i), 0, radius * glm::sin(alpha * i)));
         cube->setPosition(glm::ballRand(radius));
-        sphere->addChild(cube);
+        empty->addChild(cube);
     }
     
     DirectionalLight * dirLight = new DirectionalLight();
     dirLight->setDirection(glm::vec3(0, -1, 1));
     
     scene->addChild(sphere, 1);
+    scene->addChild(empty);
     scene->addChild(dirLight);
 
     /* Skybox */
@@ -91,7 +94,7 @@ void ReflectionsDemo::processInput()
 void ReflectionsDemo::update(float delta)
 {
     printf("FPS =  %d     \r", CoreServices::getCore()->getFPS());
-    sphere->setRotation(glm::vec3(0, 1, 0), 7.0f * delta);
+    empty->setRotation(glm::vec3(0, 1, 0), 7.0f * delta);
 }
 
 void ReflectionsDemo::onGUI()

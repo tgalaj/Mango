@@ -17,7 +17,7 @@ public:
 
 private:
     Scene      * scene;
-    Model      * sphere;
+    SceneNode  * empty;
     FreeCamera * cam;
 };
 
