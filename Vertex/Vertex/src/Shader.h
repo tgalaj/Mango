@@ -13,6 +13,7 @@ public:
     friend class Renderer;
     friend class ShaderManager;
     friend class Mesh;
+    friend class ParticleEffect;
 
     virtual ~Shader();
 
@@ -21,6 +22,7 @@ public:
     void setUniform1ui      (const std::string & uniformName, unsigned int value);
     void setUniform2fv      (const std::string & uniformName, glm::vec2 & vector);
     void setUniform3fv      (const std::string & uniformName, glm::vec3 & vector);
+    void setUniform4fv      (const std::string & uniformName, glm::vec4 & vector);
     void setUniformMatrix3fv(const std::string & uniformName, glm::mat3 & matrix);
     void setUniformMatrix4fv(const std::string & uniformName, glm::mat4 & matrix);
 

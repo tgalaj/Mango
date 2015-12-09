@@ -12,6 +12,8 @@ Renderer::Renderer()
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_FRAMEBUFFER_SRGB);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //glClearColor(0.382f, 0.618f, 1.0f, 1.0f);
     glClearColor(1, 1, 1, 1);
@@ -38,6 +40,18 @@ Renderer::Renderer()
                                 "res/shaders/SkyboxLayered.vert", 
                                 "res/shaders/Skybox.frag",
                                 "res/shaders/SkyboxLayered.geom");
+
+    ShaderManager::createShader("ve_render_particles",
+                                "res/shaders/Particles.vert", 
+                                "res/shaders/Particles.frag");
+
+    ShaderManager::createShader("ve_compute_particles",
+                                "", 
+                                "",
+                                "",
+                                "",
+                                "",
+                                "res/shaders/ParticleSystem.comp");
 }
 
 Renderer::~Renderer()
@@ -114,7 +128,7 @@ void Renderer::render()
         {
             setupLightsUniforms();
         }
-
+ 
         currentShader->setUniform3fv("camPos", glm::vec3(reflectiveModels[i]->worldTransform[3]));
         currentShader->setUniformMatrix4fv("mvps[0]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[0], glm::vec3(0, -1, 0)));
         currentShader->setUniformMatrix4fv("mvps[1]", reflectiveTextures[i]->proj * glm::lookAt(glm::vec3(reflectiveModels[i]->worldTransform[3]), vectors[1], glm::vec3(0, -1, 0)));
@@ -134,6 +148,12 @@ void Renderer::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     /* Draw scene normally */
+
+    for (int i = 0; i < particle_effects.size(); ++i)
+    {
+        particle_effects[i]->render(cam);
+    }
+
     for (auto & model : models)
     {
         if (model->shader != currentShader && model->shader != nullptr)

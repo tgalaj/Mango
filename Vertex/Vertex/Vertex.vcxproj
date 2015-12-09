@@ -98,6 +98,9 @@
     <None Include="res\shaders\Layered.frag" />
     <None Include="res\shaders\Layered.geom" />
     <None Include="res\shaders\Layered.vert" />
+    <None Include="res\shaders\Particles.frag" />
+    <None Include="res\shaders\Particles.vert" />
+    <None Include="res\shaders\ParticleSystem.comp" />
     <None Include="res\shaders\Reflection.frag" />
     <None Include="res\shaders\Reflection.vert" />
     <None Include="res\shaders\Skybox.frag" />

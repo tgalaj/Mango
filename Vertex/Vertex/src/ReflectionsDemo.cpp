@@ -59,6 +59,8 @@ ReflectionsDemo::ReflectionsDemo()
 
 ReflectionsDemo::~ReflectionsDemo()
 {
+    delete scene;
+    scene = nullptr;
 }
 
 void ReflectionsDemo::processInput()

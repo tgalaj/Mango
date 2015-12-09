@@ -8,6 +8,7 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "Skybox.h"
+#include "ParticleEffect.h"
 
 class Renderer final
 {
@@ -38,6 +39,8 @@ private:
     std::vector<DirectionalLight *> dirLights;
     std::vector<PointLight *>       pointLights;
     std::vector<SpotLight *>        spotLights;
+
+    std::deque<ParticleEffect *> particle_effects;
 
     short cachedDirCount;
     short cachedPointCount;

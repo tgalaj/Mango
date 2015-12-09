@@ -310,5 +310,14 @@
     <None Include="res\shaders\SkyboxLayered.geom">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="res\shaders\ParticleSystem.comp">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\Particles.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\Particles.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

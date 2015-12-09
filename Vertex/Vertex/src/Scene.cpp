@@ -1,7 +1,6 @@
 #include "CoreServices.h"
 #include "Scene.h"
 
-
 Scene::Scene(Camera * _cam)
     : modelMatrix(glm::mat4(1.0f))
 {
@@ -51,6 +50,11 @@ void Scene::addChild(SceneNode * child, bool reflective)
     if (SpotLight * light = dynamic_cast<SpotLight *>(child))
     {
         CoreServices::getRenderer()->spotLights.push_back(light);
+    }
+
+    if (ParticleEffect * pe = dynamic_cast<ParticleEffect *>(child))
+    {
+        CoreServices::getRenderer()->particle_effects.push_back(pe);
     }
 
     addChildrenToRenderer(child);

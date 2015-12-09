@@ -33,11 +33,11 @@ Shader::Shader(const std::string & vertexShaderFilename,
     bool status = true;
 
     /* Check if compute shader's source code is the only one available. */
-    if (!shaderCodes[5].empty())
+    if (shaderCodes[5] != "")
     {
-        for (auto & shaderCode : shaderCodes)
+        for (int i = 0; i < 5; ++i)
         {
-            if (!shaderCode.empty())
+            if (shaderCodes[i] != "")
             {
                 fprintf(stderr, "Compute shader can't be created due to presence of other shader source codes.\n");
                 printf("Press any key to continue...\n");
@@ -436,6 +436,31 @@ void Shader::setUniform3fv(const std::string & uniformName, glm::vec3 & vector)
         if (getUniformLocation(uniformName))
         {
             glProgramUniform3fv(program_id, uniformsLocations[uniformName], 1, glm::value_ptr(vector));
+        }
+    }
+}
+
+void Shader::setUniform4fv(const std::string & uniformName, glm::vec4 & vector)
+{
+    if (uniformsLocations.count(uniformName))
+    {
+        glProgramUniform4fv(program_id, uniformsLocations[uniformName], 1, glm::value_ptr(vector));
+    }
+    else if (uniformBlocksMembers.count(uniformName))
+    {
+        GLubyte * data = uniformBlocksMembers[uniformName]->data +
+                         uniformBlocksMembers[uniformName]->uniformMembersOffsets[uniformName] +
+                         uniformBlocksMembers[uniformName]->ring_index * uniformBlocksMembers[uniformName]->block_size;
+
+        memcpy(data, glm::value_ptr(vector), sizeof(glm::vec4));
+
+        uniformBlocksMembers[uniformName]->isDirty = true;
+    }
+    else
+    {
+        if (getUniformLocation(uniformName))
+        {
+            glProgramUniform4fv(program_id, uniformsLocations[uniformName], 1, glm::value_ptr(vector));
         }
     }
 }

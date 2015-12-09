@@ -8,7 +8,7 @@
 int main(int argc, char * args[])
 {
     VertexEngineCore vec("Hello Vertex!", 1024, 768);
-    vec.start(new ReflectionsDemo());
+    vec.start(new ParticlesDemo());
     
     return 0;
 }
