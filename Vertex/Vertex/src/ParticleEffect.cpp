@@ -7,12 +7,17 @@
 #include <vector>
 
 ParticleEffect::ParticleEffect(GLuint _max_particles)
-    : color(glm::vec4(0.85f, 0.325f, 0.0f, 0.4f)),
+    : color(glm::vec4(0.85f, 0.325f, 0.0f, 0.2f)),
       simulate(true)
 {
     if(_max_particles > 18000000)
     {
         _max_particles = 18000000;
+    }
+
+    if (_max_particles < 1000)
+    {
+        _max_particles = 1000;
     }
 
     max_particles = _max_particles;
