@@ -20,8 +20,8 @@ public:
     void reset();
 
 private:
-    std::vector<GLfloat> init_positions;
-    std::vector<GLfloat> init_velocities;
+    GLfloat * init_positions;
+    GLfloat * init_velocities;
 
     Shader * shader;
 

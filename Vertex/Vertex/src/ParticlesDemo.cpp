@@ -45,7 +45,7 @@ ParticlesDemo::ParticlesDemo()
     DirectionalLight * dirLight = new DirectionalLight();
     dirLight->setDirection(glm::vec3(0, -1, 1));
 
-    particles = new ParticleEffect(8000000);
+    particles = new ParticleEffect(10000000);
 
     scene->addChild(sphere);
     scene->addChild(sphere2);

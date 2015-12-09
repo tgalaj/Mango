@@ -10,10 +10,18 @@ ParticleEffect::ParticleEffect(GLuint _max_particles)
     : color(glm::vec4(0.85f, 0.325f, 0.0f, 0.4f)),
       simulate(true)
 {
+    if(_max_particles > 18000000)
+    {
+        _max_particles = 18000000;
+    }
+
     max_particles = _max_particles;
 
-    std::vector<GLfloat> positions;
-    std::vector<GLfloat> velocities(max_particles * 4, 0.0f);
+    init_positions  = new GLfloat[max_particles * 4];
+    init_velocities = new GLfloat[max_particles * 4];
+    
+    memset(init_positions,  0, sizeof(GLfloat) * 4 * max_particles);
+    memset(init_velocities, 0, sizeof(GLfloat) * 4 * max_particles);
 
     glm::vec4 p(0.0f, 0.0f, 0.0f, 1.0f);
     int no_particles_in_dim = cbrt(max_particles);
@@ -24,6 +32,7 @@ ParticleEffect::ParticleEffect(GLuint _max_particles)
           dy = 2.0f / (no_particles_in_dim - 1),
           dz = 2.0f / (no_particles_in_dim - 1);
 
+    int counter = 0;
     for (int i = 0; i < no_particles_in_dim; ++i)
     {
         for (int j = 0; j < no_particles_in_dim; ++j)
@@ -37,24 +46,21 @@ ParticleEffect::ParticleEffect(GLuint _max_particles)
 
                 p = transf * p;
 
-                positions.push_back(p.x);
-                positions.push_back(p.y);
-                positions.push_back(p.z);
-                positions.push_back(p.w);
+                init_positions[counter++] = p.x;
+                init_positions[counter++] = p.y;
+                init_positions[counter++] = p.z;
+                init_positions[counter++] = p.w;
             }
         }
     }
 
-    init_positions  = positions;
-    init_velocities = velocities;
-
     /* VBOs */
     glGenBuffers(2, vbo_ids);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, vbo_ids[POSITIONS]);
-    glBufferStorage(GL_SHADER_STORAGE_BUFFER, max_particles * sizeof(glm::vec4), &positions[0], GL_DYNAMIC_STORAGE_BIT /*flags*/);
+    glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 4 * max_particles, init_positions, GL_DYNAMIC_STORAGE_BIT /*flags*/);
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, vbo_ids[VELOCITIES]);
-    glBufferStorage(GL_SHADER_STORAGE_BUFFER, max_particles * sizeof(glm::vec4), &velocities[0], GL_DYNAMIC_STORAGE_BIT /*flags*/);
+    glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 4 * max_particles, init_velocities, GL_DYNAMIC_STORAGE_BIT /*flags*/);
 
     /* VAO */
     glCreateVertexArrays(1, &vao_id);
@@ -62,7 +68,7 @@ ParticleEffect::ParticleEffect(GLuint _max_particles)
 
     glVertexArrayAttribBinding(vao_id, 0, 0);
     glVertexArrayAttribFormat(vao_id, 0, 4, GL_FLOAT, GL_FALSE, 0);
-    glVertexArrayVertexBuffer(vao_id, 0, vbo_ids[POSITIONS], 0, sizeof(glm::vec4));
+    glVertexArrayVertexBuffer(vao_id, 0, vbo_ids[POSITIONS], 0, sizeof(GLfloat) * 4);
 
     glPointSize(1.0f);
 }
@@ -70,6 +76,9 @@ ParticleEffect::ParticleEffect(GLuint _max_particles)
 
 ParticleEffect::~ParticleEffect()
 {
+    delete[] init_positions;
+    delete[] init_velocities;
+
     for (auto & vbo_id : vbo_ids)
     {
         if (vbo_id != 0)
@@ -89,10 +98,10 @@ ParticleEffect::~ParticleEffect()
 void ParticleEffect::reset()
 {
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, vbo_ids[POSITIONS]);
-    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, max_particles * sizeof(glm::vec4), &init_positions[0]);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * max_particles, init_positions);
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, vbo_ids[VELOCITIES]);
-    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, max_particles * sizeof(glm::vec4), &init_velocities[0]);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * max_particles, init_velocities);
 
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_BUFFER_UPDATE_BARRIER_BIT);
 }
