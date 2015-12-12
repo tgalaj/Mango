@@ -3,6 +3,7 @@
 #include <deque>
 
 #include "Camera.h"
+#include "Cloth.h"
 #include "Model.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
@@ -32,8 +33,8 @@ private:
 
     struct ReflectiveObj;
 
-    std::deque<Model *> models;
-    std::deque<Model *> reflectiveModels;
+    std::deque<Model *>          models;
+    std::deque<Model *>          reflectiveModels;
     std::deque<ReflectiveObj *>  reflectiveTextures;
 
     std::vector<DirectionalLight *> dirLights;
@@ -41,6 +42,7 @@ private:
     std::vector<SpotLight *>        spotLights;
 
     std::deque<ParticleEffect *> particle_effects;
+    std::deque<Cloth *>          cloth_objects;
 
     short cachedDirCount;
     short cachedPointCount;

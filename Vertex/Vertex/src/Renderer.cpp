@@ -52,6 +52,22 @@ Renderer::Renderer()
                                 "",
                                 "",
                                 "res/shaders/ParticleSystem.comp");
+
+    ShaderManager::createShader("ve_compute_cloth",
+                                "", 
+                                "",
+                                "",
+                                "",
+                                "",
+                                "res/shaders/Cloth.comp");
+
+    ShaderManager::createShader("ve_compute_cloth_normals",
+                                "", 
+                                "",
+                                "",
+                                "",
+                                "",
+                                "res/shaders/ClothNormals.comp");
 }
 
 Renderer::~Renderer()
@@ -148,35 +164,34 @@ void Renderer::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     /* Draw scene normally */
+    for (int i = 0; i < cloth_objects.size(); ++i)
+    {
+        cloth_objects[i]->compute();
+    }
 
     for (int i = 0; i < particle_effects.size(); ++i)
     {
         particle_effects[i]->render(cam);
     }
 
+    currentShader = ShaderManager::getShader("ve_basic");
+    currentShader->apply();
+    setupLightsUniforms();
+
     for (auto & model : models)
     {
-        if (model->shader != currentShader && model->shader != nullptr)
-        {
-            currentShader = model->shader;
-            currentShader->apply();
-        }
-
-        if (currentShader)
-        {
-            currentShader->unlockUBOs();
-            setupLightsUniforms();
-        }
-
         currentShader->setUniform3fv("camPos", cam->getPosition());
         currentShader->setUniformMatrix4fv("viewProj", cam->getViewProjection());
 
         model->render(currentShader);
+    }
 
-        if (currentShader)
-        {
-            currentShader->lockUBOs();
-        }
+    for (int i = 0; i < cloth_objects.size(); ++i)
+    {    
+        currentShader->setUniform3fv("camPos", cam->getPosition());
+        currentShader->setUniformMatrix4fv("viewProj", cam->getViewProjection());
+    
+        cloth_objects[i]->render(currentShader);
     }
 
     if (skybox)

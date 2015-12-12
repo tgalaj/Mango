@@ -14,6 +14,7 @@ public:
     friend class ShaderManager;
     friend class Mesh;
     friend class ParticleEffect;
+    friend class Cloth;
 
     virtual ~Shader();
 

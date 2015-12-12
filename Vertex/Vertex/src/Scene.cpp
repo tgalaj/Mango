@@ -57,6 +57,11 @@ void Scene::addChild(SceneNode * child, bool reflective)
         CoreServices::getRenderer()->particle_effects.push_back(pe);
     }
 
+    if (Cloth * cloth = dynamic_cast<Cloth *>(child))
+    {
+        CoreServices::getRenderer()->cloth_objects.push_back(cloth);
+    }
+
     addChildrenToRenderer(child);
 }
 

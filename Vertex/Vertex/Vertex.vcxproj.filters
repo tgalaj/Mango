@@ -150,6 +150,9 @@
     <ClCompile Include="src\Skybox.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Cloth.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseGame.h">
@@ -275,6 +278,9 @@
     <ClInclude Include="src\Skybox.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Cloth.h">
+      <Filter>Header Files\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.vert">
@@ -317,6 +323,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="res\shaders\Particles.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\Cloth.comp">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\ClothNormals.comp">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
