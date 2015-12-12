@@ -1,16 +1,21 @@
 #include "Cloth.h"
 #include "ShaderManager.h"
+#include "CoreAssetManager.h"
 
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <math.h>
-#include <vector>
 
-Cloth::Cloth       (int particles_x, int particles_y, float cloth_size_x, float cloth_size_y)
-    : particles_dim(particles_x, particles_y),
-      cloth_size   (cloth_size_x, cloth_size_y),
-      PRIM_RESTART (0xffffff),
-      read_buf     (0)
+Cloth::Cloth           (int particles_x, int particles_y, float cloth_size_x, float cloth_size_y)
+    : particles_dim    (particles_x, particles_y),
+      cloth_size       (cloth_size_x, cloth_size_y),
+      PRIM_RESTART     (0xffffff),
+      read_buf         (0),
+      gravity(glm::vec3(0.0f, -9.81f, 0.0f)),
+      particle_mass    (0.1f),
+      spring_k         (2000.0f),
+      delta_t          (0.000005f),
+      damping          (0.1f)
 {
     if (particles_dim.x * particles_dim.y > 18000000)
     {
@@ -43,6 +48,10 @@ Cloth::Cloth       (int particles_x, int particles_y, float cloth_size_x, float 
           dy = cloth_size.y / (particles_dim.y - 1),
           ds = 1.0f         / (particles_dim.x - 1),
           dt = 1.0f         / (particles_dim.y - 1);
+
+    rest_len_x    = dx;
+    rest_len_y    = dy;
+    rest_len_diag = glm::sqrt(dx * dx + dy * dy);
 
     int counter = 0;
     for (int i = 0; i < particles_dim.y; ++i)
@@ -127,8 +136,27 @@ Cloth::Cloth       (int particles_x, int particles_y, float cloth_size_x, float 
     glVertexArrayVertexBuffer(vao_id, 1 /*bindingindex*/, vbo_ids[NORMALS],     0 /*offset*/, sizeof(glm::vec4) /*stride*/);
     glVertexArrayVertexBuffer(vao_id, 2 /*bindingindex*/, vbo_ids[TEXCOORDS],   0 /*offset*/, sizeof(glm::vec2) /*stride*/);
 
+    /* Get shaders */
     compute_cloth_shader         = ShaderManager::getShader("ve_compute_cloth");
     compute_cloth_normals_shader = ShaderManager::getShader("ve_compute_cloth_normals");
+
+    /* Set up textures and material */
+    Texture * diff = CoreAssetManager::createTexture2D("res/texture/white_4x4.jpg");
+    diff->setTypeName(std::string("texture_diffuse"));
+
+    Texture * spec = CoreAssetManager::createTexture2D("res/texture/spec_default.jpg");
+    spec->setTypeName(std::string("texture_specular"));
+
+    textures.push_back(diff);
+    textures.push_back(spec);
+
+    material.diffuse_color = glm::vec3(0.8f, 0.8f, 0.8f);
+    material.shininess     = 2.0f;
+
+    /* Compute normals */
+    compute_cloth_normals_shader->apply();
+    glDispatchCompute(particles_dim.x / 10, particles_dim.y / 10, 1);
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }
 
 Cloth::~Cloth()
@@ -175,11 +203,47 @@ void Cloth::reset()
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }
 
+void Cloth::setDiffuseTexture(const std::string & filename)
+{
+    Texture * diff = CoreAssetManager::createTexture2D(filename);
+    diff->setTypeName(std::string("texture_diffuse"));
+
+    textures[0] = diff;
+}
+
+void Cloth::setSpecularTexture(const std::string & filename)
+{
+    Texture * spec = CoreAssetManager::createTexture2D(filename);
+    spec->setTypeName(std::string("texture_specular"));
+
+    textures[1] = spec;
+}
+
+void Cloth::setColor(glm::vec3 & color)
+{
+    material.diffuse_color = color;
+}
+
+void Cloth::setShininess(float shinines)
+{
+    material.shininess = shinines;
+}
+
 void Cloth::compute()
 {
     if (simulate)
     {
         compute_cloth_shader->apply();
+        
+        compute_cloth_shader->setUniform3fv("Gravity",         gravity);
+        compute_cloth_shader->setUniform1f ("ParticleMass",    particle_mass);
+        compute_cloth_shader->setUniform1f ("ParticleInvMass", 1.0f / particle_mass);
+        compute_cloth_shader->setUniform1f ("RestLengthHoriz", rest_len_x);
+        compute_cloth_shader->setUniform1f ("RestLengthVert",  rest_len_y);
+        compute_cloth_shader->setUniform1f ("RestLengthDiag",  rest_len_diag);
+        compute_cloth_shader->setUniform1f ("SpringK",         spring_k);
+        compute_cloth_shader->setUniform1f ("DeltaT",          delta_t);
+        compute_cloth_shader->setUniform1f ("DampingConst",    damping);
 
         for(int i = 0; i < 1000; ++i)
         {
@@ -205,6 +269,14 @@ void Cloth::render(Shader * shader)
     shader->setUniformMatrix3fv("normalMatrix", normalMatrix);
     shader->setUniformMatrix4fv("world", worldTransform);
 
+    for (GLuint i = 0; i < textures.size(); ++i)
+    {
+        textures[i]->bind(i);
+    }
+
+    shader->setUniform1f ("material.shininess",    material.shininess);
+    shader->setUniform3fv("material.diffuseColor", material.diffuse_color);
+
     glBindVertexArray(vao_id);
-    glDrawElements(GL_TRIANGLE_STRIP, num_elements, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLE_STRIP, num_elements, GL_UNSIGNED_INT, NULL);
 }

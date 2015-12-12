@@ -7,6 +7,7 @@
 #include "VertexEngineCore.h"
 #include "DirectionalLight.h"
 
+#include <imgui\imgui_impl_sdl.h>
 #include <glm\gtc\constants.hpp>
 #include <glm\gtc\random.hpp>
 
@@ -35,7 +36,7 @@ ClothDemo::ClothDemo()
     DirectionalLight * dirLight = new DirectionalLight();
     dirLight->setDirection(glm::vec3(0, -1, 1));
 
-    cloth = new Cloth(40, 40, 4.0f, 4.0f);
+    cloth = new Cloth(50, 50, 8.0f, 6.0f);
     cloth->simulate = false;
 
     scene->addChild(sphere);
@@ -132,6 +133,39 @@ void ClothDemo::update(float delta)
            cam->getPitch());
 }
 
+float cloth_shininess = 2.0f;
+ImVec4 cloth_color = ImColor(200, 200, 200);
+
 void ClothDemo::onGUI()
 {
+    {
+        ImGui::Begin      ("Cloth settings");
+
+        ImGui::Text       ("Material properties:");
+        ImGui::SliderFloat("Shininess", &cloth_shininess, 1.0f, 200.0f);
+        ImGui::ColorEdit3 ("Color", (float*)&cloth_color);
+
+        ImGui::Text("Physical properties:");
+        ImGui::SliderFloat3("Gravity",       &cloth->gravity[0], -100.0f, 100.0f);
+        ImGui::SliderFloat ("Particle mass", &cloth->particle_mass, 0.1f, 10.0f);
+        ImGui::SliderFloat ("Spring k",      &cloth->spring_k, 0.0f, 20000.0f);
+        ImGui::SliderFloat ("Damping",       &cloth->damping,  0.0f, 1.0f);
+
+        if(cloth->simulate)
+        {
+            if (ImGui::Button("Pause simulation")) cloth->simulate ^= 1;
+        }
+        else
+        {
+            if (ImGui::Button("Start simulation")) cloth->simulate ^= 1;
+        }
+
+        if (ImGui::Button("Reset simulation")) cloth->reset();
+
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::End();
+
+        cloth->setShininess(cloth_shininess);
+        cloth->setColor(glm::vec3(cloth_color.x, cloth_color.y, cloth_color.z));
+    }
 }
