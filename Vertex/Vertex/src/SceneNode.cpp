@@ -24,19 +24,19 @@ SceneNode::~SceneNode()
 void SceneNode::setPosition(glm::vec3 & position)
 {
     isDirty = true;
-    localTransform = glm::translate(localTransform, position);
+    localTransform = glm::translate(glm::mat4(1.0f), position);
 }
 
 void SceneNode::setRotation(glm::vec3 & axis, float angleDegrees)
 {
     isDirty = true;
-    localTransform = glm::rotate(localTransform, glm::radians(angleDegrees), axis);
+    localTransform = glm::rotate(glm::mat4(1.0f), glm::radians(angleDegrees), axis);
 }
 
 void SceneNode::setScale(glm::vec3 & scale)
 {
     isDirty = true;
-    localTransform = glm::scale(localTransform, scale);
+    localTransform = glm::scale(glm::mat4(1.0f), scale);
 }
 
 void SceneNode::addChild(SceneNode * child)

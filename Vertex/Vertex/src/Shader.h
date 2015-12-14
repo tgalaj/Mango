@@ -21,6 +21,8 @@ public:
     void setUniform1f       (const std::string & uniformName, float value);
     void setUniform1i       (const std::string & uniformName, int value);
     void setUniform1ui      (const std::string & uniformName, unsigned int value);
+    void setUniform1fv      (const std::string & uniformName, GLsizei count, float * value);
+    void setUniform1iv      (const std::string & uniformName, GLsizei count, int * value);
     void setUniform2fv      (const std::string & uniformName, glm::vec2 & vector);
     void setUniform3fv      (const std::string & uniformName, glm::vec3 & vector);
     void setUniform4fv      (const std::string & uniformName, glm::vec4 & vector);

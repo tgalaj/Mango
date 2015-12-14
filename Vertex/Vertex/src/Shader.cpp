@@ -390,6 +390,36 @@ void Shader::setUniform1ui(const std::string & uniformName, unsigned int value)
     }
 }
 
+void Shader::setUniform1fv(const std::string & uniformName, GLsizei count, float * value)
+{
+    if (uniformsLocations.count(uniformName))
+    {
+        glProgramUniform1fv(program_id, uniformsLocations[uniformName], count, value);
+    }
+    else
+    {
+        if (getUniformLocation(uniformName))
+        {
+            glProgramUniform1fv(program_id, uniformsLocations[uniformName], count, value);
+        }
+    }
+}
+
+void Shader::setUniform1iv(const std::string & uniformName, GLsizei count, int * value)
+{
+    if (uniformsLocations.count(uniformName))
+    {
+        glProgramUniform1iv(program_id, uniformsLocations[uniformName], count, value);
+    }
+    else
+    {
+        if (getUniformLocation(uniformName))
+        {
+            glProgramUniform1iv(program_id, uniformsLocations[uniformName], count, value);
+        }
+    }
+}
+
 void Shader::setUniform2fv(const std::string & uniformName, glm::vec2 & vector)
 {
     if (uniformsLocations.count(uniformName))

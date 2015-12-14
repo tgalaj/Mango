@@ -11,12 +11,18 @@ Cloth::Cloth           (int particles_x, int particles_y, float cloth_size_x, fl
       cloth_size       (cloth_size_x, cloth_size_y),
       PRIM_RESTART     (0xffffff),
       read_buf         (0),
+      simulate         (true),
       gravity(glm::vec3(0.0f, -9.81f, 0.0f)),
       particle_mass    (0.1f),
       spring_k         (2000.0f),
       delta_t          (0.000005f),
       damping          (0.1f)
 {
+    for (auto & pin : pins)
+    {
+        pin = true;
+    }
+
     if (particles_dim.x * particles_dim.y > 18000000)
     {
         particles_dim.x = 4242;
@@ -39,7 +45,7 @@ Cloth::Cloth           (int particles_x, int particles_y, float cloth_size_x, fl
     memset(init_velocities, 0, sizeof(GLfloat) * 4 * particles_dim.x * particles_dim.y);
 
     glm::mat4 transf = glm::translate(glm::mat4(1.0), glm::vec3(0, cloth_size.y, 0));
-    transf = glm::rotate(transf, glm::radians(-80.0f), glm::vec3(1, 0, 0));
+    transf = glm::rotate(transf, glm::radians(80.0f), glm::vec3(1, 0, 0));
     transf = glm::translate(transf, glm::vec3(0, -cloth_size.y, 0));
 
     glm::vec4 p(0.0f, 0.0f, 0.0f, 1.0f);
@@ -229,12 +235,28 @@ void Cloth::setShininess(float shinines)
     material.shininess = shinines;
 }
 
+void Cloth::setPin(int idx, bool isActive)
+{
+    if (idx < 0)
+    {
+        idx = 0;
+    }
+
+    if (idx >= sizeof(pins) / sizeof(int))
+    {
+        idx = sizeof(pins) / sizeof(int) - 1;
+    }
+
+    pins[idx] = isActive;
+}
+
 void Cloth::compute()
 {
     if (simulate)
     {
         compute_cloth_shader->apply();
         
+        compute_cloth_shader->setUniform1iv("pins", 5,        &pins[0]);
         compute_cloth_shader->setUniform3fv("Gravity",         gravity);
         compute_cloth_shader->setUniform1f ("ParticleMass",    particle_mass);
         compute_cloth_shader->setUniform1f ("ParticleInvMass", 1.0f / particle_mass);

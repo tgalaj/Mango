@@ -34,6 +34,8 @@ public:
     void setColor    (glm::vec3 & color);
     void setShininess(float shinines);
 
+    void setPin(int idx, bool isActive);
+    
 private:
     GLfloat * init_positions;
     GLfloat * init_velocities;
@@ -59,6 +61,8 @@ private:
     const GLuint PRIM_RESTART;
 
     enum { POSITIONS_0, POSITIONS_1, VELOCITIES_0, VELOCITIES_1, NORMALS, INDICES, TEXCOORDS };
+
+    int pins[5];
 
     void compute();
     void render(Shader * shader);
