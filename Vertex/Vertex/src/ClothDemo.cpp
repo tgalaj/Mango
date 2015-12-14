@@ -28,10 +28,10 @@ ClothDemo::ClothDemo()
     CoreServices::getCore()->setScene(scene);
 
     Model * sphere = CoreAssetManager::createModel();
-    sphere->genSphere(1.0f, 4);
+    sphere->genSphere(1.0f, 20);
     sphere->setTexture("res/texture/white_4x4.jpg");
     sphere->setDiffuseColor(0, glm::vec3(1, 0, 0));
-    sphere->setPosition(glm::vec3(10, 0, 0));
+    sphere->setPosition(glm::vec3(4, 1, -2));
 
     DirectionalLight * dirLight = new DirectionalLight();
     dirLight->setDirection(glm::vec3(-1, -1, -1));
