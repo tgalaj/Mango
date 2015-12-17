@@ -63,9 +63,27 @@ void clothConstraint(inout vec3 p, inout vec3 v, uint noParticles, uint idx)
 		if(distance(PositionIn[i].xyz, p) < marble_radius * 2 && i != idx)
 		{
 			p = p - normalize(PositionIn[i].xyz - p) * DeltaT * 5;
-			v = v * (1.0 - 200 * DeltaT);
+			v = v * (1.0 - 2000.0 * DeltaT);
+				
 			break;
 		}
+	}
+}
+
+void planeConstraint(inout vec3 p, inout vec3 v)
+{
+	vec3 planePos = vec3(0, -2, 0);
+	vec4 pp = model * vec4(p, 1.0f);
+	
+	vec3 delta = pp.xyz - planePos;
+	float dist = length(delta);
+	
+	if(dot(pp.xyz - planePos, vec3(0, 1, 0)) < delta_distance)
+	{
+		float diff = ( -2.0 + delta_distance - pp.y  );
+		diff = min( max( diff, 0 ), 1.0f );
+		p.y += diff;
+		v = vec3(0);
 	}
 }
 
@@ -145,8 +163,11 @@ void main()
 	vec3 p2 = p + v * DeltaT + 0.5 * a * DeltaT * DeltaT;
 	
 	v = v + a * DeltaT;
+	
 	clothConstraint(p2, v, nParticles.x * nParticles.y, idx);
-		
+	
+	planeConstraint(p2, v);
+
 	if(sphereConstraint(p2))
 	{
 		VelocityOut[idx] = vec4(v, 0.0) * (1.0 - 200 * DeltaT);

@@ -33,6 +33,12 @@ ClothDemo::ClothDemo()
     sphere->setDiffuseColor(0, glm::vec3(1, 0, 0));
     sphere->setPosition(glm::vec3(4, -0.8f, -2));
 
+    Model * plane = CoreAssetManager::createModel();
+    plane->genPlane(40, 40, 10, 10);
+    plane->setTexture("res/texture/white_4x4.jpg");
+    plane->setDiffuseColor(0, glm::vec3(115.0f/255.0f, 54.0f/255.0f, 11.0f/255.0f));
+    plane->setPosition(glm::vec3(0, -2.0f, 0));
+
     DirectionalLight * dirLight = new DirectionalLight();
     dirLight->setDirection(glm::vec3(-1, -1, -1));
 
@@ -40,6 +46,7 @@ ClothDemo::ClothDemo()
     cloth->setDiffuseTexture("res/texture/me_textile.tga");
 
     scene->addChild(sphere);
+    scene->addChild(plane);
     scene->addChild(dirLight);
     scene->addChild(cloth);
 
@@ -60,6 +67,8 @@ ClothDemo::~ClothDemo()
 
 bool vsync = true;
 bool isWire = false;
+bool pins[]{ 1, 1, 1, 1, 1 };
+
 void ClothDemo::processInput()
 {
     if (Input::getKeyDown(Input::Escape))
@@ -95,6 +104,14 @@ void ClothDemo::processInput()
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
     }
+
+    if (Input::getKeyUp(Input::R))
+    {
+        for (auto & pin : pins)
+        {
+            pin = !pin;
+        }
+    }
 }
 
 void ClothDemo::update(float delta)
@@ -107,8 +124,6 @@ ImVec4 cloth_color = ImColor(200, 200, 200);
 
 glm::vec3 trans, rot;
 glm::vec3 trans_old, rot_old;
-
-bool pins[] { 0, 0, 1, 0, 0 };
 
 void ClothDemo::onGUI()
 {
@@ -123,7 +138,7 @@ void ClothDemo::onGUI()
         ImGui::SliderFloat3("Gravity",       &cloth->gravity[0], -100.0f, 100.0f);
         ImGui::SliderFloat ("Particle mass", &cloth->particle_mass, 0.1f, 10.0f);
         ImGui::SliderFloat ("Stiffness",      &cloth->spring_k, 400.0f, 20000.0f);
-        ImGui::SliderFloat ("Damping",       &cloth->damping,  0.0f, 1.0f);
+        ImGui::SliderFloat ("Damping",       &cloth->damping,  0.0f, 10.0f);
 
         ImGui::Text("\nStatic points:");
         ImGui::Checkbox("Pin 1", &pins[0]);
