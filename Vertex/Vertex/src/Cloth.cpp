@@ -4,6 +4,7 @@
 
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
+#include <glm\gtc\type_ptr.hpp>
 #include <math.h>
 
 Cloth::Cloth           (int particles_x, int particles_y, float cloth_size_x, float cloth_size_y)
@@ -12,11 +13,11 @@ Cloth::Cloth           (int particles_x, int particles_y, float cloth_size_x, fl
       PRIM_RESTART     (0xffffff),
       read_buf         (0),
       simulate         (true),
-      gravity(glm::vec3(0.0f, -9.81f, 0.0f)),
-      particle_mass    (0.1f),
-      spring_k         (2000.0f),
-      delta_t          (0.000005f),
-      damping          (0.1f)
+      gravity(glm::vec3(0.0f, 10*-9.81f, 0.0f)),
+      particle_mass    (0.1f/1.5),
+      spring_k         (4000.0f),
+      delta_t          (0.00005f*2),
+      damping          (20*0.1f)
 {
     for (auto & pin : pins)
     {
@@ -25,14 +26,14 @@ Cloth::Cloth           (int particles_x, int particles_y, float cloth_size_x, fl
 
     if (particles_dim.x * particles_dim.y > 18000000)
     {
-        particles_dim.x = 4242;
-        particles_dim.y = 4242;
+        particles_dim.x = 4240;
+        particles_dim.y = 4240;
     }
 
-    if (particles_dim.x * particles_dim.y < 1000)
+    if (particles_dim.x <= 0 || particles_dim.y <= 0)
     {
-        particles_dim.x = 32;
-        particles_dim.y = 32;
+        particles_dim.x = 10;
+        particles_dim.y = 10;
     }
 
     init_positions  = new GLfloat[particles_dim.x * particles_dim.y * 4];
@@ -267,7 +268,9 @@ void Cloth::compute()
         compute_cloth_shader->setUniform1f ("DeltaT",          delta_t);
         compute_cloth_shader->setUniform1f ("DampingConst",    damping);
 
-        for(int i = 0; i < 1000; ++i)
+        compute_cloth_shader->setUniformMatrix4fv("model", worldTransform);
+
+        for(int i = 0; i < 50; ++i)
         {
             glDispatchCompute(particles_dim.x / 10, particles_dim.y / 10, 1);
             glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);

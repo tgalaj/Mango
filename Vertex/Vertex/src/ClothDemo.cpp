@@ -31,12 +31,12 @@ ClothDemo::ClothDemo()
     sphere->genSphere(1.0f, 20);
     sphere->setTexture("res/texture/white_4x4.jpg");
     sphere->setDiffuseColor(0, glm::vec3(1, 0, 0));
-    sphere->setPosition(glm::vec3(4, 1, -2));
+    sphere->setPosition(glm::vec3(4, -0.8f, -2));
 
     DirectionalLight * dirLight = new DirectionalLight();
     dirLight->setDirection(glm::vec3(-1, -1, -1));
 
-    cloth = new Cloth(60, 60, 8.0f, 6.0f);
+    cloth = new Cloth(40, 40, 4.0f, 3.0f);
     cloth->setDiffuseTexture("res/texture/me_textile.tga");
 
     scene->addChild(sphere);
@@ -108,7 +108,7 @@ ImVec4 cloth_color = ImColor(200, 200, 200);
 glm::vec3 trans, rot;
 glm::vec3 trans_old, rot_old;
 
-bool pins[] { 1, 1, 1, 1, 1 };
+bool pins[] { 0, 0, 1, 0, 0 };
 
 void ClothDemo::onGUI()
 {
@@ -122,7 +122,7 @@ void ClothDemo::onGUI()
         ImGui::Text("\nPhysical properties:");
         ImGui::SliderFloat3("Gravity",       &cloth->gravity[0], -100.0f, 100.0f);
         ImGui::SliderFloat ("Particle mass", &cloth->particle_mass, 0.1f, 10.0f);
-        ImGui::SliderFloat ("Spring k",      &cloth->spring_k, 0.0f, 20000.0f);
+        ImGui::SliderFloat ("Stiffness",      &cloth->spring_k, 400.0f, 20000.0f);
         ImGui::SliderFloat ("Damping",       &cloth->damping,  0.0f, 1.0f);
 
         ImGui::Text("\nStatic points:");
@@ -133,7 +133,7 @@ void ClothDemo::onGUI()
         ImGui::Checkbox("Pin 5", &pins[4]);
 
         ImGui::Text("\nTransformations:");
-        ImGui::SliderFloat3("Translation", &trans[0], -100.0f, 100.0f);
+        ImGui::SliderFloat3("Translation", &trans[0], -5.0f, 5.0f);
         ImGui::SliderFloat3("Rotation",    &rot[0],    0.0f,   360.0f);
 
         if(cloth->simulate)

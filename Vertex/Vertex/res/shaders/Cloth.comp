@@ -1,5 +1,6 @@
 layout( local_size_x = 10, local_size_y = 10 ) in;
 
+uniform mat4  model;
 uniform bool  pins[5];
 uniform vec3  Gravity;
 uniform float ParticleMass;
@@ -12,7 +13,10 @@ uniform float DeltaT;
 uniform float DampingConst;
 
 uniform float sphereRadius = 1.0f;
-uniform vec3 spherePos     = vec3(4.0, 1.0, -2.0);
+uniform vec3 spherePos     = vec3(4.0, -0.8, -2.0);
+
+const float delta_distance = 0.02; // Small distance offset between collider and cloth
+const float max_deform_rate = 0.08;
 
 layout(std430, binding=0) buffer PosIn 
 {
@@ -36,16 +40,33 @@ layout(std430, binding=3) buffer VelOut
 
 bool sphereConstraint(inout vec3 p)
 {
-	vec3 delta = p - spherePos;
+	vec4 pp = model * vec4(p, 1);
+	
+	vec3 delta = pp.xyz - spherePos;
 	float dist = length(delta);
 	
-	if(dist < sphereRadius)
+	if(dist < sphereRadius + delta_distance)
 	{
-		p += (sphereRadius - dist) * delta / dist;
+		p += (sphereRadius + delta_distance - dist) * delta / dist;
 		return true;
 	}
 	
 	return false;
+}
+
+void clothConstraint(inout vec3 p, inout vec3 v, uint noParticles, uint idx)
+{
+	float marble_radius = min(RestLengthVert, RestLengthHoriz) * 0.45;
+	
+	for(uint i = 0; i < noParticles; ++i)
+	{
+		if(distance(PositionIn[i].xyz, p) < marble_radius * 2 && i != idx)
+		{
+			p = p - normalize(PositionIn[i].xyz - p) * DeltaT * 5;
+			v = v * (1.0 - 200 * DeltaT);
+			break;
+		}
+	}
 }
 
 void main() 
@@ -123,15 +144,18 @@ void main()
 	vec3 a = force * ParticleInvMass;
 	vec3 p2 = p + v * DeltaT + 0.5 * a * DeltaT * DeltaT;
 	
+	v = v + a * DeltaT;
+	clothConstraint(p2, v, nParticles.x * nParticles.y, idx);
+		
 	if(sphereConstraint(p2))
 	{
-		VelocityOut[idx] = vec4( 0.0);
+		VelocityOut[idx] = vec4(v, 0.0) * (1.0 - 200 * DeltaT);
 		PositionOut[idx] = vec4(p2 , 1.0);
 	}
 	else
-	{
-		VelocityOut[idx] = vec4( v + a * DeltaT, 0.0);
-		PositionOut[idx] = vec4(p2 , 1.0);
+	{		
+		VelocityOut[idx] = vec4(v, 0.0);//vec4( v + a * DeltaT, 0.0);
+		PositionOut[idx] = vec4(p2, 1.0);//vec4(p2 , 1.0);
 	}
 	
 	// Pin a few of the top verts
