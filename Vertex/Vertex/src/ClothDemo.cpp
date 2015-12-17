@@ -31,12 +31,12 @@ ClothDemo::ClothDemo()
     sphere->genSphere(1.0f, 20);
     sphere->setTexture("res/texture/white_4x4.jpg");
     sphere->setDiffuseColor(0, glm::vec3(1, 0, 0));
-    sphere->setPosition(glm::vec3(4, -0.8f, -2));
+    sphere->setPosition(glm::vec3(7, -0.8f, -2));
 
     Model * plane = CoreAssetManager::createModel();
     plane->genPlane(40, 40, 10, 10);
-    plane->setTexture("res/texture/white_4x4.jpg");
-    plane->setDiffuseColor(0, glm::vec3(115.0f/255.0f, 54.0f/255.0f, 11.0f/255.0f));
+    plane->setTexture("res/texture/trak_tile_g.jpg");
+    //plane->setDiffuseColor(0, glm::vec3(115.0f/255.0f, 54.0f/255.0f, 11.0f/255.0f));
     plane->setPosition(glm::vec3(0, -2.0f, 0));
 
     DirectionalLight * dirLight = new DirectionalLight();

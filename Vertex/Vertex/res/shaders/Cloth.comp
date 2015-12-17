@@ -13,7 +13,7 @@ uniform float DeltaT;
 uniform float DampingConst;
 
 uniform float sphereRadius = 1.0f;
-uniform vec3 spherePos     = vec3(4.0, -0.8, -2.0);
+uniform vec3 spherePos     = vec3(7.0, -0.8, -2.0);
 
 const float delta_distance = 0.02; // Small distance offset between collider and cloth
 const float max_deform_rate = 0.08;

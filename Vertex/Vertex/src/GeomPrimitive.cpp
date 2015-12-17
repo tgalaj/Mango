@@ -429,7 +429,8 @@ void GeomPrimitive::genPlane(VEBuffers & buffers, float width, float height, uns
         {
             buffers.positions.push_back(glm::vec3(w, 0.0f, h));
             buffers.normals.push_back  (glm::vec3(0.0f, 1.0f, 0.0f));
-            buffers.texcoords.push_back(glm::vec2(i / (float) slices, j / (float) stacks));
+            //buffers.texcoords.push_back(glm::vec2(i / (float) slices, j / (float) stacks));
+            buffers.texcoords.push_back(glm::vec2(i % 2, j % 2));
         }
         w = -width * 0.5f;
     }
