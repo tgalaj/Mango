@@ -20,6 +20,7 @@ public:
     ~Cloth();
 
     bool simulate;
+    bool shouldSelfCollide;
 
     glm::vec3 gravity;
     float particle_mass;

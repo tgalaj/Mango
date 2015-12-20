@@ -19,7 +19,7 @@ void gotoxy(int x, int y)
 
 ClothDemo::ClothDemo()
 {
-    cam = new FreeCamera(60.0f, 1024, 768, 0.1f, 1000.0f);
+    cam = new FreeCamera(60.0f, 1280, 720, 0.1f, 1000.0f);
     cam->setPosition(6.84f, 8.12f, 18.93f);
     cam->setYaw(-109.2f);
     cam->setPitch(-24.8f);
@@ -135,8 +135,8 @@ void ClothDemo::onGUI()
         ImGui::ColorEdit3 ("Color", (float*)&cloth_color);
 
         ImGui::Text("\nPhysical properties:");
-        ImGui::SliderFloat3("Gravity",       &cloth->gravity[0], -100.0f, 100.0f);
-        ImGui::SliderFloat ("Particle mass", &cloth->particle_mass, 0.1f, 10.0f);
+        ImGui::SliderFloat3("Gravity",       &cloth->gravity[0], -200.0f, 100.0f);
+        ImGui::SliderFloat ("Particle mass", &cloth->particle_mass, 0.01f, 0.2f);
         ImGui::SliderFloat ("Stiffness",      &cloth->spring_k, 400.0f, 20000.0f);
         ImGui::SliderFloat ("Damping",       &cloth->damping,  0.0f, 10.0f);
 
@@ -161,6 +161,15 @@ void ClothDemo::onGUI()
         }
 
         if (ImGui::Button("Reset simulation")) cloth->reset();
+
+        if (cloth->shouldSelfCollide)
+        {
+            if (ImGui::Button("Self Collision ON")) cloth->shouldSelfCollide ^= 1;
+        }
+        else
+        {
+            if (ImGui::Button("Self Collision OFF")) cloth->shouldSelfCollide ^= 1;
+        }
 
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();

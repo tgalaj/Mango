@@ -63,6 +63,6 @@ void main()
 		}
 	}
 	
-	Normal[idx] = vec4(normalize(n), 0.0);
+	Normal[idx] = vec4(normalize(-n), 0.0);
 }
 

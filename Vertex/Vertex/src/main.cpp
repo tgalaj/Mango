@@ -7,7 +7,7 @@
 
 int main(int argc, char * args[])
 {
-    VertexEngineCore vec("Hello Vertex!", 1024, 768);
+    VertexEngineCore vec("Compute shader cloth simulation", 1280, 720);
     vec.start(new ClothDemo());
     
     return 0;

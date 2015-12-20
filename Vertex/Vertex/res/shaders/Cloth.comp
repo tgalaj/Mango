@@ -11,11 +11,13 @@ uniform float RestLengthVert;
 uniform float RestLengthDiag;
 uniform float DeltaT;
 uniform float DampingConst;
+uniform bool shouldSelfCollide;
 
-uniform float sphereRadius = 1.0f;
-uniform vec3 spherePos     = vec3(7.0, -0.8, -2.0);
+const float sphereRadius = 1.0f;
+const vec3  spherePos    = vec3(7.0, -0.8, -2.0);
+const vec3  planePos     = vec3(0, -2, 0);
 
-const float delta_distance = 0.02; // Small distance offset between collider and cloth
+const float delta_distance  = 0.02; // Small distance offset between collider and cloth
 const float max_deform_rate = 0.08;
 
 layout(std430, binding=0) buffer PosIn 
@@ -38,7 +40,7 @@ layout(std430, binding=3) buffer VelOut
   vec4 VelocityOut[];
 };
 
-bool sphereConstraint(inout vec3 p)
+void sphereConstraint(inout vec3 p, inout vec3 v)
 {
 	vec4 pp = model * vec4(p, 1);
 	
@@ -48,10 +50,8 @@ bool sphereConstraint(inout vec3 p)
 	if(dist < sphereRadius + delta_distance)
 	{
 		p += (sphereRadius + delta_distance - dist) * delta / dist;
-		return true;
+		v = v * (1.0 - 200 * DeltaT);
 	}
-	
-	return false;
 }
 
 void clothConstraint(inout vec3 p, inout vec3 v, uint noParticles, uint idx)
@@ -62,7 +62,7 @@ void clothConstraint(inout vec3 p, inout vec3 v, uint noParticles, uint idx)
 	{
 		if(distance(PositionIn[i].xyz, p) < marble_radius * 2 && i != idx)
 		{
-			p = p - normalize(PositionIn[i].xyz - p) * DeltaT * 5;
+			p = p - normalize(PositionIn[i].xyz - p) * DeltaT * 8;
 			v = v * (1.0 - 2000.0 * DeltaT);
 				
 			break;
@@ -72,16 +72,13 @@ void clothConstraint(inout vec3 p, inout vec3 v, uint noParticles, uint idx)
 
 void planeConstraint(inout vec3 p, inout vec3 v)
 {
-	vec3 planePos = vec3(0, -2, 0);
 	vec4 pp = model * vec4(p, 1.0f);
-	
-	vec3 delta = pp.xyz - planePos;
-	float dist = length(delta);
 	
 	if(dot(pp.xyz - planePos, vec3(0, 1, 0)) < delta_distance)
 	{
-		float diff = ( -2.0 + delta_distance - pp.y  );
+		float diff = ( planePos.y + delta_distance - pp.y  );
 		diff = min( max( diff, 0 ), 1.0f );
+		
 		p.y += diff;
 		v = vec3(0);
 	}
@@ -164,20 +161,16 @@ void main()
 	
 	v = v + a * DeltaT;
 	
-	clothConstraint(p2, v, nParticles.x * nParticles.y, idx);
-	
-	planeConstraint(p2, v);
-
-	if(sphereConstraint(p2))
+	if(shouldSelfCollide)
 	{
-		VelocityOut[idx] = vec4(v, 0.0) * (1.0 - 200 * DeltaT);
-		PositionOut[idx] = vec4(p2 , 1.0);
+		clothConstraint (p2, v, nParticles.x * nParticles.y, idx);
 	}
-	else
-	{		
-		VelocityOut[idx] = vec4(v, 0.0);//vec4( v + a * DeltaT, 0.0);
-		PositionOut[idx] = vec4(p2, 1.0);//vec4(p2 , 1.0);
-	}
+	
+	planeConstraint (p2, v);
+	sphereConstraint(p2, v);
+	
+	VelocityOut[idx] = vec4(v, 0.0);//vec4( v + a * DeltaT, 0.0);
+	PositionOut[idx] = vec4(p2, 1.0);//vec4(p2 , 1.0);
 	
 	// Pin a few of the top verts
 	if( gl_GlobalInvocationID.y == nParticles.y - 1      && 

@@ -14,10 +14,11 @@ Cloth::Cloth           (int particles_x, int particles_y, float cloth_size_x, fl
       read_buf         (0),
       simulate         (true),
       gravity(glm::vec3(0.0f, 10*-9.81f, 0.0f)),
-      particle_mass    (0.1f/1.5),
+      particle_mass    (0.1f/1.5f),
       spring_k         (4000.0f),
-      delta_t          (0.00005f*2),
-      damping          (20*0.1f)
+      delta_t          (0.00005f*2.0f),
+      damping          (20.0f*0.1f),
+      shouldSelfCollide(1)
 {
     for (auto & pin : pins)
     {
@@ -36,14 +37,14 @@ Cloth::Cloth           (int particles_x, int particles_y, float cloth_size_x, fl
         particles_dim.y = 10;
     }
 
-    init_positions  = new GLfloat[particles_dim.x * particles_dim.y * 4];
-    init_velocities = new GLfloat[particles_dim.x * particles_dim.y * 4];
+    init_positions  = new GLfloat[(int)particles_dim.x * (int)particles_dim.y * 4];
+    init_velocities = new GLfloat[(int)particles_dim.x * (int)particles_dim.y * 4];
 
     std::vector<GLfloat> init_tc;
     std::vector<GLuint>  init_el;
 
-    memset(init_positions,  0, sizeof(GLfloat) * 4 * particles_dim.x * particles_dim.y);
-    memset(init_velocities, 0, sizeof(GLfloat) * 4 * particles_dim.x * particles_dim.y);
+    memset(init_positions,  0, sizeof(GLfloat) * 4 * (size_t)particles_dim.x * (size_t)particles_dim.y);
+    memset(init_velocities, 0, sizeof(GLfloat) * 4 * (size_t)particles_dim.x * (size_t)particles_dim.y);
 
     glm::mat4 transf = glm::translate(glm::mat4(1.0), glm::vec3(0, cloth_size.y, 0));
     transf = glm::rotate(transf, glm::radians(80.0f), glm::vec3(1, 0, 0));
@@ -85,8 +86,8 @@ Cloth::Cloth           (int particles_x, int particles_y, float cloth_size_x, fl
     {
         for (int col = 0; col < particles_dim.x; ++col)
         {
-            init_el.push_back((row + 1) * particles_dim.x + col);
-            init_el.push_back( row      * particles_dim.x + col);
+            init_el.push_back((row + 1) * (unsigned)particles_dim.x + col);
+            init_el.push_back( row      * (unsigned)particles_dim.x + col);
         }
         init_el.push_back(PRIM_RESTART);
     }
@@ -95,7 +96,7 @@ Cloth::Cloth           (int particles_x, int particles_y, float cloth_size_x, fl
     glPrimitiveRestartIndex(PRIM_RESTART);
 
     /* VBOs */
-    GLuint no_parts = particles_dim.x * particles_dim.y;
+    GLuint no_parts = (GLuint)particles_dim.x * (GLuint)particles_dim.y;
 
     glGenBuffers(7, vbo_ids);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, vbo_ids[POSITIONS_0]);
@@ -162,7 +163,7 @@ Cloth::Cloth           (int particles_x, int particles_y, float cloth_size_x, fl
 
     /* Compute normals */
     compute_cloth_normals_shader->apply();
-    glDispatchCompute(particles_dim.x / 10, particles_dim.y / 10, 1);
+    glDispatchCompute((GLuint)particles_dim.x / 10, (GLuint)particles_dim.y / 10, 1);
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }
 
@@ -192,21 +193,21 @@ void Cloth::reset()
     read_buf = 0;
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, vbo_ids[POSITIONS_0]);
-    glBufferSubData(GL_SHADER_STORAGE_BUFFER,  0, sizeof(GLfloat) * 4 * particles_dim.x * particles_dim.y, init_positions);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER,  0, sizeof(GLfloat) * 4 * (GLsizeiptr)particles_dim.x * (GLsizeiptr)particles_dim.y, init_positions);
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, vbo_ids[POSITIONS_1]);
-    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * particles_dim.x * particles_dim.y, NULL);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * (GLsizeiptr)particles_dim.x * (GLsizeiptr)particles_dim.y, NULL);
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, vbo_ids[VELOCITIES_0]);
-    glBufferSubData(GL_SHADER_STORAGE_BUFFER,  0, sizeof(GLfloat) * 4 * particles_dim.x * particles_dim.y, init_velocities);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER,  0, sizeof(GLfloat) * 4 * (GLsizeiptr)particles_dim.x * (GLsizeiptr)particles_dim.y, init_velocities);
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, vbo_ids[VELOCITIES_1]);
-    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * particles_dim.x * particles_dim.y, NULL);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * (GLsizeiptr)particles_dim.x * (GLsizeiptr)particles_dim.y, NULL);
 
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_BUFFER_UPDATE_BARRIER_BIT);
 
     compute_cloth_normals_shader->apply();
-    glDispatchCompute(particles_dim.x / 10, particles_dim.y / 10, 1);
+    glDispatchCompute((GLuint)particles_dim.x / 10, (GLuint)particles_dim.y / 10, 1);
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }
 
@@ -257,22 +258,23 @@ void Cloth::compute()
     {
         compute_cloth_shader->apply();
         
-        compute_cloth_shader->setUniform1iv("pins", 5,        &pins[0]);
-        compute_cloth_shader->setUniform3fv("Gravity",         gravity);
-        compute_cloth_shader->setUniform1f ("ParticleMass",    particle_mass);
-        compute_cloth_shader->setUniform1f ("ParticleInvMass", 1.0f / particle_mass);
-        compute_cloth_shader->setUniform1f ("RestLengthHoriz", rest_len_x);
-        compute_cloth_shader->setUniform1f ("RestLengthVert",  rest_len_y);
-        compute_cloth_shader->setUniform1f ("RestLengthDiag",  rest_len_diag);
-        compute_cloth_shader->setUniform1f ("SpringK",         spring_k);
-        compute_cloth_shader->setUniform1f ("DeltaT",          delta_t);
-        compute_cloth_shader->setUniform1f ("DampingConst",    damping);
+        compute_cloth_shader->setUniform1iv("pins", 5,          &pins[0]);
+        compute_cloth_shader->setUniform3fv("Gravity",           gravity);
+        compute_cloth_shader->setUniform1f ("ParticleMass",      particle_mass);
+        compute_cloth_shader->setUniform1f ("ParticleInvMass",   1.0f / particle_mass);
+        compute_cloth_shader->setUniform1f ("RestLengthHoriz",   rest_len_x);
+        compute_cloth_shader->setUniform1f ("RestLengthVert",    rest_len_y);
+        compute_cloth_shader->setUniform1f ("RestLengthDiag",    rest_len_diag);
+        compute_cloth_shader->setUniform1f ("SpringK",           spring_k);
+        compute_cloth_shader->setUniform1f ("DeltaT",            delta_t);
+        compute_cloth_shader->setUniform1f ("DampingConst",      damping);
+        compute_cloth_shader->setUniform1i ("shouldSelfCollide", shouldSelfCollide);
 
         compute_cloth_shader->setUniformMatrix4fv("model", worldTransform);
 
         for(int i = 0; i < 50; ++i)
         {
-            glDispatchCompute(particles_dim.x / 10, particles_dim.y / 10, 1);
+            glDispatchCompute((GLuint)particles_dim.x / 10, (GLuint)particles_dim.y / 10, 1);
             glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 
             /* Swap buffers */
@@ -284,7 +286,7 @@ void Cloth::compute()
         }
 
         compute_cloth_normals_shader->apply();
-        glDispatchCompute(particles_dim.x / 10, particles_dim.y / 10, 1);
+        glDispatchCompute((GLuint)particles_dim.x / 10, (GLuint)particles_dim.y / 10, 1);
         glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
     }
 }

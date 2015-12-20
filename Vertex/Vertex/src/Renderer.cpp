@@ -75,7 +75,7 @@ Renderer::~Renderer()
     delete skybox;
     skybox = nullptr;
 
-    for (int i = 0; i < reflectiveTextures.size(); ++i)
+    for (unsigned int i = 0; i < reflectiveTextures.size(); ++i)
     {
         delete reflectiveTextures[i];
         reflectiveTextures[i] = nullptr;
@@ -114,7 +114,7 @@ glm::vec3 vectors[] = { glm::vec3( 1.0f,  0.0f,  0.0f),
 
 void Renderer::render()
 {
-    for(int i = 0; i < reflectiveTextures.size(); ++i)
+    for(unsigned int i = 0; i < reflectiveTextures.size(); ++i)
     {
         glBindFramebuffer(GL_FRAMEBUFFER, reflectiveTextures[i]->fbo_id);
         glViewport(0, 0, reflectiveTextures[i]->cube_size, reflectiveTextures[i]->cube_size);
@@ -160,16 +160,16 @@ void Renderer::render()
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, cam->geViewportWidth(), cam->geViewportHeight());
+    glViewport(0, 0, (GLsizei)cam->geViewportWidth(), (GLsizei)cam->geViewportHeight());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     /* Draw scene normally */
-    for (int i = 0; i < cloth_objects.size(); ++i)
+    for (unsigned int i = 0; i < cloth_objects.size(); ++i)
     {
         cloth_objects[i]->compute();
     }
 
-    for (int i = 0; i < particle_effects.size(); ++i)
+    for (unsigned int i = 0; i < particle_effects.size(); ++i)
     {
         particle_effects[i]->render(cam);
     }
@@ -186,7 +186,7 @@ void Renderer::render()
         model->render(currentShader);
     }
 
-    for (int i = 0; i < cloth_objects.size(); ++i)
+    for (unsigned int i = 0; i < cloth_objects.size(); ++i)
     {    
         currentShader->setUniform3fv("camPos", cam->getPosition());
         currentShader->setUniformMatrix4fv("viewProj", cam->getViewProjection());
@@ -211,7 +211,7 @@ void Renderer::render()
         currentShader->setUniform3fv("camPos", cam->getPosition());
         currentShader->setUniformMatrix4fv("viewProj", cam->getViewProjection());
 
-        for (int i = 0; i < reflectiveModels.size(); ++i)
+        for (unsigned int i = 0; i < reflectiveModels.size(); ++i)
         {
             glActiveTexture(GL_TEXTURE7);
             glBindTexture(GL_TEXTURE_CUBE_MAP, reflectiveTextures[i]->to_color_id);

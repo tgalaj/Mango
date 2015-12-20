@@ -29,7 +29,7 @@ ParticleEffect::ParticleEffect(GLuint _max_particles)
     memset(init_velocities, 0, sizeof(GLfloat) * 4 * max_particles);
 
     glm::vec4 p(0.0f, 0.0f, 0.0f, 1.0f);
-    int no_particles_in_dim = cbrt(max_particles);
+    int no_particles_in_dim = (int)cbrt(max_particles);
 
     glm::mat4 transf = glm::translate(glm::mat4(1.0f), glm::vec3(-1, -1, -1));
 
