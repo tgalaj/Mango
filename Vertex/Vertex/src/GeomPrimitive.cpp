@@ -113,6 +113,53 @@ void GeomPrimitive::genCube(VEBuffers & buffers, float radius)
                         };
 }
 
+void GeomPrimitive::genCubeMap(VEBuffers & buffers, float radius)
+{
+    float r2 = radius * 0.5f;
+
+    buffers.positions = { 
+                            // Front
+                            glm::vec3(-r2, -r2, +r2),
+                            glm::vec3(+r2, -r2, +r2),
+                            glm::vec3(+r2, +r2, +r2),
+                            glm::vec3(-r2, +r2, +r2),
+                            // Right
+                            glm::vec3(+r2, -r2, +r2),
+                            glm::vec3(+r2, -r2, -r2),
+                            glm::vec3(+r2, +r2, -r2),
+                            glm::vec3(+r2, +r2, +r2),
+                            // Back
+                            glm::vec3(-r2, -r2, -r2),
+                            glm::vec3(-r2, +r2, -r2),
+                            glm::vec3(+r2, +r2, -r2),
+                            glm::vec3(+r2, -r2, -r2),
+                            // Left
+                            glm::vec3(-r2, -r2, +r2),
+                            glm::vec3(+r2, +r2, +r2),
+                            glm::vec3(-r2, +r2, -r2),
+                            glm::vec3(-r2, -r2, -r2),
+                            // Bottom
+                            glm::vec3(-r2, -r2, +r2),
+                            glm::vec3(-r2, -r2, -r2),
+                            glm::vec3(+r2, -r2, -r2),
+                            glm::vec3(+r2, -r2, +r2),
+                            // Top
+                            glm::vec3(-r2, +r2, +r2),
+                            glm::vec3(+r2, +r2, +r2),
+                            glm::vec3(+r2, +r2, -r2),
+                            glm::vec3(+r2, -r2, +r2)
+                        };
+
+    buffers.indices   = { 
+                            0,  2,  1,  0,  3,  2,
+                            4,  6,  5,  4,  7,  6,
+                            8,  10, 9,  8,  11, 10,
+                            12, 14, 13, 12, 15, 14, 
+                            16, 18, 17, 16, 19, 18, 
+                            20, 22, 21, 20, 23, 22
+                        };
+}
+
 void GeomPrimitive::genTorus(VEBuffers & buffers, float innerRadius, float outerRadius, unsigned int slices, unsigned int stacks)
 {
     float phi   = 0.0f;
@@ -382,7 +429,8 @@ void GeomPrimitive::genPlane(VEBuffers & buffers, float width, float height, uns
         {
             buffers.positions.push_back(glm::vec3(w, 0.0f, h));
             buffers.normals.push_back  (glm::vec3(0.0f, 1.0f, 0.0f));
-            buffers.texcoords.push_back(glm::vec2(i / (float) slices, j / (float) stacks));
+            //buffers.texcoords.push_back(glm::vec2(i / (float) slices, j / (float) stacks));
+            buffers.texcoords.push_back(glm::vec2(i % 2, j % 2));
         }
         w = -width * 0.5f;
     }
@@ -412,7 +460,7 @@ void GeomPrimitive::genSphere(VEBuffers & buffers, float r, unsigned int slices)
 {
     float deltaPhi = glm::two_pi<float>() / static_cast<float>(slices);
     
-    unsigned int parallels = slices * 0.5f;
+    unsigned int parallels = static_cast<unsigned int>(slices * 0.5f);
 
     for (unsigned int i = 0; i <= parallels; ++i)
     {

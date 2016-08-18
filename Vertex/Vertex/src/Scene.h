@@ -13,7 +13,7 @@ public:
     Scene(Camera * _cam);
     ~Scene();
 
-    void addChild(SceneNode * child);
+    void addChild(SceneNode * child, bool reflective = false);
     void update();
 
 private:

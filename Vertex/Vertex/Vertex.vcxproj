@@ -16,6 +16,8 @@
     <ClCompile Include="include\imgui\imgui_draw.cpp" />
     <ClCompile Include="include\imgui\imgui_impl_sdl.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Cloth.cpp" />
+    <ClCompile Include="src\ClothDemo.cpp" />
     <ClCompile Include="src\CoreAssetManager.cpp" />
     <ClCompile Include="src\CoreServices.cpp" />
     <ClCompile Include="src\FreeCamera.cpp" />
@@ -24,16 +26,20 @@
     <ClCompile Include="src\GeomPrimitive.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\MultiDrawIndirectDemo.cpp" />
     <ClCompile Include="src\OrthographicCamera.cpp" />
     <ClCompile Include="src\ParticleEffect.cpp" />
+    <ClCompile Include="src\ParticlesDemo.cpp" />
     <ClCompile Include="src\PerspectiveCamera.cpp" />
     <ClCompile Include="src\PointLight.cpp" />
     <ClCompile Include="src\PostprocessEffect.cpp" />
+    <ClCompile Include="src\ReflectionsDemo.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneNode.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\SimpleGame.cpp" />
+    <ClCompile Include="src\Skybox.cpp" />
     <ClCompile Include="src\SpotLight.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Model.cpp" />
@@ -53,11 +59,16 @@
     <ClInclude Include="include\imgui\stb_textedit.h" />
     <ClInclude Include="include\imgui\stb_truetype.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Cloth.h" />
+    <ClInclude Include="src\ClothDemo.h" />
     <ClInclude Include="src\CoreAssetManager.h" />
     <ClInclude Include="src\CoreServices.h" />
     <ClInclude Include="src\DebugOutputGL.h" />
     <ClInclude Include="src\FreeCamera.h" />
     <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\MultiDrawIndirectDemo.h" />
+    <ClInclude Include="src\ParticlesDemo.h" />
+    <ClInclude Include="src\ReflectionsDemo.h" />
     <ClInclude Include="src\ShaderManager.h" />
     <ClInclude Include="src\SimpleGame.h" />
     <ClInclude Include="src\Input.h" />
@@ -72,6 +83,7 @@
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\SceneNode.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\Skybox.h" />
     <ClInclude Include="src\SpotLight.h" />
     <ClInclude Include="src\BaseGame.h" />
     <ClInclude Include="src\Model.h" />
@@ -85,6 +97,20 @@
   <ItemGroup>
     <None Include="res\shaders\Basic.frag" />
     <None Include="res\shaders\Basic.vert" />
+    <None Include="res\shaders\Cloth.comp" />
+    <None Include="res\shaders\ClothNormals.comp" />
+    <None Include="res\shaders\Layered.frag" />
+    <None Include="res\shaders\Layered.geom" />
+    <None Include="res\shaders\Layered.vert" />
+    <None Include="res\shaders\Particles.frag" />
+    <None Include="res\shaders\Particles.vert" />
+    <None Include="res\shaders\ParticleSystem.comp" />
+    <None Include="res\shaders\Reflection.frag" />
+    <None Include="res\shaders\Reflection.vert" />
+    <None Include="res\shaders\Skybox.frag" />
+    <None Include="res\shaders\Skybox.vert" />
+    <None Include="res\shaders\SkyboxLayered.geom" />
+    <None Include="res\shaders\SkyboxLayered.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9DF5F709-0864-4185-BE40-2FDD4F0B26EC}</ProjectGuid>

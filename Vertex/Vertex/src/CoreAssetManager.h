@@ -27,7 +27,9 @@ public:
      */
     static const std::string loadFile (const std::string & filename);
 
-    static Texture * const createTexture2D(const std::string & filename, GLint base_level = 0);
+    static Texture * const createTexture2D     (const std::string & filename,  GLint base_level = 0);
+    static Texture * const createCubeMapTexture(const std::string * filenames, GLint base_level = 0);
+
     static Model   * const createModel(const std::string & filename);
     static Model   * const createModel();
 

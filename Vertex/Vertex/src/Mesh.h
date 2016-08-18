@@ -21,8 +21,17 @@ public:
     Mesh();
     ~Mesh();
 
+    Mesh & operator=(const Mesh &) = delete;
+
 private:
     friend class Model;
+    friend class CoreAssetManager;
+    friend class Renderer;
+
+    Mesh * clone() const
+    {
+        return new Mesh(*this);
+    }
 
     void render(Shader * shader);
     void setBuffers(VEBuffers & buffers);

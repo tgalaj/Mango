@@ -1,7 +1,6 @@
 #include "CoreServices.h"
 #include "Scene.h"
 
-
 Scene::Scene(Camera * _cam)
     : modelMatrix(glm::mat4(1.0f))
 {
@@ -22,13 +21,20 @@ Scene::~Scene()
     cam = nullptr;
 }
 
-void Scene::addChild(SceneNode * child)
+void Scene::addChild(SceneNode * child, bool reflective)
 {
     children.push_back(child);
 
     if (Model * m = dynamic_cast<Model *>(child))
     {
-        CoreServices::getRenderer()->models.push_back(m);
+        if(reflective)
+        {
+            CoreServices::getRenderer()->addReflectiveModel(m);
+        }
+        else
+        {
+            CoreServices::getRenderer()->models.push_back(m);
+        }
     }
 
     if (DirectionalLight * light = dynamic_cast<DirectionalLight *>(child))
@@ -44,6 +50,16 @@ void Scene::addChild(SceneNode * child)
     if (SpotLight * light = dynamic_cast<SpotLight *>(child))
     {
         CoreServices::getRenderer()->spotLights.push_back(light);
+    }
+
+    if (ParticleEffect * pe = dynamic_cast<ParticleEffect *>(child))
+    {
+        CoreServices::getRenderer()->particle_effects.push_back(pe);
+    }
+
+    if (Cloth * cloth = dynamic_cast<Cloth *>(child))
+    {
+        CoreServices::getRenderer()->cloth_objects.push_back(cloth);
     }
 
     addChildrenToRenderer(child);

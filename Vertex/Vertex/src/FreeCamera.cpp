@@ -69,8 +69,8 @@ void FreeCamera::processInput(float deltaTime)
         }
 
         SDL_GetRelativeMouseState(&currMouseX, &currMouseY);
-        float x_offset = currMouseX;
-        float y_offset = -currMouseY;
+        float x_offset = static_cast<float>(currMouseX);
+        float y_offset = static_cast<float>(-currMouseY);
 
         x_offset *= mouseSensitivity;
         y_offset *= mouseSensitivity;
@@ -95,7 +95,7 @@ void FreeCamera::processInput(float deltaTime)
     if (Input::getMouseButtonUp(Input::Mouse2))
     {
         SDL_SetRelativeMouseMode(SDL_FALSE);
-        SDL_WarpMouseInWindow(nullptr, viewportWidth * 0.5f, viewportHeight * 0.5f);
+        SDL_WarpMouseInWindow(nullptr, static_cast<int>(viewportWidth * 0.5f), static_cast<int>(viewportHeight * 0.5f));
 
         isFirstMouseClick = true;
     }
@@ -109,4 +109,40 @@ void FreeCamera::setMoveSpeed(float _moveSpeed)
 void FreeCamera::setMouseSensitivity(float _mouseSensitivity)
 {
     mouseSensitivity = _mouseSensitivity;
+}
+
+float FreeCamera::getYaw()
+{
+    return yaw;
+}
+
+float FreeCamera::getPitch()
+{
+    return pitch;
+}
+
+void FreeCamera::setYaw(float _yaw)
+{
+    yaw = _yaw;
+
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+    direction = glm::normalize(direction);
+
+    isDirty = true;
+}
+
+void FreeCamera::setPitch(float _pitch)
+{
+    pitch = _pitch;
+
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+    direction = glm::normalize(direction);
+
+    isDirty = true;
 }

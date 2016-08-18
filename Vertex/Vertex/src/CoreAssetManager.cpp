@@ -72,6 +72,22 @@ Texture * const CoreAssetManager::createTexture2D(const std::string & filename, 
     }
 }
 
+Texture * const CoreAssetManager::createCubeMapTexture(const std::string * filenames, GLint base_level)
+{
+    if (loadedTextures.count(filenames[0]))
+    {
+        return loadedTextures.at(filenames[0]);
+    }
+    else
+    {
+        Texture * t = new Texture();
+        t->createCubeMapTexture(filenames, base_level);
+        loadedTextures[filenames[0]] = t;
+
+        return t;
+    }
+}
+
 Model * const CoreAssetManager::createModel(const std::string & filename)
 {
     Model * model = new Model();
@@ -81,7 +97,12 @@ Model * const CoreAssetManager::createModel(const std::string & filename)
 
     if (loadedModels.count(filename))
     {
-        model->meshes = loadedModels.at(filename)->meshes;
+        model->meshes.resize(loadedModels.at(filename)->meshes.size());
+
+        for (unsigned i = 0; i < loadedModels.at(filename)->meshes.size(); ++i)
+        {
+            model->meshes[i] = loadedModels.at(filename)->meshes[i]->clone();
+        }
     }
     else
     {

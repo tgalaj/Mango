@@ -64,7 +64,6 @@ void ImGui_ImplSdl_RenderDrawLists(ImDrawData* draw_data)
     };
 
     glUseProgram(g_ShaderHandle);
-    glUniform1i(g_AttribLocationTex, 0);
     glUniformMatrix4fv(g_AttribLocationProjMtx, 1, GL_FALSE, &ortho_projection[0][0]);
     glBindVertexArray(g_VaoHandle);
 
@@ -169,12 +168,12 @@ void ImGui_ImplSdl_CreateFontsTexture()
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);   // Load as RGBA 32-bits for OpenGL3 demo because it is more likely to be compatible with user's existing shader.
 
-                                                              // Create OpenGL texture
-    glGenTextures(1, &g_FontTexture);
-    glBindTexture(GL_TEXTURE_2D, g_FontTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    // Create OpenGL texture
+    glCreateTextures(GL_TEXTURE_2D, 1, &g_FontTexture);
+    glTextureParameteri(g_FontTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTextureParameteri(g_FontTexture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTextureStorage2D(g_FontTexture, 1, GL_RGBA8, width, height);
+    glTextureSubImage2D(g_FontTexture, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
     // Store our identifier
     io.Fonts->TexID = (void *)(intptr_t)g_FontTexture;
@@ -193,7 +192,7 @@ bool ImGui_ImplSdl_CreateDeviceObjects()
     glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
 
     const GLchar *vertex_shader =
-        "#version 440\n"
+        "#version 450\n"
         "uniform mat4 ProjMtx;\n"
         "in vec2 Position;\n"
         "in vec2 UV;\n"
@@ -208,8 +207,8 @@ bool ImGui_ImplSdl_CreateDeviceObjects()
         "}\n";
 
     const GLchar* fragment_shader =
-        "#version 440\n"
-        "uniform sampler2D Texture;\n"
+        "#version 450\n"
+        "layout(binding = 0) uniform sampler2D Texture;\n"
         "in vec2 Frag_UV;\n"
         "in vec4 Frag_Color;\n"
         "out vec4 Out_Color;\n"
