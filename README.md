@@ -9,7 +9,8 @@ The newest features (may be **unstable**) will be pushed to **develop** branch a
 - [ ] Add base abstract class for lights
 - [ ] Improve scene graph
 - [ ] Easy to use toolkit to create demo/game scenes
-- [ ] Better resource management (is CoreAssetManager necessary?)
+- [x] Is CoreAssetManager necessary? Ans: Yes, it, is
+- [ ] Better resource management 
 - [ ] Easy to use material system
 - [ ] Refactored & enhanced shader class
 - [ ] Add feature to add #include directive in shaders (generic default shaders)
