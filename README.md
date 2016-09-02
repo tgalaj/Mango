@@ -5,7 +5,7 @@ The newest features (may be **unstable**) will be pushed to **develop** branch a
 
 ## Short-term TODOs
 - [ ] Refactor engine's architecture
-- [ ] Remove watch_ptr class
+- [x] Remove watch_ptr class
 - [ ] Add base abstract class for lights
 - [ ] Improve scene graph
 - [ ] Easy to use toolkit to create demo/game scenes
@@ -13,7 +13,7 @@ The newest features (may be **unstable**) will be pushed to **develop** branch a
 - [ ] Easy to use material system
 - [ ] Refactored & enhanced shader class
 - [ ] Add feature to add #include directive in shaders (generic default shaders)
-- [ ] Update & move dlls to bin32/bin64 subfolders
+- [x] Update & move dlls to bin32/bin64 subfolders
 - [ ] Add Forward rendering technique
 - [ ] Add Deferred rendering technique
 - [ ] Add easy to use interface to switch between different rendering techniques
@@ -35,3 +35,9 @@ The newest features (may be **unstable**) will be pushed to **develop** branch a
 - [ ] Constructive solid geometry
 - [ ] GPU supported ray tracing, photon mapping
 - [ ] Support for Vulkan renderer
+
+### Dependencies' versions
+- SDL  2.0.4 (stable)
+- GLEW 2.0.0
+- FreeImage 3.17.0
+- Assimp 3.2

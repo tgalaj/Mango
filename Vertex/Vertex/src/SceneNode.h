@@ -3,9 +3,7 @@
 #include <glm\glm.hpp>
 #include <deque>
 
-#include "watch_ptr.h"
-
-class SceneNode : public Watchable
+class SceneNode
 {
 public:
     friend class Scene;
@@ -22,7 +20,7 @@ public:
 
 protected:
     //std::deque<SceneNode *> children;
-    std::deque<watch_ptr<SceneNode> *> children;
+    std::deque<SceneNode*> children;
     glm::mat4 localTransform;
     glm::mat4 worldTransform;
 
