@@ -1,0 +1,24 @@
+size 320 240
+output refrecg.png
+
+camera 0 0 4 0 0 0 0 1 0 45
+
+point 0 4 4 0 0 0
+
+ambient 0.2 0.2 0.2
+shininess 20
+
+maxdepth 5
+maxverts 3
+
+vertex -2 -2 0
+vertex +2 -2 0
+vertex 0 4 0
+
+specular 1 1 1
+
+tri 0 1 2
+
+pushTransform
+translate 0 0 5
+tri 0 1 2
