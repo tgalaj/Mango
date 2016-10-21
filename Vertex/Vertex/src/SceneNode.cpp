@@ -16,7 +16,6 @@ SceneNode::~SceneNode()
     {
         //delete child;
         //child = nullptr;
-        delete child->get();
         delete child;
     }
 }
@@ -42,7 +41,6 @@ void SceneNode::setScale(glm::vec3 & scale)
 void SceneNode::addChild(SceneNode * child)
 {
     //isDirty = true;
-    children.push_back(new watch_ptr<SceneNode>(child));
 }
 
 void SceneNode::update(glm::mat4 & parentTransform, bool dirty)
@@ -59,6 +57,6 @@ void SceneNode::update(glm::mat4 & parentTransform, bool dirty)
 
     for (auto & child : children)
     {
-        child->get()->update(worldTransform, dirty);
+        
     }
 }

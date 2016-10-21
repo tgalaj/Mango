@@ -3,7 +3,6 @@
 
 std::map<std::string, Texture *> CoreAssetManager::loadedTextures;
 std::map<std::string, Model *> CoreAssetManager::loadedModels;
-std::vector<watch_ptr<Watchable> *> CoreAssetManager::watchables;
 
 CoreAssetManager::~CoreAssetManager()
 {
@@ -13,15 +12,8 @@ CoreAssetManager::~CoreAssetManager()
         it->second = nullptr;
     }
 
-    for (auto & w : watchables)
-    {
-        delete w->get();
-        delete w;
-    }
-
     loadedTextures.clear();
     loadedModels.clear();
-    watchables.clear();
 }
 
 const std::string CoreAssetManager::loadFile(const std::string & filename)
@@ -92,9 +84,6 @@ Model * const CoreAssetManager::createModel(const std::string & filename)
 {
     Model * model = new Model();
 
-    watch_ptr<Watchable> * watchable = new watch_ptr<Watchable>(model);
-    watchables.push_back(watchable);
-
     if (loadedModels.count(filename))
     {
         model->meshes.resize(loadedModels.at(filename)->meshes.size());
@@ -116,9 +105,6 @@ Model * const CoreAssetManager::createModel(const std::string & filename)
 Model * const CoreAssetManager::createModel()
 {
     Model * model = new Model();
-
-    watch_ptr<Watchable> * watchable = new watch_ptr<Watchable>(model);
-    watchables.push_back(watchable);
 
     return model;
 }

@@ -132,9 +132,6 @@
     <ClCompile Include="src\ShaderManager.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\watch_ptr.cpp">
-      <Filter>Source Files\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="src\ClothDemo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -259,9 +256,6 @@
     </ClInclude>
     <ClInclude Include="src\ShaderManager.h">
       <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\watch_ptr.h">
-      <Filter>Header Files\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="src\ClothDemo.h">
       <Filter>Header Files</Filter>

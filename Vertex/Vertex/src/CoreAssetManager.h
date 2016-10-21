@@ -9,7 +9,6 @@
 #include <string>
 
 #include "Model.h"
-#include "watch_ptr.h"
 
 class CoreAssetManager final
 {
@@ -39,7 +38,6 @@ private:
 
     static std::map<std::string, Texture *> loadedTextures;
     static std::map<std::string, Model *> loadedModels;
-    static std::vector<watch_ptr<Watchable> *> watchables;
 
     /**
      * @brief   Loads a file that contains multiple shaders 
