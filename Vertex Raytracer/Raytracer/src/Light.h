@@ -1,8 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
-enum LIGH_TYPE { DIRECTIONAL, POINT };
+enum class LIGHT_TYPE { DIRECTIONAL, POINT };
 
 class Light
 {
@@ -10,7 +8,6 @@ public:
     Light()
     {
         light_intensity = 1.0f;
-        isVisible = true;
     }
 
     ~Light() {};
@@ -22,8 +19,7 @@ public:
     glm::vec3 attenuation;
 
     float light_intensity;
-    bool isVisible;
 
-    LIGH_TYPE type;
+    LIGHT_TYPE type;
 };
 

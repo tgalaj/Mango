@@ -144,9 +144,9 @@ void Scene::loadScene(std::string filename)
                     if (isValidInput)
                     {
                         Triangle t;
-                        t.p0 = vertices[(int)values[0]];
-                        t.p1 = vertices[(int)values[1]];
-                        t.p2 = vertices[(int)values[2]];
+                        t.p0 = vertices[int(values[0])];
+                        t.p1 = vertices[int(values[1])];
+                        t.p2 = vertices[int(values[2])];
                         t.n = glm::normalize(glm::cross(t.p1 - t.p0, t.p2 - t.p0));
                         t.mat = m;
                         t.transform = transfstack.top();
@@ -208,11 +208,10 @@ void Scene::loadScene(std::string filename)
                     if (isValidInput)
                     {
                         Light l;
-                        l.type    = DIRECTIONAL;
+                        l.type    = LIGHT_TYPE::DIRECTIONAL;
                         l.dir_pos = glm::vec3(values[0], values[1], values[2]);
                         l.color   = glm::vec3(values[3], values[4], values[5]);
                         l.transform = transfstack.top();
-                        l.isVisible = true;
                         l.light_intensity = 1.0f;
 
                         lights.push_back(l);
@@ -225,11 +224,10 @@ void Scene::loadScene(std::string filename)
                     if (isValidInput)
                     {
                         Light l;
-                        l.type    = POINT;
+                        l.type    = LIGHT_TYPE::POINT;
                         l.dir_pos = glm::vec3(values[0], values[1], values[2]);
                         l.color   = glm::vec3(values[3], values[4], values[5]);
                         l.transform = transfstack.top();
-                        l.isVisible = true;
                         l.light_intensity = 1.0f;
 
                         l.attenuation = attenuation;
