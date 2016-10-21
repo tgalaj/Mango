@@ -4,6 +4,7 @@
 #include <FreeImage.h>
 
 #include "Scene.h"
+#include "Time.h"
 
 #define BPP 24 //cause three 8 bit RGB values
 //#define CMD
@@ -44,6 +45,7 @@ int main(int argc, char * argv[])
         return EXIT_FAILURE;
     }
 
+    double start_time = Time::getTime();
     for (int i = 0; i < height; ++i)
     {
         for (int j = 0; j < width; ++j)
@@ -59,7 +61,7 @@ int main(int argc, char * argv[])
             color.rgbBlue  = static_cast<BYTE>(c.b * 255.0f + 0.5f);
 
             FreeImage_SetPixelColor(image, width-j, i, &color);
-
+            
             ++pixels_counter;
             if (pixels_counter % 1000 == 0)
                 printf("%d / %d pixels \r", pixels_counter, total_pixels);
@@ -69,11 +71,16 @@ int main(int argc, char * argv[])
     if (FreeImage_Save(FIF_PNG, image, scene->outputFilename.c_str(), 0))
     {
         printf("Image %s successfully saved!\n", scene->outputFilename.c_str());
+        printf("Processing time = %.2fs\n", Time::getTime() - start_time);
     }
 
     delete scene;
 
     FreeImage_DeInitialise();
+
+    printf("Press any key to continue...\n");
+    getchar();
+
     return EXIT_SUCCESS;
 }
 
