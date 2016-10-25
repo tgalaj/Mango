@@ -6,10 +6,12 @@
 Framebuffer::Framebuffer(int width, int height)
     : m_width (width),
       m_height(height),
+      m_processed_pixel_counter(0),
       m_image (nullptr)
 {
     FreeImage_Initialise();
 
+    m_size = m_width * m_height;
     m_image = FreeImage_Allocate(m_width, m_height, BPP);
 
     if (!m_image)
@@ -28,7 +30,7 @@ void Framebuffer::raytrace(Scene& scene, const std::string& scene_file_name)
     /* Raytracing code */
     int num_threads = std::thread::hardware_concurrency() * 4;
 
-    std::vector<int> bounds = thread_bounds(num_threads, m_width * m_height);
+    std::vector<int> bounds = thread_bounds(num_threads, m_size);
 
     double start_time = Time::getTime();
 
@@ -51,7 +53,7 @@ void Framebuffer::raytrace(Scene& scene, const std::string& scene_file_name)
 
     if (FreeImage_Save(FIF_PNG, m_image, scene_file_name.c_str(), 0))
     {
-        printf("Image %s successfully saved!\n", scene_file_name.c_str());
+        printf("\nImage %s successfully saved!\n", scene_file_name.c_str());
         printf("Processing time = %.2fs\n", Time::getTime() - start_time);
     }
 }
@@ -73,6 +75,13 @@ void Framebuffer::process(Scene& scene, int left, int right)
         color.rgbBlue  = static_cast<BYTE>(c.b * 255.0f + 0.5f);
 
         FreeImage_SetPixelColor(m_image, m_width - jj, ii, &color);
+
+        m_processed_pixel_counter += 1;
+
+        if(m_processed_pixel_counter % 100 == 0)
+        {
+            printf("Processed pixels = %d/%d\r", m_processed_pixel_counter.load(), m_size);
+        }
     }
 }
 
