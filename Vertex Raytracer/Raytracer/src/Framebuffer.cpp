@@ -21,15 +21,12 @@ Framebuffer::Framebuffer(int width, int height)
 Framebuffer::~Framebuffer()
 {
     FreeImage_DeInitialise();
-
-    printf("Press any key to continue...\n");
-    getchar();
 }
 
 void Framebuffer::raytrace(Scene& scene, const std::string& scene_file_name)
 {
     /* Raytracing code */
-    int num_threads = std::thread::hardware_concurrency() * 4;
+    int num_threads = 1;//std::thread::hardware_concurrency() * 4;
 
     std::vector<int> bounds = thread_bounds(num_threads, m_width * m_height);
 
@@ -70,7 +67,7 @@ void Framebuffer::process(Scene& scene, int left, int right)
         int jj = i - ii * m_width;
 
         glm::vec3 c = raytracer.illuminate(jj, ii);
-
+        
         color.rgbRed   = static_cast<BYTE>(c.r * 255.0f + 0.5f);
         color.rgbGreen = static_cast<BYTE>(c.g * 255.0f + 0.5f);
         color.rgbBlue  = static_cast<BYTE>(c.b * 255.0f + 0.5f);

@@ -16,7 +16,7 @@ int main(int argc, char * argv[])
 
         scene.loadScene(argv[1]);
     #else
-        scene.loadScene("subm/scene5.test");
+        scene.loadScene("subm/scene4-specular.test");
     #endif
 
     Framebuffer framebuffer(scene.width, scene.height);
