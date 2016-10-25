@@ -26,32 +26,30 @@ Framebuffer::~Framebuffer()
     getchar();
 }
 
-void Framebuffer::raytrace(Raytracer& raytracer, const std::string& scene_file_name) const
+void Framebuffer::raytrace(Scene& scene, const std::string& scene_file_name)
 {
     /* Raytracing code */
-    int total_pixels = m_width * m_height;
-    int pixels_counter = 0;
+    int num_threads = std::thread::hardware_concurrency() * 4;
 
-    RGBQUAD color;
+    std::vector<int> bounds = thread_bounds(num_threads, m_width * m_height);
 
     double start_time = Time::getTime();
 
-    for (int i = 0; i < m_height; ++i)
+    /* Use num_threads - 1 threads to raytrace the scene */
+    for(int i = 0; i < num_threads - 1; ++i)
     {
-        for (int j = 0; j < m_width; ++j)
-        {
-            glm::vec3 c = raytracer.illuminate(j, i);
+        m_threads.push_back(std::thread(&Framebuffer::process, this, std::ref(scene), bounds[i], bounds[i + 1]));
+    }
 
-            color.rgbRed   = static_cast<BYTE>(c.r * 255.0f + 0.5f);
-            color.rgbGreen = static_cast<BYTE>(c.g * 255.0f + 0.5f);
-            color.rgbBlue  = static_cast<BYTE>(c.b * 255.0f + 0.5f);
+    /* Use main thread to raytrace the scene */
+    for (int i = num_threads - 1; i < num_threads; ++i) 
+    {
+        process(scene, bounds[i], bounds[i + 1]);
+    }
 
-            FreeImage_SetPixelColor(m_image, m_width - j, i, &color);
-
-            ++pixels_counter;
-            if (pixels_counter % 1000 == 0)
-                printf("%d / %d pixels \r", pixels_counter, total_pixels);
-        }
+    for (auto &t : m_threads) 
+    {
+        t.join();
     }
 
     if (FreeImage_Save(FIF_PNG, m_image, scene_file_name.c_str(), 0))
@@ -59,4 +57,48 @@ void Framebuffer::raytrace(Raytracer& raytracer, const std::string& scene_file_n
         printf("Image %s successfully saved!\n", scene_file_name.c_str());
         printf("Processing time = %.2fs\n", Time::getTime() - start_time);
     }
+}
+
+void Framebuffer::process(Scene& scene, int left, int right)
+{
+    RGBQUAD color;
+    Raytracer raytracer(scene);
+
+    for (int i = left; i < right; ++i) 
+    {
+        int ii = i / m_width;
+        int jj = i - ii * m_width;
+
+        glm::vec3 c = raytracer.illuminate(jj, ii);
+
+        color.rgbRed   = static_cast<BYTE>(c.r * 255.0f + 0.5f);
+        color.rgbGreen = static_cast<BYTE>(c.g * 255.0f + 0.5f);
+        color.rgbBlue  = static_cast<BYTE>(c.b * 255.0f + 0.5f);
+
+        FreeImage_SetPixelColor(m_image, m_width - jj, ii, &color);
+    }
+}
+
+std::vector<int> Framebuffer::thread_bounds(int parts, int mem) const
+{
+    std::vector<int> bounds;
+    int delta = mem / parts;
+    int reminder = mem % parts;
+    int N1 = 0, N2 = 0;
+    bounds.push_back(N1);
+
+    for (int i = 0; i < parts; ++i)
+    {
+        N2 = N1 + delta;
+
+        if (i == parts - 1)
+        {
+            N2 += reminder;
+        }
+
+        bounds.push_back(N2);
+        N1 = N2;
+    }
+
+    return bounds;
 }

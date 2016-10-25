@@ -1,5 +1,4 @@
 #include "Scene.h"
-#include "Raytracer.h"
 #include "Framebuffer.h"
 
 //#define CMD
@@ -20,10 +19,8 @@ int main(int argc, char * argv[])
         scene.loadScene("subm/scene5.test");
     #endif
 
-    Raytracer raytracer(scene);
-
     Framebuffer framebuffer(scene.width, scene.height);
-    framebuffer.raytrace(raytracer, scene.outputFilename);
+    framebuffer.raytrace(scene, scene.outputFilename);
 
     return EXIT_SUCCESS;
 }

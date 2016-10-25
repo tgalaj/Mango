@@ -168,7 +168,7 @@ void Raytracer::calcShadows(const glm::vec3& hit_pos) const
 
         if (light->type == LIGHT_TYPE::POINT)
         {
-            dir = light->dir_pos - hit_pos;// current_intersect_point;
+            dir = light->dir_pos - hit_pos;
             distance = glm::distance(light->dir_pos, hit_pos);
         }
 
@@ -180,7 +180,7 @@ void Raytracer::calcShadows(const glm::vec3& hit_pos) const
         /* Check if ray intersects any object */
         for (auto & s : m_scene->spheres)
         {
-            float shadow_distance; //TODO: better name
+            float shadow_distance;
             if (shadow_ray.checkIntersection(s, shadow_distance))
             {
                 if (shadow_distance >= -0.0005f && shadow_distance < distance)
