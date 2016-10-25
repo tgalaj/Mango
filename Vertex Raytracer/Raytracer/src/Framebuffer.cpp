@@ -26,7 +26,7 @@ Framebuffer::~Framebuffer()
 void Framebuffer::raytrace(Scene& scene, const std::string& scene_file_name)
 {
     /* Raytracing code */
-    int num_threads = 1;//std::thread::hardware_concurrency() * 4;
+    int num_threads = std::thread::hardware_concurrency() * 4;
 
     std::vector<int> bounds = thread_bounds(num_threads, m_width * m_height);
 

@@ -11,7 +11,6 @@ public:
     ~Raytracer();
 
     void setBackgroundColor(float r, float g, float b) { m_background_color = glm::vec3(r, g, b); }
-    void setShadowColor    (float r, float g, float b) { m_shadow_color     = glm::vec3(r, g, b); }
 
     glm::vec3 illuminate(int x_idx, int y_idx, Ray* reflection_ray = nullptr);
 
@@ -30,7 +29,6 @@ private:
     glm::vec3 m_objects_intersect_point;
 
     glm::vec3 m_background_color;
-    glm::vec3 m_shadow_color;
     int m_recurrence_depth;
 
     float m_max_distance;

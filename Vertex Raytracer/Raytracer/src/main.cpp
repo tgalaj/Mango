@@ -1,7 +1,7 @@
 #include "Scene.h"
 #include "Framebuffer.h"
 
-//#define CMD
+#define CMD
 
 int main(int argc, char * argv[])
 {
@@ -16,7 +16,7 @@ int main(int argc, char * argv[])
 
         scene.loadScene(argv[1]);
     #else
-        scene.loadScene("subm/scene4-specular.test");
+        scene.loadScene("subm/scene6.test");
     #endif
 
     Framebuffer framebuffer(scene.width, scene.height);

@@ -2,7 +2,6 @@
 
 Raytracer::Raytracer(Scene& scene)
     : m_background_color(glm::vec3(0.0f)),
-      m_shadow_color    (glm::vec3(0.0f)),
       m_recurrence_depth(INITIAL_RECURRENCE_DEPTH),
       m_max_distance    (std::numeric_limits<float>::max()),
       m_distance        (m_max_distance),
@@ -27,7 +26,7 @@ glm::vec3 Raytracer::illuminate(int x_idx, int y_idx, Ray* reflection_ray)
 
     Ray ray = (reflection_ray == nullptr) ? m_scene->cam->rayFromCamera(y_idx, x_idx) : *reflection_ray;
 
-    bool isIntersection = checkSpheresIntersections(ray) || checkTrianglesIntersections(ray);
+    bool isIntersection = checkSpheresIntersections(ray) | checkTrianglesIntersections(ray);
 
     /* Calculate light */
     if (isIntersection)
@@ -141,10 +140,6 @@ glm::vec3 Raytracer::calcLight(const Ray& ray, const glm::vec3& hit_pos)
 
             light_color += attenuation * (lambert + phong);
         }
-        else
-        {
-            light_color += m_shadow_color;
-        }
 
         light_index++;
     }
@@ -227,7 +222,9 @@ glm::vec3 Raytracer::calcReflections(const Ray& ray, const glm::vec3& hit_pos)
 
             /* Compute reflection color */
             m_recurrence_depth++;
-            reflection_color += m_objects_material.specular * illuminate(-1, -1, &reflection_ray);
+
+            glm::vec3 specular = m_objects_material.specular;
+            reflection_color += specular * illuminate(-1, -1, &reflection_ray);
         }
     }
 
