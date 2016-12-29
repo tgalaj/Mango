@@ -53,7 +53,8 @@ bool Raytracer::checkSpheresIntersections(const Ray& ray)
     for (auto & s : m_scene->spheres)
     {
         /* Get intersections with spheres */
-        if (ray.checkIntersection(s, m_distance))
+        float distance1;
+        if (ray.checkIntersection(s, m_distance, distance1))
         {
             if (m_distance < m_max_distance && m_distance > 0.0f)
             {
@@ -175,10 +176,10 @@ void Raytracer::calcShadows(const glm::vec3& hit_pos) const
         /* Check if ray intersects any object */
         for (auto & s : m_scene->spheres)
         {
-            float shadow_distance;
-            if (shadow_ray.checkIntersection(s, shadow_distance))
+            float shadow_distance0, shadow_distance1;
+            if (shadow_ray.checkIntersection(s, shadow_distance0, shadow_distance1))
             {
-                if (shadow_distance >= -0.0005f && shadow_distance < distance)
+                if (shadow_distance0 >= -0.0005f && shadow_distance0 < distance)
                 {
                     m_light_visibility[i] = false;
                     break;

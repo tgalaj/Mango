@@ -1,5 +1,7 @@
-#include "Ray.h"
+#include <utility>
 
+#include "Ray.h"
+#include "MathHelpers.h"
 
 Ray::Ray(const glm::vec3 & origin, const glm::vec3 & direction)
 {
@@ -12,9 +14,8 @@ Ray::~Ray()
 {
 }
 
-bool Ray::checkIntersection(const Sphere & s, float & d) const
+bool Ray::checkIntersection(const Sphere & s, float & t0, float & t1) const
 {
-    d = -888.0f;
     glm::mat4 T  = glm::inverse(s.transform);
 
     glm::vec3 r_dir    = glm::vec3(T * glm::vec4(direction, 0.0f));
@@ -24,12 +25,12 @@ bool Ray::checkIntersection(const Sphere & s, float & d) const
     float b = 2.0f * glm::dot(r_dir, r_origin - s.center);
     float c = glm::dot(r_origin - s.center, r_origin - s.center) - s.radius * s.radius;
 
-    float delta = b * b - 4 * a * c;
-
-    if (delta < 0)
+    if(!solveQuadraticEquation(a, b, c, t0, t1))
+    {
         return false;
+    }
 
-    d = (-b - glm::sqrt(delta)) / (2.0f * a);
+    if(t0 > t1) std::swap(t0, t1);
 
     return true;
 }

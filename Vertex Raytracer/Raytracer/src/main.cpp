@@ -1,7 +1,7 @@
 #include "Scene.h"
 #include "Framebuffer.h"
 
-#define CMD
+//#define CMD
 
 int main(int argc, char * argv[])
 {

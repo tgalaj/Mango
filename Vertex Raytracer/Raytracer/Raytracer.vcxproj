@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Atmosphere.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -94,10 +95,12 @@
     <ClCompile Include="src\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Atmosphere.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Framebuffer.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\Material.h" />
+    <ClInclude Include="src\MathHelpers.h" />
     <ClInclude Include="src\Primitives.h" />
     <ClInclude Include="src\Ray.h" />
     <ClInclude Include="src\Raytracer.h" />
