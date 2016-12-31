@@ -36,6 +36,7 @@ The newest features (may be **unstable**) will be pushed to **develop** branch a
 - [ ] Constructive solid geometry
 - [ ] GPU supported ray tracing, photon mapping
 - [ ] Support for Vulkan renderer
+- [ ] Efficient and realistic atmospheric scattering
 
 ### Dependencies' versions
 - SDL  2.0.4 (stable)
