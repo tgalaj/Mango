@@ -14,6 +14,22 @@ Ray::~Ray()
 {
 }
 
+bool Ray::checkIntersection(float & radius, float & t0, float & t1) const
+{
+    float a = glm::dot(direction, direction);
+    float b = 2.0f * glm::dot(direction, origin);
+    float c = glm::dot(origin, origin) - radius * radius;
+
+    if (!solveQuadraticEquation(a, b, c, t0, t1))
+    {
+        return false;
+    }
+
+    if (t0 > t1) std::swap(t0, t1);
+
+    return true;
+}
+
 bool Ray::checkIntersection(const Sphere & s, float & t0, float & t1) const
 {
     glm::mat4 T  = glm::inverse(s.transform);

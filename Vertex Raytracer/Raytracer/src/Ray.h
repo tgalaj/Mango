@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include "Primitives.h"
+#include "Atmosphere.h"
 
 class Ray
 {
@@ -9,6 +10,7 @@ public:
     Ray(const glm::vec3 & origin, const glm::vec3 & direction);
     ~Ray();
 
+    bool checkIntersection(float & radius, float & t0, float & t1) const; //for atmospheric scattering purposes
     bool checkIntersection(const Sphere & s, float & t0, float & t1) const;
     bool checkIntersection(const Triangle & t, float & d) const;
 

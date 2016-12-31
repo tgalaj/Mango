@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <glm/glm.hpp>
+#include "Ray.h"
 
 class Atmosphere
 {
@@ -18,7 +19,7 @@ public:
 
     ~Atmosphere() {}
 
-    glm::vec3 computeIncidentLight(const glm::vec3& origin, const glm::vec3& direction, float t_min, float t_max) const;
+    glm::vec3 computeIncidentLight(const Ray & ray, float t_min, float t_max);
 
     glm::vec3 sun_direction; //Needs to be normalized
     float planet_radius;

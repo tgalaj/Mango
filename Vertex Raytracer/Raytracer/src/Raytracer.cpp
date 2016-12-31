@@ -28,6 +28,20 @@ glm::vec3 Raytracer::illuminate(int x_idx, int y_idx, Ray* reflection_ray)
 
     bool isIntersection = checkSpheresIntersections(ray) | checkTrianglesIntersections(ray);
 
+    /* Calculate atmoshperic scattering */
+    /** Does the ray intersect the planetory body ? (the intersection test is against the Earth here 
+      * not against the atmosphere).If the ray intersects the Earth body and that the intersection is ahead of us,
+      * then the ray intersects the planet in 2 points, t0 and t1.But we only want to comupute the atmosphere
+      * between t = 0 and t = t0(where the ray hits the Earth first).If the viewing ray doesn't hit the Earth,
+      * or course the ray is then bounded to the range [0:INF]. In the method computeIncidentLight() we then
+      * compute where this primary ray intersects the atmosphere and we limit the max t range  of the ray to
+      * the point where it leaves the atmosphere. 
+      */
+    // 1) Check if ray intersects with a planet
+
+    /* The *viewing or camera ray* is bounded to the range[0:tMax] */
+    // 2) Compute atmosphere's incident light
+
     /* Calculate light */
     if (isIntersection)
     {
