@@ -2,7 +2,6 @@
 
 #include <glm/glm.hpp>
 #include "Primitives.h"
-#include "Atmosphere.h"
 
 class Ray
 {

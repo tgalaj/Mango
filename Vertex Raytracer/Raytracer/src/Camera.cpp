@@ -34,7 +34,7 @@ Ray Camera::rayFromCamera(int i, int j) const
     
     float a = tanFovx * ((jj - (img_width  * 0.5f)) / (img_width  * 0.5f));
     float b = tanFovy * (((img_height * 0.5f) - ii) / (img_height * 0.5f));
-    
+   
     glm::vec3 s = glm::normalize(u * a + v * b - n);
    
     return Ray(eye, s);

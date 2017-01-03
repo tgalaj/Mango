@@ -70,9 +70,24 @@ void Framebuffer::process(Scene& scene, int left, int right)
 
         glm::vec3 c = raytracer.illuminate(jj, ii);
         
-        color.rgbRed   = static_cast<BYTE>(c.r * 255.0f + 0.5f);
-        color.rgbGreen = static_cast<BYTE>(c.g * 255.0f + 0.5f);
-        color.rgbBlue  = static_cast<BYTE>(c.b * 255.0f + 0.5f);
+        if(!use_tone_mapping)
+        {
+            static float exposure = 1.0f;
+            static float gamma    = 1.2f;
+
+            c = glm::vec3(1.0f) - glm::exp(-c * exposure);
+            c = glm::pow(c, glm::vec3(1.0f / gamma));
+            
+            color.rgbRed   = static_cast<BYTE>(c.r * 255.0f + 0.5f);
+            color.rgbGreen = static_cast<BYTE>(c.g * 255.0f + 0.5f);
+            color.rgbBlue  = static_cast<BYTE>(c.b * 255.0f + 0.5f);
+        }
+        else
+        {
+            color.rgbRed   = static_cast<BYTE>(c.r * 255.0f + 0.5f);
+            color.rgbGreen = static_cast<BYTE>(c.g * 255.0f + 0.5f);
+            color.rgbBlue  = static_cast<BYTE>(c.b * 255.0f + 0.5f);
+        }
 
         FreeImage_SetPixelColor(m_image, m_width - jj, ii, &color);
 

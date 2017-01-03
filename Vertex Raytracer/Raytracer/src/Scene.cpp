@@ -8,7 +8,8 @@
 #include "Scene.h"
 
 Scene::Scene()
-    : cam(nullptr)
+    : atmosphere(nullptr),
+      cam(nullptr)
 {
     maxdepth = 5;
     width = 0;
@@ -17,6 +18,11 @@ Scene::Scene()
 
 Scene::~Scene()
 {
+    if (atmosphere != nullptr)
+    {
+        delete atmosphere;
+    }
+
     if (cam != nullptr)
     {
         delete cam;
@@ -80,6 +86,15 @@ void Scene::loadScene(std::string filename)
                     if (isValidInput)
                     {
                         outputFilename = output;
+                    }
+                }
+                else if (cmd == "atmosphere")
+                {
+                    isValidInput = true;//readvals(s, 10, values);
+
+                    if (isValidInput)
+                    {
+                        atmosphere = new Atmosphere();
                     }
                 }
                 else if (cmd == "camera")

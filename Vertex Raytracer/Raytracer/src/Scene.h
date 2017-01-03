@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Atmosphere.h"
 #include "Camera.h"
 #include "Primitives.h"
 #include "Light.h"
@@ -23,6 +24,7 @@ public:
 
     std::vector<Light> lights;
 
+    Atmosphere * atmosphere;
     Camera * cam;
 
     std::string outputFilename;

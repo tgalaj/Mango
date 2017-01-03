@@ -12,6 +12,8 @@ public:
 
     void raytrace(Scene& scene, const std::string& scene_file_name);
 
+    bool use_tone_mapping = true;
+
 private:
     const int BPP = 24; //cause three 8 bit RGB values
 

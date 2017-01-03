@@ -26,7 +26,7 @@ glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t
     uint32_t num_samples_light = 8;
 
     float segment_length = (t_max - t_min) / num_samples;
-    float t_current      = t_min;
+    float t_current      = 0;//t_min;
 
     /* Rayleight and Mie contributions */
     glm::vec3 sum_r(0.0f), sum_m(0.0f);
@@ -67,7 +67,7 @@ glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t
             glm::vec3 sample_position_light = sample_position + (t_current_light + segment_length_light * 0.5f) * sun_direction;
             float height_light = sample_position_light.length() - planet_radius;
 
-            if(height_light < 0)
+            if(height_light >= 0)
             {
                 break;
             }

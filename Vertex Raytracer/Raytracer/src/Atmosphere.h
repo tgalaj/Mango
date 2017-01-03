@@ -6,16 +6,16 @@
 class Atmosphere
 {
 public:
-    Atmosphere(glm::vec3 _sun_direction = glm::vec3(0, 1, 0), 
-               float _earth_radius      = 6360e3,
-               float _atmosphere_radius = 6420e2,
-               float _h_rayleigh        = 7994,
-               float _h_mie             = 1200)
-               : sun_direction    (_sun_direction),
-                 planet_radius    (_earth_radius),
-                 atmosphere_radius(_atmosphere_radius),
-                 h_rayleigh       (_h_rayleigh),
-                 h_mie            (_h_mie) {}
+    explicit Atmosphere(glm::vec3 _sun_direction = glm::vec3(0, 1, 0), 
+                        float _earth_radius      = 6360e3f,
+                        float _atmosphere_radius = 6420e2f,
+                        float _h_rayleigh        = 7994.0f,
+                        float _h_mie             = 1200.0f)
+                        : sun_direction    (glm::normalize(_sun_direction)),
+                          planet_radius    (_earth_radius),
+                          atmosphere_radius(_atmosphere_radius),
+                          h_rayleigh       (_h_rayleigh),
+                          h_mie            (_h_mie) {}
 
     ~Atmosphere() {}
 

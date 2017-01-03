@@ -10,8 +10,6 @@ public:
     explicit Raytracer(Scene& scene);
     ~Raytracer();
 
-    void setBackgroundColor(float r, float g, float b) { m_background_color = glm::vec3(r, g, b); }
-
     glm::vec3 illuminate(int x_idx, int y_idx, Ray* reflection_ray = nullptr);
 
 private:

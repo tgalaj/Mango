@@ -26,8 +26,6 @@ glm::vec3 Raytracer::illuminate(int x_idx, int y_idx, Ray* reflection_ray)
 
     Ray ray = (reflection_ray == nullptr) ? m_scene->cam->rayFromCamera(y_idx, x_idx) : *reflection_ray;
 
-    bool isIntersection = checkSpheresIntersections(ray) | checkTrianglesIntersections(ray);
-
     /* Calculate atmoshperic scattering */
     /** Does the ray intersect the planetory body ? (the intersection test is against the Earth here 
       * not against the atmosphere).If the ray intersects the Earth body and that the intersection is ahead of us,
@@ -37,10 +35,24 @@ glm::vec3 Raytracer::illuminate(int x_idx, int y_idx, Ray* reflection_ray)
       * compute where this primary ray intersects the atmosphere and we limit the max t range  of the ray to
       * the point where it leaves the atmosphere. 
       */
-    // 1) Check if ray intersects with a planet
+    if(m_scene->atmosphere != nullptr)
+    {
+        // 1) Check if ray intersects with a planet
+        float t0, t1, tMax = std::numeric_limits<float>::max();
+        if (ray.checkIntersection(m_scene->atmosphere->planet_radius, t0, t1) && t1 > 0.0f)
+        {
+            tMax = glm::max(0.0f, t0);
+            m_background_color = glm::vec3(1, 0, 0);
+        }
+        else
+        {
+            /* The *viewing or camera ray* is bounded to the range[0:tMax] */
+            // 2) Compute atmosphere's incident light
+            m_background_color = glm::vec3(1, 0, 1);//m_scene->atmosphere->computeIncidentLight(ray, 0, tMax);
+        }
+    }
 
-    /* The *viewing or camera ray* is bounded to the range[0:tMax] */
-    // 2) Compute atmosphere's incident light
+    bool isIntersection = checkSpheresIntersections(ray) | checkTrianglesIntersections(ray);
 
     /* Calculate light */
     if (isIntersection)
@@ -52,7 +64,7 @@ glm::vec3 Raytracer::illuminate(int x_idx, int y_idx, Ray* reflection_ray)
         glm::vec3 light_color      = calcLight      (ray, hit_pos);
         glm::vec3 reflection_color = calcReflections(ray, hit_pos);
 
-        return light_color + reflection_color + m_objects_material.ambient + m_objects_material.emission;
+        return light_color + reflection_color + m_objects_material.ambient + m_objects_material.emission + m_background_color;
     }
 
     /* return background color */
