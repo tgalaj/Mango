@@ -1,5 +1,6 @@
 ﻿#include <glm/gtc/constants.hpp>
 #include "Atmosphere.h"
+#include "MathHelpers.h"
 
 const glm::vec3 Atmosphere::BETA_RAYLEIGH(3.8e-6f, 13.5e-6f, 33.1e-6f);
 const glm::vec3 Atmosphere::BETA_MIE(21e-6f);
@@ -7,7 +8,7 @@ const glm::vec3 Atmosphere::BETA_MIE(21e-6f);
 glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t_max)
 {
     float t0, t1;
-    if (!ray.checkIntersection(atmosphere_radius, t0, t1) || t1 < 0)
+    if (!intersect(ray, t0, t1) || t1 < 0)
     {
         return glm::vec3(0.0f);
     }
@@ -33,7 +34,7 @@ glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t
     float optical_depth_r = 0, optical_depth_m = 0;
 
     /* mu in the paper which is the cosine of the angle between the sun direction and the ray direction */
-    float mu = glm::dot(ray.direction, sun_direction);
+    float mu = glm::dot(ray.m_direction, sun_direction);
 
     float phase_r = 3.0f / (16.0f * glm::pi<float>()) * (1.0f + mu * mu);
     float g = 0.76f;
@@ -41,7 +42,7 @@ glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t
 
     for(uint32_t i = 0; i < num_samples; ++i)
     {
-        glm::vec3 sample_position = ray.origin + (t_current + segment_length * 0.5f) * ray.direction;
+        glm::vec3 sample_position = ray.m_origin + (t_current + segment_length * 0.5f) * ray.m_direction;
         float height = glm::length(sample_position) - planet_radius;
 
         /* compute optical depth for view ray */
@@ -55,7 +56,7 @@ glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t
         float t0_light, t1_light;
 
         Ray light_ray(sample_position, sun_direction);
-        light_ray.checkIntersection(atmosphere_radius, t0_light, t1_light);
+        intersect(light_ray, t0_light, t1_light);
 
         float segment_length_light = t1_light / num_samples_light;
         float t_current_light = 0;
@@ -67,7 +68,7 @@ glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t
             glm::vec3 sample_position_light = sample_position + (t_current_light + segment_length_light * 0.5f) * sun_direction;
             float height_light = glm::length(sample_position_light) - planet_radius;
 
-            if(height_light < 0)
+            if(height_light < 0.0f)
             {
                 break;
             }
@@ -91,4 +92,35 @@ glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t
 
     static float sun_intensity = 20.0f;
     return (sum_r * BETA_RAYLEIGH * phase_r + sum_m * BETA_MIE * phase_m) * sun_intensity;
+}
+
+bool Atmosphere::intersect(const Ray & ray, float & t0, float & t1, bool is_planet)
+{
+    float a = glm::dot(ray.m_direction, ray.m_direction);
+    float b = 2 * glm::dot(ray.m_direction, ray.m_origin);
+
+    float radius = is_planet ? planet_radius : atmosphere_radius;
+    float c = glm::dot(ray.m_origin, ray.m_origin) - radius * radius;
+
+    if(!solveQuadraticEquation(a, b, c, t0, t1))
+    {
+        return false;
+    }
+
+    //if(t0 < 0.0f)
+    //{
+    //    t0 = t1;
+
+    //    if(t0 < 0.0f)
+    //    {
+    //        return false; //both t0 and t1 are negative
+    //    }
+    //}
+
+    if(t0 > t1)
+    {
+        std::swap(t0, t1);
+    }
+
+    return true;
 }

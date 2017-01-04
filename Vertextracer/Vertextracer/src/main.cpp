@@ -5,13 +5,14 @@ int main()
 {
     std::cout << "Vertextracer!\n";
 
+    Scene scene; //Todo pass scene as a reference to be feed from a file OR create static loader function in Scene and return copy of options
+
     Options options;
     options.width = 640;
     options.height = 480;
-    options.fov = 60.0f;
+    options.fov = 65.0f;
     options.output_file_name = "output";
-
-    Scene scene; //Todo pass scene as a reference to be feed from a file OR create static loader function in Scene and return copy of options
+    options.cam_origin = glm::vec3(0.0f, scene.atmosphere.planet_radius + 1000.0f, 30000.0f);
 
     Framebuffer framebuffer(options);
     framebuffer.render(scene);

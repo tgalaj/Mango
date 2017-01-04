@@ -42,14 +42,12 @@ glm::vec3 Raytracer::illuminate(int x_idx, int y_idx, Ray* reflection_ray)
         if (ray.checkIntersection(m_scene->atmosphere->planet_radius, t0, t1) && t1 > 0.0f)
         {
             tMax = glm::max(0.0f, t0);
-            m_background_color = glm::vec3(1, 0, 0);
+            //m_background_color = glm::vec3(1, 0, 0);
         }
-        else
-        {
-            /* The *viewing or camera ray* is bounded to the range[0:tMax] */
-            // 2) Compute atmosphere's incident light
-            m_background_color = glm::vec3(1, 0, 1);//m_scene->atmosphere->computeIncidentLight(ray, 0, tMax);
-        }
+
+        /* The *viewing or camera ray* is bounded to the range[0:tMax] */
+        // 2) Compute atmosphere's incident light
+        m_background_color = m_scene->atmosphere->computeIncidentLight(ray, 0, tMax);
     }
 
     bool isIntersection = checkSpheresIntersections(ray) | checkTrianglesIntersections(ray);

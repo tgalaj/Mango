@@ -20,6 +20,7 @@ public:
     ~Atmosphere() {}
 
     glm::vec3 computeIncidentLight(const Ray & ray, float t_min, float t_max);
+    bool intersect(const Ray & ray, float & t0, float & t1, bool is_planet = false);
 
     glm::vec3 sun_direction; //Needs to be normalized
     float planet_radius;

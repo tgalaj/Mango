@@ -5,5 +5,5 @@
 size 640 480 
 output atmosphere1.png
 
-camera 0 6361000 30000 0 1 1 0 1 0 65
+camera 0 6361000 30000 0 0 1 0 1 0 65
 atmosphere

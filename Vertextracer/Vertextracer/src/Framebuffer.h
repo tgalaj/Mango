@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include <iostream>
 #include <glm/glm.hpp>
 #include "Scene.h"
 #include "Camera.h"
@@ -21,7 +20,7 @@ public:
     Framebuffer(const Options & options);
     ~Framebuffer();
 
-    void render(const Scene & scene);
+    void render(Scene & scene);
 
 private:
     void savePPM() const;
