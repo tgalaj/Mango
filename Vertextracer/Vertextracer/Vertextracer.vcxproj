@@ -151,9 +151,10 @@
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Object.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Raytracer.cpp" />
     <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Atmosphere.h" />
@@ -161,10 +162,12 @@
     <ClInclude Include="src\Framebuffer.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\MathHelpers.h" />
+    <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Object.h" />
     <ClInclude Include="src\Ray.h" />
     <ClInclude Include="src\Raytracer.h" />
     <ClInclude Include="src\Scene.h" />
+    <ClInclude Include="src\Sphere.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

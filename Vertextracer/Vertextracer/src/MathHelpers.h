@@ -3,7 +3,7 @@
 #include <cmath>
 #include <algorithm>
 
-bool solveQuadraticEquation(float a, float b, float c, float& x1, float& x2)
+static bool solveQuadraticEquation(float a, float b, float c, float& x1, float& x2)
 {
     if(b == 0)
     {

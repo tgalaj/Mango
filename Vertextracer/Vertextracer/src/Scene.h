@@ -9,9 +9,10 @@
 class Scene
 {
 public:
-    Scene() {};
+    Scene();
+    ~Scene();
 
     Atmosphere atmosphere;
-    std::vector<std::unique_ptr<Object>> m_objects;
-    std::vector<std::unique_ptr<Light>> m_lights;
+    std::vector<Object*> m_objects;
+    std::vector<Light*> m_lights;
 };
