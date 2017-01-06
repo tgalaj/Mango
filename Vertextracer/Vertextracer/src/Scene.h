@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Light.h"
-#include "Object.h"
+#include "Model.h"
 #include "Atmosphere.h"
 
 class Scene
@@ -13,6 +13,6 @@ public:
     ~Scene();
 
     Atmosphere atmosphere;
-    std::vector<Object*> m_objects;
+    std::vector<Model*> m_objects;
     std::vector<Light*> m_lights;
 };

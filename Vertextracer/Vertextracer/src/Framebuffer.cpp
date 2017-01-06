@@ -58,7 +58,7 @@ void Framebuffer::render(Scene & scene)
             //    *(pixel++) = scene.atmosphere.computeIncidentLight(primary_ray, 0, tMax);
             //}
 
-            *(pixel++) = m_raytarcer->castRay(primary_ray, scene, 0);
+            *(pixel++) = m_raytarcer->castRay(primary_ray, scene, m_options, 0);
         }
         fprintf(stderr, "\rDone %3d%c", int(100 * y / (m_options.width - 1)), '%');
     }

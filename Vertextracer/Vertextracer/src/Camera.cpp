@@ -9,9 +9,7 @@ Camera::Camera(uint32_t width, uint32_t height, const glm::vec3 & eye, float fov
 {
     update();
 
-    m_cam_transform = glm::mat4(0.945519, 0, -0.325569, 0, -0.179534, 0.834209, -0.521403, 0, 0.271593, 0.551447, 0.78876, 0, 4.208271, 8.374532, 17.932925, 1);//glm::rotate(glm::mat4(), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));//glm::mat4(1.0f);
-    glm::vec4 temp_eye = m_cam_transform * glm::vec4(m_eye, 1.0f);
-    m_eye = glm::vec3(temp_eye) / temp_eye.w;
+    m_cam_transform = glm::lookAt(m_eye, glm::vec3(0.0, 0.0, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 }
 
 Ray Camera::getPrimaryRay(uint32_t x, uint32_t y)
