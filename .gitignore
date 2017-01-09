@@ -3,6 +3,9 @@ Debug/
 bin/
 **/models/*
 !**/models/nanosuit/
+!**/monkey.obj
+
+*.ppm
 
 # Ignore VSC++ 2013 files
 *.opensdf
