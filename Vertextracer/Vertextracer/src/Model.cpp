@@ -49,8 +49,11 @@ Mesh * Model::processMesh(aiMesh * mesh, const aiScene * scene, aiString & direc
     /* Process positions, normals, texcoords */
     for (size_t i = 0; i < mesh->mNumVertices; ++i)
     {
-        buffers.m_positions.push_back(glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z));
-        buffers.m_normals.push_back(glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z));
+        glm::vec4 position = m_model_matrix  * glm::vec4(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.0f);
+        glm::vec3 normal   = m_normal_matrix * glm::vec3(mesh->mNormals[i].x,  mesh->mNormals[i].y,  mesh->mNormals[i].z);
+
+        buffers.m_positions.push_back(glm::vec3(position));
+        buffers.m_normals.push_back(normal);
 
         if (mesh->mTextureCoords[0])
         {

@@ -5,7 +5,7 @@ int main()
 {
     std::cout << "Vertextracer!\n";
 
-    Model * monkey = new Model();
+    Model * monkey = new Model(glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(-1,0,0)));
     monkey->loadModel("res/models/monkey.obj");
 
     Scene scene; //Todo pass scene as a reference to be feed from a file OR create static loader function in Scene and return copy of options
