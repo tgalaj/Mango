@@ -35,24 +35,27 @@ bool Mesh::intersect(const Ray & ray, float & t_near, uint32_t & tri_index, glm:
 
 void Mesh::getSurfaceData(const glm::vec3 & hit_point, const glm::vec3 & view_dir, const uint32_t & tri_index, const glm::vec2 & uv, glm::vec3 & hit_normal, glm::vec2 & hit_texcoord) const
 {
+#if 0
     // face normal
     const glm::vec3 &v0 = m_buffers.m_positions[m_buffers.m_indices[tri_index * 3]];
     const glm::vec3 &v1 = m_buffers.m_positions[m_buffers.m_indices[tri_index * 3 + 1]];
     const glm::vec3 &v2 = m_buffers.m_positions[m_buffers.m_indices[tri_index * 3 + 2]];
     hit_normal = glm::cross(v1 - v0, v2 - v0);
     hit_normal = glm::normalize(hit_normal);
+#else
+    // vertex normal
+    const glm::vec3 &n0 = m_buffers.m_normals[m_buffers.m_indices[tri_index * 3]];
+    const glm::vec3 &n1 = m_buffers.m_normals[m_buffers.m_indices[tri_index * 3 + 1]];
+    const glm::vec3 &n2 = m_buffers.m_normals[m_buffers.m_indices[tri_index * 3 + 2]];
+    hit_normal = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
+    hit_normal = glm::normalize(hit_normal);
+#endif
 
     // texture coordinates
-    const glm::vec2 &st0 = m_buffers.m_texcoords[tri_index * 3];
-    const glm::vec2 &st1 = m_buffers.m_texcoords[tri_index * 3 + 1];
-    const glm::vec2 &st2 = m_buffers.m_texcoords[tri_index * 3 + 2];
+    const glm::vec2 &st0 = m_buffers.m_texcoords[m_buffers.m_indices[tri_index * 3]];
+    const glm::vec2 &st1 = m_buffers.m_texcoords[m_buffers.m_indices[tri_index * 3 + 1]];
+    const glm::vec2 &st2 = m_buffers.m_texcoords[m_buffers.m_indices[tri_index * 3 + 2]];
     hit_texcoord = (1 - uv.x - uv.y) * st0 + uv.x * st1 + uv.y * st2;
-
-    // vertex normal
-    /*const glm::vec3 &n0 = m_buffers.m_normals[tri_index * 3];
-    const glm::vec3 &n1 = m_buffers.m_normals[tri_index * 3 + 1];
-    const glm::vec3 &n2 = m_buffers.m_normals[tri_index * 3 + 2];
-    hit_normal = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;*/
 }
 
 bool Mesh::rayTriangleIntersect(const Ray & ray, const glm::vec3 & v0, const glm::vec3 & v1, const glm::vec3 & v2, float & t, float & u, float & v) const

@@ -26,7 +26,7 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
         float checker = (fmod(hit_texcoord.x * M, 1.0f) > 0.5f) ^ (fmod(hit_texcoord.y * M, 1.0f) > 0.5f);
         float c = 0.3f * (1 - checker) + 0.7f * checker;
 
-        hit_color = glm::vec3(c * n_dot_view); //glm::vec3(uv.x, uv.y, 0.0f);
+        hit_color = glm::clamp(glm::vec3(glm::dot(-primary_ray.m_direction, hit_normal)), 0.0f, 1.0f);//glm::vec3(c * n_dot_view); //glm::vec3(uv.x, uv.y, 0.0f);
     }
 
     return hit_color;
