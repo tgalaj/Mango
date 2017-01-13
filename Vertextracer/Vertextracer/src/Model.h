@@ -16,6 +16,7 @@ public:
                    const glm::vec3   & albedo    = glm::vec3(0.18f))
         : m_albedo(albedo), 
           m_type(MaterialType::DIFFUSE),
+          m_index_of_refreaction(1.0f),
           m_model_matrix (transform),
           m_normal_matrix(glm::transpose(glm::inverse(transform)))
 
@@ -33,6 +34,7 @@ public:
     std::vector<Mesh *> m_meshes;
     glm::vec3 m_albedo;
     MaterialType m_type;
+    float m_index_of_refreaction;
 
 private:
     void processNode(aiNode * node, const aiScene * scene, aiString & directory);

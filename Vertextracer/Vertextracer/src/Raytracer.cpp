@@ -37,8 +37,7 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
                                                   light_intensity, 
                                                   intersect_info_shading.tNear);
 
-                    Ray shadow_ray = Ray(hit_point + hit_normal * (0.0f + options.shadow_bias), -light_dir);
-                    bool is_visible = !trace(shadow_ray,
+                    bool is_visible = !trace(Ray(hit_point + hit_normal * (0.0f + options.shadow_bias), -light_dir),
                                              scene,
                                              intersect_info_shading,
                                              RayType::SHADOW);
@@ -60,6 +59,47 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
                     }
                 }
 
+                break;
+            }
+            case MaterialType::REFLECTION:
+            {
+                glm::vec3 reflection = glm::reflect(primary_ray.m_direction, hit_normal);
+                hit_color += 0.8f * castRay(Ray(hit_point + hit_normal * options.shadow_bias, reflection),
+                                            scene,
+                                            options,
+                                            depth + 1);
+                break;
+            }
+            case MaterialType::REFLECTION_AND_REFRACTION:
+            {
+                glm::vec3 refraction_color(0.0f), reflection_color(0.0f);
+
+                /* Compute fresnel */
+                float kr;
+                fresnel(primary_ray.m_direction, hit_normal, scene.m_objects[intersect_info.parent_index]->m_index_of_refreaction, kr);
+
+                bool is_outside = glm::dot(primary_ray.m_direction, hit_normal) < 0.0f;
+                glm::vec3 bias = options.shadow_bias * hit_normal;
+
+                /* Compute refraction if it is not a case of total internal reflection */
+                if(kr < 1.0f)
+                {
+                    glm::vec3 refraction_direction = glm::normalize(refract(primary_ray.m_direction, hit_normal, scene.m_objects[intersect_info.parent_index]->m_index_of_refreaction));
+                    glm::vec3 refraction_origin = is_outside ? hit_point - bias : hit_point + bias;
+                    refraction_color = castRay(Ray(refraction_origin, refraction_direction), 
+                                               scene, 
+                                               options, 
+                                               depth + 1);
+                }
+
+                glm::vec3 reflection_direction = glm::normalize(glm::reflect(primary_ray.m_direction, hit_normal));
+                glm::vec3 reflection_origin = is_outside ? hit_point + bias : hit_point - bias;
+                reflection_color = castRay(Ray(reflection_origin, reflection_direction),
+                                           scene, 
+                                           options, 
+                                           depth + 1);
+
+                hit_color += reflection_color * kr + refraction_color * (1.0f - kr);
                 break;
             }
         }
@@ -110,4 +150,55 @@ bool Raytracer::trace(const Ray & ray, const Scene & scene, IntersectInfo & inte
     }
 
     return intersect_info.hitObject != nullptr;
+}
+
+glm::vec3 Raytracer::refract(const glm::vec3 & I, const glm::vec3 & N, const float & ior) const
+{
+    float cosi = glm::clamp(glm::dot(I, N), -1.0f, 1.0f);
+    float etai = 1, etat = ior;
+    glm::vec3 n = N;
+
+    if(cosi < 0.0f)
+    {
+        cosi = -cosi;
+    }
+    else
+    {
+        std::swap(etai, etat);
+        n = -N;
+    }
+
+    float eta = etai / etat;
+    float k = 1 - eta * eta * (1 * cosi * cosi);
+
+    return k < 0.0f ? glm::vec3(0.0f) : eta * I + (eta * cosi - std::sqrtf(k)) * n;
+}
+
+void Raytracer::fresnel(const glm::vec3 & I, const glm::vec3 & N, const float & ior, float & kr)
+{
+    float cosi = glm::clamp(glm::dot(I, N), -1.0f, 1.0f);
+    float etai = 1, etat = ior;
+
+    if (cosi > 0.0f)
+    {
+        std::swap(etai, etat);
+    }
+
+    /* Snell's law */
+    float sint = etai / etat * std::sqrtf(glm::max(0.0f, 1.0f - cosi * cosi));
+
+    /* Total internall refelction */
+    if(sint >= 1.0f)
+    {
+        kr = 1.0f;
+    }
+    else
+    {
+        float cost = std::sqrtf(glm::max(0.0f, 1.0f - sint * sint));
+        cosi = std::fabsf(cosi);
+        float Rs = ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost));
+        float Rp = ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost));
+
+        kr = (Rs * Rs + Rp * Rp) / 2.0f;
+    }
 }
