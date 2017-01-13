@@ -5,6 +5,7 @@ bin/
 !**/models/nanosuit/
 !**/monkey.obj
 !**/sphere.obj
+!**/plane.obj
 
 *.ppm
 

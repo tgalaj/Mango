@@ -14,7 +14,7 @@ void Model::loadModel(const std::string & file_name)
 {
     Assimp::Importer importer;
 
-    unsigned int flags = aiProcess_Triangulate | aiProcess_GenSmoothNormals;
+    unsigned int flags = aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs;
     const aiScene * scene = importer.ReadFile(file_name, flags);
 
     if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)

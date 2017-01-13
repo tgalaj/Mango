@@ -152,23 +152,27 @@
   <ItemGroup>
     <ClCompile Include="src\Atmosphere.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\DirectionalLight.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Model.cpp" />
+    <ClCompile Include="src\PointLight.cpp" />
     <ClCompile Include="src\Raytracer.cpp" />
     <ClCompile Include="src\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Atmosphere.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\DirectionalLight.h" />
     <ClInclude Include="src\Framebuffer.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\MathHelpers.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Object.h" />
+    <ClInclude Include="src\PointLight.h" />
     <ClInclude Include="src\Ray.h" />
     <ClInclude Include="src\Raytracer.h" />
     <ClInclude Include="src\Scene.h" />

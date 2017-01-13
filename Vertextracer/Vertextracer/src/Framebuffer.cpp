@@ -47,6 +47,7 @@ void Framebuffer::render(Scene & scene)
         {
             Ray primary_ray = m_cam->getPrimaryRay(x, y);
 
+            //Atmospheric scattering part
             //float t0, t1, tMax = std::numeric_limits<float>::max();
             //if (scene.atmosphere.intersect(primary_ray, t0, t1, true) && t1 > 0.0f)
             //{
@@ -58,7 +59,7 @@ void Framebuffer::render(Scene & scene)
             //    *(pixel++) = scene.atmosphere.computeIncidentLight(primary_ray, 0, tMax);
             //}
 
-            *(pixel++) = m_raytarcer->castRay(primary_ray, scene, m_options, 0);
+            *(pixel++) = m_raytarcer->castRay(primary_ray, scene, m_options);
         }
         fprintf(stderr, "\rDone %3d%c", int(100 * y / (m_options.width - 1)), '%');
     }

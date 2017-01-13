@@ -1,42 +1,82 @@
 ﻿#include "Raytracer.h"
 #include "Framebuffer.h"
 
-glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const Options & options, uint32_t depth)
+glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const Options & options, const uint32_t & depth)
 {
-    glm::vec3 hit_color = options.background_color;
-    float t_near = std::numeric_limits<float>::max();
-
-    glm::vec2 uv;
-    uint32_t index = 0;
-    Object *hit_object = nullptr; // this is a pointer to the hit object 
-
-    if (trace(primary_ray, scene, t_near, index, uv, &hit_object))
+    if(depth > options.max_depth)
     {
-        glm::vec3 hit_point = primary_ray.m_origin + primary_ray.m_direction * t_near;
+        return options.background_color;
+    }
+
+    glm::vec3 hit_color(0.0f);
+    IntersectInfo intersect_info = {};
+
+    if (trace(primary_ray, scene, intersect_info))
+    {
+        glm::vec3 hit_point = primary_ray.m_origin + primary_ray.m_direction * intersect_info.tNear;
         glm::vec3 hit_normal;
         glm::vec2 hit_texcoord;
-        hit_object->getSurfaceData(hit_point, primary_ray.m_direction, index, uv, hit_normal, hit_texcoord);
+        intersect_info.hitObject->getSurfaceData(hit_point, 
+                                                 primary_ray.m_direction,
+                                                 intersect_info.triangle_index, 
+                                                 intersect_info.uv, 
+                                                 hit_normal,
+                                                 hit_texcoord);
 
-        // Use the normal and texture coordinates to shade the hit point.
-        // The normal is used to compute a simple facing ratio and the texture coordinate
-        // to compute a basic checker board pattern
-        float n_dot_view = glm::max(glm::dot(hit_normal, -primary_ray.m_direction), 0.0f);
-        const int M = 10;
-        
-        float checker = (fmod(hit_texcoord.x * M, 1.0f) > 0.5f) ^ (fmod(hit_texcoord.y * M, 1.0f) > 0.5f);
-        float c = 0.3f * (1 - checker) + 0.7f * checker;
+        switch(scene.m_objects[intersect_info.parent_index]->m_type)
+        {
+            case MaterialType::DIFFUSE:
+            {
+                for(uint32_t i = 0; i < scene.m_lights.size(); ++i)
+                {
+                    glm::vec3 light_dir, light_intensity;
+                    IntersectInfo intersect_info_shading = {};
 
-        hit_color = glm::clamp(glm::vec3(glm::dot(-primary_ray.m_direction, hit_normal)), 0.0f, 1.0f);//glm::vec3(c * n_dot_view); //glm::vec3(uv.x, uv.y, 0.0f);
+                    scene.m_lights[i]->illuminate(hit_point, 
+                                                  light_dir, 
+                                                  light_intensity, 
+                                                  intersect_info_shading.tNear);
+
+                    Ray shadow_ray = Ray(hit_point + hit_normal * (0.0f + options.shadow_bias), -light_dir);
+                    bool is_visible = !trace(shadow_ray,
+                                             scene,
+                                             intersect_info_shading,
+                                             RayType::SHADOW);
+
+                    /* Checkered pattern */
+                    float angle = glm::radians(45.0f);
+                    float s = hit_texcoord.x * glm::cos(angle) - hit_texcoord.y * glm::sin(angle);
+                    float t = hit_texcoord.y * glm::cos(angle) + hit_texcoord.x * glm::sin(angle);
+                    float scale_s = 20.0f, scale_t = 20.0f;
+                    float pattern = 1.0f;//(glm::fract(s * scale_s) < 0.5f) ^ (glm::fract(t * scale_t) < 0.5f);
+
+                    if (is_visible)
+                    {
+                        hit_color += is_visible * pattern * light_intensity * glm::max(0.0f, glm::dot(hit_normal, -light_dir)) * scene.m_objects[intersect_info.parent_index]->m_albedo;
+                    }
+                    else
+                    {
+                        hit_color += glm::vec3(0.1f) * pattern * light_intensity * glm::max(0.0f, glm::dot(hit_normal, -light_dir)) * scene.m_objects[intersect_info.parent_index]->m_albedo;;
+                    }
+                }
+
+                break;
+            }
+        }
+    }
+    else
+    {
+        hit_color = options.background_color;
     }
 
     return hit_color;
 }
 
-bool Raytracer::trace(const Ray & ray, const Scene & scene, float &t_near, uint32_t & index, glm::vec2 & uv, Object **hit_object)
+bool Raytracer::trace(const Ray & ray, const Scene & scene, IntersectInfo & intersect_info, RayType ray_type)
 {
     static const float INF = std::numeric_limits<float>::max();
 
-    *hit_object = nullptr;
+    intersect_info.hitObject = nullptr;
 
     for (uint32_t j = 0; j < scene.m_objects.size(); ++j)
     {
@@ -46,15 +86,28 @@ bool Raytracer::trace(const Ray & ray, const Scene & scene, float &t_near, uint3
             uint32_t index_triangle;
             glm::vec2 uv_triangle;
 
-            if (scene.m_objects[j]->m_meshes[k]->intersect(ray, t_near_triangle, index_triangle, uv_triangle) && t_near_triangle < t_near)
+            if (scene.m_objects[j]->m_meshes[k]->intersect(ray, t_near_triangle, index_triangle, uv_triangle) && t_near_triangle < intersect_info.tNear)
             {
-                *hit_object = scene.m_objects[j]->m_meshes[k];
-                t_near = t_near_triangle;
-                index = index_triangle;
-                uv = uv_triangle;
+                if(ray_type == RayType::SHADOW )
+                {
+                    if (scene.m_objects[j]->m_type == MaterialType::REFLECTION_AND_REFRACTION)
+                    {
+                        continue;
+                    }
+                    //else
+                    {
+                        return true;
+                    }
+                }
+
+                intersect_info.hitObject      = scene.m_objects[j]->m_meshes[k];
+                intersect_info.tNear          = t_near_triangle;
+                intersect_info.triangle_index = index_triangle;
+                intersect_info.parent_index   = j;
+                intersect_info.uv             = uv_triangle;
             }
         }
     }
 
-    return *hit_object != nullptr;
+    return intersect_info.hitObject != nullptr;
 }

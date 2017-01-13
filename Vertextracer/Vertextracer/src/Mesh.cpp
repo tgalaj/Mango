@@ -94,5 +94,5 @@ bool Mesh::rayTriangleIntersect(const Ray & ray, const glm::vec3 & v0, const glm
 
     t = glm::dot(edge2, q_vec) * inv_det;
 
-    return true;
+    return (t > 0.0f) ? true : false;
 }
