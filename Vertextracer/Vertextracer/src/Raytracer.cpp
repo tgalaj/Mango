@@ -1,5 +1,6 @@
 ﻿#include "Raytracer.h"
 #include "Framebuffer.h"
+#include "Light.h"
 
 glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const Options & options, const uint32_t & depth)
 {
@@ -27,6 +28,8 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
         {
             case MaterialType::DIFFUSE:
             {
+                glm::vec3 diffuse(0.0f), specular(0.0f);
+
                 for(uint32_t i = 0; i < scene.m_lights.size(); ++i)
                 {
                     glm::vec3 light_dir, light_intensity;
@@ -51,13 +54,18 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
 
                     if (is_visible)
                     {
-                        hit_color += is_visible * pattern * light_intensity * glm::max(0.0f, glm::dot(hit_normal, -light_dir)) * scene.m_objects[intersect_info.parent_index]->m_albedo;
-                    }
-                    else
-                    {
-                        hit_color += glm::vec3(0.1f) * pattern * light_intensity * glm::max(0.0f, glm::dot(hit_normal, -light_dir)) * scene.m_objects[intersect_info.parent_index]->m_albedo;;
+                        diffuse += light_intensity * glm::max(0.0f, glm::dot(hit_normal, -light_dir)) * scene.m_objects[intersect_info.parent_index]->m_albedo;
+                        
+                        glm::vec3 reflected = glm::normalize(glm::reflect(light_dir, hit_normal));
+                        specular += light_intensity * glm::pow(glm::max(0.0f, glm::dot(reflected, -primary_ray.m_direction)), scene.m_objects[intersect_info.parent_index]->m_specular_exponent);
                     }
                 }
+
+                glm::vec3 ambient = Light::AMBIENT * scene.m_objects[intersect_info.parent_index]->m_albedo;
+
+                hit_color = ambient  * scene.m_objects[intersect_info.parent_index]->m_ka +
+                            diffuse  * scene.m_objects[intersect_info.parent_index]->m_kd +
+                            specular * scene.m_objects[intersect_info.parent_index]->m_ks;
 
                 break;
             }

@@ -25,6 +25,9 @@ public:
         {
             loadModel(file_name);
         }
+
+        m_ka = m_kd = m_ks = 1.0f;
+        m_specular_exponent = 20.0f;
     }
 
     ~Model();
@@ -35,6 +38,8 @@ public:
     glm::vec3 m_albedo;
     MaterialType m_type;
     float m_index_of_refreaction;
+    float m_ka, m_kd, m_ks;
+    float m_specular_exponent;
 
 private:
     void processNode(aiNode * node, const aiScene * scene, aiString & directory);

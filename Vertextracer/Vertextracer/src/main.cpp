@@ -8,6 +8,8 @@ int main()
     Model * monkey = new Model(glm::lookAt(glm::vec3(0.0f), 10.0f*glm::vec3(-1,-1,-1), glm::vec3(0, 1, 0)));
     monkey->loadModel("res/models/monkey.obj");
     monkey->m_albedo = glm::vec3(0.14f, 0.74f, 0.0f);
+    monkey->m_ks = 0.1f;
+    monkey->m_specular_exponent = 10.0f;
     //monkey->m_type = MaterialType::REFLECTION_AND_REFRACTION;
     //monkey->m_index_of_refreaction = 1.5f;
 
@@ -23,6 +25,7 @@ int main()
     //plane->m_type = MaterialType::REFLECTION_AND_REFRACTION;
 
     DirectionalLight * dir_light = new DirectionalLight();;
+    dir_light->m_intensity = 1.5f;
 
     Scene scene; //Todo pass scene as a reference to be feed from a file OR create static loader function in Scene and return copy of options
     scene.m_objects.push_back(monkey);
@@ -42,6 +45,5 @@ int main()
     Framebuffer framebuffer(options);
     framebuffer.render(scene);
     
-    system("pause");
     return EXIT_SUCCESS;
 }

@@ -1,6 +1,6 @@
 ﻿#include "Camera.h"
 
-Camera::Camera(uint32_t width, uint32_t height, const glm::vec3 & eye, float fov)
+Camera::Camera(uint32_t width, uint32_t height, float fov, const glm::vec3 & eye, const glm::vec3 & look_at, const glm::vec3 & up)
     : m_width(width),
       m_height(height),
       m_eye(eye),
@@ -9,7 +9,7 @@ Camera::Camera(uint32_t width, uint32_t height, const glm::vec3 & eye, float fov
 {
     update();
 
-    m_cam_transform = glm::lookAt(m_eye, glm::vec3(0.0, 0.0, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+    m_cam_transform = glm::lookAt(m_eye, look_at, up);
 }
 
 Ray Camera::getPrimaryRay(uint32_t x, uint32_t y)

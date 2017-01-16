@@ -17,4 +17,6 @@ public:
     glm::mat4 m_model_matrix; //Light to world position/direction
     glm::vec3 m_color;
     float m_intensity;
+
+    static const glm::vec3 AMBIENT;
 };
