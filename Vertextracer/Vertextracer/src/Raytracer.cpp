@@ -63,7 +63,7 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
             }
             case MaterialType::REFLECTION:
             {
-                glm::vec3 reflection = glm::reflect(primary_ray.m_direction, hit_normal);
+                glm::vec3 reflection = glm::normalize(glm::reflect(primary_ray.m_direction, hit_normal));
                 hit_color += 0.8f * castRay(Ray(hit_point + hit_normal * options.shadow_bias, reflection),
                                             scene,
                                             options,
@@ -169,7 +169,7 @@ glm::vec3 Raytracer::refract(const glm::vec3 & I, const glm::vec3 & N, const flo
     }
 
     float eta = etai / etat;
-    float k = 1 - eta * eta * (1 * cosi * cosi);
+    float k = 1 - eta * eta * (1 - cosi * cosi);
 
     return k < 0.0f ? glm::vec3(0.0f) : eta * I + (eta * cosi - std::sqrtf(k)) * n;
 }
