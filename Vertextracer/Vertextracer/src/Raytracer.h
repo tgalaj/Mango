@@ -2,9 +2,6 @@
 #include <glm/glm.hpp>
 #include "Scene.h"
 #include "Ray.h"
-#include "DirectionalLight.h"
-
-struct Options;
 
 enum class RayType { PRIMARY, SHADOW };
 

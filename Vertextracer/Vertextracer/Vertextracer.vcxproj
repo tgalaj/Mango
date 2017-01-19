@@ -168,10 +168,12 @@
     <ClInclude Include="src\DirectionalLight.h" />
     <ClInclude Include="src\Framebuffer.h" />
     <ClInclude Include="src\Light.h" />
+    <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\MathHelpers.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Object.h" />
+    <ClInclude Include="src\Options.h" />
     <ClInclude Include="src\PointLight.h" />
     <ClInclude Include="src\Ray.h" />
     <ClInclude Include="src\Raytracer.h" />

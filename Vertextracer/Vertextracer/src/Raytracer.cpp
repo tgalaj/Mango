@@ -22,9 +22,10 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
                                                  intersect_info.triangle_index, 
                                                  intersect_info.uv, 
                                                  hit_normal,
-                                                 hit_texcoord);
+                                                 hit_texcoord,
+                                                 scene.m_objects[intersect_info.parent_index]->m_material->use_flat_shading);
 
-        switch(scene.m_objects[intersect_info.parent_index]->m_type)
+        switch(scene.m_objects[intersect_info.parent_index]->m_material->m_type)
         {
             case MaterialType::DIFFUSE:
             {
@@ -54,18 +55,18 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
 
                     if (is_visible)
                     {
-                        diffuse += light_intensity * glm::max(0.0f, glm::dot(hit_normal, -light_dir)) * scene.m_objects[intersect_info.parent_index]->m_albedo;
+                        diffuse += light_intensity * glm::max(0.0f, glm::dot(hit_normal, -light_dir)) * scene.m_objects[intersect_info.parent_index]->m_material->m_albedo;
                         
                         glm::vec3 reflected = glm::normalize(glm::reflect(light_dir, hit_normal));
-                        specular += light_intensity * glm::pow(glm::max(0.0f, glm::dot(reflected, -primary_ray.m_direction)), scene.m_objects[intersect_info.parent_index]->m_specular_exponent);
+                        specular += light_intensity * glm::pow(glm::max(0.0f, glm::dot(reflected, -primary_ray.m_direction)), scene.m_objects[intersect_info.parent_index]->m_material->m_specular_exponent);
                     }
                 }
 
-                glm::vec3 ambient = Light::AMBIENT * scene.m_objects[intersect_info.parent_index]->m_albedo;
+                glm::vec3 ambient = Light::AMBIENT * scene.m_objects[intersect_info.parent_index]->m_material->m_albedo;
 
-                hit_color = ambient  * scene.m_objects[intersect_info.parent_index]->m_ka +
-                            diffuse  * scene.m_objects[intersect_info.parent_index]->m_kd +
-                            specular * scene.m_objects[intersect_info.parent_index]->m_ks;
+                hit_color = ambient  * scene.m_objects[intersect_info.parent_index]->m_material->m_ka +
+                            diffuse  * scene.m_objects[intersect_info.parent_index]->m_material->m_kd +
+                            specular * scene.m_objects[intersect_info.parent_index]->m_material->m_ks;
 
                 break;
             }
@@ -84,7 +85,7 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
 
                 /* Compute fresnel */
                 float kr;
-                fresnel(primary_ray.m_direction, hit_normal, scene.m_objects[intersect_info.parent_index]->m_index_of_refreaction, kr);
+                fresnel(primary_ray.m_direction, hit_normal, scene.m_objects[intersect_info.parent_index]->m_material->m_index_of_refreaction, kr);
 
                 bool is_outside = glm::dot(primary_ray.m_direction, hit_normal) < 0.0f;
                 glm::vec3 bias = options.shadow_bias * hit_normal;
@@ -92,7 +93,7 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
                 /* Compute refraction if it is not a case of total internal reflection */
                 if(kr < 1.0f)
                 {
-                    glm::vec3 refraction_direction = glm::normalize(refract(primary_ray.m_direction, hit_normal, scene.m_objects[intersect_info.parent_index]->m_index_of_refreaction));
+                    glm::vec3 refraction_direction = glm::normalize(refract(primary_ray.m_direction, hit_normal, scene.m_objects[intersect_info.parent_index]->m_material->m_index_of_refreaction));
                     glm::vec3 refraction_origin = is_outside ? hit_point - bias : hit_point + bias;
                     refraction_color = castRay(Ray(refraction_origin, refraction_direction), 
                                                scene, 
@@ -138,7 +139,7 @@ bool Raytracer::trace(const Ray & ray, const Scene & scene, IntersectInfo & inte
             {
                 if(ray_type == RayType::SHADOW )
                 {
-                    if (scene.m_objects[j]->m_type == MaterialType::REFLECTION_AND_REFRACTION)
+                    if (scene.m_objects[j]->m_material->m_type == MaterialType::REFLECTION_AND_REFRACTION)
                     {
                         continue;
                     }

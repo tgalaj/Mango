@@ -92,5 +92,11 @@
     <ClInclude Include="src\DirectionalLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Options.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Object.h"
+#include <vector>
 
 class Mesh : public Object
 {
@@ -16,7 +17,7 @@ public:
     explicit Mesh(const Buffers & buffers);
 
     bool intersect(const Ray & ray, float & t_near, uint32_t & tri_index, glm::vec2 & texcoord) const override;
-    void getSurfaceData(const glm::vec3 & hit_point, const glm::vec3 & view_dir, const uint32_t & tri_index, const glm::vec2 & uv, glm::vec3 & hit_normal, glm::vec2 & hit_texcoord) const override;
+    void getSurfaceData(const glm::vec3 & hit_point, const glm::vec3 & view_dir, const uint32_t & tri_index, const glm::vec2 & uv, glm::vec3 & hit_normal, glm::vec2 & hit_texcoord, bool flat_shading) const override;
 
 private:
     /* Moller-Trumbore ray triangle intersection algorithm */

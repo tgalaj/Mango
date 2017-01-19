@@ -1,4 +1,6 @@
-﻿#include "Model.h"
+﻿#include <assimp\postprocess.h>
+
+#include "Model.h"
 
 Model::~Model()
 {
@@ -8,13 +10,19 @@ Model::~Model()
     }
 
     m_meshes.clear();
+
+    delete m_material;
 }
 
 void Model::loadModel(const std::string & file_name)
 {
     Assimp::Importer importer;
 
-    unsigned int flags = aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs;
+    unsigned int flags = aiProcess_Triangulate      | 
+                         aiProcess_GenSmoothNormals |
+                         aiProcess_FlipUVs          |
+                         aiProcess_JoinIdenticalVertices;
+
     const aiScene * scene = importer.ReadFile(file_name, flags);
 
     if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)

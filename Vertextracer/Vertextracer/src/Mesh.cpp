@@ -33,23 +33,26 @@ bool Mesh::intersect(const Ray & ray, float & t_near, uint32_t & tri_index, glm:
     return intersect;
 }
 
-void Mesh::getSurfaceData(const glm::vec3 & hit_point, const glm::vec3 & view_dir, const uint32_t & tri_index, const glm::vec2 & uv, glm::vec3 & hit_normal, glm::vec2 & hit_texcoord) const
+void Mesh::getSurfaceData(const glm::vec3 & hit_point, const glm::vec3 & view_dir, const uint32_t & tri_index, const glm::vec2 & uv, glm::vec3 & hit_normal, glm::vec2 & hit_texcoord, bool flat_shading) const
 {
-#if 0
-    // face normal
-    const glm::vec3 &v0 = m_buffers.m_positions[m_buffers.m_indices[tri_index * 3]];
-    const glm::vec3 &v1 = m_buffers.m_positions[m_buffers.m_indices[tri_index * 3 + 1]];
-    const glm::vec3 &v2 = m_buffers.m_positions[m_buffers.m_indices[tri_index * 3 + 2]];
-    hit_normal = glm::cross(v1 - v0, v2 - v0);
-    hit_normal = glm::normalize(hit_normal);
-#else
-    // vertex normal
-    const glm::vec3 &n0 = m_buffers.m_normals[m_buffers.m_indices[tri_index * 3]];
-    const glm::vec3 &n1 = m_buffers.m_normals[m_buffers.m_indices[tri_index * 3 + 1]];
-    const glm::vec3 &n2 = m_buffers.m_normals[m_buffers.m_indices[tri_index * 3 + 2]];
-    hit_normal = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
-    hit_normal = glm::normalize(hit_normal);
-#endif
+    if (flat_shading)
+    {
+        // face normal
+        const glm::vec3 &v0 = m_buffers.m_positions[m_buffers.m_indices[tri_index * 3]];
+        const glm::vec3 &v1 = m_buffers.m_positions[m_buffers.m_indices[tri_index * 3 + 1]];
+        const glm::vec3 &v2 = m_buffers.m_positions[m_buffers.m_indices[tri_index * 3 + 2]];
+        hit_normal = glm::cross(v1 - v0, v2 - v0);
+        hit_normal = glm::normalize(hit_normal);
+    }
+    else
+    {
+        // vertex normal
+        const glm::vec3 &n0 = m_buffers.m_normals[m_buffers.m_indices[tri_index * 3]];
+        const glm::vec3 &n1 = m_buffers.m_normals[m_buffers.m_indices[tri_index * 3 + 1]];
+        const glm::vec3 &n2 = m_buffers.m_normals[m_buffers.m_indices[tri_index * 3 + 2]];
+        hit_normal = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
+        hit_normal = glm::normalize(hit_normal);
+    }
 
     // texture coordinates
     const glm::vec2 &st0 = m_buffers.m_texcoords[m_buffers.m_indices[tri_index * 3]];
@@ -68,7 +71,7 @@ bool Mesh::rayTriangleIntersect(const Ray & ray, const glm::vec3 & v0, const glm
 
     float det = glm::dot(edge1, p_vec);
 
-    if(fabs(det) < EPSILON)
+    if(det < EPSILON && det > -EPSILON)
     {
         /* Ray and triangle are parallel*/
         return false;
@@ -94,5 +97,5 @@ bool Mesh::rayTriangleIntersect(const Ray & ray, const glm::vec3 & v0, const glm
 
     t = glm::dot(edge2, q_vec) * inv_det;
 
-    return (t > 0.0f) ? true : false;
+    return (t >= 0.0f) ? true : false;
 }
