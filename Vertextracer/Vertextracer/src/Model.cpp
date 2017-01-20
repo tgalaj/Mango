@@ -23,7 +23,7 @@ void Model::loadModel(const std::string & file_name)
                          aiProcess_FlipUVs          |
                          aiProcess_JoinIdenticalVertices;
 
-    const aiScene * scene = importer.ReadFile(file_name, flags);
+    const aiScene * scene = importer.ReadFile("res/models/" + file_name, flags);
 
     if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {

@@ -1,0 +1,33 @@
+output simple
+
+width 640
+height 480
+
+camera_fov 60
+camera_origin 0 -0.5 5.5
+
+#refractive
+#ior 1.5
+albedo 0.14 0.74 0
+ks 0.1
+shininess 10
+look_at 0 0 0 -1 -1 -1 0 1 0
+object monkey.obj
+reset
+
+refractive
+ior 1.8
+albedo 0.52 0 0.46
+translate 0.3 0 2.2
+scale 0.5 0.5 0.5
+object sphere.obj
+reset 
+
+albedo 0.7 0.7 0.7
+translate 0 1 0
+object plane.obj
+reset 
+
+#direction | color | intensity
+directional 1 1 -1 1 1 1 1.0
+
