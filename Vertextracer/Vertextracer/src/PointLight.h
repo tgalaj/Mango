@@ -17,7 +17,6 @@ public:
         m_intensity = intensity;
 
         m_position = position;
-        m_position = glm::vec3(m_model_matrix * glm::vec4(m_position, 1.0f));
     }
 
     void illuminate(const glm::vec3 & hit_point, glm::vec3 & light_dir, glm::vec3 & light_intensity, float & distance) const override
@@ -28,6 +27,11 @@ public:
 
         light_intensity = m_color * m_intensity / (4.0f * glm::pi<float>() * length);
         distance = glm::distance(hit_point, m_position);
+    }
+
+    void update() override
+    {
+        m_position = glm::vec3(m_model_matrix * glm::vec4(m_position, 1.0f));
     }
 
     glm::vec3 m_position;

@@ -5,6 +5,8 @@ height 480
 
 camera_fov 60
 camera_origin 0 -0.5 5.5
+#camera_origin 0 -6361000 30000
+#camera_lookat 0 -6361000 30001
 
 #refractive
 #ior 1.5
@@ -29,5 +31,7 @@ object plane.obj
 reset 
 
 #direction | color | intensity
-directional 1 1 -1 1 1 1 1.0
+directional 0 1 0 1 1 1 1.5
+
+#atmosphere 6360000 6420000
 

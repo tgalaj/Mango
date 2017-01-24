@@ -14,8 +14,6 @@ public:
         m_intensity = intensity;
 
         m_direction = direction;
-        m_direction = glm::vec3(m_model_matrix * glm::vec4(m_direction, 0.0f));
-        m_direction = glm::normalize(m_direction);
     }
 
     void illuminate(const glm::vec3 & hit_point, glm::vec3 & light_dir, glm::vec3 & light_intensity, float & distance) const override
@@ -24,6 +22,13 @@ public:
         light_intensity = m_intensity * m_color;
         distance        = std::numeric_limits<float>::max();
     }
+
+    void update() override
+    {
+        m_direction = glm::vec3(m_model_matrix * glm::vec4(m_direction, 0.0f));
+        m_direction = glm::normalize(m_direction);
+    }
+
 
     glm::vec3 m_direction;
 };

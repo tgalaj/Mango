@@ -13,6 +13,7 @@ public:
     virtual ~Light() {};
 
     virtual void illuminate(const glm::vec3 & hit_point, glm::vec3 & light_dir, glm::vec3 & light_intensity, float & distance) const = 0;
+    virtual void update() = 0;
 
     glm::mat4 m_model_matrix; //Light to world position/direction
     glm::vec3 m_color;

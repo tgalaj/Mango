@@ -42,6 +42,9 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
     glm::vec3 attenuation = glm::vec3(1.0f, 0.0f, 0.0f);
 
     Material m;
+    DirectionalLight * dir_light = nullptr;
+
+    bool was_dir_light_loaded = false;
 
     if (fs.is_open())
     {
@@ -238,16 +241,24 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                     }
                 }
                 /* Lights */
-                else if (cmd == "atmosphere") //TODO
+                else if (cmd == "atmosphere")
                 {
-                    isValidInput = true;//readvals(s, 10, values);
+                    isValidInput = readvals(s, 2, values);
 
-                    if (isValidInput)
+                    if (isValidInput && dir_light != nullptr)
                     {
-                        //atmosphere = new Atmosphere();
+                        atmosphere = new Atmosphere();
+
+                        if (values[0] > 0.0f && values[1] > 0.0f)
+                        {
+                            atmosphere->planet_radius     = values[0];
+                            atmosphere->atmosphere_radius = values[1];
+                        }
+
+                        atmosphere->sun_direction = glm::normalize(-dir_light->m_direction);
                     }
                 }
-                else if (cmd == "directional")
+                else if (cmd == "directional" && !was_dir_light_loaded)
                 {
                     isValidInput = readvals(s, 7, values);
 
@@ -256,10 +267,14 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                         DirectionalLight * l = new DirectionalLight();
                         l->m_direction = glm::vec3(values[0], values[1], values[2]);
                         l->m_color = glm::vec3(values[3], values[4], values[5]);
-                        l->m_model_matrix = glm::mat4(1.0f); //TODO
+                        l->m_model_matrix = current_transformation;
                         l->m_intensity = values[6];
 
+                        l->update();
                         m_lights.push_back(l);
+
+                        dir_light = l;
+                        was_dir_light_loaded = true;
                     }
                 }
                 else if (cmd == "point")
@@ -271,9 +286,9 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                         PointLight * l = new PointLight();
                         l->m_position = glm::vec3(values[0], values[1], values[2]);
                         l->m_color = glm::vec3(values[3], values[4], values[5]);
-                        l->m_model_matrix = glm::mat4(1.0f); //TODO
+                        l->m_model_matrix = current_transformation;
                         l->m_intensity = values[6];
-
+                        l->update();
                         //TODO: l->attenuation = attenuation;
 
                         m_lights.push_back(l);

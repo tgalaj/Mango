@@ -14,7 +14,7 @@ public:
 
     void loadScene(const std::string & scene_file_name, Options & options);
 
-    Atmosphere atmosphere;
+    Atmosphere * atmosphere = nullptr;
     std::vector<Model*> m_objects;
     std::vector<Light*> m_lights;
 
