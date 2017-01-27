@@ -24,8 +24,9 @@ public:
 
     ~Atmosphere() {}
 
-    glm::vec3 computeIncidentLight(const Ray & ray, float t_min, float t_max);
+    glm::vec3 computeIncidentLight(const Ray & ray, float t_min, float t_max, glm::vec3& transmittance);
     bool intersect(const Ray & ray, float & t0, float & t1, bool is_planet = false);
+    glm::vec3 computeColor(const Ray & ray, glm::vec3& transmittance, float& t_max);
 
     glm::vec3 sun_direction; //Needs to be normalized
     glm::vec3 m_center;

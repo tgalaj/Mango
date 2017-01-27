@@ -6,14 +6,16 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
 {
     if(depth > options.max_depth)
     {
-        return options.background_color;
+        return traceAtmosphere(primary_ray, scene, options);
     }
 
     glm::vec3 hit_color(0.0f);
     IntersectInfo intersect_info = {};
+    bool is_hit = false;
 
     if (trace(primary_ray, scene, intersect_info))
     {
+        is_hit = true;
         glm::vec3 hit_point = primary_ray.m_origin + primary_ray.m_direction * intersect_info.tNear;
         glm::vec3 hit_normal;
         glm::vec2 hit_texcoord;
@@ -115,10 +117,20 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
     }
     else
     {
-        hit_color = options.background_color;
+        hit_color = traceAtmosphere(primary_ray, scene, options);
     }
 
-    return hit_color;
+    /* Calculate atmosphere color and transmittance */
+    glm::vec3 transmittance(0.0f);
+    glm::vec3 atmosphere_color(0.0f);
+    
+    if (is_hit)
+    {
+        atmosphere_color = traceAtmosphere(primary_ray, scene, options, transmittance, intersect_info.tNear);
+    }
+
+    /* Aerial perspective - blending object's color with atmosphere's color*/
+    return hit_color * (1.0f - transmittance) + atmosphere_color;
 }
 
 bool Raytracer::trace(const Ray & ray, const Scene & scene, IntersectInfo & intersect_info, RayType ray_type)
@@ -159,6 +171,33 @@ bool Raytracer::trace(const Ray & ray, const Scene & scene, IntersectInfo & inte
     }
 
     return intersect_info.hitObject != nullptr;
+}
+
+glm::vec3 Raytracer::traceAtmosphere(const Ray & ray, const Scene & scene, const Options & options)
+{
+    if (scene.atmosphere != nullptr)
+    {
+        glm::vec3 transmittance(0.0f);
+        float t_max = -1.0f;
+        return scene.atmosphere->computeColor(ray, transmittance, t_max);
+    }
+    else
+    {
+        return options.background_color;
+    }
+}
+
+glm::vec3 Raytracer::traceAtmosphere(const Ray & ray, const Scene & scene, const Options & options, glm::vec3& transmittance, float& t_max)
+{
+    if (scene.atmosphere != nullptr)
+    {
+        return scene.atmosphere->computeColor(ray, transmittance, t_max);
+    }
+    else
+    {
+        transmittance = glm::vec3(0.0f);
+        return options.background_color;
+    }
 }
 
 glm::vec3 Raytracer::refract(const glm::vec3 & I, const glm::vec3 & N, const float & ior) const

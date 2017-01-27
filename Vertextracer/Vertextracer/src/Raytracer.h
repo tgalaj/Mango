@@ -21,6 +21,8 @@ private:
     };
 
     bool trace(const Ray & ray, const Scene & scene, IntersectInfo & intersect_info, RayType ray_type = RayType::PRIMARY);
+    glm::vec3 traceAtmosphere(const Ray & ray, const Scene & scene, const Options & options);
+    glm::vec3 traceAtmosphere(const Ray & ray, const Scene & scene, const Options & options, glm::vec3& transmittance, float& t_max);
     glm::vec3 refract(const glm::vec3 & I, const glm::vec3 & N, const float & ior) const;
     void fresnel(const glm::vec3 & I, const glm::vec3 & N, const float & ior, float & kr);
 };

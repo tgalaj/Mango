@@ -5,7 +5,7 @@
 const glm::vec3 Atmosphere::BETA_RAYLEIGH(5.8e-6f, 13.5e-6f, 33.1e-6f);
 const glm::vec3 Atmosphere::BETA_MIE(21e-6f);
 
-glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t_max)
+glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t_max, glm::vec3& transmittance)
 {
     float t0, t1;
     if (!intersect(ray, t0, t1) || t1 < 0)
@@ -90,7 +90,9 @@ glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t
         t_current += segment_length;
     }
 
-    static float sun_intensity = 20.0f;
+    transmittance = sum_r * BETA_RAYLEIGH + sum_m * BETA_MIE;
+
+    static float sun_intensity = 20.0f; //TODO sun_intensity from directional light!
     return (sum_r * BETA_RAYLEIGH * phase_r + sum_m * BETA_MIE * phase_m) * sun_intensity;
 }
 
@@ -125,4 +127,20 @@ bool Atmosphere::intersect(const Ray & ray, float & t0, float & t1, bool is_plan
     }
 
     return true;
+}
+
+glm::vec3 Atmosphere::computeColor(const Ray & ray, glm::vec3& transmittance, float& t_max)
+{
+    float t0, t1, tMax = std::numeric_limits<float>::max();
+    if (intersect(ray, t0, t1, true) && t1 > 0.0f)
+    {
+        tMax = std::max(0.0f, t0);
+    }
+
+    if(t_max >= 0)
+    {
+        tMax = t_max;
+    }
+
+    return computeIncidentLight(ray, 0, tMax, transmittance);
 }

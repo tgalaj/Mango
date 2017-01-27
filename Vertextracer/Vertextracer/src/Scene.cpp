@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <glm/gtc/matrix_transform.inl>
+#include <glm/gtc/quaternion.hpp>
 
 #include "Scene.h"
 #include "PointLight.h"
@@ -319,7 +320,8 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        current_transformation = current_transformation * glm::rotate(glm::mat4(1.0f), glm::radians(values[3]), glm::vec3(values[0], values[1], values[2]));
+                        glm::quat q = glm::angleAxis(glm::radians(values[3]), glm::vec3(values[0], values[1], values[2]));
+                        current_transformation = current_transformation * glm::mat4(q);
                     }
                 }
                 else if (cmd == "scale")
