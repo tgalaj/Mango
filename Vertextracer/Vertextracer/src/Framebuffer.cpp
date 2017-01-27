@@ -17,8 +17,8 @@ Framebuffer::Framebuffer(const Options & options)
     m_cam = new Camera(m_options.width, 
                        m_options.height, 
                        m_options.fov,
-                       m_options.cam_origin, 
-                       m_options.cam_lookat, 
+                       m_options.cam_origin,
+                       m_options.cam_lookat,
                        m_options.cam_up);
 
     m_raytarcer = new Raytracer();

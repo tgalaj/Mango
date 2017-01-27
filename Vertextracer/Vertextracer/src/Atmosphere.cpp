@@ -2,7 +2,7 @@
 #include "Atmosphere.h"
 #include "MathHelpers.h"
 
-const glm::vec3 Atmosphere::BETA_RAYLEIGH(3.8e-6f, 13.5e-6f, 33.1e-6f);
+const glm::vec3 Atmosphere::BETA_RAYLEIGH(5.8e-6f, 13.5e-6f, 33.1e-6f);
 const glm::vec3 Atmosphere::BETA_MIE(21e-6f);
 
 glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t_max)
@@ -43,7 +43,7 @@ glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t
     for(uint32_t i = 0; i < num_samples; ++i)
     {
         glm::vec3 sample_position = ray.m_origin + (t_current + segment_length * 0.5f) * ray.m_direction;
-        float height = glm::length(sample_position) - planet_radius;
+        float height = glm::length(sample_position - m_center) - planet_radius;
 
         /* compute optical depth for view ray */
         float hr = glm::exp(-height / h_rayleigh) * segment_length;
@@ -66,7 +66,7 @@ glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t
         for(j = 0; j < num_samples_light; ++j)
         {
             glm::vec3 sample_position_light = sample_position + (t_current_light + segment_length_light * 0.5f) * sun_direction;
-            float height_light = glm::length(sample_position_light) - planet_radius;
+            float height_light = glm::length(sample_position_light - m_center) - planet_radius;
 
             if(height_light < 0.0f)
             {
@@ -96,11 +96,13 @@ glm::vec3 Atmosphere::computeIncidentLight(const Ray & ray, float t_min, float t
 
 bool Atmosphere::intersect(const Ray & ray, float & t0, float & t1, bool is_planet)
 {
+    glm::vec3 L = ray.m_origin - m_center;
+
     float a = glm::dot(ray.m_direction, ray.m_direction);
-    float b = 2 * glm::dot(ray.m_direction, ray.m_origin);
+    float b = 2 * glm::dot(ray.m_direction, L);
 
     float radius = is_planet ? planet_radius : atmosphere_radius;
-    float c = glm::dot(ray.m_origin, ray.m_origin) - radius * radius;
+    float c = glm::dot(L, L) - radius * radius;
 
     if(!solveQuadraticEquation(a, b, c, t0, t1))
     {

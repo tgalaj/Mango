@@ -337,8 +337,8 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        current_transformation = glm::lookAt(glm::vec3(values[0], values[1], values[2]), 
-                                                             glm::vec3(values[3], values[4], values[5]), 
+                        current_transformation = glm::lookAt(glm::vec3(values[0], values[1], values[2]),
+                                                             glm::vec3(values[3], values[4], values[5]),
                                                              glm::vec3(values[6], values[7], values[8]));
                     }
                 }

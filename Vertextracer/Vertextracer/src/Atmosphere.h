@@ -15,7 +15,12 @@ public:
                           planet_radius    (_earth_radius),
                           atmosphere_radius(_atmosphere_radius),
                           h_rayleigh       (_h_rayleigh),
-                          h_mie            (_h_mie) {}
+                          h_mie            (_h_mie)
+    {
+        m_center = glm::vec3(0.0f, 
+                             planet_radius + 1000.0f, 
+                             0.0f);
+    }
 
     ~Atmosphere() {}
 
@@ -23,6 +28,7 @@ public:
     bool intersect(const Ray & ray, float & t0, float & t1, bool is_planet = false);
 
     glm::vec3 sun_direction; //Needs to be normalized
+    glm::vec3 m_center;
     float planet_radius;
     float atmosphere_radius;
     float h_rayleigh;
