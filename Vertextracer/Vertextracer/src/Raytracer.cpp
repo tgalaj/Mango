@@ -155,10 +155,8 @@ bool Raytracer::trace(const Ray & ray, const Scene & scene, IntersectInfo & inte
                     {
                         continue;
                     }
-                    //else
-                    {
-                        return true;
-                    }
+                    
+                    return true;
                 }
 
                 intersect_info.hitObject      = scene.m_objects[j]->m_meshes[k];
@@ -196,7 +194,7 @@ glm::vec3 Raytracer::traceAtmosphere(const Ray & ray, const Scene & scene, const
     else
     {
         transmittance = glm::vec3(0.0f);
-        return options.background_color;
+        return glm::vec3(0.0f);
     }
 }
 
