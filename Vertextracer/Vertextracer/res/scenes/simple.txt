@@ -1,7 +1,6 @@
 output simple
 
-width 640
-height 480
+size 640 480
 
 camera_fov 60
 camera_origin 0 -0.5 5.5
@@ -25,7 +24,10 @@ scale 0.5 0.5 0.5
 object sphere.obj
 reset 
 
-albedo 0.7 0.7 0.7
+#albedo 0.7 0.7 0.7
+texture grass.jpg
+#texture debug.png
+texture_linear 1
 translate 0 1 0
 object plane.obj
 reset 

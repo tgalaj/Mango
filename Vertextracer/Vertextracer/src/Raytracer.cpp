@@ -65,9 +65,15 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
                 }
 
                 glm::vec3 ambient = Light::AMBIENT * scene.m_objects[intersect_info.parent_index]->m_material->m_albedo;
+                glm::vec3 tex(1.0f);
 
-                hit_color = ambient  * scene.m_objects[intersect_info.parent_index]->m_material->m_ka +
-                            diffuse  * scene.m_objects[intersect_info.parent_index]->m_material->m_kd +
+                if(scene.m_objects[intersect_info.parent_index]->m_material->m_textrue != nullptr)
+                {
+                    tex = scene.m_objects[intersect_info.parent_index]->m_material->m_textrue->fetchPixel(hit_texcoord.x, hit_texcoord.y);
+                }
+
+                hit_color = ambient  * scene.m_objects[intersect_info.parent_index]->m_material->m_ka * tex +
+                            diffuse  * scene.m_objects[intersect_info.parent_index]->m_material->m_kd * tex +
                             specular * scene.m_objects[intersect_info.parent_index]->m_material->m_ks;
 
                 break;

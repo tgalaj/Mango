@@ -42,7 +42,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
     float values[10];
     glm::vec3 attenuation = glm::vec3(1.0f, 0.0f, 0.0f);
 
-    Material m;
+    Material * m = new Material();
     DirectionalLight * dir_light = nullptr;
 
     bool was_dir_light_loaded = false;
@@ -141,7 +141,27 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        m.m_albedo = glm::vec3(values[0], values[1], values[2]);
+                        m->m_albedo = glm::vec3(values[0], values[1], values[2]);
+                    }
+                }
+                else if (cmd == "texture")
+                {
+                    std::string tex_file_name;
+                    isValidInput = readvals(s, 1, tex_file_name);
+
+                    if (isValidInput)
+                    {
+                        m->m_textrue = new Texture();
+                        m->m_textrue->load(tex_file_name);
+                    }
+                }
+                else if (cmd == "texture_linear")
+                {
+                    isValidInput = readvals(s, 1, values);
+
+                    if (isValidInput)
+                    {
+                        m->m_textrue->use_linear = values[0];
                     }
                 }
                 else if (cmd == "specular")
@@ -168,7 +188,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        m.m_specular_exponent = values[0];
+                        m->m_specular_exponent = values[0];
                     }
                 }
                 else if (cmd == "ior")
@@ -177,7 +197,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        m.m_index_of_refreaction = values[0];
+                        m->m_index_of_refreaction = values[0];
                     }
                 }
                 else if (cmd == "flat")
@@ -186,7 +206,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        m.use_flat_shading = values[0];
+                        m->use_flat_shading = values[0];
                     }
                 }
                 else if (cmd == "ka")
@@ -195,7 +215,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        m.m_ka = values[0];
+                        m->m_ka = values[0];
                     }
                 }
                 else if (cmd == "kd")
@@ -204,7 +224,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        m.m_kd = values[0];
+                        m->m_kd = values[0];
                     }
                 }
                 else if (cmd == "ks")
@@ -213,20 +233,20 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        m.m_ks = values[0];
+                        m->m_ks = values[0];
                     }
                 }
                 else if (cmd == "phong")
                 {
-                    m.m_type = MaterialType::DIFFUSE;
+                    m->m_type = MaterialType::DIFFUSE;
                 }
                 else if (cmd == "reflective")
                 {
-                    m.m_type = MaterialType::REFLECTION;
+                    m->m_type = MaterialType::REFLECTION;
                 }
                 else if (cmd == "refractive")
                 {
-                    m.m_type = MaterialType::REFLECTION_AND_REFRACTION;
+                    m->m_type = MaterialType::REFLECTION_AND_REFRACTION;
                 }
                 /* Models/Objects */
                 else if (cmd == "object")
@@ -237,7 +257,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                     if (isValidInput)
                     {
                         Model * object = new Model(current_transformation, model_file_name);
-                        object->m_material = new Material(m);
+                        object->m_material = new Material(*m);
                         m_objects.push_back(object);
                     }
                 }
@@ -347,7 +367,9 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                 else if (cmd == "reset")
                 {
                     current_transformation = glm::mat4(1.0f);
-                    m = Material();
+                    
+                    delete m;
+                    m = new Material();
                 }
             }
 
