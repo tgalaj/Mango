@@ -9,7 +9,7 @@ class Camera
 public:
     Camera(uint32_t width, uint32_t height, float fov, const glm::vec3 & eye, const glm::vec3 & look_at, const glm::vec3 & up);
     
-    Ray getPrimaryRay(uint32_t x, uint32_t y);
+    Ray getPrimaryRay(float x, float y);
     void update();
 
     uint32_t m_width, m_height;

@@ -13,4 +13,7 @@ struct Options
     glm::vec3 cam_up = glm::vec3(0.0f, -1.0f, 0.0f);
     float fov = 60.0f;
     float shadow_bias = 1e-4f;
+    uint32_t aa_max_depth = 2;
+    float aa_epsilon = 0.1f;
+    bool enable_antialiasing = false;
 };

@@ -14,6 +14,13 @@ public:
     void render(Scene & scene);
 
 private:
+    glm::vec3 antialias(glm::vec2 top_left,
+                        glm::vec2 top_right,
+                        glm::vec2 bottom_left,
+                        glm::vec2 bottom_right,
+                        Scene & scene,
+                        const uint32_t & depth = 0);
+
     void savePPM() const;
 
     Options m_options;

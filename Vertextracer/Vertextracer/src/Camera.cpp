@@ -12,12 +12,12 @@ Camera::Camera(uint32_t width, uint32_t height, float fov, const glm::vec3 & eye
     m_cam_transform = glm::lookAt(m_eye, look_at, up);
 }
 
-Ray Camera::getPrimaryRay(uint32_t x, uint32_t y)
+Ray Camera::getPrimaryRay(float x, float y)
 {
     Ray primary_ray;
 
-    float pixel_cam_x = (2.0f * ((x + 0.5f) / m_width) - 1.0f) * m_aspect_ratio * m_angle;
-    float pixel_cam_y = (1.0f - 2.0f * ((y + 0.5f) / m_height)) * m_angle;
+    float pixel_cam_x = (2.0f * ((x/* + 0.5f*/) / m_width) - 1.0f) * m_aspect_ratio * m_angle;
+    float pixel_cam_y = (1.0f - 2.0f * ((y/* + 0.5f*/) / m_height)) * m_angle;
 
     primary_ray.m_origin    = m_eye;
     primary_ray.m_direction = glm::vec3(pixel_cam_x, pixel_cam_y, -1.0f);

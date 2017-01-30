@@ -371,6 +371,33 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                     delete m;
                     m = new Material();
                 }
+                else if (cmd == "antialiasing")
+                {
+                    isValidInput = readvals(s, 1, values);
+
+                    if (isValidInput)
+                    {
+                       options.enable_antialiasing = values[0];
+                    }
+                }
+                else if (cmd == "antialiasing_max_depth")
+                {
+                    isValidInput = readvals(s, 1, values);
+
+                    if (isValidInput)
+                    {
+                        options.aa_max_depth = values[0];
+                    }
+                }
+                else if (cmd == "antialiasing_epsilon")
+                {
+                    isValidInput = readvals(s, 1, values);
+
+                    if (isValidInput)
+                    {
+                        options.aa_epsilon = values[0];
+                    }
+                }
             }
 
             std::getline(fs, str);
