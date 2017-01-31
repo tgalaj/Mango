@@ -24,6 +24,7 @@ Framebuffer::Framebuffer(const Options & options)
                        m_options.cam_up);
 
     m_raytarcer = new Raytracer();
+    m_processed_pixel_counter = 0;
 }
 
 Framebuffer::~Framebuffer()
@@ -46,38 +47,86 @@ Framebuffer::~Framebuffer()
 
 void Framebuffer::render(Scene & scene)
 {
-    glm::vec3 * pixel = m_framebuffer;
-    int counter = 0;
+    int num_threads         = std::thread::hardware_concurrency() * 4;
+    std::vector<int> bounds = thread_bounds(num_threads, m_options.height);
+    auto start_time         = Time::getTime();
 
-    int processed_pixel_counter = 0;
-    auto start_time             = Time::getTime();
-
-    for(uint32_t y = 0; y < m_options.height; ++y)
+    /* Use num_threads - 1 threads to raytrace the scene */
+    for (int i = 0; i < num_threads - 1; ++i)
     {
-        for(uint32_t x = 0; x < m_options.width; ++x)
-        {
-            if(m_options.enable_antialiasing)
-            {
-                *(pixel++) += antialias(glm::vec2(x, y),
-                                        glm::vec2(x + 1.0f, y), 
-                                        glm::vec2(x, y + 1.0f), 
-                                        glm::vec2(x + 1.0f, y + 1.0f), 
-                                        scene);
-            }
-            else
-            {
-                Ray primary_ray = m_cam->getPrimaryRay(x + 0.5f, y + 0.5f);
-                
-                *(pixel++) += m_raytarcer->castRay(primary_ray, scene, m_options);
-            }
-        }
-        fprintf(stderr, "\b\b\b\b%3d%c", int(100 * y / (m_options.height - 1)), '%');
+        m_threads.push_back(std::thread(&Framebuffer::process, this, std::ref(scene), bounds[i], bounds[i + 1]));
+    }
+
+    /* Use main thread to raytrace the scene */
+    for (int i = num_threads - 1; i < num_threads; ++i)
+    {
+        process(scene, bounds[i], bounds[i + 1]);
+    }
+
+    for (auto &t : m_threads)
+    {
+        t.join();
     }
 
     std::cout << "\rRaytracing time = " << Time::getTime() - start_time << "s" <<  std::endl;
     std::cout << "Saving PPM output...\n";
 
     savePPM();
+}
+
+void Framebuffer::process(Scene & scene, int left, int right)
+{
+    for (uint32_t y = left; y < right; ++y)
+    {
+        for (uint32_t x = 0; x < m_options.width; ++x)
+        {
+            if (m_options.enable_antialiasing)
+            {
+                m_framebuffer[x + y * m_options.width] += antialias(glm::vec2(x, y),
+                                                                    glm::vec2(x + 1.0f, y),
+                                                                    glm::vec2(x, y + 1.0f),
+                                                                    glm::vec2(x + 1.0f, y + 1.0f),
+                                                                    scene);
+            }
+            else
+            {
+                Ray primary_ray = m_cam->getPrimaryRay(x + 0.5f, y + 0.5f);
+
+                m_framebuffer[x + y * m_options.width] += m_raytarcer->castRay(primary_ray, scene, m_options);
+            }
+
+            m_processed_pixel_counter += 1;
+
+            if (m_processed_pixel_counter % 100 == 0)
+            {
+                printf(" %.1f%c\r", float(m_processed_pixel_counter.load()) / float(m_options.width * m_options.height) * 100.0f, '%');
+            }
+        }
+    }
+}
+
+std::vector<int> Framebuffer::thread_bounds(int parts, int mem) const
+{
+    std::vector<int> bounds;
+    int delta = mem / parts;
+    int reminder = mem % parts;
+    int N1 = 0, N2 = 0;
+    bounds.push_back(N1);
+
+    for (int i = 0; i < parts; ++i)
+    {
+        N2 = N1 + delta;
+
+        if (i == parts - 1)
+        {
+            N2 += reminder;
+        }
+
+        bounds.push_back(N2);
+        N1 = N2;
+    }
+
+    return bounds;
 }
 
 glm::vec3 Framebuffer::antialias(glm::vec2 top_left, glm::vec2 top_right, glm::vec2 bottom_left, glm::vec2 bottom_right, Scene & scene, const uint32_t & depth)

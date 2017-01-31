@@ -4,6 +4,8 @@
 #include "Camera.h"
 #include "Raytracer.h"
 #include "Options.h"
+#include <thread>
+#include <atomic>
 
 class Framebuffer
 {
@@ -22,10 +24,15 @@ private:
                         const uint32_t & depth = 0);
 
     void savePPM() const;
+    void process(Scene& scene, int left, int right);
+    std::vector<int> thread_bounds(int parts, int mem) const;
 
     Options m_options;
 
     glm::vec3 * m_framebuffer;
     Camera * m_cam;
     Raytracer * m_raytarcer;
+
+    std::vector<std::thread> m_threads;
+    std::atomic<int> m_processed_pixel_counter;
 };
