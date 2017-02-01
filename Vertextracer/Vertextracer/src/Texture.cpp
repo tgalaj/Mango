@@ -39,7 +39,7 @@ bool Texture::load(const std::string & file_name)
         m_width = width;
         m_height = height;
 
-        data = new glm::vec3[m_width * m_height];
+        data = new glm::highp_dvec3[m_width * m_height];
 
         for(uint32_t i = 0; i < m_width * m_height; ++i)
         {
@@ -48,7 +48,7 @@ bool Texture::load(const std::string & file_name)
             auto b = pixels[i * 4 + 2];
             //auto a = pixels[i * 4 + 3];
 
-            data[i] = glm::vec3(r, g, b) / 255.0f;
+            data[i] = glm::highp_dvec3(r, g, b) / 255.0;
         }
 
         is_loaded = true;
@@ -63,7 +63,7 @@ bool Texture::load(const std::string & file_name)
     return is_loaded;
 }
 
-glm::vec3 Texture::fetchPixel(float u, float v) const
+glm::highp_dvec3 Texture::fetchPixel(double u, double v) const
 {
     u = 1.0f - u;
 
@@ -75,10 +75,10 @@ glm::vec3 Texture::fetchPixel(float u, float v) const
         int x = std::floor(u);
         int y = std::floor(v);
 
-        float u_ratio = u - x;
-        float v_ratio = v - y;
-        float u_opposite = 1 - u_ratio;
-        float v_opposite = 1 - v_ratio;
+        double u_ratio = u - x;
+        double v_ratio = v - y;
+        double u_opposite = 1 - u_ratio;
+        double v_opposite = 1 - v_ratio;
 
         return (data[x * m_width + y] * u_opposite + data[(x + 1) * m_width + y] * u_ratio) * v_opposite +
                (data[x * m_width + y + 1] * u_opposite + data[(x + 1) * m_width + y + 1] * u_ratio) * v_ratio;
@@ -86,8 +86,8 @@ glm::vec3 Texture::fetchPixel(float u, float v) const
     }
     else
     {
-        int _x = u * (m_width - 1.0f) + 0.5f;
-        int _y = v * (m_height - 1.0f) + 0.5f;
+        int _x = u * (m_width - 1.0) + 0.5;
+        int _y = v * (m_height - 1.0) + 0.5;
 
         int index = _x * m_width + _y;
         return data[index];

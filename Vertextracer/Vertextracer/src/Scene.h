@@ -19,6 +19,6 @@ public:
     std::vector<Light*> m_lights;
 
 private:
-    bool Scene::readvals(std::stringstream &s, const int numvals, float* values) const;
+    bool Scene::readvals(std::stringstream &s, const int numvals, double* values) const;
     bool Scene::readvals(std::stringstream &s, const int numvals, std::string & values) const;
 };

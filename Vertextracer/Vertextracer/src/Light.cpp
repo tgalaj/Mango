@@ -1,3 +1,3 @@
 ﻿#include "Light.h"
 
-const glm::vec3 Light::AMBIENT = glm::vec3(0.1f);
+const glm::highp_dvec3 Light::AMBIENT = glm::highp_dvec3(0.1f);

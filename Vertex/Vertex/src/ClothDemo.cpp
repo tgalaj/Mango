@@ -19,44 +19,48 @@ void gotoxy(int x, int y)
 
 ClothDemo::ClothDemo()
 {
-    cam = new FreeCamera(60.0f, 1280, 720, 0.1f, 1000.0f);
-    cam->setPosition(6.84f, 8.12f, 18.93f);
-    cam->setYaw(-109.2f);
-    cam->setPitch(-24.8f);
+    cam = new FreeCamera(60.0f, 1280, 720, 0.1f, 50000.0f);
+    cam->setPosition(8109.0f, 750.0f, 9509.0f);
+    cam->setYaw(-90.0f);
+    cam->setPitch(0.0f);
 
     scene = new Scene(cam);
     CoreServices::getCore()->setScene(scene);
 
-    Model * sphere = CoreAssetManager::createModel();
-    sphere->genSphere(1.0f, 20);
-    sphere->setTexture("res/texture/white_4x4.jpg");
-    sphere->setDiffuseColor(0, glm::vec3(1, 0, 0));
-    sphere->setPosition(glm::vec3(7, -0.8f, -2));
+    Model * terrrain = CoreAssetManager::createModel("res/models/terrain_mountains.obj");
+    terrrain->setPosition(glm::vec3(0.0f));
 
-    Model * plane = CoreAssetManager::createModel();
-    plane->genPlane(40, 40, 10, 10);
-    plane->setTexture("res/texture/trak_tile_g.jpg");
-    //plane->setDiffuseColor(0, glm::vec3(115.0f/255.0f, 54.0f/255.0f, 11.0f/255.0f));
-    plane->setPosition(glm::vec3(0, -2.0f, 0));
-
+//    Model * sphere = CoreAssetManager::createModel();
+//    sphere->genSphere(1.0f, 20);
+//    sphere->setTexture("res/texture/white_4x4.jpg");
+//    sphere->setDiffuseColor(0, glm::vec3(1, 0, 0));
+//    sphere->setPosition(glm::vec3(7, -0.8f, -2));
+//
+//    Model * plane = CoreAssetManager::createModel();
+//    plane->genPlane(40, 40, 10, 10);
+//    plane->setTexture("res/texture/trak_tile_g.jpg");
+//    //plane->setDiffuseColor(0, glm::vec3(115.0f/255.0f, 54.0f/255.0f, 11.0f/255.0f));
+//    plane->setPosition(glm::vec3(0, -2.0f, 0));
+//
     DirectionalLight * dirLight = new DirectionalLight();
     dirLight->setDirection(glm::vec3(-1, -1, -1));
-
-    cloth = new Cloth(40, 40, 4.0f, 3.0f);
-    cloth->setDiffuseTexture("res/texture/me_textile.tga");
-
-    scene->addChild(sphere);
-    scene->addChild(plane);
+//
+//    cloth = new Cloth(40, 40, 4.0f, 3.0f);
+//    cloth->setDiffuseTexture("res/texture/me_textile.tga");
+//
+//    scene->addChild(sphere);
+//    scene->addChild(plane);
     scene->addChild(dirLight);
-    scene->addChild(cloth);
-
-    /* Skybox */
-    CoreServices::getRenderer()->createSkybox("res/skyboxes/stormydays/stormydays_rt.tga",
-                                              "res/skyboxes/stormydays/stormydays_lf.tga",
-                                              "res/skyboxes/stormydays/stormydays_dn.tga",
-                                              "res/skyboxes/stormydays/stormydays_up.tga",
-                                              "res/skyboxes/stormydays/stormydays_ft.tga",
-                                              "res/skyboxes/stormydays/stormydays_bk.tga");
+    scene->addChild(terrrain);
+//    scene->addChild(cloth);
+//
+//    /* Skybox */
+//    CoreServices::getRenderer()->createSkybox("res/skyboxes/stormydays/stormydays_rt.tga",
+//                                              "res/skyboxes/stormydays/stormydays_lf.tga",
+//                                              "res/skyboxes/stormydays/stormydays_dn.tga",
+//                                              "res/skyboxes/stormydays/stormydays_up.tga",
+//                                              "res/skyboxes/stormydays/stormydays_ft.tga",
+//                                              "res/skyboxes/stormydays/stormydays_bk.tga");
 }
 
 ClothDemo::~ClothDemo()
@@ -130,80 +134,80 @@ void ClothDemo::onGUI()
     {
         ImGui::Begin      ("Cloth settings");
 
-        ImGui::Text       ("Material properties:");
-        ImGui::SliderFloat("Shininess", &cloth_shininess, 1.0f, 200.0f);
-        ImGui::ColorEdit3 ("Color", (float*)&cloth_color);
-
-        ImGui::Text("\nPhysical properties:");
-        ImGui::SliderFloat3("Gravity",       &cloth->gravity[0], -200.0f, 100.0f);
-        ImGui::SliderFloat ("Particle mass", &cloth->particle_mass, 0.01f, 0.2f);
-        ImGui::SliderFloat ("Stiffness",      &cloth->spring_k, 400.0f, 20000.0f);
-        ImGui::SliderFloat ("Damping",       &cloth->damping,  0.0f, 10.0f);
-
-        ImGui::Text("\nStatic points:");
-        ImGui::Checkbox("Pin 1", &pins[0]);
-        ImGui::Checkbox("Pin 2", &pins[1]);
-        ImGui::Checkbox("Pin 3", &pins[2]);
-        ImGui::Checkbox("Pin 4", &pins[3]);
-        ImGui::Checkbox("Pin 5", &pins[4]);
-
-        ImGui::Text("\nTransformations:");
-        ImGui::SliderFloat3("Translation", &trans[0], -5.0f, 5.0f);
-        ImGui::SliderFloat3("Rotation",    &rot[0],    0.0f,   360.0f);
-
-        if(cloth->simulate)
-        {
-            if (ImGui::Button("Pause simulation")) cloth->simulate ^= 1;
-        }
-        else
-        {
-            if (ImGui::Button("Start simulation")) cloth->simulate ^= 1;
-        }
-
-        if (ImGui::Button("Reset simulation")) cloth->reset();
-
-        if (cloth->shouldSelfCollide)
-        {
-            if (ImGui::Button("Self Collision ON")) cloth->shouldSelfCollide ^= 1;
-        }
-        else
-        {
-            if (ImGui::Button("Self Collision OFF")) cloth->shouldSelfCollide ^= 1;
-        }
-
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        ImGui::End();
-
-        cloth->setShininess(cloth_shininess);
-        cloth->setColor(glm::vec3(cloth_color.x, cloth_color.y, cloth_color.z));
-
-        if(glm::notEqual(trans, trans_old).x || glm::notEqual(trans, trans_old).y || glm::notEqual(trans, trans_old).z)
-        {
-            cloth->setPosition(trans);
-            trans_old = trans;
-        }
-
-        if(glm::notEqual(rot_old, rot).x)
-        {
-            cloth->setRotation(glm::vec3(1, 0, 0), rot.x);
-            rot_old.x = rot.x;
-        }
-
-        if (glm::notEqual(rot_old, rot).y)
-        {
-            cloth->setRotation(glm::vec3(0, 1, 0), rot.y);
-            rot_old.y = rot.y;
-        }
-
-        if (glm::notEqual(rot_old, rot).z)
-        {
-            cloth->setRotation(glm::vec3(0, 0, 1), rot.z);
-            rot_old.z = rot.z;
-        }
-
-        for (int i = 0; i < sizeof(pins) / sizeof(bool); ++i)
-        {
-            cloth->setPin(i, pins[i]);
-        }
+//        ImGui::Text       ("Material properties:");
+//        ImGui::SliderFloat("Shininess", &cloth_shininess, 1.0f, 200.0f);
+//        ImGui::ColorEdit3 ("Color", (float*)&cloth_color);
+//
+//        ImGui::Text("\nPhysical properties:");
+//        ImGui::SliderFloat3("Gravity",       &cloth->gravity[0], -200.0f, 100.0f);
+//        ImGui::SliderFloat ("Particle mass", &cloth->particle_mass, 0.01f, 0.2f);
+//        ImGui::SliderFloat ("Stiffness",      &cloth->spring_k, 400.0f, 20000.0f);
+//        ImGui::SliderFloat ("Damping",       &cloth->damping,  0.0f, 10.0f);
+//
+//        ImGui::Text("\nStatic points:");
+//        ImGui::Checkbox("Pin 1", &pins[0]);
+//        ImGui::Checkbox("Pin 2", &pins[1]);
+//        ImGui::Checkbox("Pin 3", &pins[2]);
+//        ImGui::Checkbox("Pin 4", &pins[3]);
+//        ImGui::Checkbox("Pin 5", &pins[4]);
+//
+//        ImGui::Text("\nTransformations:");
+//        ImGui::SliderFloat3("Translation", &trans[0], -5.0f, 5.0f);
+//        ImGui::SliderFloat3("Rotation",    &rot[0],    0.0f,   360.0f);
+//
+//        if(cloth->simulate)
+//        {
+//            if (ImGui::Button("Pause simulation")) cloth->simulate ^= 1;
+//        }
+//        else
+//        {
+//            if (ImGui::Button("Start simulation")) cloth->simulate ^= 1;
+//        }
+//
+//        if (ImGui::Button("Reset simulation")) cloth->reset();
+//
+//        if (cloth->shouldSelfCollide)
+//        {
+//            if (ImGui::Button("Self Collision ON")) cloth->shouldSelfCollide ^= 1;
+//        }
+//        else
+//        {
+//            if (ImGui::Button("Self Collision OFF")) cloth->shouldSelfCollide ^= 1;
+//        }
+//
+//        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+//        ImGui::End();
+//
+//        cloth->setShininess(cloth_shininess);
+//        cloth->setColor(glm::vec3(cloth_color.x, cloth_color.y, cloth_color.z));
+//
+//        if(glm::notEqual(trans, trans_old).x || glm::notEqual(trans, trans_old).y || glm::notEqual(trans, trans_old).z)
+//        {
+//            cloth->setPosition(trans);
+//            trans_old = trans;
+//        }
+//
+//        if(glm::notEqual(rot_old, rot).x)
+//        {
+//            cloth->setRotation(glm::vec3(1, 0, 0), rot.x);
+//            rot_old.x = rot.x;
+//        }
+//
+//        if (glm::notEqual(rot_old, rot).y)
+//        {
+//            cloth->setRotation(glm::vec3(0, 1, 0), rot.y);
+//            rot_old.y = rot.y;
+//        }
+//
+//        if (glm::notEqual(rot_old, rot).z)
+//        {
+//            cloth->setRotation(glm::vec3(0, 0, 1), rot.z);
+//            rot_old.z = rot.z;
+//        }
+//
+//        for (int i = 0; i < sizeof(pins) / sizeof(bool); ++i)
+//        {
+//            cloth->setPin(i, pins[i]);
+//        }
     }
 }

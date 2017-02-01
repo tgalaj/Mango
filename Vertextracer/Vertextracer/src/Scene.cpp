@@ -39,8 +39,8 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
     options.output_file_name = scene_file_name.substr(scene_file_name.find_first_of("/") + 1, scene_file_name.find('.') - 1);
 
     glm::mat4 current_transformation(1.0f);
-    float values[10];
-    glm::vec3 attenuation = glm::vec3(1.0f, 0.0f, 0.0f);
+    double values[10];
+    glm::highp_dvec3 attenuation = glm::highp_dvec3(1.0f, 0.0f, 0.0f);
 
     Material * m = new Material();
     DirectionalLight * dir_light = nullptr;
@@ -95,7 +95,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.cam_origin = glm::vec3(values[0], values[1], values[2]);
+                        options.cam_origin = glm::highp_dvec3(values[0], values[1], values[2]);
                     }
                 }
                 else if (cmd == "camera_orientation")
@@ -114,7 +114,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.cam_up = glm::vec3(values[0], values[1], values[2]);
+                        options.cam_up = glm::highp_dvec3(values[0], values[1], values[2]);
                     }
                 }
                 else if (cmd == "camera_fov")
@@ -133,7 +133,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        //m.ambient = glm::vec3(values[0], values[1], values[2]);
+                        //m.ambient = glm::highp_dvec3(values[0], values[1], values[2]);
                     }
                 }
                 else if (cmd == "albedo")
@@ -142,7 +142,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        m->m_albedo = glm::vec3(values[0], values[1], values[2]);
+                        m->m_albedo = glm::highp_dvec3(values[0], values[1], values[2]);
                     }
                 }
                 else if (cmd == "texture")
@@ -171,7 +171,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        //m.specular = glm::vec3(values[0], values[1], values[2]);
+                        //m.specular = glm::highp_dvec3(values[0], values[1], values[2]);
                     }
                 }
                 else if (cmd == "emission")
@@ -180,7 +180,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        //m.emission = glm::vec3(values[0], values[1], values[2]);
+                        //m.emission = glm::highp_dvec3(values[0], values[1], values[2]);
                     }
                 }
                 else if (cmd == "shininess")
@@ -287,8 +287,8 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                     if (isValidInput)
                     {
                         DirectionalLight * l = new DirectionalLight();
-                        l->m_direction = glm::vec3(values[0], values[1], values[2]);
-                        l->m_color = glm::vec3(values[3], values[4], values[5]);
+                        l->m_direction = glm::highp_dvec3(values[0], values[1], values[2]);
+                        l->m_color = glm::highp_dvec3(values[3], values[4], values[5]);
                         l->m_model_matrix = current_transformation;
                         l->m_intensity = values[6];
 
@@ -306,8 +306,8 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                     if (isValidInput)
                     {
                         PointLight * l = new PointLight();
-                        l->m_position = glm::vec3(values[0], values[1], values[2]);
-                        l->m_color = glm::vec3(values[3], values[4], values[5]);
+                        l->m_position = glm::highp_dvec3(values[0], values[1], values[2]);
+                        l->m_color = glm::highp_dvec3(values[3], values[4], values[5]);
                         l->m_model_matrix = current_transformation;
                         l->m_intensity = values[6];
                         l->update();
@@ -322,7 +322,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        attenuation = glm::vec3(values[0], values[1], values[2]);
+                        attenuation = glm::highp_dvec3(values[0], values[1], values[2]);
                     }
                 }
                 /* Transformations */
@@ -332,7 +332,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        current_transformation = current_transformation * glm::translate(glm::mat4(1.0f), glm::vec3(values[0], values[1], values[2]));
+                        current_transformation = current_transformation * glm::translate(glm::mat4(1.0f), glm::highp_vec3(values[0], values[1], values[2]));
                     }
                 }
                 else if (cmd == "rotate")
@@ -341,7 +341,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        glm::quat q = glm::angleAxis(glm::radians(values[3]), glm::vec3(values[0], values[1], values[2]));
+                        glm::quat q = glm::angleAxis(glm::radians(values[3]), glm::highp_dvec3(values[0], values[1], values[2]));
                         current_transformation = current_transformation * glm::mat4(q);
                     }
                 }
@@ -351,7 +351,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        current_transformation = current_transformation * glm::scale(glm::mat4(1.0f), glm::vec3(values[0], values[1], values[2]));
+                        current_transformation = current_transformation * glm::scale(glm::mat4(1.0f), glm::highp_vec3(values[0], values[1], values[2]));
                     }
                 }
                 else if (cmd == "look_at")
@@ -360,9 +360,9 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        current_transformation = glm::lookAt(glm::vec3(values[0], values[1], values[2]),
-                                                             glm::vec3(values[3], values[4], values[5]),
-                                                             glm::vec3(values[6], values[7], values[8]));
+                        current_transformation = glm::lookAt(glm::highp_dvec3(values[0], values[1], values[2]),
+                                                             glm::highp_dvec3(values[3], values[4], values[5]),
+                                                             glm::highp_dvec3(values[6], values[7], values[8]));
                     }
                 }
                 else if (cmd == "reset")
@@ -383,14 +383,35 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                 }
                 else if (cmd == "antialiasing")
                 {
-                    isValidInput = readvals(s, 1, values);
+                    std::string aa_type = "";
+                    isValidInput = readvals(s, 1, aa_type);
 
                     if (isValidInput)
                     {
-                       options.enable_antialiasing = values[0];
+                        if (!aa_type.empty())
+                        {
+                            options.enable_antialiasing = true;
+
+                            if (aa_type == "adaptive")
+                            {
+                                options.antyaliasing_type = Options::AAAlgorithm::ADAPTIVE;
+                            }
+                            else if (aa_type == "stochastic")
+                            {
+                                options.antyaliasing_type = Options::AAAlgorithm::STOCHASTIC;
+                            }
+                            else if (aa_type == "fxaa")
+                            {
+                                options.antyaliasing_type = Options::AAAlgorithm::FXAA;
+                            }
+                            else
+                            {
+                                options.enable_antialiasing = false;
+                            }
+                        }
                     }
                 }
-                else if (cmd == "antialiasing_max_depth")
+                else if (cmd == "adaptive_aa_max_depth")
                 {
                     isValidInput = readvals(s, 1, values);
 
@@ -399,13 +420,22 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                         options.aa_max_depth = values[0];
                     }
                 }
-                else if (cmd == "antialiasing_epsilon")
+                else if (cmd == "adaptive_aa_epsilon")
                 {
                     isValidInput = readvals(s, 1, values);
 
                     if (isValidInput)
                     {
                         options.aa_epsilon = values[0];
+                    }
+                }
+                else if (cmd == "stochastic_aa_num_samples")
+                {
+                    isValidInput = readvals(s, 1, values);
+
+                    if (isValidInput)
+                    {
+                        options.num_samples = values[0];
                     }
                 }
             }
@@ -419,7 +449,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
     }
 }
 
-bool Scene::readvals(std::stringstream &s, const int numvals, float* values) const
+bool Scene::readvals(std::stringstream &s, const int numvals, double* values) const
 {
     for (int i = 0; i < numvals; i++) {
         s >> values[i];

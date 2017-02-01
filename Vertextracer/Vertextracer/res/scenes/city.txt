@@ -1,9 +1,9 @@
-output city
+output city/city
 
 size 640 480
 
-antialiasing 1
-antialiasing_max_depth 2
+antialiasing adaptive
+adaptive_aa_max_depth 2
 
 camera_fov 60
 camera_origin 11209 -1575 1398

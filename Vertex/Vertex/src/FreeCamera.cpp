@@ -6,7 +6,7 @@
 
 FreeCamera::FreeCamera(float _fieldOfView, float _viewportWidth, float _viewportHeight, float _near, float _far)
     : PerspectiveCamera(_fieldOfView, _viewportWidth, _viewportHeight, _near, _far),
-      moveSpeed(10.0f),
+      moveSpeed(1000.0f),
       mouseSensitivity(0.2f),
       currMouseX(0),
       currMouseY(0),

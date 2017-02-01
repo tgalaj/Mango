@@ -9,7 +9,7 @@ public:
     ~Texture();
 
     bool load(const std::string & file_name);
-    glm::vec3 fetchPixel(float u, float v) const;
+    glm::highp_dvec3 fetchPixel(double u, double v) const;
 
     uint32_t m_width;
     uint32_t m_height;
@@ -17,5 +17,5 @@ public:
     bool use_linear;
 
 private:
-    glm::vec3* data;
+    glm::highp_dvec3* data;
 };

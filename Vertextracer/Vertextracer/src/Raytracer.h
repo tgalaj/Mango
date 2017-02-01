@@ -8,21 +8,21 @@ enum class RayType { PRIMARY, SHADOW };
 class Raytracer
 {
 public:
-    glm::vec3 castRay(const Ray & primary_ray, const Scene & scene, const Options & options, const uint32_t & depth = 0);
+    glm::highp_dvec3 castRay(const Ray & primary_ray, const Scene & scene, const Options & options, const uint32_t & depth = 0);
 
 private:
     struct IntersectInfo
     {
         const Object *hitObject = nullptr;
-        float tNear = std::numeric_limits<float>::max();
-        glm::vec2 uv;
+        double tNear = std::numeric_limits<double>::max();
+        glm::highp_dvec2 uv;
         uint32_t triangle_index = 0;
         uint32_t parent_index = 0;
     };
 
     bool trace(const Ray & ray, const Scene & scene, IntersectInfo & intersect_info, RayType ray_type = RayType::PRIMARY);
-    glm::vec3 traceAtmosphere(const Ray & ray, const Scene & scene, const Options & options);
-    glm::vec3 traceAtmosphere(const Ray & ray, const Scene & scene, const Options & options, glm::vec3& transmittance, float& t_max);
-    glm::vec3 refract(const glm::vec3 & I, const glm::vec3 & N, const float & ior) const;
-    void fresnel(const glm::vec3 & I, const glm::vec3 & N, const float & ior, float & kr);
+    glm::highp_dvec3 traceAtmosphere(const Ray & ray, const Scene & scene, const Options & options);
+    glm::highp_dvec3 traceAtmosphere(const Ray & ray, const Scene & scene, const Options & options, glm::highp_dvec3& transmittance, double& t_max);
+    glm::highp_dvec3 refract(const glm::highp_dvec3 & I, const glm::highp_dvec3 & N, const double & ior) const;
+    void fresnel(const glm::highp_dvec3 & I, const glm::highp_dvec3 & N, const double & ior, double & kr);
 };

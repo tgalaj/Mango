@@ -58,18 +58,18 @@ Mesh * Model::processMesh(aiMesh * mesh, const aiScene * scene, aiString & direc
     for (size_t i = 0; i < mesh->mNumVertices; ++i)
     {
         glm::vec4 position = m_model_matrix  * glm::vec4(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.0f);
-        glm::vec3 normal   = m_normal_matrix * glm::vec3(mesh->mNormals[i].x,  mesh->mNormals[i].y,  mesh->mNormals[i].z);
+        glm::highp_dvec3 normal   = m_normal_matrix * glm::highp_dvec3(mesh->mNormals[i].x,  mesh->mNormals[i].y,  mesh->mNormals[i].z);
 
-        buffers.m_positions.push_back(glm::vec3(position));
+        buffers.m_positions.push_back(glm::highp_dvec3(position));
         buffers.m_normals.push_back(normal);
 
         if (mesh->mTextureCoords[0])
         {
-            buffers.m_texcoords.push_back(glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y));
+            buffers.m_texcoords.push_back(glm::highp_dvec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y));
         }
         else
         {
-            buffers.m_texcoords.push_back(glm::vec2(0.0f));
+            buffers.m_texcoords.push_back(glm::highp_dvec2(0.0f));
         }
     }
 
