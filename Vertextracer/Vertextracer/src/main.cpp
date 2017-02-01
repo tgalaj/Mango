@@ -5,13 +5,33 @@
 
 int main()
 {
-    std::cout << "Vertextracer!\n";
+    std::cout << "Vertextracer!\n\n";
 
     Options options;
     Scene scene;
     scene.loadScene("city.txt", options);
 
     Framebuffer framebuffer(options);
+
+    /* TODO: Print active configuration */
+    if (options.enable_antialiasing)
+    {
+        switch (options.antyaliasing_type)
+        {
+            case Options::AAAlgorithm::ADAPTIVE:
+            {
+                std::cout << "Adaptive AA\n" << "max depth = " << options.aa_max_depth << std::endl;
+                break;
+            }
+            case Options::AAAlgorithm::STOCHASTIC:
+            {
+                std::cout << "Stochastic AA\n" << "num samples = " << options.num_samples << std::endl;
+                break;
+            }
+        }
+    }
+
+    std::cout << std::endl;
 
 #if RENDER_SINGLE
     framebuffer.render(scene);

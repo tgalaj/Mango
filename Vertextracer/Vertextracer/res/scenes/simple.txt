@@ -1,8 +1,9 @@
 output simple
 
 size 640 480
-antialiasing 1
-antialiasing_max_depth 2
+antialiasing adaptive
+adaptive_aa_max_depth 2
+stochastic_aa_num_samples 2
 
 camera_fov 60
 camera_origin 0 -0.5 5.5
