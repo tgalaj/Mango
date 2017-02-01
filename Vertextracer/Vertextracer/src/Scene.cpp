@@ -98,13 +98,14 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                         options.cam_origin = glm::vec3(values[0], values[1], values[2]);
                     }
                 }
-                else if (cmd == "camera_lookat")
+                else if (cmd == "camera_orientation")
                 {
-                    isValidInput = readvals(s, 3, values);
+                    isValidInput = readvals(s, 2, values);
 
                     if (isValidInput)
                     {
-                        options.cam_lookat = glm::vec3(values[0], values[1], values[2]);
+                        options.cam_pitch = values[0];
+                        options.cam_yaw   = values[1];
                     }
                 }
                 else if (cmd == "camera_up")
@@ -370,6 +371,15 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                     
                     delete m;
                     m = new Material();
+                }
+                else if (cmd == "aerial_perspective")
+                {
+                    isValidInput = readvals(s, 1, values);
+
+                    if (isValidInput)
+                    {
+                        options.enable_aerial_perspective = values[0];
+                    }
                 }
                 else if (cmd == "antialiasing")
                 {

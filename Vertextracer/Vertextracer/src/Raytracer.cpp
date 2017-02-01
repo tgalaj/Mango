@@ -130,7 +130,7 @@ glm::vec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const
     glm::vec3 transmittance(0.0f);
     glm::vec3 atmosphere_color(0.0f);
     
-    if (is_hit)
+    if (is_hit && options.enable_aerial_perspective)
     {
         atmosphere_color = traceAtmosphere(primary_ray, scene, options, transmittance, intersect_info.tNear);
     }

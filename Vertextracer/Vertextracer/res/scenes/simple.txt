@@ -1,13 +1,14 @@
 output simple
 
 size 640 480
-antialiasing 1
+antialiasing 0
 antialiasing_max_depth 3
 
 camera_fov 60
 camera_origin 0 -0.5 5.5
-#camera_origin 0 0 0
-#camera_lookat 0 0 -1
+
+#camera_orientation PITCH(x) YAW(y)
+camera_orientation 0 -90
 
 #refractive
 #ior 1.5

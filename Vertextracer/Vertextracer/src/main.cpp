@@ -7,7 +7,7 @@ int main()
 
     Options options;
     Scene scene;
-    scene.loadScene("simple.txt", options);
+    scene.loadScene("city.txt", options);
 
     Framebuffer framebuffer(options);
     framebuffer.render(scene);

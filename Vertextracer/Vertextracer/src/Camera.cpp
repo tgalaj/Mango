@@ -16,8 +16,8 @@ Ray Camera::getPrimaryRay(float x, float y)
 {
     Ray primary_ray;
 
-    float pixel_cam_x = (2.0f * ((x/* + 0.5f*/) / m_width) - 1.0f) * m_aspect_ratio * m_angle;
-    float pixel_cam_y = (1.0f - 2.0f * ((y/* + 0.5f*/) / m_height)) * m_angle;
+    float pixel_cam_x = (2.0f * ((x) / m_width) - 1.0f) * m_aspect_ratio * m_angle;
+    float pixel_cam_y = (1.0f - 2.0f * ((y) / m_height)) * m_angle;
 
     primary_ray.m_origin    = m_eye;
     primary_ray.m_direction = glm::vec3(pixel_cam_x, pixel_cam_y, -1.0f);

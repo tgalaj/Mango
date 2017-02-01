@@ -63,13 +63,13 @@ void Mesh::getSurfaceData(const glm::vec3 & hit_point, const glm::vec3 & view_di
 
 bool Mesh::rayTriangleIntersect(const Ray & ray, const glm::vec3 & v0, const glm::vec3 & v1, const glm::vec3 & v2, float & t, float & u, float & v) const
 {
-    static const float EPSILON = 1e-8;
+    static const double EPSILON = 1e-8;
 
-    glm::vec3 edge1 = v1 - v0;
-    glm::vec3 edge2 = v2 - v0;
-    glm::vec3 p_vec = glm::cross(ray.m_direction, edge2);
+    glm::highp_vec3 edge1 = v1 - v0;
+    glm::highp_vec3 edge2 = v2 - v0;
+    glm::highp_vec3 p_vec = glm::cross(ray.m_direction, edge2);
 
-    float det = glm::dot(edge1, p_vec);
+    double det = glm::dot(edge1, p_vec);
 
     if(det < EPSILON && det > -EPSILON)
     {
@@ -77,25 +77,25 @@ bool Mesh::rayTriangleIntersect(const Ray & ray, const glm::vec3 & v0, const glm
         return false;
     }
 
-    float inv_det = 1.0f / det;
+    double inv_det = 1.0 / det;
 
-    glm::vec3 t_vec = ray.m_origin - v0;
+    glm::highp_vec3 t_vec = ray.m_origin - v0;
     u = glm::dot(t_vec, p_vec) * inv_det;
 
-    if(u < 0.0f || u > 1.0f)
+    if(u < 0.0 || u > 1.0)
     {
         return false;
     }
 
-    glm::vec3 q_vec = glm::cross(t_vec, edge1);
+    glm::highp_vec3 q_vec = glm::cross(t_vec, edge1);
     v = glm::dot(ray.m_direction, q_vec) * inv_det;
 
-    if(v < 0.0f || u + v > 1.0f)
+    if(v < 0.0 || u + v > 1.0)
     {
         return false;
     }
 
     t = glm::dot(edge2, q_vec) * inv_det;
 
-    return (t >= 0.0f) ? true : false;
+    return (t >= 0.0) ? true : false;
 }

@@ -16,11 +16,33 @@ Framebuffer::Framebuffer(const Options & options)
     m_framebuffer = new glm::vec3[m_options.width * m_options.height];
     memset(m_framebuffer, 0, sizeof(glm::vec3) * m_options.width * m_options.height);
 
+    if(m_options.cam_pitch > 89.0f)
+    {
+        m_options.cam_pitch = 89.0f;
+    }
+    if (m_options.cam_pitch < -89.0f)
+    {
+        m_options.cam_pitch = -89.0f;
+    }
+
+    glm::vec3 cam_dir;
+    cam_dir.x = glm::cos(glm::radians(m_options.cam_yaw)) * glm::cos(glm::radians(m_options.cam_pitch));
+    cam_dir.y = glm::sin(glm::radians(m_options.cam_pitch));
+    cam_dir.z = glm::sin(glm::radians(m_options.cam_yaw)) * glm::cos(glm::radians(m_options.cam_pitch));
+    cam_dir   = glm::normalize(cam_dir);
+
+    glm::vec3 cam_right;
+    cam_right.x = glm::cos(glm::radians(m_options.cam_yaw) - glm::half_pi<float>());
+    cam_right.y = 0.0f;
+    cam_right.z = glm::sin(glm::radians(m_options.cam_yaw) - glm::half_pi<float>());;
+    cam_right   = glm::normalize(cam_right);
+    m_options.cam_up = glm::cross(cam_right, cam_dir);
+
     m_cam = new Camera(m_options.width, 
                        m_options.height, 
                        m_options.fov,
                        m_options.cam_origin,
-                       m_options.cam_lookat,
+                       m_options.cam_origin + cam_dir,
                        m_options.cam_up);
 
     m_raytarcer = new Raytracer();
@@ -47,7 +69,7 @@ Framebuffer::~Framebuffer()
 
 void Framebuffer::render(Scene & scene)
 {
-    int num_threads         = std::thread::hardware_concurrency() * 4;
+    int num_threads         = std::thread::hardware_concurrency();
     std::vector<int> bounds = thread_bounds(num_threads, m_options.height);
     auto start_time         = Time::getTime();
 

@@ -2,7 +2,6 @@
 #include "Input.h"
 
 #include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\quaternion.hpp>
 #include <glm\gtx\quaternion.hpp>
 
 FreeCamera::FreeCamera(float _fieldOfView, float _viewportWidth, float _viewportHeight, float _near, float _far)
