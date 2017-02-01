@@ -8,6 +8,9 @@ struct Options
     std::string output_file_name = "output";
     uint32_t width = 640;
     uint32_t height = 480;
+    bool render_single_frame = true;
+    uint32_t num_frames = 128;
+
     uint32_t max_depth = 5;
     glm::highp_dvec3 background_color = glm::highp_dvec3(0.235294f, 0.67451f, 0.843137f);
     glm::highp_dvec3 cam_origin = glm::highp_dvec3(0.0f);

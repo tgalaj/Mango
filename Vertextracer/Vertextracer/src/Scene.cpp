@@ -70,6 +70,16 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                         options.height = static_cast<int>(values[1]);
                     }
                 }
+                else if (cmd == "render_single_frame")
+                {
+                    isValidInput = readvals(s, 2, values);
+
+                    if (isValidInput)
+                    {
+                        options.render_single_frame = values[0];
+                        options.num_frames          = values[1];
+                    }
+                }
                 else if (cmd == "maxdepth")
                 {
                     isValidInput = readvals(s, 1, values);

@@ -91,14 +91,15 @@ void Framebuffer::render(Scene & scene)
         t.join();
     }
 
-#if RENDER_SINGLE
-    std::cout << "\rRaytracing time = " << Time::getTime() - start_time << "s" <<  std::endl;
-    std::cout << "Saving PPM output...\n";
-#endif
-
     if(m_options.antyaliasing_type == Options::AAAlgorithm::FXAA)
     {
         fxaa();
+    }
+
+    if (m_options.render_single_frame)
+    {
+        std::cout << "\rRaytracing time = " << Time::getTime() - start_time << "s" << std::endl;
+        std::cout << "Saving PPM output...\n";
     }
 
     savePPM();
@@ -280,8 +281,9 @@ void Framebuffer::savePPM() const
 
     output.close();
 
-#if RENDER_SINGLE
-    std::cout << "Opening PPM " << m_options.output_file_name + ".ppm\n";
-    system((m_options.output_file_name + ".ppm").c_str());
-#endif
+    if (m_options.render_single_frame)
+    {
+        std::cout << "Opening PPM " << m_options.output_file_name + ".ppm\n";
+        system((m_options.output_file_name + ".ppm").c_str());
+    }
 }

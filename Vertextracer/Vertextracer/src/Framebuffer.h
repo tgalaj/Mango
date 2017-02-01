@@ -7,8 +7,6 @@
 #include <thread>
 #include <atomic>
 
-#define RENDER_SINGLE 0
-
 class Framebuffer
 {
 public:

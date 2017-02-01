@@ -1,6 +1,9 @@
-output city/city
+#output city/city-no-ap
+output city/atmosphere
 
 size 640 480
+
+render_single_frame 0 128
 
 antialiasing adaptive
 adaptive_aa_max_depth 2
@@ -10,10 +13,10 @@ camera_origin 11209 -1575 1398
 camera_orientation 0 -130
 
 #albedo 0.5 0.5 0.5
-ks 0.1
-shininess 10
-object city.obj
-reset
+#ks 0.1
+#shininess 10
+#object city.obj
+#reset
 
 #direction | color | intensity
 directional 0 1 -1 1 1 1 2.5
