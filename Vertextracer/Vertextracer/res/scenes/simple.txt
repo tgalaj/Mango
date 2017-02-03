@@ -1,9 +1,10 @@
-output simple
-
+output simple-fxaa
 size 640 480
-antialiasing adaptive
+
+antialiasing fxaa
+
 adaptive_aa_max_depth 2
-stochastic_aa_num_samples 2
+stochastic_aa_num_samples 4
 
 camera_fov 60
 camera_origin 0 -0.5 5.5

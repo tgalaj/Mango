@@ -36,7 +36,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
     std::string str, cmd;
 
     fs.open("res/scenes/" + scene_file_name);
-    options.output_file_name = scene_file_name.substr(scene_file_name.find_first_of("/") + 1, scene_file_name.find('.') - 1);
+    options.OUTPUT_FILE_NAME = scene_file_name.substr(scene_file_name.find_first_of("/") + 1, scene_file_name.find('.') - 1);
 
     glm::mat4 current_transformation(1.0f);
     double values[10];
@@ -66,8 +66,8 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.width = static_cast<int>(values[0]);
-                        options.height = static_cast<int>(values[1]);
+                        options.WIDTH = static_cast<int>(values[0]);
+                        options.HEIGHT = static_cast<int>(values[1]);
                     }
                 }
                 else if (cmd == "render_single_frame")
@@ -76,8 +76,8 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.render_single_frame = values[0];
-                        options.num_frames          = values[1];
+                        options.RENDER_SINGLE_FRAME = values[0];
+                        options.NUM_MULTI_FRAMES    = values[1];
                     }
                 }
                 else if (cmd == "maxdepth")
@@ -86,7 +86,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.max_depth = static_cast<int>(values[0]);
+                        options.REFLECTION_MAX_DEPTH = static_cast<int>(values[0]);
                     }
                 }
                 else if (cmd == "output")
@@ -96,7 +96,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.output_file_name = output;
+                        options.OUTPUT_FILE_NAME = output;
                     }
                 }
                 else if (cmd == "camera_origin")
@@ -105,7 +105,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.cam_origin = glm::highp_dvec3(values[0], values[1], values[2]);
+                        options.CAM_ORIGIN = glm::highp_dvec3(values[0], values[1], values[2]);
                     }
                 }
                 else if (cmd == "camera_orientation")
@@ -114,8 +114,8 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.cam_pitch = values[0];
-                        options.cam_yaw   = values[1];
+                        options.CAM_PITCH = values[0];
+                        options.CAM_YAW   = values[1];
                     }
                 }
                 else if (cmd == "camera_up")
@@ -124,7 +124,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.cam_up = glm::highp_dvec3(values[0], values[1], values[2]);
+                        options.CAM_UP = glm::highp_dvec3(values[0], values[1], values[2]);
                     }
                 }
                 else if (cmd == "camera_fov")
@@ -133,7 +133,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.fov = values[0];
+                        options.CAM_FOV = values[0];
                     }
                 }
                 /* Materials */
@@ -272,7 +272,6 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                         m_objects.push_back(object);
                     }
                 }
-                /* Lights */
                 else if (cmd == "atmosphere")
                 {
                     isValidInput = readvals(s, 2, values);
@@ -288,8 +287,15 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                         }
 
                         atmosphere->sun_direction = glm::normalize(-dir_light->m_direction);
+
+                        /* To generate shadows from planet */
+                        Model * object = new Model(glm::translate(glm::mat4(1.0f), glm::highp_vec3(atmosphere->m_center)) * glm::scale(glm::mat4(1.0f), glm::highp_vec3(atmosphere->planet_radius)), "sphere.obj");
+                        object->m_material = new Material();
+                        object->m_material->is_planet = true;
+                        m_objects.push_back(object);
                     }
                 }
+                /* Lights */
                 else if (cmd == "directional" && !was_dir_light_loaded)
                 {
                     isValidInput = readvals(s, 7, values);
@@ -388,7 +394,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.enable_aerial_perspective = values[0];
+                        options.ENABLE_AERIAL_PERSPECTIVE = values[0];
                     }
                 }
                 else if (cmd == "antialiasing")
@@ -400,23 +406,23 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                     {
                         if (!aa_type.empty())
                         {
-                            options.enable_antialiasing = true;
+                            options.ENABLE_ANTIALIASING = true;
 
                             if (aa_type == "adaptive")
                             {
-                                options.antyaliasing_type = Options::AAAlgorithm::ADAPTIVE;
+                                options.ANTYALIASING_TYPE = Options::AAType::ADAPTIVE;
                             }
                             else if (aa_type == "stochastic")
                             {
-                                options.antyaliasing_type = Options::AAAlgorithm::STOCHASTIC;
+                                options.ANTYALIASING_TYPE = Options::AAType::STOCHASTIC;
                             }
                             else if (aa_type == "fxaa")
                             {
-                                options.antyaliasing_type = Options::AAAlgorithm::FXAA;
+                                options.ANTYALIASING_TYPE = Options::AAType::FXAA;
                             }
                             else
                             {
-                                options.enable_antialiasing = false;
+                                options.ENABLE_ANTIALIASING = false;
                             }
                         }
                     }
@@ -427,7 +433,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.aa_max_depth = values[0];
+                        options.ADAPTIVE_AA_MAX_DEPTH = values[0];
                     }
                 }
                 else if (cmd == "adaptive_aa_epsilon")
@@ -436,7 +442,7 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.aa_epsilon = values[0];
+                        options.ADAPTIVE_AA_EPSILON = values[0];
                     }
                 }
                 else if (cmd == "stochastic_aa_num_samples")
@@ -445,7 +451,43 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput)
                     {
-                        options.num_samples = values[0];
+                        options.STOCHASTIC_AA_NUM_SAMPLES = values[0];
+                    }
+                }
+                else if (cmd == "fxaa_num_iterations")
+                {
+                    isValidInput = readvals(s, 1, values);
+
+                    if (isValidInput)
+                    {
+                        options.FXAA_NUM_ITERATIONS = values[0];
+                    }
+                }
+                else if (cmd == "fxaa_span_max")
+                {
+                    isValidInput = readvals(s, 1, values);
+
+                    if (isValidInput)
+                    {
+                        options.FXAA_SPAN_MAX = values[0];
+                    }
+                }
+                else if (cmd == "fxaa_reduce_min")
+                {
+                    isValidInput = readvals(s, 1, values);
+
+                    if (isValidInput)
+                    {
+                        options.FXAA_REDUCE_MIN = values[0];
+                    }
+                }
+                else if (cmd == "fxaa_reduce_mul")
+                {
+                    isValidInput = readvals(s, 1, values);
+
+                    if (isValidInput)
+                    {
+                        options.FXAA_REDUCE_MUL = values[0];
                     }
                 }
             }

@@ -1,9 +1,9 @@
-#output city/city-no-ap
-output city/atmosphere
+output city-adaptive-2
+#output city/atmosphere
 
 size 640 480
 
-render_single_frame 0 128
+#render_single_frame 0 128
 
 antialiasing adaptive
 adaptive_aa_max_depth 2

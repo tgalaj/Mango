@@ -5,15 +5,16 @@ enum class MaterialType { DIFFUSE, REFLECTION, REFLECTION_AND_REFRACTION };
 
 struct Material
 {
-    Texture* m_textrue           = nullptr;
-    glm::highp_dvec3 m_albedo           = glm::highp_dvec3(0.18f);
-    MaterialType m_type          = MaterialType::DIFFUSE;
+    Texture* m_textrue            = nullptr;
+    glm::highp_dvec3 m_albedo     = glm::highp_dvec3(0.18f);
+    MaterialType m_type           = MaterialType::DIFFUSE;
     double m_index_of_refreaction = 1.0f;
     double m_ka                   = 1.0f, 
-          m_kd                   = 1.0f, 
-          m_ks                   = 1.0f;
+          m_kd                    = 1.0f, 
+          m_ks                    = 1.0f;
     double m_specular_exponent    = 20.0f;
-    bool use_flat_shading        = false;
+    bool use_flat_shading         = false;
+    bool is_planet                = false;
 
     Material()
     {

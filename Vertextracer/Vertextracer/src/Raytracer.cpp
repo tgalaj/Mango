@@ -4,7 +4,7 @@
 
 glm::highp_dvec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene, const Options & options, const uint32_t & depth)
 {
-    if(depth > options.max_depth)
+    if(depth > options.REFLECTION_MAX_DEPTH)
     {
         return traceAtmosphere(primary_ray, scene, options);
     }
@@ -43,17 +43,10 @@ glm::highp_dvec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene
                                                   light_intensity, 
                                                   intersect_info_shading.tNear);
 
-                    bool is_visible = !trace(Ray(hit_point + hit_normal * (0.0f + options.shadow_bias), -light_dir),
+                    bool is_visible = !trace(Ray(hit_point + hit_normal * options.SHADOW_BIAS, -light_dir),
                                              scene,
                                              intersect_info_shading,
                                              RayType::SHADOW);
-
-                    /* Checkered pattern */
-                    double angle = glm::radians(45.0f);
-                    double s = hit_texcoord.x * glm::cos(angle) - hit_texcoord.y * glm::sin(angle);
-                    double t = hit_texcoord.y * glm::cos(angle) + hit_texcoord.x * glm::sin(angle);
-                    double scale_s = 20.0f, scale_t = 20.0f;
-                    double pattern = 1.0f;//(glm::fract(s * scale_s) < 0.5f) ^ (glm::fract(t * scale_t) < 0.5f);
 
                     if (is_visible)
                     {
@@ -81,7 +74,7 @@ glm::highp_dvec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene
             case MaterialType::REFLECTION:
             {
                 glm::highp_dvec3 reflection = glm::normalize(glm::reflect(primary_ray.m_direction, hit_normal));
-                hit_color += 0.8 * castRay(Ray(hit_point + hit_normal * options.shadow_bias, reflection),
+                hit_color += 0.8 * castRay(Ray(hit_point + hit_normal * options.SHADOW_BIAS, reflection),
                                             scene,
                                             options,
                                             depth + 1);
@@ -96,7 +89,7 @@ glm::highp_dvec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene
                 fresnel(primary_ray.m_direction, hit_normal, scene.m_objects[intersect_info.parent_index]->m_material->m_index_of_refreaction, kr);
 
                 bool is_outside = glm::dot(primary_ray.m_direction, hit_normal) < 0.0f;
-                glm::highp_dvec3 bias = options.shadow_bias * hit_normal;
+                glm::highp_dvec3 bias = options.SHADOW_BIAS * hit_normal;
 
                 /* Compute refraction if it is not a case of total internal reflection */
                 if(kr < 1.0f)
@@ -130,7 +123,7 @@ glm::highp_dvec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene
     glm::highp_dvec3 transmittance(0.0f);
     glm::highp_dvec3 atmosphere_color(0.0f);
     
-    if (is_hit && options.enable_aerial_perspective)
+    if (is_hit && options.ENABLE_AERIAL_PERSPECTIVE)
     {
         atmosphere_color = traceAtmosphere(primary_ray, scene, options, transmittance, intersect_info.tNear);
     }
@@ -165,11 +158,14 @@ bool Raytracer::trace(const Ray & ray, const Scene & scene, IntersectInfo & inte
                     return true;
                 }
 
-                intersect_info.hitObject      = scene.m_objects[j]->m_meshes[k];
-                intersect_info.tNear          = t_near_triangle;
-                intersect_info.triangle_index = index_triangle;
-                intersect_info.parent_index   = j;
-                intersect_info.uv             = uv_triangle;
+                if(!scene.m_objects[j]->m_material->is_planet)
+                {
+                    intersect_info.hitObject      = scene.m_objects[j]->m_meshes[k];
+                    intersect_info.tNear          = t_near_triangle;
+                    intersect_info.triangle_index = index_triangle;
+                    intersect_info.parent_index   = j;
+                    intersect_info.uv             = uv_triangle;
+                }
             }
         }
     }
@@ -187,7 +183,7 @@ glm::highp_dvec3 Raytracer::traceAtmosphere(const Ray & ray, const Scene & scene
     }
     else
     {
-        return options.background_color;
+        return options.BACKGROUND_COLOR;
     }
 }
 

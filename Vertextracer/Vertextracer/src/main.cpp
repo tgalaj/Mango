@@ -5,44 +5,23 @@
 
 int main()
 {
-    std::cout << "Vertextracer!\n\n";
-
     Options options;
     Scene scene;
-    scene.loadScene("city.txt", options);
+    scene.loadScene("simple.txt", options);
 
     Framebuffer framebuffer(options);
+    options.printConfiguration();
 
-    /* TODO: Print active configuration - print/toString function in Options */
-    if (options.enable_antialiasing)
-    {
-        switch (options.antyaliasing_type)
-        {
-            case Options::AAAlgorithm::ADAPTIVE:
-            {
-                std::cout << "Adaptive AA\n" << "max depth = " << options.aa_max_depth << std::endl;
-                break;
-            }
-            case Options::AAAlgorithm::STOCHASTIC:
-            {
-                std::cout << "Stochastic AA\n" << "num samples = " << options.num_samples << std::endl;
-                break;
-            }
-        }
-    }
-
-    std::cout << std::endl;
-
-    if (options.render_single_frame)
+    if (options.RENDER_SINGLE_FRAME)
     {
         framebuffer.render(scene);
     }
     else
     {
         /* Render sequence of images */
-        int num_angles = 128;
+        int num_angles = options.NUM_MULTI_FRAMES;
 
-        std::string output_file_name = framebuffer.m_options.output_file_name;
+        std::string output_file_name = framebuffer.m_options.OUTPUT_FILE_NAME;
 
         auto start_time = Time::getTime();
         for (int i = 0; i < num_angles; ++i)
@@ -53,7 +32,7 @@ int main()
             glm::vec3 sun_dir = glm::normalize(-glm::vec3(0.0f, glm::cos(angle), -glm::sin(angle)));
             scene.atmosphere->sun_direction = sun_dir;
             static_cast<DirectionalLight*>(scene.m_lights[0])->m_direction = -sun_dir;
-            framebuffer.m_options.output_file_name = output_file_name + std::to_string(i);
+            framebuffer.m_options.OUTPUT_FILE_NAME = output_file_name + std::to_string(i+1);
 
             framebuffer.render(scene);
         }
