@@ -6,6 +6,7 @@ bin/
 !**/monkey.obj
 !**/sphere.obj
 !**/plane.obj
+!**/city.obj
 
 *.ppm
 
