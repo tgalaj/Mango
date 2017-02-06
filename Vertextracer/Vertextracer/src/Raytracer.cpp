@@ -65,6 +65,12 @@ glm::highp_dvec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene
                     tex = scene.m_objects[intersect_info.parent_index]->m_material->m_textrue->fetchPixel(hit_texcoord.x, hit_texcoord.y);
                 }
 
+                /* TODO: attenuation */
+                //If dir light -> attenuation = 1.0;
+                //float radius = glm::distance(hit_point, l.position);
+                //float attenuation = light.intensity / (light.atten.x + light.atten.y * radius + light.atten.z * radius * radius);
+                //hit_color += attenuation*(diffuse+specular)
+
                 hit_color = ambient  * scene.m_objects[intersect_info.parent_index]->m_material->m_ka * tex +
                             diffuse  * scene.m_objects[intersect_info.parent_index]->m_material->m_kd * tex +
                             specular * scene.m_objects[intersect_info.parent_index]->m_material->m_ks;
