@@ -1,16 +1,19 @@
-output city-adaptive-2
-#output city/atmosphere
+#output city-adaptive-2
+output atmosphere
 
-size 640 480
+size 64 48
 
-#render_single_frame 0 128
+#render_multi_frames 0 128
 
-antialiasing adaptive
-adaptive_aa_max_depth 2
+#antialiasing adaptive
+#adaptive_aa_max_depth 2
 
 camera_fov 60
-camera_origin 11209 -1575 1398
-camera_orientation 0 -130
+#camera_origin 11209 -1575 1398
+#camera_orientation 0 -130
+
+camera_origin 0 -1000 0
+camera_orientation 0 90
 
 #albedo 0.5 0.5 0.5
 #ks 0.1

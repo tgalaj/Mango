@@ -99,7 +99,7 @@ void Framebuffer::render(Scene & scene)
         }
     }
 
-    if (m_options.RENDER_SINGLE_FRAME)
+    if (!m_options.RENDER_MULTI_FRAMES)
     {
         std::cout << "\rRaytracing time = " << Time::getTime() - start_time << "s" << std::endl;
         std::cout << "Saving PPM output...\n";
@@ -348,7 +348,7 @@ void Framebuffer::savePPM() const
 
     output.close();
 
-    if (m_options.RENDER_SINGLE_FRAME)
+    if (!m_options.RENDER_MULTI_FRAMES)
     {
         std::cout << "Opening PPM " << m_options.OUTPUT_FILE_NAME + ".ppm\n";
         system((m_options.OUTPUT_FILE_NAME + ".ppm").c_str());

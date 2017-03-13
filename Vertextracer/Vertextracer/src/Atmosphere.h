@@ -2,6 +2,9 @@
 
 #include <glm/glm.hpp>
 #include "Ray.h"
+#include <cstdio>
+
+#define M_PHI 1.618033988749895
 
 class Atmosphere
 {
@@ -23,6 +26,15 @@ public:
     }
 
     ~Atmosphere() {}
+
+    static double f(double x)
+    {
+//        if(x > 0.0f || x < -1.0f)
+//        printf("x = %.2f\n",x);
+        return exp(x); //15.0232s
+//        return 1.0 - x + (x * x * 0.5) - (x*x*x / 6.0) + (x*x*x*x / 24.0);
+//        return glm::pow(M_PHI, x); //18.6742s
+    }
 
     glm::highp_dvec3 computeIncidentLight(const Ray & ray, double t_min, double t_max, glm::highp_dvec3& transmittance);
     bool intersect(const Ray & ray, double & t0, double & t1, bool is_planet = false);

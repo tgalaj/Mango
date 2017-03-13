@@ -16,6 +16,7 @@ public:
     void render(Scene & scene);
 
     Options m_options;
+
 private:
     glm::highp_dvec3 adaptive_antialias(const glm::highp_dvec2 & top_left,
                                         const glm::highp_dvec2 & top_right,

@@ -1,6 +1,7 @@
 ﻿#include <glm/gtc/constants.hpp>
 #include "Atmosphere.h"
 #include "MathHelpers.h"
+#include "Framebuffer.h"
 
 const glm::highp_dvec3 Atmosphere::BETA_RAYLEIGH(5.8e-6f, 13.5e-6f, 33.1e-6f);
 const glm::highp_dvec3 Atmosphere::BETA_MIE(21e-6f);
@@ -46,8 +47,8 @@ glm::highp_dvec3 Atmosphere::computeIncidentLight(const Ray & ray, double t_min,
         double height = glm::length(sample_position - m_center) - planet_radius;
 
         /* compute optical depth for view ray */
-        double hr = glm::exp(-height / h_rayleigh) * segment_length;
-        double hm = glm::exp(-height / h_mie)      * segment_length;
+        double hr = f(-height / h_rayleigh) * segment_length;
+        double hm = f(-height / h_mie)      * segment_length;
 
         optical_depth_r += hr;
         optical_depth_m += hm;
@@ -73,15 +74,17 @@ glm::highp_dvec3 Atmosphere::computeIncidentLight(const Ray & ray, double t_min,
                 break;
             }
 
-            optical_depth_light_r += glm::exp(-height_light / h_rayleigh) * segment_length_light;
-            optical_depth_light_m += glm::exp(-height_light / h_mie)      * segment_length_light;
+            optical_depth_light_r += f(-height_light / h_rayleigh) * segment_length_light;
+            optical_depth_light_m += f(-height_light / h_mie)      * segment_length_light;
             t_current_light += segment_length_light;
         }
 
         if(j == num_samples_light)
         {
             glm::highp_dvec3 tau = BETA_RAYLEIGH * (optical_depth_r + optical_depth_light_r) + BETA_MIE * 1.1 * (optical_depth_m + optical_depth_light_m);
-            glm::highp_dvec3 attenuation(glm::exp(-tau.x), glm::exp(-tau.y), glm::exp(-tau.z));
+            glm::highp_dvec3 attenuation(f(-tau.x), 
+                                         f(-tau.y), 
+                                         f(-tau.z));
 
             sum_r += attenuation * hr;
             sum_m += attenuation * hm;

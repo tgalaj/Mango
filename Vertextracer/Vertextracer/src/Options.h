@@ -6,11 +6,12 @@ struct Options
 {
     enum class AAType { STOCHASTIC, ADAPTIVE, FXAA };
 
-    std::string OUTPUT_FILE_NAME = "output";
-    uint32_t WIDTH               = 640;
-    uint32_t HEIGHT              = 480;
-    bool RENDER_SINGLE_FRAME     = true;
-    uint32_t NUM_MULTI_FRAMES    = 128;
+    std::string OUTPUT_FILE_NAME  = "output";
+    uint32_t WIDTH                = 640;
+    uint32_t HEIGHT               = 480;
+    bool RENDER_MULTI_FRAMES      = false;
+    uint32_t NUM_MULTI_FRAMES_MIN = 0;
+    uint32_t NUM_MULTI_FRAMES_MAX = 128;
 
     glm::highp_dvec3 CAM_ORIGIN       = glm::highp_dvec3(0.0f);
     glm::highp_dvec3 CAM_UP           = glm::highp_dvec3(0.0f, -1.0f, 0.0f);
@@ -43,12 +44,12 @@ struct Options
     {
         std::cout << "Configuration of Vertextracer\n" << std::endl;
          
-        std::cout << "Resolution          = " << WIDTH << " x " << HEIGHT                 << std::endl;
-        std::cout << "Render single frame = " << (RENDER_SINGLE_FRAME ? "true" : "false") << std::endl;
+        std::cout << "Resolution             = " << WIDTH << " x " << HEIGHT                 << std::endl;
+        std::cout << "Render multiple frames = " << (RENDER_MULTI_FRAMES ? "true" : "false") << std::endl;
 
-        if (!RENDER_SINGLE_FRAME)
+        if (RENDER_MULTI_FRAMES)
         {
-            std::cout << "Number of frames to render = " << NUM_MULTI_FRAMES << std::endl;
+            std::cout << "Number of frames to render = " << NUM_MULTI_FRAMES_MAX - NUM_MULTI_FRAMES_MIN << std::endl;
         }
 
         std::cout << std::endl;
