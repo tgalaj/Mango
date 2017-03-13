@@ -35,7 +35,7 @@ glm::highp_dvec3 Atmosphere::computeIncidentLight(const Ray & ray, double t_min,
     double optical_depth_r = 0, optical_depth_m = 0;
 
     /* mu in the paper which is the cosine of the angle between the sun direction and the ray direction */
-    double mu = glm::dot(ray.m_direction, sun_direction);
+    double mu = glm::dot(ray.m_direction, -sun_light->m_direction);
 
     double phase_r = 3.0f / (16.0f * glm::pi<double>()) * (1.0f + mu * mu);
     double g = 0.76f;
@@ -56,7 +56,7 @@ glm::highp_dvec3 Atmosphere::computeIncidentLight(const Ray & ray, double t_min,
         /* compute optical depth for light ray */
         double t0_light, t1_light;
 
-        Ray light_ray(sample_position, sun_direction);
+        Ray light_ray(sample_position, -sun_light->m_direction);
         intersect(light_ray, t0_light, t1_light);
 
         double segment_length_light = t1_light / num_samples_light;
@@ -66,7 +66,7 @@ glm::highp_dvec3 Atmosphere::computeIncidentLight(const Ray & ray, double t_min,
         uint32_t j;
         for(j = 0; j < num_samples_light; ++j)
         {
-            glm::highp_dvec3 sample_position_light = sample_position + (t_current_light + segment_length_light * 0.5f) * sun_direction;
+            glm::highp_dvec3 sample_position_light = sample_position + (t_current_light + segment_length_light * 0.5f) * -sun_light->m_direction;
             double height_light = glm::length(sample_position_light - m_center) - planet_radius;
 
             if(height_light < 0.0f)
@@ -95,8 +95,7 @@ glm::highp_dvec3 Atmosphere::computeIncidentLight(const Ray & ray, double t_min,
 
     transmittance = sum_r * BETA_RAYLEIGH + sum_m * BETA_MIE;
 
-    static double sun_intensity = 20.0f; //TODO sun_intensity from directional light!
-    return (sum_r * BETA_RAYLEIGH * phase_r + sum_m * BETA_MIE * phase_m) * sun_intensity;
+    return (sum_r * BETA_RAYLEIGH * phase_r + sum_m * BETA_MIE * phase_m) * sun_light->m_intensity;
 }
 
 bool Atmosphere::intersect(const Ray & ray, double & t0, double & t1, bool is_planet)

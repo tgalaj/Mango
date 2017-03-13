@@ -23,7 +23,7 @@ int main()
 {
     Options options;
     Scene scene;
-    scene.loadScene("city.txt", options);
+    scene.loadScene("simple.txt", options);
 
     Framebuffer framebuffer(options);
     options.printConfiguration();
@@ -46,15 +46,15 @@ int main()
             double angle = i / float(num_angles) * glm::pi<double>() * 0.6;
 
             glm::vec3 sun_dir = glm::normalize(-glm::vec3(0.0f, glm::cos(angle), -glm::sin(angle)));
-            scene.atmosphere->sun_direction = sun_dir;
-            static_cast<DirectionalLight*>(scene.m_lights[0])->m_direction = -sun_dir;
+            scene.atmosphere->sun_light = static_cast<DirectionalLight*>(scene.m_lights[0]);
+            scene.atmosphere->sun_light->m_direction = -sun_dir;
             framebuffer.m_options.OUTPUT_FILE_NAME = output_file_name + std::to_string(i+1);
 
             framebuffer.render(scene);
         }
         std::cout << "\rRaytracing time = " << Time::getTime() - start_time << "s" << std::endl;
+        system((framebuffer.m_options.OUTPUT_FILE_NAME + std::to_string(options.NUM_MULTI_FRAMES_MIN + 1) + ".ppm").c_str());
     }
-    system("pause");
 
     //const int num_iter = 10000000;
     //const double coeffs[6] = { -1, 1.0 / 2.0, 1.0 / 6.0, 1.0 / 24.0, 1.0 };

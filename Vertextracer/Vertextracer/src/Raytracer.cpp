@@ -43,6 +43,9 @@ glm::highp_dvec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene
                                                   light_intensity, 
                                                   intersect_info_shading.tNear);
 
+                    /* TODO: Temp solution - need to calculate reflected sun light from earth's objects */
+                    light_intensity = glm::highp_dvec3(1.0f);
+
                     bool is_visible = !trace(Ray(hit_point + hit_normal * options.SHADOW_BIAS, -light_dir),
                                              scene,
                                              intersect_info_shading,

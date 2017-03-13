@@ -285,15 +285,13 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
 
                     if (isValidInput && dir_light != nullptr)
                     {
-                        atmosphere = new Atmosphere();
+                        atmosphere = new Atmosphere(dir_light);
 
                         if (values[0] > 0.0f && values[1] > 0.0f)
                         {
                             atmosphere->planet_radius     = values[0];
                             atmosphere->atmosphere_radius = values[1];
                         }
-
-                        atmosphere->sun_direction = glm::normalize(-dir_light->m_direction);
 
                         /* To generate shadows from planet */
                         Model * object = new Model(glm::translate(glm::mat4(1.0f), glm::highp_vec3(atmosphere->m_center)) * glm::scale(glm::mat4(1.0f), glm::highp_vec3(atmosphere->planet_radius)), "sphere.obj");
