@@ -78,13 +78,13 @@ void Scene::loadScene(const std::string & scene_file_name, Options & options)
                     {
                         options.RENDER_MULTI_FRAMES = true;
 
-                        if(values[1] > values[0])
+                        if(values[1] < values[0])
                         {
                             std::swap(values[0], values[1]);
                         }
 
                         options.NUM_MULTI_FRAMES_MIN = values[0];
-                        options.NUM_MULTI_FRAMES_MAX = values[1] + 1;
+                        options.NUM_MULTI_FRAMES_MAX = values[1];
                     }
                 }
                 else if (cmd == "maxdepth")

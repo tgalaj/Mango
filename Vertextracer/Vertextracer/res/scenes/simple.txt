@@ -1,5 +1,7 @@
-output test-exp
+output simple
 size 640 480
+
+#render_multi_frames 0 128
 
 #antialiasing adaptive
 
@@ -23,11 +25,11 @@ reset
 
 #refractive
 #ior 1.8
-#albedo 0.52 0 0.46
-#translate 0.3 0 2.2
-#scale 0.5 0.5 0.5
-#object sphere.obj
-#reset 
+albedo 0.52 0 0.46
+translate 0.3 0 2.2
+scale 0.5 0.5 0.5
+object sphere.obj
+reset 
 
 #albedo 0.7 0.7 0.7
 texture grass.jpg
@@ -44,7 +46,7 @@ reset
 #reset 
 
 #direction | color | intensity
-directional 0 1 0 1 1 1 20.0
+directional 0 1 0 1 1 1 13.661
 
 atmosphere -1 -1
 

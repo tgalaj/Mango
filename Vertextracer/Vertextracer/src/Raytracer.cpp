@@ -31,7 +31,7 @@ glm::highp_dvec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene
         {
             case MaterialType::DIFFUSE:
             {
-                glm::highp_dvec3 diffuse(0.0f), specular(0.0f);
+                glm::highp_dvec3 diffuse(0.0), specular(0.0), atmosphere_color(0.0);
 
                 for(uint32_t i = 0; i < scene.m_lights.size(); ++i)
                 {
@@ -53,7 +53,9 @@ glm::highp_dvec3 Raytracer::castRay(const Ray & primary_ray, const Scene & scene
 
                     if (is_visible)
                     {
-                        diffuse += light_intensity * glm::max(0.0, glm::dot(hit_normal, -light_dir)) * scene.m_objects[intersect_info.parent_index]->m_material->m_albedo;
+                        double NdotL = glm::max(0.0, glm::dot(hit_normal, -light_dir));
+                        atmosphere_color += scene.atmosphere->computeLightColor(primary_ray, 0.0, intersect_info.tNear, NdotL, scene.m_objects[intersect_info.parent_index]->m_material->m_albedo);
+                        diffuse += atmosphere_color;//light_intensity * NdotL * scene.m_objects[intersect_info.parent_index]->m_material->m_albedo;
                         
                         glm::highp_dvec3 reflected = glm::normalize(glm::reflect(light_dir, hit_normal));
                         specular += light_intensity * glm::pow(glm::max(0.0, glm::dot(reflected, -primary_ray.m_direction)), scene.m_objects[intersect_info.parent_index]->m_material->m_specular_exponent);

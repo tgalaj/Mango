@@ -98,6 +98,78 @@ glm::highp_dvec3 Atmosphere::computeIncidentLight(const Ray & ray, double t_min,
     return (sum_r * BETA_RAYLEIGH * phase_r + sum_m * BETA_MIE * phase_m) * sun_light->m_intensity;
 }
 
+glm::highp_dvec3 Atmosphere::computeLightColor(const Ray & ray, double t_min, double t_max, double NdotL, glm::highp_dvec3& ambient)
+{
+    if(t_min > t_max)
+    {
+        std::swap(t_min, t_max);
+    }
+
+    /* compute optical depth for view ray */
+    glm::highp_dvec3 optical_depth_view(0.0);
+    glm::highp_dvec3 optical_depth_light_to_surface(0.0);
+
+    uint32_t num_samples       = 16;
+    uint32_t num_samples_light = 16;
+
+    double segment_length = (t_max - t_min) / num_samples;
+    double t_current      = t_min;
+
+    double optical_depth_r = 0, optical_depth_m = 0;
+    
+    for (uint32_t i = 0; i < num_samples; ++i)
+    {
+        glm::highp_dvec3 sample_position = ray.m_origin + (t_current + segment_length * 0.5f) * ray.m_direction;
+        double height = glm::length(sample_position - m_center) - planet_radius;
+
+        /* compute optical depth for view ray */
+        double hr = f(-height / h_rayleigh) * segment_length;
+        double hm = f(-height / h_mie)      * segment_length;
+
+        optical_depth_r += hr;
+        optical_depth_m += hm;
+
+        t_current += segment_length;
+    }
+    optical_depth_view = BETA_RAYLEIGH * optical_depth_r + BETA_MIE * 1.1 * optical_depth_m;
+
+    /* compute optical depth for light ray */
+    double t0_light, t1_light;
+
+    Ray light_ray(ray.m_origin + t_max * ray.m_direction, -sun_light->m_direction);
+    intersect(light_ray, t0_light, t1_light);
+
+    double segment_length_light = t1_light / num_samples_light;
+    double t_current_light = 0;
+    double optical_depth_light_r = 0, optical_depth_light_m = 0;
+
+    for (uint32_t i = 0; i < num_samples; ++i)
+    {
+        glm::highp_dvec3 sample_position = light_ray.m_origin + (t_current_light + segment_length_light * 0.5f) * light_ray.m_direction;
+        double height = glm::length(sample_position - m_center) - planet_radius;
+
+        /* compute optical depth for view ray */
+        double hr = f(-height / h_rayleigh) * segment_length_light;
+        double hm = f(-height / h_mie)      * segment_length_light;
+
+        optical_depth_light_r += hr;
+        optical_depth_light_m += hm;
+
+        t_current_light += segment_length_light;
+    }
+    optical_depth_light_to_surface = BETA_RAYLEIGH * optical_depth_light_r + BETA_MIE * 1.1 * optical_depth_light_m;
+
+    glm::highp_dvec3 attenuation_view(f(-optical_depth_view.x),
+                                      f(-optical_depth_view.y),
+                                      f(-optical_depth_view.z));
+
+    glm::highp_dvec3 attenuation_light(f(-optical_depth_light_to_surface.x),
+                                       f(-optical_depth_light_to_surface.y),
+                                       f(-optical_depth_light_to_surface.z));
+
+    return ambient * NdotL * /*sun_light->m_intensity **/ attenuation_light * attenuation_view;
+}
+
 bool Atmosphere::intersect(const Ray & ray, double & t0, double & t1, bool is_planet)
 {
     glm::highp_dvec3 L = ray.m_origin - m_center;

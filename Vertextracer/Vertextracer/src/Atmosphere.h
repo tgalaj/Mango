@@ -38,6 +38,7 @@ public:
     }
 
     glm::highp_dvec3 computeIncidentLight(const Ray & ray, double t_min, double t_max, glm::highp_dvec3& transmittance);
+    glm::highp_dvec3 computeLightColor(const Ray & ray, double t_min, double t_max, double NdotL, glm::highp_dvec3& ambient);
     bool intersect(const Ray & ray, double & t0, double & t1, bool is_planet = false);
     glm::highp_dvec3 computeColor(const Ray & ray, glm::highp_dvec3& transmittance, double& t_max);
 
