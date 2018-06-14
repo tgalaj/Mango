@@ -2,9 +2,9 @@ set(SAMPLE_NAME "SampleGame")
 
 # Add .lib files
 if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-	link_directories(${CMAKE_SOURCE_DIR}/lib/x32)
+	link_directories(${VertexEngine_SOURCE_DIR}/lib/x32)
 elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	link_directories(${CMAKE_SOURCE_DIR}/lib/x64)
+	link_directories(${VertexEngine_SOURCE_DIR}/lib/x64)
 endif()
 
 # Add source files
@@ -18,8 +18,8 @@ file(GLOB_RECURSE HEADER_FILES_EXE
 	${CMAKE_CURRENT_SOURCE_DIR}/*.hpp)
 	
 # Define the include DIRs
-include_directories("${CMAKE_SOURCE_DIR}/include"
-				    "${CMAKE_SOURCE_DIR}/thirdparty"
+include_directories("${VertexEngine_SOURCE_DIR}/include"
+				    "${VertexEngine_SOURCE_DIR}/thirdparty"
 				    ${CMAKE_CURRENT_SOURCE_DIR})	
 
 # Define the executable
@@ -37,34 +37,34 @@ if(MSVC_IDE)
 	if(CMAKE_SIZEOF_VOID_P EQUAL 4)
 		add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
 						   COMMAND ${CMAKE_COMMAND} -E copy_directory
-								   ${PROJECT_SOURCE_DIR}/dlls/bin
+								   ${VertexEngine_SOURCE_DIR}/dlls/bin
 								   ${CMAKE_CURRENT_BINARY_DIR})
 	elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 		add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
 						   COMMAND ${CMAKE_COMMAND} -E copy_directory
-								   ${PROJECT_SOURCE_DIR}/dlls/bin64
+								   ${VertexEngine_SOURCE_DIR}/dlls/bin64
 								   ${CMAKE_CURRENT_BINARY_DIR})
 	endif()
 endif()
 
 add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
 				   COMMAND ${CMAKE_COMMAND} -E copy_directory
-						   ${PROJECT_SOURCE_DIR}/res
+						   ${VertexEngine_SOURCE_DIR}/res
 						   ${CMAKE_CURRENT_BINARY_DIR}/res)
 
 # Create virtual folders to make it look nicer in VS
 if(MSVC_IDE)
 	# Macro to preserve source files hierarchy in the IDE
 	macro(GroupSources curdir)
-		file(GLOB children RELATIVE ${PROJECT_SOURCE_DIR}/${curdir} ${PROJECT_SOURCE_DIR}/${curdir}/*)
+		file(GLOB children RELATIVE ${VertexEngine_SOURCE_DIR}/${curdir} ${VertexEngine_SOURCE_DIR}/${curdir}/*)
 
 		foreach(child ${children})
-			if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/${curdir}/${child})
+			if(IS_DIRECTORY ${VertexEngine_SOURCE_DIR}/${curdir}/${child})
 				GroupSources(${curdir}/${child})
 			else()
 				string(REPLACE "/" "\\" groupname ${curdir})
 				string(REPLACE "example_game" "sources" groupname ${groupname})
-				source_group(${groupname} FILES ${PROJECT_SOURCE_DIR}/${curdir}/${child})
+				source_group(${groupname} FILES ${VertexEngine_SOURCE_DIR}/${curdir}/${child})
 			endif()
 		endforeach()
 	endmacro()
