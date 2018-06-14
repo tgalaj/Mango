@@ -1,36 +1,35 @@
 # Vertex Engine
 This is open source 3D graphics engine mostly for proof of concept graphics application purposes. In the future it may evolve into some kind of game engine.
 
-The newest features (may be **unstable**) will be pushed to **develop** branch and **stable** version of the engine will be pushed to **master** branch. 
-
 ## Short-term TODOs
-- [ ] Refactor engine's architecture
+- [x] Refactor engine's architecture
 - [x] Remove watch_ptr class
-- [ ] Add base abstract class for lights
-- [ ] Improve scene graph
-- [ ] Easy to use toolkit to create demo/game scenes
+- [x] Add base abstract class for lights
+- [x] Improve scene graph
+- [x] Easy to use toolkit to create demo/game scenes
 - [x] Is CoreAssetManager necessary? Ans: Yes, it, is
 - [ ] Better resource management 
-- [ ] Easy to use material system
-- [ ] Refactored & enhanced shader class
-- [ ] Add feature to add #include directive in shaders (generic default shaders)
+- [x] Easy to use material system
+- [x] Refactored & enhanced shader class
+- [x] Add feature to add #include directive in shaders (generic default shaders)
 - [x] Update & move dlls to bin32/bin64 subfolders
-- [ ] Add Forward rendering technique
+- [x] Add Forward rendering technique
 - [ ] Add Deferred rendering technique
 - [ ] Add easy to use interface to switch between different rendering techniques
 - [ ] Easy to use interface for postprocess effects
-- [ ] Shadow mapping (simple shadow mapping, variance shadow mapping)
+- [x] Shadow mapping
+- [ ] Variance Shadow Mapping
 - [ ] Models' animation (linear blend skinning, dual quaternion skinning)
-- [ ] Directional ligths support
-- [ ] Spot ligths support
-- [ ] Point ligths support
+- [x] Directional ligths support
+- [x] Spot ligths support
+- [x] Point ligths support
 - [ ] Light Shafts
-- [ ] Support for geometry shaders
-- [ ] Support for compute shaders
-- [ ] Support for tesselation shaders
+- [x] Support for geometry shaders
+- [x] Support for compute shaders
+- [x] Support for tesselation shaders
 
 ## Long-term TODOs
-- [ ] Convert project to use CMake
+- [x] Convert project to use CMake
 - [ ] Graphical editor to creation of demo/game scenes easier
 - [ ] Support for Lua scripting language
 - [ ] Constructive solid geometry
@@ -38,15 +37,10 @@ The newest features (may be **unstable**) will be pushed to **develop** branch a
 - [ ] Support for Vulkan renderer
 - [ ] Efficient and realistic atmospheric scattering
 
-## Vertextracer TODOs
-- [ ] Tonemapping - auto-exposure
-- [ ] Light intensity calculated from AS
-- [ ] Ambient light calculated from AS
-- [ ] AS + fog
-- [ ] Calculate AS coefficients at fly (for a fog)
-
 ### Dependencies' versions
-- SDL  2.0.4 (stable)
-- GLEW 2.0.0
+- GLFW 3.2.1
+- GLAD GL 4.6 Core
 - FreeImage 3.17.0
-- Assimp 3.2
+- Assimp 4.0.1
+- ImGui 1.51
+- entityX 1.0.0

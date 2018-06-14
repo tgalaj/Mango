@@ -1,16 +1,13 @@
-Release/
-Debug/
-bin/
-**/models/*
-!**/models/nanosuit/
-!**/monkey.obj
-!**/sphere.obj
-!**/plane.obj
-!**/city.obj
+# Created by https://www.gitignore.io/api/cmake
 
-*.ppm
-
-# Ignore VSC++ 2013 files
-*.opensdf
-*.sdf
-*.suo
+### CMake ###
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+build

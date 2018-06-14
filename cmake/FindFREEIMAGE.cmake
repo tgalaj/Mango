@@ -1,0 +1,42 @@
+# - Try to find Assimp
+# Once done, this will define
+#
+# FREEIMAGE_FOUND - system has Assimp
+# FREEIMAGE_INCLUDE_DIR - the Assimp include directories
+# FREEIMAGE_LIBRARIES - link these to use Assimp
+FIND_PATH( FREEIMAGE_INCLUDE_DIR FreeImage.h
+	/usr/include
+	/usr/local/include
+	/opt/local/include
+	"${CMAKE_SOURCE_DIR}/thirdparty"
+)
+
+if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+	FIND_LIBRARY( FREEIMAGE_LIBRARY FreeImage
+		/usr/lib
+		/usr/local/lib
+		/opt/local/lib
+		"${CMAKE_SOURCE_DIR}/lib/x32"
+	)
+elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	FIND_LIBRARY( FREEIMAGE_LIBRARY FreeImage
+		/usr/lib64
+		/usr/local/lib
+		/opt/local/lib
+		"${CMAKE_SOURCE_DIR}/lib/x64"
+	)
+endif()
+
+IF(FREEIMAGE_INCLUDE_DIR AND FREEIMAGE_LIBRARY)
+	SET( FREEIMAGE_FOUND TRUE )
+	SET( FREEIMAGE_LIBRARIES ${FREEIMAGE_LIBRARY} )
+ENDIF(FREEIMAGE_INCLUDE_DIR AND FREEIMAGE_LIBRARY)
+IF(FREEIMAGE_FOUND)
+	IF(NOT FREEIMAGE_FIND_QUIETLY)
+	MESSAGE(STATUS "Found FREEIMAGE: ${FREEIMAGE_LIBRARY}")
+	ENDIF(NOT FREEIMAGE_FIND_QUIETLY)
+ELSE(FREEIMAGE_FOUND)
+	IF(FREEIMAGE_FIND_REQUIRED)
+	MESSAGE(FATAL_ERROR "Could not find libFreeImage")
+	ENDIF(FREEIMAGE_FIND_REQUIRED)
+ENDIF(FREEIMAGE_FOUND)
