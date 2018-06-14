@@ -5,7 +5,7 @@ project(VertexEngine)
 
 option(BUILD_EXAMPLE_GAME 
 	   "Build example game project to see Vertex Engine in action."
-	   ON)
+	   OFF)
 	   
 if(BUILD_EXAMPLE_GAME)
 	message(STATUS "Creating Example Game Project")
