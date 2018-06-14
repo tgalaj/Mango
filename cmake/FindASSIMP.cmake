@@ -8,21 +8,21 @@ FIND_PATH( ASSIMP_INCLUDE_DIR assimp/mesh.h
 	/usr/include
 	/usr/local/include
 	/opt/local/include
-	"${CMAKE_SOURCE_DIR}/thirdparty"
+	"${VertexEngine_SOURCE_DIR}/thirdparty"
 )
 if(CMAKE_SIZEOF_VOID_P EQUAL 4)
 	FIND_LIBRARY( ASSIMP_LIBRARY assimp
 		/usr/lib
 		/usr/local/lib
 		/opt/local/lib
-		"${CMAKE_SOURCE_DIR}/lib/x32"
+		"${VertexEngine_SOURCE_DIR}/lib/x32"
 	)
 elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 	FIND_LIBRARY( ASSIMP_LIBRARY assimp
 		/usr/lib64
 		/usr/local/lib
 		/opt/local/lib
-		"${CMAKE_SOURCE_DIR}/lib/x64"
+		"${VertexEngine_SOURCE_DIR}/lib/x64"
 	)
 endif()
 

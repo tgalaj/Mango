@@ -17,18 +17,18 @@
 set( _glfw3_HEADER_SEARCH_DIRS
 	"/usr/include"
 	"/usr/local/include"
-	"${CMAKE_SOURCE_DIR}/thirdparty" )
+	"${VertexEngine_SOURCE_DIR}/thirdparty" )
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 4)
 	set( _glfw3_LIB_SEARCH_DIRS
 		"/usr/lib"
 		"/usr/local/lib"
-		"${CMAKE_SOURCE_DIR}/lib/x32")
+		"${VertexEngine_SOURCE_DIR}/lib/x32")
 elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 	set( _glfw3_LIB_SEARCH_DIRS
 		"/usr/lib"
 		"/usr/local/lib"
-		"${CMAKE_SOURCE_DIR}/lib/x64")
+		"${VertexEngine_SOURCE_DIR}/lib/x64")
 
 endif()
 
