@@ -33,8 +33,7 @@ file(GLOB_RECURSE HEADER_FILES
 file(GLOB THIRDPARTY_IMGUI
 	"${VertexEngine_SOURCE_DIR}/thirdparty/imgui/imgui.cpp"
 	"${VertexEngine_SOURCE_DIR}/thirdparty/imgui/imgui_draw.cpp"
-	"${VertexEngine_SOURCE_DIR}/thirdparty/imgui/imgui_demo.cpp"
-	"${VertexEngine_SOURCE_DIR}/thirdparty/imgui/imgui_tabs.cpp")
+	"${VertexEngine_SOURCE_DIR}/thirdparty/imgui/imgui_demo.cpp")
 
 # Add GLAD source file
 file(GLOB THIRDPARTY_GLAD
