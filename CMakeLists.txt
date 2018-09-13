@@ -3,6 +3,8 @@
 cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
 project(VertexEngine)
 
+set(CMAKE_CXX_STANDARD 11)
+
 option(BUILD_EXAMPLE_GAME 
 	   "Build example game project to see Vertex Engine in action."
 	   OFF)

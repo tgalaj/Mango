@@ -33,18 +33,16 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 target_link_libraries(${SAMPLE_NAME} ${PROJECT_NAME})
 
 # Copy dlls and resources
-if(MSVC_IDE)
-	if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-		add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
-						   COMMAND ${CMAKE_COMMAND} -E copy_directory
-								   ${VertexEngine_SOURCE_DIR}/dlls/bin
-								   ${CMAKE_CURRENT_BINARY_DIR})
-	elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
-		add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
-						   COMMAND ${CMAKE_COMMAND} -E copy_directory
-								   ${VertexEngine_SOURCE_DIR}/dlls/bin64
-								   ${CMAKE_CURRENT_BINARY_DIR})
-	endif()
+if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+	add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
+			           COMMAND ${CMAKE_COMMAND} -E copy_directory
+			           ${VertexEngine_SOURCE_DIR}/dlls/bin
+			           ${CMAKE_CURRENT_BINARY_DIR})
+elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
+				       COMMAND ${CMAKE_COMMAND} -E copy_directory
+				       ${VertexEngine_SOURCE_DIR}/dlls/bin64
+				       ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
 add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
