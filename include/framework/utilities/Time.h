@@ -18,7 +18,7 @@ namespace Vertex
         }
 
     private:
-        static const long long SECOND = 1'000'000'000L;
+        static const long long SECOND = 1000000000L;
     };
 }
 
