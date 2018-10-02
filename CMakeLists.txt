@@ -1,94 +1,24 @@
 # Copyright (C) 2018 Tomasz Gałaj
 
-cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
-project(VertexEngine)
-
-set(CMAKE_CXX_STANDARD 11)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
+project(VertexEngine VERSION 0.1)
 
 option(BUILD_EXAMPLE_GAME 
 	   "Build example game project to see Vertex Engine in action."
-	   OFF)
-	   
+	   ON)
+
+set(THIRDPARTY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty")
+
+# add thirdparties
+include(thirdparty/thirdparty.cmake)
+
+# subdirectories
+add_subdirectory(src)
+
 if(BUILD_EXAMPLE_GAME)
 	message(STATUS "Creating Example Game Project")
 	add_subdirectory(example_game)
 endif()
-
-# Add .lib files
-if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-	link_directories(${VertexEngine_SOURCE_DIR}/lib/x32)
-elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	link_directories(${VertexEngine_SOURCE_DIR}/lib/x64)
-endif()
-
-# Add source files
-file(GLOB_RECURSE SOURCE_FILES 
-	"${VertexEngine_SOURCE_DIR}/src/*.c"
-	"${VertexEngine_SOURCE_DIR}/src/*.cpp")
-	
-# Add header files
-file(GLOB_RECURSE HEADER_FILES 
-	"${VertexEngine_SOURCE_DIR}/include/*.h"
-	"${VertexEngine_SOURCE_DIR}/include/*.hpp")
-	
-# Add imgui source files
-file(GLOB THIRDPARTY_IMGUI
-	"${VertexEngine_SOURCE_DIR}/thirdparty/imgui/imgui.cpp"
-	"${VertexEngine_SOURCE_DIR}/thirdparty/imgui/imgui_draw.cpp"
-	"${VertexEngine_SOURCE_DIR}/thirdparty/imgui/imgui_demo.cpp")
-
-# Add GLAD source file
-file(GLOB THIRDPARTY_GLAD
-	"${VertexEngine_SOURCE_DIR}/thirdparty/glad.c")
-
-set(THIRDPARTY ${THIRDPARTY_IMGUI} ${THIRDPARTY_GLAD})
-
-# Define the library
-add_library(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${THIRDPARTY})
-
-# Define the include DIRs
-include_directories("${VertexEngine_SOURCE_DIR}/include"
-					"${VertexEngine_SOURCE_DIR}/thirdparty")
-
-#######################################
-# LOOK for the packages that we need! #
-#######################################
-
-# We need a CMAKE_DIR with some code to find external dependencies
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${VertexEngine_SOURCE_DIR}/cmake/")
-
-# OpenGL
-find_package(OpenGL REQUIRED)
-
-# GLM
-find_package(GLM REQUIRED)
-message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
-
-# GLFW
-find_package(GLFW3 REQUIRED)
-message(STATUS "Found GLFW3 in ${GLFW3_INCLUDE_DIR}")
-
-# ASSIMP
-find_package(ASSIMP REQUIRED)
-message(STATUS "Found ASSIMP in ${ASSIMP_INCLUDE_DIR}")
-
-# FREEIMAGE
-find_package(FREEIMAGE REQUIRED)
-message(STATUS "Found FREEIMAGE in ${FREEIMAGE_INCLUDE_DIR}")
-
-# FREEIMAGE
-find_package(ENTITYX REQUIRED)
-message(STATUS "Found ENTITYX in ${ENTITYX_INCLUDE_DIR}")
-
-# Put all libraries into a variable
-set(LIBS glfw3 
-		 opengl32 
-		 assimp 
-		 FreeImage 
-		 optimized entityx debug entityx_d)
-
-# Define the link libraries
-target_link_libraries(${PROJECT_NAME} ${LIBS})
 
 # Create virtual folders to make it look nicer in VS
 if(MSVC_IDE)
@@ -110,7 +40,4 @@ if(MSVC_IDE)
 	# Run macro
 	GroupSources("src")
 	GroupSources("include")
-	
-	source_group(thirdparty\\imgui FILES ${THIRDPARTY_IMGUI})
-	source_group(thirdparty\\glad  FILES ${THIRDPARTY_GLAD})
 endif()

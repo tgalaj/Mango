@@ -1,5 +1,3 @@
-#include <FreeImage.h>
-
 #include "framework/rendering/Texture.h"
 #include "framework/utilities/Util.h"
 
@@ -28,20 +26,7 @@ namespace Vertex
     void Texture::genTexture2D(const std::string & filename, GLint base_level, bool is_srgb)
     {
         /* Pointer to the image */
-        FIBITMAP *dib = Util::loadTexture(filename);
-                  dib = FreeImage_ConvertTo32Bits(dib);
-
-        FreeImage_FlipVertical(dib);
-
-        /* Pointer to image data */
-        BYTE *bits = nullptr;
-
-        bits     = FreeImage_GetBits(dib);
-        m_width  = FreeImage_GetWidth(dib);
-        m_height = FreeImage_GetHeight(dib);
-
-        if (bits == 0 || m_width == 0 || m_height == 0)
-            return;
+        unsigned char* data = Util::loadTexture(filename);
 
         m_to_type = GL_TEXTURE_2D;
         m_format  = GL_BGRA;
@@ -63,7 +48,7 @@ namespace Vertex
                             m_height,
                             m_format,
                             GL_UNSIGNED_BYTE,
-                            bits);
+                            data);
 
         glGenerateTextureMipmap(m_to_id);
 
@@ -72,33 +57,20 @@ namespace Vertex
         glTextureParameteri(m_to_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTextureParameteri(m_to_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-        /* Release FreeImage data */
-        FreeImage_Unload(dib);
+        /* Release image data */
+        stbi_image_free(data);
     }
 
     void Texture::genCubeMapTexture(const std::string * filenames, GLint base_level, bool is_srgb)
     {
         const int numCubeFaces = 6;
 
-        /* Pointer to the image */
-        FIBITMAP * dibs[numCubeFaces];
-
-        /* Pointer to image data */
-        BYTE * bits[numCubeFaces];
+        /* Pointer to the image data */
+        unsigned char * imgs_data[numCubeFaces];
 
         for (int i = 0; i < numCubeFaces; ++i)
         {
-            dibs[i] = Util::loadTexture(filenames[i]);
-            dibs[i] = FreeImage_ConvertTo32Bits(dibs[i]);
-
-            FreeImage_FlipHorizontal(dibs[i]);
-
-            bits[i] = FreeImage_GetBits(dibs[i]);
-            m_width = FreeImage_GetWidth(dibs[i]);
-            m_height = FreeImage_GetHeight(dibs[i]);
-
-            if (bits[i] == 0 || m_width == 0 || m_height == 0)
-                return;
+            imgs_data[i] = Util::loadTexture(filenames[i]);
         }
 
         m_to_type = GL_TEXTURE_CUBE_MAP;
@@ -125,7 +97,7 @@ namespace Vertex
                                 1 /*depth*/,
                                 m_format,
                                 GL_UNSIGNED_BYTE,
-                                bits[i]);
+                                imgs_data[i]);
         }
 
         glGenerateTextureMipmap(m_to_id);
@@ -138,8 +110,8 @@ namespace Vertex
 
         for (int i = 0; i < numCubeFaces; ++i)
         {
-            /* Release FreeImage data */
-            FreeImage_Unload(dibs[i]);
+            /* Release images' data */
+            stbi_image_free(imgs_data[i]);
         }
     }
 

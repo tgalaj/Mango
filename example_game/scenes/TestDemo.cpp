@@ -11,7 +11,7 @@
 #include "core_components/SpotLightComponent.h"
 #include "framework/window/Input.h"
 #include "core_engine/CoreServices.h"
-#include "imgui/imgui.h"
+#include "imgui.h"
 #include "core_engine/GameObject.h"
 #include "systems/MoveSystem.h"
 

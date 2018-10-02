@@ -1,4 +1,6 @@
 ﻿#pragma once
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <glm/detail/type_vec3.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>

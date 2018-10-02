@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <string>
-#include <FreeImage.h>
+#include <stb_image.h>
 
 namespace Vertex
 {
@@ -22,8 +22,9 @@ namespace Vertex
         * @param   std::string Relative path, with file name
         *          and extension, to the file that needs to be
         *          loaded.
-        * @returns Pointer to FIBITMAP that contains image's data.
+        * @returns Pointer to unsigned char that contains image's data.
+        *          Have to be freed with stbi_image_free(data)!
         */
-        static FIBITMAP* loadTexture(const std::string & filename);
+        static unsigned char* loadTexture(const std::string & filename);
     };
 }

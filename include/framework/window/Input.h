@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <glm/detail/type_vec2.hpp>
+#include <glm/glm.hpp>
 
 namespace Vertex
 {

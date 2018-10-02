@@ -56,42 +56,11 @@ namespace Vertex
     }
 
 
-    FIBITMAP* Util::loadTexture(const std::string & filename)
+    unsigned char* Util::loadTexture(const std::string & filename)
     {
-        /* Image format */
-        FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
+        int width, height, nr_channels;
+        unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nr_channels, 0);
 
-        /* Pointer to the image */
-        FIBITMAP *dib = nullptr;
-
-        /* Check the file signature and deduce its format */
-        fif = FreeImage_GetFileType(filename.c_str(), 0);
-
-        /* If still unknown, try to guess the file format from the file extension */
-        if (fif == FIF_UNKNOWN)
-        {
-            fif = FreeImage_GetFIFFromFilename(filename.c_str());
-        }
-
-        /* If still unknown, set status to false */
-        if (fif == FIF_UNKNOWN)
-        {
-            fprintf(stderr, "Error while loading texture %s. Can't deduce file format.\n", filename.c_str());
-            return nullptr;
-        }
-
-        /* Check if FreeImage supports loading the file */
-        if (FreeImage_FIFSupportsReading(fif))
-        {
-            dib = FreeImage_Load(fif, filename.c_str());
-        }
-
-        if (!dib)
-        {
-            fprintf(stderr, "Error while loading texture %s. Vertex Engine doesn't support such files or file name is incorrect.\n", filename.c_str());
-            return nullptr;
-        }
-
-        return dib;
+        return data;
     }
 }

@@ -1,9 +1,8 @@
 ﻿#pragma once
 
-#include "imgui/imgui.h"
+#include <imgui.h>
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "imgui/imgui_utils.h"
 
 #include "framework/window/Window.h"
 
@@ -29,8 +28,6 @@ namespace Vertex
             ImGui_ImplGlfw_InitForOpenGL(window, true);
             ImGui_ImplOpenGL3_Init("#version 450");
 
-            setStyle(GUIStyle::RayTeak, 0.95f);
-
             m_window_size = glm::vec2(Window::getWidth(), Window::getHeight());
         }
 
@@ -46,11 +43,6 @@ namespace Vertex
             glViewport(0, 0, GLsizei(m_window_size.x), GLsizei(m_window_size.y));
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        }
-
-        static void setStyle(Style style, float alpha)
-        {
-            ImGui::SetupImGuiStyle(style, alpha);
         }
 
         static void updateWindowSize(float width, float height)

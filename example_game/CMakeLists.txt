@@ -1,49 +1,25 @@
 set(SAMPLE_NAME "SampleGame")
 
-# Add .lib files
-if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-	link_directories(${VertexEngine_SOURCE_DIR}/lib/x32)
-elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	link_directories(${VertexEngine_SOURCE_DIR}/lib/x64)
-endif()
-
 # Add source files
 file(GLOB_RECURSE SOURCE_FILES_EXE 
-	${CMAKE_CURRENT_SOURCE_DIR}/*.c
-	${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
-	
+	 *.c
+	 *.cpp)
+
 # Add header files
 file(GLOB_RECURSE HEADER_FILES_EXE 
-	${CMAKE_CURRENT_SOURCE_DIR}/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/*.hpp)
-	
-# Define the include DIRs
-include_directories("${VertexEngine_SOURCE_DIR}/include"
-				    "${VertexEngine_SOURCE_DIR}/thirdparty"
-				    ${CMAKE_CURRENT_SOURCE_DIR})	
+	 *.h
+	 *.hpp)
 
 # Define the executable
 add_executable(${SAMPLE_NAME} ${HEADER_FILES_EXE} ${SOURCE_FILES_EXE})
+set_property(TARGET ${SAMPLE_NAME} PROPERTY CXX_STANDARD 11)
 
-# Set SampleGame as startup project in Visual Studio
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} 
-			 PROPERTY VS_STARTUP_PROJECT ${SAMPLE_NAME})
+# Define the include DIRs
+target_include_directories(${SAMPLE_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(${SAMPLE_NAME} PRIVATE ${VertexEngine_SOURCE_DIR}/include)
 
 # Define the link libraries
-target_link_libraries(${SAMPLE_NAME} ${PROJECT_NAME})
-
-# Copy dlls and resources
-if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-	add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
-			           COMMAND ${CMAKE_COMMAND} -E copy_directory
-			           ${VertexEngine_SOURCE_DIR}/dlls/bin
-			           ${CMAKE_CURRENT_BINARY_DIR})
-elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
-				       COMMAND ${CMAKE_COMMAND} -E copy_directory
-				       ${VertexEngine_SOURCE_DIR}/dlls/bin64
-				       ${CMAKE_CURRENT_BINARY_DIR})
-endif()
+target_link_libraries(${SAMPLE_NAME} "${PROJECT_NAME}")
 
 add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
 				   COMMAND ${CMAKE_COMMAND} -E copy_directory
