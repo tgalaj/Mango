@@ -6,6 +6,19 @@
 
 namespace Vertex
 {
+    struct ImageData
+    {
+        ImageData()
+            : width(0),
+              height(0),
+              channels(0)
+        {}
+
+        GLuint width;
+        GLuint height;
+        GLuint channels;
+    };
+
     class Texture final
     {
     public:
@@ -14,17 +27,16 @@ namespace Vertex
 
         void bind(GLuint unit = 0) const;
         
-        GLuint getWidth()  const { return m_width; }
-        GLuint getHeight() const { return m_height; }
+        GLuint getWidth()  const { return m_tex_data.width; }
+        GLuint getHeight() const { return m_tex_data.height; }
 
     private:
         void genTexture2D     (const std::string & filename,  GLint base_level, bool is_srgb = false);
         void genCubeMapTexture(const std::string * filenames, GLint base_level, bool is_srgb = false);
 
+        ImageData m_tex_data;
         GLuint m_to_id;
         GLenum m_to_type;
-        GLuint m_width;
-        GLuint m_height;
         GLint  m_base_level;
         GLenum m_format;
         GLint m_internal_format;

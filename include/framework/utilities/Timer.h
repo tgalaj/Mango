@@ -3,7 +3,7 @@
 
 namespace Vertex
 {
-    class Time final
+    class Timer final
     {
     public:
         /**

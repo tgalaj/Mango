@@ -6,7 +6,7 @@
 #include "core_systems/GUISystem.h"
 #include "core_systems/RenderingSystem.h"
 #include "core_systems/FreePoseSystem.h"
-#include "framework/utilities/Time.h"
+#include "framework/utilities/Timer.h"
 #include "framework/window/Input.h"
 #include "framework/window/Window.h"
 
@@ -106,7 +106,7 @@ namespace Vertex
         int frames = 0;
         double frame_counter = 0.0;
 
-        double last_time = Time::getTime();
+        double last_time = Timer::getTime();
         double unprocessed_time = 0.0;
 
         double start_time = 0.0;
@@ -118,7 +118,7 @@ namespace Vertex
         {
             should_render = false;
 
-            start_time = Time::getTime();
+            start_time = Timer::getTime();
             passed_time = start_time - last_time;
 
             last_time = start_time;

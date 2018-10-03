@@ -56,10 +56,14 @@ namespace Vertex
     }
 
 
-    unsigned char* Util::loadTexture(const std::string & filename)
+    unsigned char* Util::loadTexture(const std::string & filename, ImageData & image_data)
     {
         int width, height, nr_channels;
-        unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nr_channels, 0);
+        unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nr_channels, 4);
+
+        image_data.width    = width;
+        image_data.height   = height;
+        image_data.channels = nr_channels;
 
         return data;
     }

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #define GLM_ENABLE_EXPERIMENTAL
 
-#include <glm/detail/type_vec3.hpp>
+#include <glm/vec3.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/euler_angles.hpp>
@@ -43,9 +43,9 @@ namespace Vertex
         
         void setOrientation(float x, float y, float z)
         {
-            m_orientation = glm::angleAxis(glm::radians(x), glm::vec3(1, 0, 0)) * 
-                            glm::angleAxis(glm::radians(y), glm::vec3(0, 1, 0)) * 
-                            glm::angleAxis(glm::radians(z), glm::vec3(0, 0, 1));
+            m_orientation = glm::angleAxis(glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f)) *
+                            glm::angleAxis(glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f)) *
+                            glm::angleAxis(glm::radians(z), glm::vec3(0.0f, 0.0f, 1.0f));
             m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_is_dirty    = true;
         }

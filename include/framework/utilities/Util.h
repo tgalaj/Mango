@@ -1,4 +1,7 @@
 ﻿#pragma once
+
+#include "framework/rendering/Texture.h"
+
 #include <string>
 #include <stb_image.h>
 
@@ -22,9 +25,10 @@ namespace Vertex
         * @param   std::string Relative path, with file name
         *          and extension, to the file that needs to be
         *          loaded.
+        * @param   image_data
         * @returns Pointer to unsigned char that contains image's data.
         *          Have to be freed with stbi_image_free(data)!
         */
-        static unsigned char* loadTexture(const std::string & filename);
+        static unsigned char* loadTexture(const std::string & filename, ImageData & image_data);
     };
 }

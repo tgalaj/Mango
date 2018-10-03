@@ -200,7 +200,6 @@ void TestDemo::input(float delta)
     {
         is_debug_render = !is_debug_render;
         Vertex::CoreServices::getRenderer()->M_DEBUG_RENDERING = is_debug_render;
-
     }
 }
 

@@ -22,7 +22,7 @@ namespace Vertex
         void genCone    (float height = 3.0f, float r = 1.5f, unsigned int slices = 10, unsigned int stacks = 10);
         void genCube    (float radius = 1.0f);
         void genCylinder(float height = 3.0f, float radius = 1.5f, unsigned int slices = 10);
-        void genPlane   (float width = 1.0f, float height = 1.0f, unsigned int slices = 5, unsigned int stacks = 5);
+        void genPlane   (float width  = 1.0f, float height = 1.0f, unsigned int slices = 5, unsigned int stacks = 5);
         void genSphere  (float radius = 1.5f, unsigned int slices = 12);
         void genTorus   (float innerRadius = 1.0f, float outerRadius = 2.0f, unsigned int slices = 10, unsigned int stacks = 10);
         void genQuad    (float width = 1.0f, float height = 1.0f);

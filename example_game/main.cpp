@@ -1,11 +1,10 @@
 #include "scenes/TestDemo.h"
 #include "systems/MoveSystem.h"
-#include <memory>
 #include "core_engine/VertexCore.h"
-#include <iostream>
+#include <memory>
+
 int main(int argc, char * args[])
 {
-    std::cout << "Hello world!" << std::endl;
     Vertex::VertexCore vec(std::make_shared<TestDemo>());
 
     vec.addSystem<MoveSystem>();

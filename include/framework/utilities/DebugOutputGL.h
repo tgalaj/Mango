@@ -2,6 +2,9 @@
 
 #include <cassert>
 #include <cstdio>
+#include <string>
+
+#include <glad/glad.h>
 
 namespace Vertex
 {

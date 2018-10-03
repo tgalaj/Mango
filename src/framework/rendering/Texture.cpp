@@ -1,13 +1,12 @@
 #include "framework/rendering/Texture.h"
 #include "framework/utilities/Util.h"
+#include <iostream>
 
 namespace Vertex
 {
     Texture::Texture()
         : m_to_id(0),
           m_to_type(GL_TEXTURE_2D),
-          m_width(0),
-          m_height(0),
           m_base_level(0), 
           m_format(0),
           m_internal_format(0)
@@ -26,26 +25,31 @@ namespace Vertex
     void Texture::genTexture2D(const std::string & filename, GLint base_level, bool is_srgb)
     {
         /* Pointer to the image */
-        unsigned char* data = Util::loadTexture(filename);
+        unsigned char* data = Util::loadTexture(filename, m_tex_data);
+
+        if(!data)
+        {
+            std::cout << "Could not load texture " << filename << std::endl;
+        }
 
         m_to_type = GL_TEXTURE_2D;
-        m_format  = GL_BGRA;
-        m_internal_format = is_srgb ? GL_SRGB8_ALPHA8 : GL_RGB8;
+        m_format  = GL_RGBA;
+        m_internal_format = is_srgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
 
         /* Generate GL texture object */
         glCreateTextures(m_to_type, 1, &m_to_id);
         glTextureStorage2D(m_to_id,
                            base_level > 0 ? 2 : base_level + 2,
                            m_internal_format,
-                           m_width,
-                           m_height);
+                           m_tex_data.width,
+                           m_tex_data.height);
 
         glTextureSubImage2D(m_to_id,
                             0 /*level*/,
                             0 /*xoffset*/,
                             0 /*yoffset*/,
-                            m_width,
-                            m_height,
+                            m_tex_data.width,
+                            m_tex_data.height,
                             m_format,
                             GL_UNSIGNED_BYTE,
                             data);
@@ -70,7 +74,7 @@ namespace Vertex
 
         for (int i = 0; i < numCubeFaces; ++i)
         {
-            imgs_data[i] = Util::loadTexture(filenames[i]);
+            imgs_data[i] = Util::loadTexture(filenames[i], m_tex_data);
         }
 
         m_to_type = GL_TEXTURE_CUBE_MAP;
@@ -82,8 +86,8 @@ namespace Vertex
         glTextureStorage2D(m_to_id,
                            base_level > 0 ? 2 : base_level + 2,
                            m_internal_format,
-                           m_width,
-                           m_height);
+                           m_tex_data.width,
+                           m_tex_data.height);
 
         for (int i = 0; i < numCubeFaces; ++i)
         {
@@ -92,8 +96,8 @@ namespace Vertex
                                 0 /*xoffset*/,
                                 0 /*yoffset*/,
                                 i /*zoffset*/,
-                                m_width,
-                                m_height,
+                                m_tex_data.width,
+                                m_tex_data.height,
                                 1 /*depth*/,
                                 m_format,
                                 GL_UNSIGNED_BYTE,
