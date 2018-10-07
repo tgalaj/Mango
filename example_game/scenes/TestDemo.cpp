@@ -135,7 +135,7 @@ void TestDemo::init()
 
     /* Lights */
     auto dir_light = Vertex::CoreAssetManager::createGameObject();
-    dir_light.addComponent<Vertex::DirectionalLightComponent>(glm::vec3(1, 1, 1), 1.0f);
+    dir_light.addComponent<Vertex::DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
     dir_light.getComponent<Vertex::TransformComponent>()->setOrientation(-45.0f, 180.0f, 0.0f);
 
     float d = 8;
@@ -208,5 +208,6 @@ void TestDemo::onGUI(float delta)
     ImGui::Begin("Cloth settings");
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
     ImGui::End();
 }

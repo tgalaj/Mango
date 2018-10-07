@@ -27,7 +27,6 @@ target_link_libraries(${PROJECT_NAME} "${ASSIMP_LIBRARY}")
 target_link_libraries(${PROJECT_NAME} "${ENTITYX_LIBRARY}")
 target_link_libraries(${PROJECT_NAME} "${GLFW_LIBRARY}")
 target_link_libraries(${PROJECT_NAME} "${GLAD_LIBRARY}"      "${CMAKE_DL_LIBS}")
-target_link_libraries(${PROJECT_NAME} "${GLM_LIBRARY}"       "${CMAKE_DL_LIBS}")
 target_link_libraries(${PROJECT_NAME} "${IMGUI_LIBRARY}"     "${CMAKE_DL_LIBS}")
 target_link_libraries(${PROJECT_NAME} "${STB_IMAGE_LIBRARY}" "${CMAKE_DL_LIBS}")
 

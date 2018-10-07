@@ -77,10 +77,6 @@ set(GLAD_INCLUDE_DIR "${GLAD_DIR}/include")
 
 # glm
 set(GLM_DIR "${THIRDPARTY_DIR}/glm")
-add_library("glm" STATIC "${THIRDPARTY_DIR}/glm_config.cpp")
-target_include_directories("glm" PRIVATE "${GLM_DIR}")
-
-set(GLM_LIBRARY "glm")
 set(GLM_INCLUDE_DIR "${GLM_DIR}")
 
 # imgui

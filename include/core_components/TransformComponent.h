@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include <glm/vec3.hpp>
@@ -14,16 +15,17 @@ namespace Vertex
     class TransformComponent
     {
     public:
-
-        explicit TransformComponent(const glm::vec3 & position    = glm::vec3(0.0f), 
-                                    const glm::vec3 & orientation = glm::vec3(0.0f, 0.0f, 0.0f),
-                                    const glm::vec3 & scale       = glm::vec3(1.0f))
-            : m_orientation(orientation),
-              m_position   (position),
-              m_scale      (scale),
-              m_is_dirty   (true)
-        {
-        }
+        TransformComponent(const glm::vec3 & position    = glm::vec3(0.0f),
+                           const glm::vec3 & orientation = glm::vec3(0.0f, 0.0f, 0.0f),
+                           const glm::vec3 & scale       = glm::vec3(1.0f))
+            : m_orientation  (orientation),
+              m_position     (position),
+              m_scale        (scale),
+              m_is_dirty     (true),
+              m_world_matrix (glm::mat4(1.0f)),
+              m_normal_matrix(glm::mat3(1.0f)),
+              m_direction    (glm::vec3(0.0f, 0.0f, -1.0f))
+        {}
 
         void setPosition(float x, float y, float z)
         {
