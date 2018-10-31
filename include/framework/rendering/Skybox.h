@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm\gtc\matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "core_components/CameraComponent.h"
 #include "core_engine/CoreAssetManager.h"

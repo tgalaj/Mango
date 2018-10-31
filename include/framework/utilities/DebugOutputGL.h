@@ -6,6 +6,12 @@
 
 #include <glad/glad.h>
 
+#if defined(_WIN32) && !defined(_WIN64)
+    #define STDCALL __stdcall
+#else
+    #define STDCALL
+#endif
+
 namespace Vertex
 {
     class DebugOutputGL final
@@ -14,7 +20,7 @@ namespace Vertex
         DebugOutputGL() {}
         ~DebugOutputGL() {}
 
-        static void __stdcall GLerrorCallback(GLenum source,
+        static void STDCALL GLerrorCallback(GLenum source,
                                               GLenum type,
                                               GLuint id,
                                               GLenum severity,

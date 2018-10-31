@@ -1,6 +1,6 @@
 # Copyright (C) 2018 Tomasz Gałaj
 
-cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.9.2 FATAL_ERROR)
 project(VertexEngine VERSION 0.1)
 
 option(BUILD_EXAMPLE_GAME 
