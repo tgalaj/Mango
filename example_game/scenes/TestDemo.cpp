@@ -30,7 +30,7 @@ void TestDemo::init()
     camera.addComponent<Vertex::CameraComponent>(45.0f, Vertex::Window::getAspectRatio(), 0.001f, 100.0f);
     camera.addComponent<Vertex::FreeLookComponent>();
     camera.addComponent<Vertex::FreeMoveComponent>();
-    camera.getComponent<Vertex::TransformComponent>()->setPosition(0, 4, 30);
+    camera.setPosition(0, 4, 30);
 
     auto cone_model = Vertex::CoreAssetManager::createModel();
     cone_model.genSphere(0.5f, 24);
@@ -53,62 +53,62 @@ void TestDemo::init()
 
     auto ground = Vertex::CoreAssetManager::createGameObject();
     ground.addComponent<Vertex::ModelRendererComponent>(plane_model);
-    ground.getComponent<Vertex::TransformComponent>()->setPosition(0.0f, -0.5f, 0.0f);
+    ground.setPosition(0.0f, -0.5f, 0.0f);
     ground.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DIFFUSE, ground_tex);
 
     auto nanobot = Vertex::CoreAssetManager::createGameObject();
     nanobot.addComponent<Vertex::ModelRendererComponent>(nanosuit_model);
-    nanobot.getComponent<Vertex::TransformComponent>()->setPosition(0.0f, -0.5f, 0.0f);
-    nanobot.getComponent<Vertex::TransformComponent>()->setScale(0.25f);
+    nanobot.setPosition(0.0f, -0.5f, 0.0f);
+    nanobot.setScale(0.25f);
 
     auto wall = Vertex::CoreAssetManager::createGameObject();
     wall.addComponent<Vertex::ModelRendererComponent>(wall_model);
     wall.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DIFFUSE, brickwall_tex);
     wall.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::NORMAL, brickwall_normal_tex);
     //wall.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DEPTH, bricks2_depth);
-    wall.getComponent<Vertex::TransformComponent>()->setOrientation(90.0f, 0.0f, 0.0f);
-    wall.getComponent<Vertex::TransformComponent>()->setPosition(0, 2.0, -9);
+    wall.setOrientation(90.0f, 0.0f, 0.0f);
+    wall.setPosition(0, 2.0, -9);
 
     auto wall2 = Vertex::CoreAssetManager::createGameObject();
     wall2.addComponent<Vertex::ModelRendererComponent>(wall_model);
     wall2.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DIFFUSE, bricks2);
     wall2.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::NORMAL, bricks2_normal);
     wall2.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DEPTH, bricks2_depth);
-    wall2.getComponent<Vertex::TransformComponent>()->setOrientation(90.0f, 0.0f, 0.0f);
-    wall2.getComponent<Vertex::TransformComponent>()->setPosition(-5, 2.0, -9);
+    wall2.setOrientation(90.0f, 0.0f, 0.0f);
+    wall2.setPosition(-5, 2.0, -9);
 
     auto plane1 = Vertex::CoreAssetManager::createGameObject();
     plane1.addComponent<Vertex::ModelRendererComponent>(wall_model);
     plane1.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DIFFUSE, bricks2);
-    plane1.getComponent<Vertex::TransformComponent>()->setOrientation(90.0f, 0.0f, 0.0f);
-    plane1.getComponent<Vertex::TransformComponent>()->setPosition(-10, 15.0, -9);
+    plane1.setOrientation(90.0f, 0.0f, 0.0f);
+    plane1.setPosition(-10, 15.0, -9);
 
     auto plane2 = Vertex::CoreAssetManager::createGameObject();
     plane2.addComponent<Vertex::ModelRendererComponent>(wall_model);
     plane2.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DIFFUSE, bricks2);
-    plane2.getComponent<Vertex::TransformComponent>()->setOrientation(0.0f, 0.0f, 0.0f);
-    plane2.getComponent<Vertex::TransformComponent>()->setPosition(-10, 12.5, -6.5);
+    plane2.setOrientation(0.0f, 0.0f, 0.0f);
+    plane2.setPosition(-10, 12.5, -6.5);
 
     auto sphere1 = Vertex::CoreAssetManager::createGameObject();
     sphere1.addComponent<Vertex::ModelRendererComponent>(cone_model);
-    sphere1.getComponent<Vertex::TransformComponent>()->setPosition(-10, 14, -6.5);
-    sphere1.getComponent<Vertex::TransformComponent>()->setScale(0.5f);
+    sphere1.setPosition(-10, 14, -6.5);
+    sphere1.setScale(0.5f);
 
     auto sphere2 = Vertex::CoreAssetManager::createGameObject();
     sphere2.addComponent<Vertex::ModelRendererComponent>(cone_model);
-    sphere2.getComponent<Vertex::TransformComponent>()->setPosition(-10, 15, -7.5);
-    sphere2.getComponent<Vertex::TransformComponent>()->setScale(0.5f);
+    sphere2.setPosition(-10, 15, -7.5);
+    sphere2.setScale(0.5f);
 
     auto point_light1 = Vertex::CoreAssetManager::createGameObject();
     point_light1.addComponent<Vertex::PointLightComponent>();
     point_light1.getComponent<Vertex::PointLightComponent>()->m_color = glm::vec3(1.0f);
     point_light1.getComponent<Vertex::PointLightComponent>()->m_intensity = 10.0f;
-    point_light1.getComponent<Vertex::TransformComponent>()->setPosition(-10, 15, -6.5);
+    point_light1.setPosition(-10, 15, -6.5);
     
     auto plight = Vertex::CoreAssetManager::createGameObject();
     plight.addComponent<Vertex::ModelRendererComponent>(cone_model);
-    plight.getComponent<Vertex::TransformComponent>()->setPosition(-10, 15, -6.5);
-    plight.getComponent<Vertex::TransformComponent>()->setScale(0.25f);
+    plight.setPosition(-10, 15, -6.5);
+    plight.setScale(0.25f);
 
     float offset = plane_size / 10.0f;
     float num_objects = 10;
@@ -123,12 +123,12 @@ void TestDemo::init()
             object.addComponent<Vertex::ModelRendererComponent>(cone_model);
             
             float pos_z = plane_size / -2.0f + (j * offset);
-            object.getComponent<Vertex::TransformComponent>()->setPosition(pos_x + 0.5f * offset, 0.5f, pos_z + 0.5f * offset);
+            object.setPosition(pos_x + 0.5f * offset, 0.5f, pos_z + 0.5f * offset);
 
             if (i == 2 && j == 2)
             {
-                nanobot.getComponent<Vertex::TransformComponent>()->addChild(object.getComponent<Vertex::TransformComponent>());
-                //object.getComponent<Vertex::TransformComponent>()->setScale(4.0f);
+                nanobot.addChild(object);
+                //object.setScale(4.0f);
             }
         }
     }
@@ -136,7 +136,7 @@ void TestDemo::init()
     /* Lights */
     auto dir_light = Vertex::CoreAssetManager::createGameObject();
     dir_light.addComponent<Vertex::DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
-    dir_light.getComponent<Vertex::TransformComponent>()->setOrientation(-45.0f, 180.0f, 0.0f);
+    dir_light.setOrientation(-45.0f, 180.0f, 0.0f);
 
     float d = 8;
     glm::vec3 positions[4]
@@ -161,7 +161,7 @@ void TestDemo::init()
         point_light.addComponent<Vertex::PointLightComponent>();
         point_light.getComponent<Vertex::PointLightComponent>()->m_color = colors[i];
         point_light.getComponent<Vertex::PointLightComponent>()->m_intensity = 50.0f;
-        point_light.getComponent<Vertex::TransformComponent>()->setPosition(positions[i].x, positions[i].y, positions[i].z);
+        point_light.setPosition(positions[i].x, positions[i].y, positions[i].z);
         point_light.addComponent<MoveSystemComponent>();
 
         //if (i == 0)
@@ -173,8 +173,8 @@ void TestDemo::init()
     spot_light.getComponent<Vertex::SpotLightComponent>()->m_color = glm::vec3(255, 206, 250) / 255.0f;
     spot_light.getComponent<Vertex::SpotLightComponent>()->m_intensity = 1000;
     spot_light.getComponent<Vertex::SpotLightComponent>()->setCutOffAngle(30.0f);
-    spot_light.getComponent<Vertex::TransformComponent>()->setPosition(1.5, 5, 1.5);
-    spot_light.getComponent<Vertex::TransformComponent>()->setOrientation(-90, 0, 0);
+    spot_light.setPosition(1.5, 5, 1.5);
+    spot_light.setOrientation(-90, 0, 0);
 }
 
 void TestDemo::input(float delta)
