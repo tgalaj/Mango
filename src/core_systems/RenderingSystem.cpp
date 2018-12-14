@@ -1,4 +1,7 @@
-﻿#include "core_systems/RenderingSystem.h"
+﻿
+#include <core_systems/RenderingSystem.h>
+
+#include "core_systems/RenderingSystem.h"
 
 #include "core_engine/CoreAssetManager.h"
 #include "core_engine/CoreServices.h"
@@ -11,8 +14,8 @@
 
 namespace Vertex
 {
-    bool RenderingSystem::M_DEBUG_RENDERING     = false;
-    float RenderingSystem::M_DEBUG_WINDOW_WIDTH = 0;
+    bool         RenderingSystem::M_DEBUG_RENDERING    = false;
+    unsigned int RenderingSystem::M_DEBUG_WINDOW_WIDTH = 0;
 
     RenderingSystem::RenderingSystem() {}
 
@@ -116,6 +119,11 @@ namespace Vertex
         glDisable(GL_BLEND);
     }
 
+    void RenderingSystem::bindMainRenderTarget()
+    {
+        m_main_render_target->bind();
+    }
+
     void RenderingSystem::applyPostprocess(std::shared_ptr<PostprocessEffect> & effect, 
                                            std::shared_ptr<RenderTarget>      * src, 
                                            std::shared_ptr<RenderTarget>      * dst)
@@ -186,9 +194,8 @@ namespace Vertex
         entities.each<ModelRendererComponent, TransformComponent>(
         [this, &shader](entityx::Entity entity, ModelRendererComponent & model_renderer, TransformComponent & transform)
         {
-            /* TODO: expose model's data to the rendering system instead of render method */
             shader->updateGlobalUniforms(transform);
-            model_renderer.m_model.render(*shader); //TODO
+            model_renderer.m_model.render(*shader);
         });
     }
 
@@ -199,9 +206,8 @@ namespace Vertex
         entities.each<ModelRendererComponent, TransformComponent>(
         [this, &shader](entityx::Entity entity, ModelRendererComponent & model_renderer, TransformComponent & transform)
         {
-            /* TODO: expose model's data to the rendering system instead of render method */
             shader->updateGlobalUniforms(transform);
-            model_renderer.m_model.render(*shader); //TODO
+            model_renderer.m_model.render(*shader);
         });
 
         endForwardRendering();
@@ -225,7 +231,7 @@ namespace Vertex
                 glClear(GL_DEPTH_BUFFER_BIT);
 
                 m_shadow_map_generator->bind();
-                //TODO: cache light_matrix
+
                 light_matrix = shadow_info.getProjection() * glm::lookAt(-transform->direction(), glm::vec3(0.0f), glm::vec3(0, 1, 0));
                 m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
 
@@ -234,11 +240,10 @@ namespace Vertex
                 glCullFace(GL_BACK);
             }
 
-            //TODO: another way to bind recently used FBO
-            m_main_render_target->bind();
+            bindMainRenderTarget();
             
             m_forward_directional->bind();
-            m_dir_shadow_map->bindTexture(5);
+            m_dir_shadow_map->bindTexture(SHADOW_MAP);
 
             m_forward_directional->setUniform(S_DIRECTIONAL_LIGHT ".base.color",     directional_light->m_color);
             m_forward_directional->setUniform(S_DIRECTIONAL_LIGHT ".base.intensity", directional_light->m_intensity);
@@ -259,13 +264,14 @@ namespace Vertex
                 glClear(GL_DEPTH_BUFFER_BIT);
 
                 m_omni_shadow_map_generator->bind();
-                //TODO: cache light_matrix
-                light_matrices[0] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3(1, 0, 0), glm::vec3(0, -1, 0));
-                light_matrices[1] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3(-1, 0, 0), glm::vec3(0, -1, 0));
-                light_matrices[2] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3(0, 1, 0), glm::vec3(0, 0, 1));
-                light_matrices[3] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3(0, -1, 0), glm::vec3(0, 0, -1));
-                light_matrices[4] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3(0, 0, 1), glm::vec3(0, -1, 0));
-                light_matrices[5] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3(0, 0, -1), glm::vec3(0, -1, 0));
+
+                light_matrices[0] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 1,  0,  0), glm::vec3(0, -1,  0));
+                light_matrices[1] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3(-1,  0,  0), glm::vec3(0, -1,  0));
+                light_matrices[2] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 0,  1,  0), glm::vec3(0,  0,  1));
+                light_matrices[3] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 0, -1,  0), glm::vec3(0,  0, -1));
+                light_matrices[4] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 0,  0,  1), glm::vec3(0, -1,  0));
+                light_matrices[5] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 0,  0, -1), glm::vec3(0, -1,  0));
+
                 m_omni_shadow_map_generator->setUniform("s_light_matrices", light_matrices, 6);
                 m_omni_shadow_map_generator->setUniform("s_light_pos", transform->position());
                 m_omni_shadow_map_generator->setUniform("s_far_plane", 100.0f);
@@ -275,12 +281,10 @@ namespace Vertex
                 glCullFace(GL_BACK);
             }
 
-            //TODO: another way to bind recently used FBO
-            m_main_render_target->bind();
+            bindMainRenderTarget();
 
             m_forward_point->bind();
-            //TODO use variable insted of magic number for shadow map target
-            m_omni_shadow_map->bindTexture(5);
+            m_omni_shadow_map->bindTexture(SHADOW_MAP);
 
             m_forward_point->setUniform(S_POINT_LIGHT ".base.color",      point_light->m_color);
             m_forward_point->setUniform(S_POINT_LIGHT ".base.intensity",  point_light->m_intensity);
@@ -305,7 +309,7 @@ namespace Vertex
                 glClear(GL_DEPTH_BUFFER_BIT);
 
                 m_shadow_map_generator->bind();
-                //TODO: cache light_matrix
+
                 light_matrix = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + transform->direction(), glm::vec3(0, 1, 0));
                 m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
 
@@ -314,12 +318,10 @@ namespace Vertex
                 glCullFace(GL_BACK);
             }
 
-            //TODO: another way to bind recently used FBO
-            m_main_render_target->bind();
+            bindMainRenderTarget();
 
             m_forward_spot->bind();
-            //TODO use variable insted of magic number for shadow map target
-            m_spot_shadow_map->bindTexture(5);
+            m_spot_shadow_map->bindTexture(SHADOW_MAP);
 
             m_forward_spot->setUniform(S_SPOT_LIGHT ".point.base.color",      spot_light->m_color);
             m_forward_spot->setUniform(S_SPOT_LIGHT ".point.base.intensity",  spot_light->m_intensity);

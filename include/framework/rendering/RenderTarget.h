@@ -38,7 +38,7 @@ namespace Vertex
         /* Creates Render Target with Color and Depth attachments */
         void create(unsigned width, unsigned height, ColorType color, DepthType depth, RenderTargetType rt_type = Tex2D, bool use_filtering = true);
 
-        /* Creates Render Target with Depth attachment aka Shadow Map */
+        /* Creates Render Target with Depth attachment only aka Shadow Map */
         void create(unsigned width, unsigned height, DepthType depth, RenderTargetType rt_type = Tex2D, bool use_filtering = true);
 
         void bind() const;

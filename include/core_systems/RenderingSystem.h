@@ -25,9 +25,11 @@ namespace Vertex
         glm::vec3 m_scene_ambient_color;
 
         static bool M_DEBUG_RENDERING;
-        static float M_DEBUG_WINDOW_WIDTH;
+        static unsigned int M_DEBUG_WINDOW_WIDTH;
 
     private:
+        enum TextureMaps { SHADOW_MAP = 5 };
+
         std::shared_ptr<Shader> m_forward_ambient;
         std::shared_ptr<Shader> m_forward_directional;
         std::shared_ptr<Shader> m_forward_point;
@@ -50,6 +52,8 @@ namespace Vertex
 
         static void beginForwardRendering();
         static void endForwardRendering();
+
+        void bindMainRenderTarget();
 
         void applyPostprocess(std::shared_ptr<PostprocessEffect> & effect, std::shared_ptr<RenderTarget> * src, std::shared_ptr<RenderTarget> * dst);
 

@@ -53,26 +53,8 @@ namespace Vertex
             switch(color)
             {
                 case RGB16F:  color_format = GL_RGB16F; break;
-                default: 
+                default:
                 case RGBA16F: color_format = GL_RGBA16F; break;
-            }
-
-            glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, use_filtering ? GL_LINEAR : GL_NEAREST);
-            glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, use_filtering ? GL_LINEAR : GL_NEAREST);
-            glTexParameterf(m_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameterf(m_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-            if (m_type == Tex2D)
-            {
-                glTexStorage2D(m_type, 1 /* levels */, color_format, m_width, m_height);
-                glBindTexture(m_type, 0);
-
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_type, m_to_id, 0 /* level */);
-            }
-
-            if (m_type == TexCube)
-            {
-                //TODO
             }
         }
         else
@@ -83,24 +65,32 @@ namespace Vertex
                 default:
                 case RGB888:   color_format = GL_RGB; break;
             }
+        }
 
-            glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, use_filtering ? GL_LINEAR : GL_NEAREST);
-            glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, use_filtering ? GL_LINEAR : GL_NEAREST);
+        glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, use_filtering ? GL_LINEAR : GL_NEAREST);
+        glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, use_filtering ? GL_LINEAR : GL_NEAREST);
+
+        if (m_type == Tex2D)
+        {
             glTexParameterf(m_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameterf(m_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-            if (m_type == Tex2D)
-            {
-                glTexStorage2D(m_type, 1 /* levels */, color_format, m_width, m_height);
-                glBindTexture(m_type, 0);
+            glTexStorage2D(m_type, 1 /* levels */, color_format, m_width, m_height);
+            glBindTexture(m_type, 0);
 
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_type, m_to_id, 0 /* level */);
-            }
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_type, m_to_id, 0 /* level */);
+        }
 
-            if (m_type == TexCube)
-            {
-                //TODO
-            }
+        if (m_type == TexCube)
+        {
+            glTexParameteri(m_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(m_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(m_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+            glTexStorage2D(m_type, 1 /* levels */, color_format, m_width, m_height);
+            glBindTexture(m_type, 0);
+
+            glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_to_id, 0);
         }
 
         if(depth != NoDepth)
@@ -173,7 +163,7 @@ namespace Vertex
             glTexParameteri(m_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(m_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-            glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1 /* levels */, depth_format, m_width, m_height);
+            glTexStorage2D(m_type, 1 /* levels */, depth_format, m_width, m_height);
 
             glBindTexture(m_type, 0);
             glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_to_id, 0);            
@@ -197,11 +187,6 @@ namespace Vertex
 
     bool RenderTarget::validate() const
     {
-        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        {
-            return false;
-        }
-
-        return true;
+        return glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
     }
 }

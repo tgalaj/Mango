@@ -46,7 +46,7 @@ namespace Vertex
         void calcTangentSpace(VertexBuffers & buffers) const;
         void genPrimitive(VertexBuffers & buffers);
 
-        void processNode (aiNode * node, const aiScene * scene, aiString & directory);
+        void processNode(aiNode * node, const aiScene * scene, aiString & directory);
         Mesh processMesh(aiMesh * mesh, const aiScene * scene, aiString & directory) const;
 
         void loadMaterialTextures(Mesh & mesh, aiMaterial * mat, aiTextureType type, Material::TextureType texture_type, aiString & directory) const;

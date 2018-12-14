@@ -179,21 +179,11 @@ void TestDemo::init()
 
 void TestDemo::input(float delta)
 {
-    static bool is_wire = false;
     static bool is_debug_render = false;
 
-    if (Vertex::Input::getKeyUp(Vertex::KeyCode::G))
+    if (Vertex::Input::getKeyUp(Vertex::KeyCode::Escape))
     {
-        is_wire = !is_wire;
-
-        if (is_wire)
-        {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        }
-        else
-        {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        }
+        Vertex::CoreServices::getCore()->stop();
     }
 
     if (Vertex::Input::getKeyUp(Vertex::KeyCode::H))
