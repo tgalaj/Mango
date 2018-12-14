@@ -26,23 +26,5 @@ add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
 						   ${VertexEngine_SOURCE_DIR}/res
 						   ${CMAKE_CURRENT_BINARY_DIR}/res)
 
-# Create virtual folders to make it look nicer in VS
-if(MSVC_IDE)
-	# Macro to preserve source files hierarchy in the IDE
-	macro(GroupSources curdir)
-		file(GLOB children RELATIVE ${VertexEngine_SOURCE_DIR}/${curdir} ${VertexEngine_SOURCE_DIR}/${curdir}/*)
-
-		foreach(child ${children})
-			if(IS_DIRECTORY ${VertexEngine_SOURCE_DIR}/${curdir}/${child})
-				GroupSources(${curdir}/${child})
-			else()
-				string(REPLACE "/" "\\" groupname ${curdir})
-				string(REPLACE "example_game" "sources" groupname ${groupname})
-				source_group(${groupname} FILES ${VertexEngine_SOURCE_DIR}/${curdir}/${child})
-			endif()
-		endforeach()
-	endmacro()
-	
-	# Run macro
-	GroupSources(example_game)
-endif()
+source_group("sources" FILES ${SOURCE_FILES_EXE})						   
+source_group("headers" FILES ${HEADER_FILES_EXE})

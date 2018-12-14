@@ -32,3 +32,6 @@ target_link_libraries(${PROJECT_NAME} "${STB_IMAGE_LIBRARY}" "${CMAKE_DL_LIBS}")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LIBRARY_SUFFIX="")
+
+source_group("sources" FILES ${SOURCE_FILES})						   
+source_group("headers" FILES ${HEADER_FILES})
