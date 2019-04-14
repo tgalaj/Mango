@@ -32,6 +32,22 @@ void TestDemo::init()
     camera.addComponent<Vertex::FreeMoveComponent>();
     camera.setPosition(0, 4, 30);
 
+    auto skybox = std::make_shared<Vertex::Skybox>("res/skyboxes/stormydays/",
+                                                   "stormydays_lf.tga",
+                                                   "stormydays_rt.tga",
+                                                   "stormydays_up.tga", 
+                                                   "stormydays_dn.tga", 
+                                                   "stormydays_ft.tga", 
+                                                   "stormydays_bk.tga" );
+    //auto skybox = std::make_shared<Vertex::Skybox>("res/skyboxes/cold/",
+    //                                               "right.jpg",
+    //                                               "left.jpg",
+    //                                               "top.jpg", 
+    //                                               "bottom.jpg", 
+    //                                               "front.jpg", 
+    //                                               "back.jpg" );
+    Vertex::CoreServices::getRenderer()->setSkybox(skybox);
+
     auto cone_model = Vertex::CoreAssetManager::createModel();
     cone_model.genSphere(0.5f, 24);
 
@@ -189,7 +205,7 @@ void TestDemo::input(float delta)
     if (Vertex::Input::getKeyUp(Vertex::KeyCode::H))
     {
         is_debug_render = !is_debug_render;
-        Vertex::CoreServices::getRenderer()->M_DEBUG_RENDERING = is_debug_render;
+        Vertex::RenderingSystem::M_DEBUG_RENDERING = is_debug_render;
     }
 }
 

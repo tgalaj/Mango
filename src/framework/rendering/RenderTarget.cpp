@@ -76,8 +76,6 @@ namespace Vertex
             glTexParameterf(m_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
             glTexStorage2D(m_type, 1 /* levels */, color_format, m_width, m_height);
-            glBindTexture(m_type, 0);
-
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_type, m_to_id, 0 /* level */);
         }
 
@@ -88,8 +86,6 @@ namespace Vertex
             glTexParameteri(m_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
             glTexStorage2D(m_type, 1 /* levels */, color_format, m_width, m_height);
-            glBindTexture(m_type, 0);
-
             glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_to_id, 0);
         }
 
@@ -109,8 +105,9 @@ namespace Vertex
 
             glRenderbufferStorage(GL_RENDERBUFFER, depth_format, width, height);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depth_rbo_id);
-            glBindRenderbuffer(GL_RENDERBUFFER, 0);
         }
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     void RenderTarget::create(unsigned width, unsigned height, DepthType depth, RenderTargetType rt_type, bool use_filtering)
@@ -152,8 +149,6 @@ namespace Vertex
             glTexParameterfv(m_type, GL_TEXTURE_BORDER_COLOR, border_color);
 
             glTexStorage2D(m_type, 1 /* levels */, depth_format, m_width, m_height);
-
-            glBindTexture(m_type, 0);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_type, m_to_id, 0);
         }
 
@@ -164,13 +159,13 @@ namespace Vertex
             glTexParameteri(m_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
             glTexStorage2D(m_type, 1 /* levels */, depth_format, m_width, m_height);
-
-            glBindTexture(m_type, 0);
-            glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_to_id, 0);            
+            glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_to_id, 0);
         }
 
         glDrawBuffer(GL_NONE);
         glReadBuffer(GL_NONE);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     void RenderTarget::bind() const

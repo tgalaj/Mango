@@ -78,8 +78,8 @@ namespace Vertex
         }
 
         m_to_type = GL_TEXTURE_CUBE_MAP;
-        m_format = GL_BGRA;
-        m_internal_format = is_srgb ? GL_SRGB8_ALPHA8 : GL_RGB8;
+        m_format = GL_RGBA;
+        m_internal_format = is_srgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
 
         /* Generate GL texture object */
         glCreateTextures(m_to_type, 1, &m_to_id);

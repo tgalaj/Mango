@@ -1,3 +1,4 @@
+#version 450
 in vec3 o_texcoord;
 
 out vec4 fragcolor;

@@ -6,6 +6,7 @@
 #include "framework/rendering/Shader.h"
 #include "framework/rendering/PostprocessEffect.h"
 #include "framework/rendering/RenderTarget.h"
+#include "framework/rendering/Skybox.h"
 
 namespace Vertex
 {
@@ -18,6 +19,7 @@ namespace Vertex
         void update(entityx::EntityManager& entities, entityx::EventManager& events, entityx::TimeDelta dt) override;
 
         void receive(const entityx::ComponentAddedEvent<CameraComponent> & component);
+        void setSkybox(const std::shared_ptr<Skybox> & skybox);
 
         entityx::ComponentHandle<TransformComponent> getCameraTransform();
         entityx::ComponentHandle<CameraComponent> getCamera();
@@ -46,6 +48,8 @@ namespace Vertex
         std::shared_ptr<RenderTarget> m_spot_shadow_map;
         std::shared_ptr<RenderTarget> m_omni_shadow_map;
 
+        std::shared_ptr<Skybox> m_default_skybox;
+
         entityx::Entity m_main_camera;
 
         static void initRenderingStates();
@@ -61,7 +65,6 @@ namespace Vertex
         void renderDebug(entityx::EntityManager & entities);
 
         void renderAll(entityx::EntityManager & entities, const std::shared_ptr<Shader> & shader);
-        void renderAllForward(entityx::EntityManager & entities, const std::shared_ptr<Shader> & shader);
         void renderLights(entityx::EntityManager & entities);
     };
 }

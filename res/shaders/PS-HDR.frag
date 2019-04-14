@@ -5,18 +5,21 @@ out vec4 fragColor;
 
 layout(binding = 0) uniform sampler2D filterTexture;
 
-const float gamma    = 1.6f;
+const float gamma    = 2.4f;
 const float exposure = 1.0f;
 
 void main()
 {
-    vec3 ldr_color = texture(filterTexture, texcoord).rgb;
+    vec3 hdr_color = texture(filterTexture, texcoord).rgb;
 
     /* Exposure tone mapping */
-    vec3 hdr_color = vec3(1.0f) - exp(-ldr_color * exposure);
+    vec3 result = vec3(1.0f) - exp(-hdr_color * exposure);
+	
+	/* Reinhard tone mapping */
+	//vec3 result = hdr_color / (vec3(1.0f) + hdr_color);
 
     /* Gamma correction */
-    hdr_color = pow(hdr_color, vec3(1.0f / gamma));
+    result = pow(result, vec3(1.0f / gamma));
 
-	fragColor = vec4(hdr_color, 1.0f);
+	fragColor = vec4(result, 1.0f);
 }

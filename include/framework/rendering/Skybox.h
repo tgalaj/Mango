@@ -1,8 +1,7 @@
 #pragma once
 
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
 
-#include "core_components/CameraComponent.h"
 #include "core_engine/CoreAssetManager.h"
 #include "Texture.h"
 
@@ -10,30 +9,36 @@ namespace Vertex
 {
     class Skybox
     {
-        friend class Renderer;
-
-    private:
-        Skybox();
+    public:
+        /*
+         * Creates skybox object.
+         * @param skybox_directory absolute or relative directory where skybox image faces are stored.
+         * @param left_face  filename of the left  side [+x] of the cubemap
+         * @param right_face filename of the right side [-x] of the cubemap
+         * @param up_face    filename of the up    side [+y] of the cubemap
+         * @param down_face  filename of the down  side [-y] of the cubemap
+         * @param front_face filename of the front side [+z] of the cubemap
+         * @param back_face  filename of the back  side [-z] of the cubemap
+         */
+        Skybox(const std::string & skybox_directory,
+               const std::string & left_face,
+               const std::string & right_face,
+               const std::string & up_face,
+               const std::string & down_face,
+               const std::string & front_face,
+               const std::string & back_face);
         ~Skybox();
 
-        void render(Shader * shader, CameraComponent * cam);
-        void loadImages(std::string * filenames);
+        void render(const glm::mat4 & projection, const glm::mat4 & view);
 
-        void setSize(float _size)
-        {
-            m_size = _size;
-            m_world = glm::scale(glm::mat4(1.0f), glm::vec3(m_size));
-        }
-
+    private:
         glm::mat4 m_world;
 
         GLuint m_vao_id;
-        GLuint m_vbo_ids[2];
-        GLuint m_indices_count;
+        GLuint m_vbo_id;
 
-        Texture * m_cube_map;
-
-        float m_size;
+        std::shared_ptr<Shader>  m_skybox_shader;
+        std::shared_ptr<Texture> m_cube_map_texture;
     };
 }
 

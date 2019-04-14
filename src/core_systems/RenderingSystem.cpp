@@ -83,6 +83,11 @@ namespace Vertex
         }
     }
 
+    void RenderingSystem::setSkybox(const std::shared_ptr<Skybox>& skybox)
+    {
+        m_default_skybox = skybox;
+    }
+
     entityx::ComponentHandle<TransformComponent> RenderingSystem::getCameraTransform()
     {
         return m_main_camera.component<TransformComponent>();
@@ -138,13 +143,11 @@ namespace Vertex
             dst->get()->bind();
         }
 
-        glClear(GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         effect->bind();
         src->get()->bindTexture();
         effect->render();
-
-        src->get()->releaseTexture();
     }
 
     void RenderingSystem::render(entityx::EntityManager & entities)
@@ -158,6 +161,15 @@ namespace Vertex
         renderAll(entities, m_forward_ambient);
 
         renderLights(entities);
+
+        /* Render skybox */
+        /* Skybox should be the RenderingSystem's object to ensure that it can be created only one instance of the skybox.
+         * RenderingSystem should expose method? parameter? something? to give user a possibility of creating the skybox.
+         */
+        if (m_default_skybox != nullptr)
+        {
+            m_default_skybox->render(getCamera()->m_projection, getCamera()->m_view);
+        }
 
         /* Apply postprocess effect */
         applyPostprocess(m_hdr_filter, &m_main_render_target, 0);
@@ -199,22 +211,15 @@ namespace Vertex
         });
     }
 
-    void RenderingSystem::renderAllForward(entityx::EntityManager & entities, const std::shared_ptr<Shader>& shader)
-    {
-        beginForwardRendering();
-
-        entities.each<ModelRendererComponent, TransformComponent>(
-        [this, &shader](entityx::Entity entity, ModelRendererComponent & model_renderer, TransformComponent & transform)
-        {
-            shader->updateGlobalUniforms(transform);
-            model_renderer.m_model.render(*shader);
-        });
-
-        endForwardRendering();
-    }
-
     void RenderingSystem::renderLights(entityx::EntityManager & entities)
     {
+        /*
+         * TODO:
+         * Transform shadow info into light component;
+         * Sort lights based on the parameter if light casts shadows or not;
+         * Then render lights with shadows and then lights without shadows;
+         */
+
         entityx::ComponentHandle<DirectionalLightComponent> directional_light;
         entityx::ComponentHandle<PointLightComponent>       point_light;
         entityx::ComponentHandle<SpotLightComponent>        spot_light;
@@ -250,7 +255,9 @@ namespace Vertex
             m_forward_directional->setUniform(S_DIRECTIONAL_LIGHT ".direction",      transform->direction());
             m_forward_directional->setUniform("s_light_matrix", light_matrix);
 
-            renderAllForward(entities, m_forward_directional);
+            beginForwardRendering();
+            renderAll(entities, m_forward_directional);
+            endForwardRendering();
         }
 
         for (auto entity : entities.entities_with_components(point_light, transform))
@@ -295,7 +302,9 @@ namespace Vertex
             m_forward_point->setUniform(S_POINT_LIGHT ".range",           point_light->m_range);
             m_forward_point->setUniform("s_far_plane", 100.0f);
 
-            renderAllForward(entities, m_forward_point);
+            beginForwardRendering();
+            renderAll(entities, m_forward_point);
+            endForwardRendering();
         }
 
         for (auto entity : entities.entities_with_components(spot_light, transform))
@@ -334,7 +343,9 @@ namespace Vertex
             m_forward_spot->setUniform(S_SPOT_LIGHT ".cutoff",                spot_light->getCutOffAngle());
             m_forward_spot->setUniform("s_light_matrix", light_matrix);
 
-            renderAllForward(entities, m_forward_spot);
+            beginForwardRendering();
+            renderAll(entities, m_forward_spot);
+            endForwardRendering();
         }
     }
 }
