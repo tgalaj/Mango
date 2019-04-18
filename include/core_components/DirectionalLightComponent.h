@@ -9,10 +9,9 @@ namespace Vertex
     class DirectionalLightComponent : public BaseLightComponent
     {
     public:
-        DirectionalLightComponent(const glm::vec3 & color, float intensity)
+        DirectionalLightComponent(const glm::vec3 & color, float intensity, float size = 20.0f)
             : BaseLightComponent(color, intensity)
         {
-            float size = 20.0f;
             setShadowInfo(ShadowInfo(glm::ortho(-size, size, -size, size, -size, size), true));
         }
 

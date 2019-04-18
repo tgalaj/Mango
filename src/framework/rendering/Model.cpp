@@ -21,7 +21,15 @@ namespace Vertex
     {
         Assimp::Importer importer;
 
-        unsigned int flags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_CalcTangentSpace;
+        unsigned int flags = aiProcess_Triangulate              | 
+                             aiProcess_GenSmoothNormals         | 
+                             aiProcess_CalcTangentSpace         | 
+                             aiProcess_FlipUVs                  | 
+                             aiProcess_OptimizeGraph            | 
+                             aiProcess_PreTransformVertices     | 
+                             aiProcess_RemoveRedundantMaterials | 
+                             aiProcess_ImproveCacheLocality     | 
+                             aiProcess_JoinIdenticalVertices;
         const aiScene * scene = importer.ReadFile(filename, flags);
 
         if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -116,7 +124,7 @@ namespace Vertex
                 fullPath.Append("/");
                 fullPath.Append(str.C_Str());
 
-                auto texture = CoreAssetManager::createTexture2D(fullPath.C_Str(), type == aiTextureType_DIFFUSE ? true : false);
+                auto texture = CoreAssetManager::createTexture2D(fullPath.C_Str(), type == aiTextureType_DIFFUSE);
                 mesh.m_material.addTexture(texture_type, texture);
             }
         }

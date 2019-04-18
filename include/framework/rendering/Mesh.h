@@ -18,8 +18,8 @@ namespace Vertex
             glm::vec3 m_tangent;
         };
 
-        std::vector<Vertex>    m_vertices;
-        std::vector<GLushort>  m_indices;
+        std::vector<Vertex>  m_vertices;
+        std::vector<GLuint>  m_indices;
     };
 
     struct MeshData

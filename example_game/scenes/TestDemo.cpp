@@ -27,35 +27,33 @@ TestDemo::~TestDemo()
 void TestDemo::init()
 {
     auto camera = Vertex::CoreAssetManager::createGameObject();
-    camera.addComponent<Vertex::CameraComponent>(45.0f, Vertex::Window::getAspectRatio(), 0.001f, 100.0f);
+    camera.addComponent<Vertex::CameraComponent>(45.0f, Vertex::Window::getAspectRatio(), 0.001f, 500.0f);
     camera.addComponent<Vertex::FreeLookComponent>();
     camera.addComponent<Vertex::FreeMoveComponent>();
     camera.setPosition(0, 4, 30);
 
-    auto skybox = std::make_shared<Vertex::Skybox>("res/skyboxes/stormydays/",
+    /*auto skybox = std::make_shared<Vertex::Skybox>("res/skyboxes/stormydays/",
                                                    "stormydays_lf.tga",
                                                    "stormydays_rt.tga",
                                                    "stormydays_up.tga", 
                                                    "stormydays_dn.tga", 
                                                    "stormydays_ft.tga", 
-                                                   "stormydays_bk.tga" );
-    //auto skybox = std::make_shared<Vertex::Skybox>("res/skyboxes/cold/",
-    //                                               "right.jpg",
-    //                                               "left.jpg",
-    //                                               "top.jpg", 
-    //                                               "bottom.jpg", 
-    //                                               "front.jpg", 
-    //                                               "back.jpg" );
+                                                   "stormydays_bk.tga" );*/
+    auto skybox = std::make_shared<Vertex::Skybox>("res/skyboxes/cold/",
+                                                   "right.jpg",
+                                                   "left.jpg",
+                                                   "top.jpg", 
+                                                   "bottom.jpg", 
+                                                   "front.jpg", 
+                                                   "back.jpg" );
     Vertex::CoreServices::getRenderer()->setSkybox(skybox);
 
-    auto cone_model = Vertex::CoreAssetManager::createModel();
-    cone_model.genSphere(0.5f, 24);
+    auto sphere_model = Vertex::CoreAssetManager::createModel();
+    sphere_model.genSphere(0.5f, 24);
 
-    float plane_size = 30;
-    auto plane_model = Vertex::CoreAssetManager::createModel();
-    plane_model.genPlane(plane_size, plane_size);
-
-    auto nanosuit_model = Vertex::CoreAssetManager::createModel("res/models/nanosuit/nanosuit.obj");
+    auto cyborg_model = Vertex::CoreAssetManager::createModel("res/models/cyborg/cyborg.obj");
+    auto damaged_helmet_model = Vertex::CoreAssetManager::createModel("res/models/damaged_helmet/DamagedHelmet.gltf");
+    auto sponza_model = Vertex::CoreAssetManager::createModel("res/models/sponza/Sponza.gltf");
 
     auto wall_model = Vertex::CoreAssetManager::createModel();
     wall_model.genPlane(5, 5, 1, 1);
@@ -67,15 +65,21 @@ void TestDemo::init()
     auto bricks2_depth        = Vertex::CoreAssetManager::createTexture2D("res/textures/bricks2_disp.jpg");
     auto bricks2_normal       = Vertex::CoreAssetManager::createTexture2D("res/textures/bricks2_normal.jpg");
 
-    auto ground = Vertex::CoreAssetManager::createGameObject();
-    ground.addComponent<Vertex::ModelRendererComponent>(plane_model);
-    ground.setPosition(0.0f, -0.5f, 0.0f);
-    ground.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DIFFUSE, ground_tex);
+    auto cyborg = Vertex::CoreAssetManager::createGameObject();
+    cyborg.addComponent<Vertex::ModelRendererComponent>(cyborg_model);
+    cyborg.setPosition(0.0f, 0.0f, 0.0f);
+    cyborg.setScale(1.0f);
 
-    auto nanobot = Vertex::CoreAssetManager::createGameObject();
-    nanobot.addComponent<Vertex::ModelRendererComponent>(nanosuit_model);
-    nanobot.setPosition(0.0f, -0.5f, 0.0f);
-    nanobot.setScale(0.25f);
+    auto damaged_helmet = Vertex::CoreAssetManager::createGameObject();
+    damaged_helmet.addComponent<Vertex::ModelRendererComponent>(damaged_helmet_model);
+    damaged_helmet.setPosition(3.0f, 2.5f, 0.0f);
+    damaged_helmet.setScale(1.0f);
+
+    auto sponza = Vertex::CoreAssetManager::createGameObject();
+    sponza.addComponent<Vertex::ModelRendererComponent>(sponza_model);
+    sponza.setPosition(-1.5f, 0.0f, 10.0f);
+    sponza.setOrientation(0.0f, -90.0f, 0.0f);
+    sponza.setScale(6.0f);
 
     auto wall = Vertex::CoreAssetManager::createGameObject();
     wall.addComponent<Vertex::ModelRendererComponent>(wall_model);
@@ -97,22 +101,22 @@ void TestDemo::init()
     plane1.addComponent<Vertex::ModelRendererComponent>(wall_model);
     plane1.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DIFFUSE, bricks2);
     plane1.setOrientation(90.0f, 0.0f, 0.0f);
-    plane1.setPosition(-10, 15.0, -9);
+    plane1.setPosition(5, 3.0, -14);
 
     auto plane2 = Vertex::CoreAssetManager::createGameObject();
     plane2.addComponent<Vertex::ModelRendererComponent>(wall_model);
     plane2.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DIFFUSE, bricks2);
     plane2.setOrientation(0.0f, 0.0f, 0.0f);
-    plane2.setPosition(-10, 12.5, -6.5);
+    plane2.setPosition(5, 0.5, -11.5);
 
     auto sphere1 = Vertex::CoreAssetManager::createGameObject();
-    sphere1.addComponent<Vertex::ModelRendererComponent>(cone_model);
-    sphere1.setPosition(-10, 14, -6.5);
+    sphere1.addComponent<Vertex::ModelRendererComponent>(sphere_model);
+    sphere1.setPosition(5, 2, -11.5);
     sphere1.setScale(0.5f);
 
     auto sphere2 = Vertex::CoreAssetManager::createGameObject();
-    sphere2.addComponent<Vertex::ModelRendererComponent>(cone_model);
-    sphere2.setPosition(-10, 15, -7.5);
+    sphere2.addComponent<Vertex::ModelRendererComponent>(sphere_model);
+    sphere2.setPosition(5, 3, -12.5);
     sphere2.setScale(0.5f);
 
     auto point_light1 = Vertex::CoreAssetManager::createGameObject();
@@ -122,28 +126,29 @@ void TestDemo::init()
     point_light1.setPosition(-10, 15, -6.5);
     
     auto plight = Vertex::CoreAssetManager::createGameObject();
-    plight.addComponent<Vertex::ModelRendererComponent>(cone_model);
+    plight.addComponent<Vertex::ModelRendererComponent>(sphere_model);
     plight.setPosition(-10, 15, -6.5);
     plight.setScale(0.25f);
 
-    float offset = plane_size / 10.0f;
+    float offset = 15.0f / 10.0f;
     float num_objects = 10;
 
     for(int i = 0; i < num_objects; ++i)
     {
-        float pos_x = plane_size / -2.0f + (i * offset);
+        float pos_x = 15.0f / -2.0f + (i * offset);
 
         for(int j = 0; j < num_objects; ++j)
         {
             auto object = Vertex::CoreAssetManager::createGameObject();
-            object.addComponent<Vertex::ModelRendererComponent>(cone_model);
+            object.addComponent<Vertex::ModelRendererComponent>(sphere_model);
+            object.setScale(0.75f);
             
-            float pos_z = plane_size / -2.0f + (j * offset);
+            float pos_z = 15.0f / -2.0f + (j * offset);
             object.setPosition(pos_x + 0.5f * offset, 0.5f, pos_z + 0.5f * offset);
 
             if (i == 2 && j == 2)
             {
-                nanobot.addChild(object);
+                cyborg.addChild(object);
                 //object.setScale(4.0f);
             }
         }
@@ -151,7 +156,7 @@ void TestDemo::init()
 
     /* Lights */
     auto dir_light = Vertex::CoreAssetManager::createGameObject();
-    dir_light.addComponent<Vertex::DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+    dir_light.addComponent<Vertex::DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 70.0f);
     dir_light.setOrientation(-45.0f, 180.0f, 0.0f);
 
     float d = 8;

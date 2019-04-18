@@ -65,6 +65,6 @@ namespace Vertex
     void Mesh::render() const
     {        
         glBindVertexArray(m_mesh_data->m_vao_id);
-        glDrawElements(m_mesh_data->m_draw_mode, m_mesh_data->m_indices_count, GL_UNSIGNED_SHORT, nullptr);
+        glDrawElements(m_mesh_data->m_draw_mode, m_mesh_data->m_indices_count, GL_UNSIGNED_INT, nullptr);
     }
 }
