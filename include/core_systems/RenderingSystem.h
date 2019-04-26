@@ -3,6 +3,7 @@
 
 #include "core_components/CameraComponent.h"
 #include "core_components/TransformComponent.h"
+#include "core_components/ModelRendererComponent.h"
 #include "framework/rendering/Shader.h"
 #include "framework/rendering/PostprocessEffect.h"
 #include "framework/rendering/RenderTarget.h"
@@ -14,11 +15,15 @@ namespace Vertex
     {
     public:
         RenderingSystem();
+        ~RenderingSystem();
 
         void configure(entityx::EntityManager& entities, entityx::EventManager& events) override;
         void update(entityx::EntityManager& entities, entityx::EventManager& events, entityx::TimeDelta dt) override;
 
-        void receive(const entityx::ComponentAddedEvent<CameraComponent> & component);
+        void receive(const entityx::ComponentAddedEvent<CameraComponent> & event);
+        void receive(const entityx::ComponentAddedEvent<ModelRendererComponent>& event);
+        void receive(const entityx::ComponentRemovedEvent<ModelRendererComponent>& event);
+
         void setSkybox(const std::shared_ptr<Skybox> & skybox);
 
         entityx::ComponentHandle<TransformComponent> getCameraTransform();
@@ -32,12 +37,16 @@ namespace Vertex
     private:
         enum TextureMaps { SHADOW_MAP = 5 };
 
+        std::vector<entityx::Entity> m_opaque_queue;
+        std::vector<entityx::Entity> m_alpha_queue;
+
         std::shared_ptr<Shader> m_forward_ambient;
         std::shared_ptr<Shader> m_forward_directional;
         std::shared_ptr<Shader> m_forward_point;
         std::shared_ptr<Shader> m_forward_spot;
         std::shared_ptr<Shader> m_shadow_map_generator;
         std::shared_ptr<Shader> m_omni_shadow_map_generator;
+        std::shared_ptr<Shader> m_blending_shader;
 
         std::shared_ptr<Shader> m_debug_rendering;
 
@@ -61,10 +70,13 @@ namespace Vertex
 
         void applyPostprocess(std::shared_ptr<PostprocessEffect> & effect, std::shared_ptr<RenderTarget> * src, std::shared_ptr<RenderTarget> * dst);
 
-        void render(entityx::EntityManager & entities);
-        void renderDebug(entityx::EntityManager & entities);
+        void render(entityx::EntityManager& entities);
+        void renderDebug();
 
-        void renderAll(entityx::EntityManager & entities, const std::shared_ptr<Shader> & shader);
-        void renderLights(entityx::EntityManager & entities);
+        void renderOpaque(const std::shared_ptr<Shader> & shader);
+        void renderAlpha(const std::shared_ptr<Shader>& shader);
+        void renderLights(entityx::EntityManager& entities);
+
+        void sortAlpha();
     };
 }

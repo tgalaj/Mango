@@ -5,7 +5,7 @@
 #include "game_logic/BaseGame.h"
 
 #define MIN_GL_VERSION_MAJOR 4
-#define MIN_GL_VERSION_MINOR 5
+#define MIN_GL_VERSION_MINOR 6
 
 namespace Vertex
 {

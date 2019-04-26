@@ -5,11 +5,11 @@ namespace Vertex
 {
     std::map<Material::TextureType, std::string> Material::m_texture_uniform_map
     {
-        { TextureType::DIFFUSE,  "diffuse_map"  },
-        { TextureType::SPECULAR, "specular_map" },
-        { TextureType::NORMAL,   "normal_map"   },
-        { TextureType::EMISSION, "emission_map" },
-        { TextureType::DEPTH,    "depth_map"    },
+        { TextureType::DIFFUSE,              "diffuse_map"  },
+        { TextureType::SPECULAR,             "specular_map" },
+        { TextureType::NORMAL,               "normal_map"   },
+        { TextureType::EMISSION,             "emission_map" },
+        { TextureType::DEPTH,                "depth_map"    },
     };
 
     Material::Material()
@@ -17,6 +17,9 @@ namespace Vertex
         addFloat("specular_power", 20.0f);
         addFloat("specular_intensity", 5.0f);
         addFloat("m_depth_scale", 0.015f);
+        addFloat("alpha_cutoff", 0.2f);
+
+        m_blend_mode = BlendMode::NONE;
     }
 
 

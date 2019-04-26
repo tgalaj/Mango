@@ -27,7 +27,7 @@ TestDemo::~TestDemo()
 void TestDemo::init()
 {
     auto camera = Vertex::CoreAssetManager::createGameObject();
-    camera.addComponent<Vertex::CameraComponent>(45.0f, Vertex::Window::getAspectRatio(), 0.001f, 500.0f);
+    camera.addComponent<Vertex::CameraComponent>(45.0f, Vertex::Window::getAspectRatio(), 0.1f, 500.0f);
     camera.addComponent<Vertex::FreeLookComponent>();
     camera.addComponent<Vertex::FreeMoveComponent>();
     camera.setPosition(0, 4, 30);
@@ -52,6 +52,7 @@ void TestDemo::init()
     sphere_model.genSphere(0.5f, 24);
 
     auto cyborg_model = Vertex::CoreAssetManager::createModel("res/models/cyborg/cyborg.obj");
+    auto zen3c_model = Vertex::CoreAssetManager::createModel("res/models/Zen3C/Zen3C.X");
     auto damaged_helmet_model = Vertex::CoreAssetManager::createModel("res/models/damaged_helmet/DamagedHelmet.gltf");
     auto sponza_model = Vertex::CoreAssetManager::createModel("res/models/sponza/Sponza.gltf");
 
@@ -64,11 +65,18 @@ void TestDemo::init()
     auto bricks2              = Vertex::CoreAssetManager::createTexture2D("res/textures/bricks2.jpg", true);
     auto bricks2_depth        = Vertex::CoreAssetManager::createTexture2D("res/textures/bricks2_disp.jpg");
     auto bricks2_normal       = Vertex::CoreAssetManager::createTexture2D("res/textures/bricks2_normal.jpg");
+    auto window_tex           = Vertex::CoreAssetManager::createTexture2D("res/textures/window.png");
+    auto grass_tex            = Vertex::CoreAssetManager::createTexture2D("res/textures/grass.png");
 
     auto cyborg = Vertex::CoreAssetManager::createGameObject();
     cyborg.addComponent<Vertex::ModelRendererComponent>(cyborg_model);
     cyborg.setPosition(0.0f, 0.0f, 0.0f);
     cyborg.setScale(1.0f);
+
+    auto zen3c = Vertex::CoreAssetManager::createGameObject();
+    zen3c.addComponent<Vertex::ModelRendererComponent>(zen3c_model);
+    zen3c.setPosition(-3.0f, -2.3f, 0.0f);
+    zen3c.setScale(0.018f);
 
     auto damaged_helmet = Vertex::CoreAssetManager::createGameObject();
     damaged_helmet.addComponent<Vertex::ModelRendererComponent>(damaged_helmet_model);
@@ -96,6 +104,35 @@ void TestDemo::init()
     wall2.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DEPTH, bricks2_depth);
     wall2.setOrientation(90.0f, 0.0f, 0.0f);
     wall2.setPosition(-5, 2.0, -9);
+
+    auto grass = Vertex::CoreAssetManager::createGameObject();
+    grass.addComponent<Vertex::ModelRendererComponent>(wall_model);
+    grass.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DIFFUSE, grass_tex);
+    grass.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addFloat("alpha_cutoff", 0.1f);
+    grass.setOrientation(90.0f, 0.0f, 0.0f);
+    grass.setPosition(-5, 1.2, 9);
+    grass.setScale(0.5);
+
+    auto window1 = Vertex::CoreAssetManager::createGameObject();
+    window1.addComponent<Vertex::ModelRendererComponent>(wall_model, Vertex::ModelRendererComponent::RenderQueue::RQ_ALPHA);
+    window1.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DIFFUSE, window_tex);
+    window1.setOrientation(90.0f, 0.0f, 0.0f);
+    window1.setPosition(0, 1.2, 9);
+    window1.setScale(0.51);
+
+    auto window3 = Vertex::CoreAssetManager::createGameObject();
+    window3.addComponent<Vertex::ModelRendererComponent>(wall_model, Vertex::ModelRendererComponent::RenderQueue::RQ_ALPHA);
+    window3.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DIFFUSE, window_tex);
+    window3.setOrientation(90.0f, 0.0f, 0.0f);
+    window3.setPosition(3, 1.2, 13);
+    window3.setScale(0.5);
+
+    auto window2 = Vertex::CoreAssetManager::createGameObject();
+    window2.addComponent<Vertex::ModelRendererComponent>(wall_model, Vertex::ModelRendererComponent::RenderQueue::RQ_ALPHA);
+    window2.getComponent<Vertex::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(Vertex::Material::TextureType::DIFFUSE, window_tex);
+    window2.setOrientation(90.0f, 0.0f, 0.0f);
+    window2.setPosition(5, 1.2, 9);
+    window2.setScale(0.5);
 
     auto plane1 = Vertex::CoreAssetManager::createGameObject();
     plane1.addComponent<Vertex::ModelRendererComponent>(wall_model);
@@ -156,7 +193,7 @@ void TestDemo::init()
 
     /* Lights */
     auto dir_light = Vertex::CoreAssetManager::createGameObject();
-    dir_light.addComponent<Vertex::DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 70.0f);
+    dir_light.addComponent<Vertex::DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 200.0f);
     dir_light.setOrientation(-45.0f, 180.0f, 0.0f);
 
     float d = 8;

@@ -27,9 +27,9 @@ namespace Vertex
     #define S_SPOT_LIGHT        "s_spot_light"
 
     /* Textures */
-    #define M_TEXTURE_DIFFUSE  "m_texture_diffuse"
-    #define M_TEXTURE_SPECULAR "m_texture_specular"
-    #define M_TEXTURE_NORMAL   "m_texture_normal"
-    #define M_TEXTURE_EMISSION "m_texture_emission"
-    #define M_TEXTURE_DEPTH    "m_texture_depth"
+    #define M_TEXTURE_DIFFUSE              "m_texture_diffuse"
+    #define M_TEXTURE_SPECULAR             "m_texture_specular"
+    #define M_TEXTURE_NORMAL               "m_texture_normal"
+    #define M_TEXTURE_EMISSION             "m_texture_emission"
+    #define M_TEXTURE_DEPTH                "m_texture_depth"
 }

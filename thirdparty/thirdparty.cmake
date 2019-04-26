@@ -9,10 +9,6 @@ find_path(ASSIMP_INCLUDE_DIR "assimp/mesh.h" "/usr/include" "/usr/local/include"
 if((NOT ASSIMP_LIBRARY) OR (NOT ASSIMP_INCLUDE_DIR))
 	set(ASSIMP_DIR "${THIRDPARTY_DIR}/assimp")
 	
-	message("Unable to find assimp, cloning...")
-    execute_process(COMMAND git submodule update --init ${ASSIMP_DIR}
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-
 	set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "Build package with shared libraries.")
 	set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE INTERNAL "If the supplementary tools for Assimp are built in addition to the library.")
 	set(ASSIMP_BUILD_TESTS OFF CACHE INTERNAL "If the test suite for Assimp is built in addition to the library.")
@@ -29,10 +25,6 @@ find_path(ENTITYX_INCLUDE_DIR "entityx/entityx.h" "/usr/include" "/usr/local/inc
 
 if((NOT ENTITYX_LIBRARY) OR (NOT ENTITYX_INCLUDE_DIR))
 	set(ENTITYX_DIR "${THIRDPARTY_DIR}/entityx")
-	
-	message("Unable to find entityx, cloning...")
-    execute_process(COMMAND git submodule update --init ${ENTITYX_DIR}
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 	set(ENTITYX_BUILD_SHARED FALSE CACHE INTERNAL "Build shared libraries?")
 	set(ENTITYX_BUILD_TESTING FALSE CACHE INTERNAL "Enable building of tests.")
@@ -51,10 +43,6 @@ find_path(GLFW_INCLUDE_DIR "glfw/glfw.h" "/usr/include" "/usr/local/include")
 
 if((NOT GLFW_LIBRARY) OR (NOT GLFW_INCLUDE_DIR))
 	set(GLFW_DIR "${THIRDPARTY_DIR}/glfw")
-
-	message("Unable to find glfw, cloning...")
-    execute_process(COMMAND git submodule update --init ${GLFW_DIR}
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 	set(GLFW_BUILD_EXAMPLES OFF CACHE INTERNAL "Build the GLFW example programs")
 	set(GLFW_BUILD_TESTS    OFF CACHE INTERNAL "Build the GLFW test programs")

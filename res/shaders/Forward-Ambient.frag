@@ -12,6 +12,7 @@ layout(binding = 4) uniform sampler2D m_texture_depth;
 
 uniform vec3 s_scene_ambient;
 uniform vec3 g_cam_pos;
+uniform float alpha_cutoff;
 
 #include "ParallaxMapping.glh"
 
@@ -19,6 +20,12 @@ void main()
 {
     vec3 dir_to_eye = normalize(g_cam_pos - world_pos) * tbn;
     vec2 parallax_texcoord = parallaxMapping(dir_to_eye);
+	vec4 texture_color = texture(m_texture_diffuse, parallax_texcoord);
 
-    frag_color = texture(m_texture_diffuse, parallax_texcoord) * vec4(s_scene_ambient, 1.0f);
+	if(texture_color.a < alpha_cutoff)
+	{
+		discard;
+	}
+
+    frag_color = texture_color * vec4(s_scene_ambient, 1.0f);
 }

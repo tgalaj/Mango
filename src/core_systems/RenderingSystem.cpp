@@ -6,7 +6,6 @@
 #include "core_engine/CoreAssetManager.h"
 #include "core_engine/CoreServices.h"
 #include "framework/window/Window.h"
-#include "core_components/ModelRendererComponent.h"
 #include "core_components/DirectionalLightComponent.h"
 #include "core_components/PointLightComponent.h"
 #include "core_components/SpotLightComponent.h"
@@ -18,10 +17,21 @@ namespace Vertex
     unsigned int RenderingSystem::M_DEBUG_WINDOW_WIDTH = 0;
 
     RenderingSystem::RenderingSystem() {}
+    
+    RenderingSystem::~RenderingSystem() 
+    {
+        m_opaque_queue.clear();
+        m_alpha_queue.clear();
+    }
 
     void RenderingSystem::configure(entityx::EntityManager & entities, entityx::EventManager & events)
     {
         events.subscribe<entityx::ComponentAddedEvent<CameraComponent>>(*this);
+        events.subscribe<entityx::ComponentAddedEvent<ModelRendererComponent>>(*this);
+        events.subscribe<entityx::ComponentRemovedEvent<ModelRendererComponent>>(*this);
+
+        m_opaque_queue.reserve(50);
+        m_alpha_queue.reserve(5);
 
         m_forward_ambient = CoreAssetManager::createShader("Forward-Ambient", "Forward-Light.vert", "Forward-Ambient.frag");
         m_forward_ambient->link();
@@ -43,6 +53,9 @@ namespace Vertex
 
         m_omni_shadow_map_generator = CoreAssetManager::createShader("Omni-Shadow-Map-Gen", "Omni-Shadow-Map-Gen.vert", "Omni-Shadow-Map-Gen.frag", "Omni-Shadow-Map-Gen.geom");
         m_omni_shadow_map_generator->link();
+
+        m_blending_shader = CoreAssetManager::createShader("Blending-Shader", "Blending.vert", "Blending.frag");
+        m_blending_shader->link();
 
         M_DEBUG_WINDOW_WIDTH = Window::getWidth() / 5.0f;
         m_scene_ambient_color = glm::vec3(0.18f);
@@ -71,7 +84,7 @@ namespace Vertex
 
         if (M_DEBUG_RENDERING)
         {
-            renderDebug(entities);
+            renderDebug();
         }
     }
 
@@ -80,6 +93,42 @@ namespace Vertex
         if (!m_main_camera)
         {
             m_main_camera = event.entity;
+        }
+    }
+
+    void RenderingSystem::receive(const entityx::ComponentAddedEvent<ModelRendererComponent>& event)
+    {
+        switch (event.component->getRenderQueue())
+        {
+        case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
+            m_opaque_queue.push_back(event.entity);
+            break;
+        case ModelRendererComponent::RenderQueue::RQ_ALPHA:
+            m_alpha_queue.push_back(event.entity);
+            break;
+        }
+    }
+
+    void RenderingSystem::receive(const entityx::ComponentRemovedEvent<ModelRendererComponent>& event)
+    {
+        std::vector<entityx::Entity>::iterator entity_it;
+
+        switch (event.component->getRenderQueue())
+        {
+        case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
+            entity_it = std::find(m_opaque_queue.begin(), m_opaque_queue.end(), event.entity);
+            if (entity_it != m_opaque_queue.end())
+            {
+                m_opaque_queue.erase(entity_it);
+            }
+            break;
+        case ModelRendererComponent::RenderQueue::RQ_ALPHA:
+            entity_it = std::find(m_alpha_queue.begin(), m_alpha_queue.end(), event.entity);
+            if (entity_it != m_alpha_queue.end())
+            {
+                m_alpha_queue.erase(entity_it);
+            }
+            break;
         }
     }
 
@@ -105,13 +154,13 @@ namespace Vertex
 
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
 
         glClearColor(0, 0, 0, 1);
     }
 
     void RenderingSystem::beginForwardRendering()
     {
-        glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
         glDepthMask(GL_FALSE);
         glDepthFunc(GL_EQUAL);
@@ -121,7 +170,6 @@ namespace Vertex
     {
         glDepthMask(GL_TRUE);
         glDepthFunc(GL_LESS);
-        glDisable(GL_BLEND);
     }
 
     void RenderingSystem::bindMainRenderTarget()
@@ -150,7 +198,7 @@ namespace Vertex
         effect->render();
     }
 
-    void RenderingSystem::render(entityx::EntityManager & entities)
+    void RenderingSystem::render(entityx::EntityManager& entities)
     {
         /* Render everything to offscreen FBO */
         m_main_render_target->bind();
@@ -158,14 +206,21 @@ namespace Vertex
 
         m_forward_ambient->bind();
         m_forward_ambient->setUniform("s_scene_ambient", m_scene_ambient_color);
-        renderAll(entities, m_forward_ambient);
+        renderOpaque(m_forward_ambient);
 
         renderLights(entities);
 
+        /* Sort transparent objects back to front */
+        sortAlpha();
+
+        /* Render transparent objects */
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_CULL_FACE);
+        m_blending_shader->bind();
+        renderAlpha(m_blending_shader);
+        glEnable(GL_CULL_FACE);
+
         /* Render skybox */
-        /* Skybox should be the RenderingSystem's object to ensure that it can be created only one instance of the skybox.
-         * RenderingSystem should expose method? parameter? something? to give user a possibility of creating the skybox.
-         */
         if (m_default_skybox != nullptr)
         {
             m_default_skybox->render(getCamera()->m_projection, getCamera()->m_view);
@@ -175,43 +230,63 @@ namespace Vertex
         applyPostprocess(m_hdr_filter, &m_main_render_target, 0);
     }
 
-    void RenderingSystem::renderDebug(entityx::EntityManager & entities)
+    void RenderingSystem::renderDebug()
     {
         glClear(GL_DEPTH_BUFFER_BIT);
         m_debug_rendering->bind();
 
         m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugPositions");
         glViewport(M_DEBUG_WINDOW_WIDTH * 0, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        renderAll(entities, m_debug_rendering);
+        renderOpaque(m_debug_rendering);
 
         m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugNormals");
         glViewport(M_DEBUG_WINDOW_WIDTH * 1, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        renderAll(entities, m_debug_rendering);
+        renderOpaque(m_debug_rendering);
 
         m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugTexCoords");
         glViewport(M_DEBUG_WINDOW_WIDTH * 2, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        renderAll(entities, m_debug_rendering);
+        renderOpaque(m_debug_rendering);
 
         m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugDiffuse");
         glViewport(M_DEBUG_WINDOW_WIDTH * 3, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        renderAll(entities, m_debug_rendering);
+        renderOpaque(m_debug_rendering);
 
         m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugDepth");
         glViewport(M_DEBUG_WINDOW_WIDTH * 4, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        renderAll(entities, m_debug_rendering);
+        renderOpaque(m_debug_rendering);
     }
 
-    void RenderingSystem::renderAll(entityx::EntityManager & entities, const std::shared_ptr<Shader> & shader)
+    void RenderingSystem::renderOpaque(const std::shared_ptr<Shader> & shader)
     {
-        entities.each<ModelRendererComponent, TransformComponent>(
-        [this, &shader](entityx::Entity entity, ModelRendererComponent & model_renderer, TransformComponent & transform)
+        ModelRendererComponent* model_renderer;
+        TransformComponent* transform;
+
+        for (auto& entity : m_opaque_queue)
         {
-            shader->updateGlobalUniforms(transform);
-            model_renderer.m_model.render(*shader);
-        });
+            model_renderer = entity.component<ModelRendererComponent>().get();
+            transform      = entity.component<TransformComponent>().get();
+
+            shader->updateGlobalUniforms(*transform);
+            model_renderer->m_model.render(*shader);
+        }
     }
 
-    void RenderingSystem::renderLights(entityx::EntityManager & entities)
+    void RenderingSystem::renderAlpha(const std::shared_ptr<Shader>& shader)
+    {
+        ModelRendererComponent* model_renderer;
+        TransformComponent* transform;
+
+        for (auto& entity : m_alpha_queue)
+        {
+            model_renderer = entity.component<ModelRendererComponent>().get();
+            transform = entity.component<TransformComponent>().get();
+
+            shader->updateGlobalUniforms(*transform);
+            model_renderer->m_model.render(*shader);
+        }
+    }
+
+    void RenderingSystem::renderLights(entityx::EntityManager& entities)
     {
         /*
          * TODO:
@@ -241,7 +316,7 @@ namespace Vertex
                 m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
 
                 glCullFace(GL_FRONT);
-                renderAll(entities, m_shadow_map_generator);
+                renderOpaque(m_shadow_map_generator);
                 glCullFace(GL_BACK);
             }
 
@@ -256,7 +331,7 @@ namespace Vertex
             m_forward_directional->setUniform("s_light_matrix", light_matrix);
 
             beginForwardRendering();
-            renderAll(entities, m_forward_directional);
+            renderOpaque(m_forward_directional);
             endForwardRendering();
         }
 
@@ -284,7 +359,7 @@ namespace Vertex
                 m_omni_shadow_map_generator->setUniform("s_far_plane", 100.0f);
 
                 glCullFace(GL_FRONT);
-                renderAll(entities, m_omni_shadow_map_generator);
+                renderOpaque(m_omni_shadow_map_generator);
                 glCullFace(GL_BACK);
             }
 
@@ -303,7 +378,7 @@ namespace Vertex
             m_forward_point->setUniform("s_far_plane", 100.0f);
 
             beginForwardRendering();
-            renderAll(entities, m_forward_point);
+            renderOpaque(m_forward_point);
             endForwardRendering();
         }
 
@@ -323,7 +398,7 @@ namespace Vertex
                 m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
 
                 glCullFace(GL_FRONT);
-                renderAll(entities, m_shadow_map_generator);
+                renderOpaque(m_shadow_map_generator);
                 glCullFace(GL_BACK);
             }
 
@@ -344,8 +419,22 @@ namespace Vertex
             m_forward_spot->setUniform("s_light_matrix", light_matrix);
 
             beginForwardRendering();
-            renderAll(entities, m_forward_spot);
+            renderOpaque(m_forward_spot);
             endForwardRendering();
         }
+    }
+
+    void RenderingSystem::sortAlpha()
+    {
+        auto cam_pos = getCameraTransform()->position();
+
+        std::sort(m_alpha_queue.begin(), m_alpha_queue.end(), 
+                   [&cam_pos](entityx::Entity & obj1, entityx::Entity & obj2)
+                         {
+                            const auto pos1 = obj1.component<TransformComponent>()->position();
+                            const auto pos2 = obj2.component<TransformComponent>()->position();
+
+                            return glm::length(cam_pos - pos1) >= glm::length(cam_pos - pos2);
+                         });
     }
 }

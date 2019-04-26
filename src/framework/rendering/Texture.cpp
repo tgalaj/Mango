@@ -60,6 +60,7 @@ namespace Vertex
         glTextureParameteri(m_to_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTextureParameteri(m_to_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTextureParameteri(m_to_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTextureParameteri(m_to_id, GL_TEXTURE_MAX_ANISOTROPY, 16); // TODO anisotropy as Renderer parameter
 
         /* Release image data */
         stbi_image_free(data);
@@ -111,6 +112,7 @@ namespace Vertex
         glTextureParameteri(m_to_id, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         glTextureParameteri(m_to_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTextureParameteri(m_to_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTextureParameteri(m_to_id, GL_TEXTURE_MAX_ANISOTROPY, 16);
 
         for (int i = 0; i < numCubeFaces; ++i)
         {
