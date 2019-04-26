@@ -1,7 +1,4 @@
-﻿
-#include <core_systems/RenderingSystem.h>
-
-#include "core_systems/RenderingSystem.h"
+﻿#include <core_systems/RenderingSystem.h>
 
 #include "core_engine/CoreAssetManager.h"
 #include "core_engine/CoreServices.h"
