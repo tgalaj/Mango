@@ -14,6 +14,8 @@
 #include "imgui.h"
 #include "core_engine/GameObject.h"
 #include "systems/MoveSystem.h"
+#include "core_engine/UIObject.h"
+#include "core_components/UITextComponent.h"
 
 TestDemo::TestDemo()
 {
@@ -26,11 +28,18 @@ TestDemo::~TestDemo()
 
 void TestDemo::init()
 {
-    auto camera = Vertex::CoreAssetManager::createGameObject();
+    auto camera = Vertex::GameObject();//Vertex::CoreAssetManager::createGameObject();
     camera.addComponent<Vertex::CameraComponent>(45.0f, Vertex::Window::getAspectRatio(), 0.1f, 500.0f);
     camera.addComponent<Vertex::FreeLookComponent>();
     camera.addComponent<Vertex::FreeMoveComponent>();
     camera.setPosition(0, 4, 30);
+
+    auto font = Vertex::CoreAssetManager::createFont("Droid48", "res/fonts/DroidSans.ttf", 48.0f);
+
+    auto ui_fps_counter = Vertex::UIObject();
+    ui_fps_counter.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2!");
+    ui_fps_counter.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 10);
+    ui_fps_counter.getComponent<Vertex::UITextComponent>()->m_color = glm::vec3(0.8, 0.0, 0.0);
 
     /*auto skybox = std::make_shared<Vertex::Skybox>("res/skyboxes/stormydays/",
                                                    "stormydays_lf.tga",

@@ -9,6 +9,7 @@
 #include "framework/utilities/Timer.h"
 #include "framework/window/Input.h"
 #include "framework/window/Window.h"
+#include "core_systems/UIRenderingSystem.h"
 
 namespace Vertex
 {
@@ -38,6 +39,7 @@ namespace Vertex
         systems.add<CameraSystem>();
         systems.add<GUISystem>();
         systems.add<RenderingSystem>();
+        systems.add<UIRenderingSystem>();
         systems.add<FreePoseSystem>();
         systems.configure();
 
@@ -96,6 +98,7 @@ namespace Vertex
     void VertexCore::updateRenderingSystems(entityx::TimeDelta dt)
     {
         systems.update<RenderingSystem>(dt);
+        systems.update<UIRenderingSystem>(dt);
         systems.update<GUISystem>(dt);
     }
 

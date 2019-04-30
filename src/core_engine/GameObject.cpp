@@ -3,7 +3,6 @@
 
 #include "core_components/TransformComponent.h"
 #include "core_systems/SceneGraphSystem.h"
-#include "core_engine/GameObject.h"
 #include "core_engine/CoreServices.h"
 
 namespace Vertex
