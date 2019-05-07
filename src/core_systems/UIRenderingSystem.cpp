@@ -29,6 +29,7 @@ namespace Vertex
     {
         prepareRendering();
 
+        // TODO: sort text components based on font - bind texture atlas before text rendering
         entityx::ComponentHandle<UITextComponent> text_component;
 
         for(auto entity : entities.entities_with_components(text_component))
@@ -44,7 +45,6 @@ namespace Vertex
 
         glGenBuffers(1, &m_vbo);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
@@ -65,42 +65,56 @@ namespace Vertex
     {
         m_ui_shader->setUniform("text_color", text_component->m_color);
 
-        // Iterate through all characters
         std::string text = text_component->m_text;
-        std::string::const_iterator c;
+        glm::vec2 font_atlas_size = text_component->m_font->getFontAtlasDimensions();
+
+        struct vertex
+        {
+            GLfloat x;
+            GLfloat y;
+            GLfloat u;
+            GLfloat v;
+        };
+        std::vector<vertex> vertices;
 
         float x = text_component->m_position.x;
         float y = text_component->m_position.y;
 
-        for (c = text.begin(); c != text.end(); c++)
+
+        /* Iterate through all characters */
+        for (auto c = text.begin(); c != text.end(); ++c)
         {
             Font::Character ch = text_component->m_font->getCharacter(*c);
 
-            GLfloat xpos = x + ch.m_bearing.x * text_component->m_scale;
-            GLfloat ypos = y - (ch.m_size.y - ch.m_bearing.y) * text_component->m_scale;
+            GLfloat xpos =  x + ch.m_bearing.x * text_component->m_scale;
+            GLfloat ypos = -y - ch.m_bearing.y * text_component->m_scale;
 
             GLfloat w = ch.m_size.x * text_component->m_scale;
             GLfloat h = ch.m_size.y * text_component->m_scale;
-            // Update VBO for each character
-            GLfloat vertices[6][4] = {
-                { xpos,     ypos + h,   0.0, 0.0 },            
-                { xpos,     ypos,       0.0, 1.0 },
-                { xpos + w, ypos,       1.0, 1.0 },
 
-                { xpos,     ypos + h,   0.0, 0.0 },
-                { xpos + w, ypos,       1.0, 1.0 },
-                { xpos + w, ypos + h,   1.01, 0.0 }           
-            };
-            // Render glyph texture over quad
-            glBindTextureUnit(0, ch.m_texture_id);
-            // Update content of VBO memory
-            glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
-            // Render quad
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-            // Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-            x += (ch.m_advance >> 6) * text_component->m_scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
+            x += ch.m_advance.x * text_component->m_scale;
+            y += ch.m_advance.y * text_component->m_scale;
+
+            /* Skip glyphs that have no pixels */
+            if(!int(w) || !int(h))
+            {
+                continue;
+            }
+
+            vertices.push_back({ xpos,     -ypos,     ch.m_glyph_texture_offset.x,                                     ch.m_glyph_texture_offset.y });
+            vertices.push_back({ xpos,     -ypos - h, ch.m_glyph_texture_offset.x,                                     ch.m_glyph_texture_offset.y + ch.m_size.y / font_atlas_size.y });
+            vertices.push_back({ xpos + w, -ypos,     ch.m_glyph_texture_offset.x + (ch.m_size.x / font_atlas_size.x), ch.m_glyph_texture_offset.y });
+            vertices.push_back({ xpos + w, -ypos,     ch.m_glyph_texture_offset.x + (ch.m_size.x / font_atlas_size.x), ch.m_glyph_texture_offset.y });
+            vertices.push_back({ xpos,     -ypos - h, ch.m_glyph_texture_offset.x,                                     ch.m_glyph_texture_offset.y + ch.m_size.y / font_atlas_size.y });
+            vertices.push_back({ xpos + w, -ypos - h, ch.m_glyph_texture_offset.x + (ch.m_size.x / font_atlas_size.x), ch.m_glyph_texture_offset.y + ch.m_size.y / font_atlas_size.y });
         }
+
+        // TODO: VAO and VBO should be inside text_component (if text component gets changed, it should update vertex data itself)
+        // TODO: Add EBO
+        text_component->m_font->bindFontTexture();
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
+        glDrawArrays(GL_TRIANGLES, 0, vertices.size());
     }
 }
 

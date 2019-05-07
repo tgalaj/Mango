@@ -28,18 +28,53 @@ TestDemo::~TestDemo()
 
 void TestDemo::init()
 {
-    auto camera = Vertex::GameObject();//Vertex::CoreAssetManager::createGameObject();
+    auto camera = Vertex::CoreAssetManager::createGameObject();
     camera.addComponent<Vertex::CameraComponent>(45.0f, Vertex::Window::getAspectRatio(), 0.1f, 500.0f);
     camera.addComponent<Vertex::FreeLookComponent>();
     camera.addComponent<Vertex::FreeMoveComponent>();
     camera.setPosition(0, 4, 30);
 
-    auto font = Vertex::CoreAssetManager::createFont("Droid48", "res/fonts/DroidSans.ttf", 48.0f);
+    auto font = Vertex::CoreAssetManager::createFont("Droid48", "res/fonts/Roboto-Regular.ttf", 8.0f);
 
-    auto ui_fps_counter = Vertex::UIObject();
-    ui_fps_counter.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2!");
-    ui_fps_counter.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 10);
-    ui_fps_counter.getComponent<Vertex::UITextComponent>()->m_color = glm::vec3(0.8, 0.0, 0.0);
+    auto text1 = Vertex::UIObject(); // TODO: create via CoreAssetManager -> store in map<name, UIObject> to be able to find GameObjects
+    text1.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
+    text1.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 10);
+    text1.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.8, 0.0, 0.0, 0.8);
+
+    auto text2 = Vertex::UIObject();
+    text2.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
+    text2.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 1);
+    text2.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.0, 0.8, 0.0, 0.8);
+
+    auto text3 = Vertex::UIObject();
+    text3.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
+    text3.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 19);
+    text3.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.0, 0.0, 0.8, 0.8);
+
+    auto text4 = Vertex::UIObject();
+    text4.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
+    text4.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 29);
+    text4.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.0, 0.8, 0.8, 0.8);
+
+    auto text5 = Vertex::UIObject(); 
+    text5.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
+    text5.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 39);
+    text5.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.8, 0.8, 0.0, 0.8);
+
+    auto text6 = Vertex::UIObject(); 
+    text6.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
+    text6.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 49);
+    text6.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.8, 0.0, 0.8, 0.8);
+
+    auto text7 = Vertex::UIObject(); 
+    text7.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
+    text7.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 59);
+    text7.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.0, 0.0, 0.0, 0.8);
+
+    auto text8 = Vertex::UIObject(); 
+    text8.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
+    text8.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 69);
+    text8.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(1.0, 1.0, 1.0, 0.8);
 
     /*auto skybox = std::make_shared<Vertex::Skybox>("res/skyboxes/stormydays/",
                                                    "stormydays_lf.tga",
@@ -268,3 +303,5 @@ void TestDemo::onGUI(float delta)
 
     ImGui::End();
 }
+
+//TODO: update function!!
