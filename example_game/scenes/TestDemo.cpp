@@ -14,8 +14,7 @@
 #include "imgui.h"
 #include "core_engine/GameObject.h"
 #include "systems/MoveSystem.h"
-#include "core_engine/UIObject.h"
-#include "core_components/UITextComponent.h"
+#include "framework/gui/GUI.h"
 
 TestDemo::TestDemo()
 {
@@ -34,47 +33,7 @@ void TestDemo::init()
     camera.addComponent<Vertex::FreeMoveComponent>();
     camera.setPosition(0, 4, 30);
 
-    auto font = Vertex::CoreAssetManager::createFont("Droid48", "res/fonts/Roboto-Regular.ttf", 8.0f);
-
-    auto text1 = Vertex::UIObject(); // TODO: create via CoreAssetManager -> store in map<name, UIObject> to be able to find GameObjects
-    text1.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
-    text1.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 10);
-    text1.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.8, 0.0, 0.0, 0.8);
-
-    auto text2 = Vertex::UIObject();
-    text2.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
-    text2.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 1);
-    text2.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.0, 0.8, 0.0, 0.8);
-
-    auto text3 = Vertex::UIObject();
-    text3.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
-    text3.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 19);
-    text3.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.0, 0.0, 0.8, 0.8);
-
-    auto text4 = Vertex::UIObject();
-    text4.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
-    text4.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 29);
-    text4.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.0, 0.8, 0.8, 0.8);
-
-    auto text5 = Vertex::UIObject(); 
-    text5.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
-    text5.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 39);
-    text5.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.8, 0.8, 0.0, 0.8);
-
-    auto text6 = Vertex::UIObject(); 
-    text6.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
-    text6.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 49);
-    text6.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.8, 0.0, 0.8, 0.8);
-
-    auto text7 = Vertex::UIObject(); 
-    text7.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
-    text7.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 59);
-    text7.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(0.0, 0.0, 0.0, 0.8);
-
-    auto text8 = Vertex::UIObject(); 
-    text8.addComponent<Vertex::UITextComponent>(font, "Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2! Hello FreeType2!");
-    text8.getComponent<Vertex::UITextComponent>()->m_position = glm::vec2(0, 69);
-    text8.getComponent<Vertex::UITextComponent>()->m_color = glm::vec4(1.0, 1.0, 1.0, 0.8);
+    auto font = Vertex::CoreAssetManager::createFont("Droid48", "res/fonts/Roboto-Regular.ttf", 48.0f);
 
     /*auto skybox = std::make_shared<Vertex::Skybox>("res/skyboxes/stormydays/",
                                                    "stormydays_lf.tga",
@@ -111,6 +70,7 @@ void TestDemo::init()
     auto bricks2_normal       = Vertex::CoreAssetManager::createTexture2D("res/textures/bricks2_normal.jpg");
     auto window_tex           = Vertex::CoreAssetManager::createTexture2D("res/textures/window.png");
     auto grass_tex            = Vertex::CoreAssetManager::createTexture2D("res/textures/grass.png");
+    auto vulkan_logo          = Vertex::CoreAssetManager::createTexture2D("res/textures/vulkan.png");
 
     auto cyborg = Vertex::CoreAssetManager::createGameObject();
     cyborg.addComponent<Vertex::ModelRendererComponent>(cyborg_model);
@@ -300,8 +260,17 @@ void TestDemo::onGUI(float delta)
     ImGui::Begin("Cloth settings");
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
+    
     ImGui::End();
+
+    Vertex::GUI::beginHUD();
+
+    Vertex::GUI::circleFilled({ Vertex::Window::getWidth() / 2.0f, Vertex::Window::getHeight() / 2.0f}, 2.0f, glm::vec4(0.0, 1.0, 0.0, 1.0));
+    auto pos = Vertex::GUI::text(Vertex::CoreAssetManager::getFont("Droid48"), "Hello ImGUI Text Demo!", { Vertex::Window::getWidth() / 2.0f, Vertex::Window::getHeight() / 2.0f + 100.0f}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, true);
+    Vertex::GUI::text(Vertex::CoreAssetManager::getFont("Droid48"), "Hello ImGUI Text Demo2!", { Vertex::Window::getWidth() / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
+    Vertex::GUI::image(Vertex::CoreAssetManager::getTexture2D("res/textures/vulkan.png"), { Vertex::Window::getWidth() - 250, 0 }, { Vertex::Window::getWidth(), 150 }, { 1.0f, 1.0f, 1.0f, 0.5f });
+
+    Vertex::GUI::endHUD();
 }
 
 //TODO: update function!!

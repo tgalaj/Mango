@@ -45,6 +45,9 @@ namespace Vertex
                                                     const std::string & tessellation_control_shader_filepathname,
                                                     const std::string & tessellation_evaluation_shader_filepathname);
 
+        static std::shared_ptr<Font> getFont(const std::string & font_name);
+        static std::shared_ptr<Texture> getTexture2D(const std::string & filepathname);
+
     private:
         CoreAssetManager() {}
         ~CoreAssetManager() {}

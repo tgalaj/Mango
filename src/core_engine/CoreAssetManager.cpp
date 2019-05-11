@@ -24,8 +24,7 @@ namespace Vertex
             return m_loaded_fonts[font_name];
         }
 
-        auto font = std::make_shared<Font>();
-        font->genFont(filepathname, font_height);
+        auto font = std::make_shared<Font>(filepathname, font_height);
         m_loaded_fonts[font_name] = font;
 
         return font;
@@ -166,5 +165,24 @@ namespace Vertex
         m_loaded_shaders[shader_name]  = shader;
 
         return shader;
+    }
+
+    std::shared_ptr<Font> CoreAssetManager::getFont(const std::string& font_name)
+    {
+        if(m_loaded_fonts.count(font_name))
+        {
+            return m_loaded_fonts[font_name];
+        }
+
+        return nullptr;
+    }
+    std::shared_ptr<Texture> CoreAssetManager::getTexture2D(const std::string& filepathname)
+    {
+        if(m_loaded_textures.count(filepathname))
+        {
+            return m_loaded_textures[filepathname];
+        }
+
+        return nullptr;
     }
 }

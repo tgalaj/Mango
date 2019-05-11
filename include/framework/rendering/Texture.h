@@ -29,6 +29,7 @@ namespace Vertex
         
         GLuint getWidth()  const { return m_tex_data.width; }
         GLuint getHeight() const { return m_tex_data.height; }
+        GLuint getID()     const {  return m_to_id; }
 
     private:
         void genTexture2D     (const std::string & filename,  GLint base_level, bool is_srgb = false);
@@ -42,5 +43,6 @@ namespace Vertex
         GLint m_internal_format;
 
         friend class CoreAssetManager;
+        friend class GUI;
     };
 }

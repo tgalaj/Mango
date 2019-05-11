@@ -25,7 +25,6 @@ namespace Vertex
                              aiProcess_GenSmoothNormals         | 
                              aiProcess_CalcTangentSpace         | 
                              aiProcess_FlipUVs                  | 
-                             aiProcess_OptimizeGraph            | 
                              aiProcess_PreTransformVertices     | 
                              aiProcess_RemoveRedundantMaterials | 
                              aiProcess_ImproveCacheLocality     | 

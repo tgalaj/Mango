@@ -55,19 +55,6 @@ if((NOT GLFW_LIBRARY) OR (NOT GLFW_INCLUDE_DIR))
 	set(GLFW_INCLUDE_DIR "${GLFW_DIR}/include")
 endif()
 
-# freetype
-find_library(FREETYPE_LIBRARY "freetype" "/usr/lib" "/usr/local/lib")
-find_path(FREETYPE_INCLUDE_DIR "include/freetype/freetype.h" "/usr/include" "/usr/local/include")
-
-if((NOT FREETYPE_LIBRARY) OR (NOT FREETYPE_INCLUDE_DIR))
-	set(FREETYPE_DIR "${THIRDPARTY_DIR}/freetype-2.10.0")
-
-    add_subdirectory("${FREETYPE_DIR}")
-
-	set(FREETYPE_LIBRARY "freetype")
-	set(FREETYPE_INCLUDE_DIR "${FREETYPE_DIR}/include")
-endif()
-
 # glad
 set(GLAD_DIR "${THIRDPARTY_DIR}/glad")
 add_library("glad" STATIC "${GLAD_DIR}/src/glad.c")

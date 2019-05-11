@@ -2,9 +2,13 @@
 
 #include <imgui.h>
 #include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
 
 #include "framework/window/Window.h"
+#include "framework/rendering/Texture.h"
+#include "framework/gui/Font.h"
+
+#include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 
 namespace Vertex
 {
@@ -13,42 +17,24 @@ namespace Vertex
     public:
         typedef void(*Style)(ImGuiStyle &);
 
-        ~GUI()
-        {
-            ImGui_ImplOpenGL3_Shutdown();
-            ImGui_ImplGlfw_Shutdown();
-            ImGui::DestroyContext();
-        }
+        ~GUI();
+        static void init(GLFWwindow * window);
+        static void prepare();
+        static void render();
+        static void updateWindowSize(float width, float height);
 
-        static void init(GLFWwindow * window)
-        {
-            IMGUI_CHECKVERSION();
-            ImGui::CreateContext();
+        /* HUD rendering */
+        static void beginHUD();
+        static void endHUD();
 
-            ImGui_ImplGlfw_InitForOpenGL(window, true);
-            ImGui_ImplOpenGL3_Init("#version 450");
-
-            m_window_size = glm::vec2(Window::getWidth(), Window::getHeight());
-        }
-
-        static void prepare()
-        {
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
-        }
-
-        static void render()
-        {
-            glViewport(0, 0, GLsizei(m_window_size.x), GLsizei(m_window_size.y));
-            ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        }
-
-        static void updateWindowSize(float width, float height)
-        {
-            m_window_size = glm::vec2(width, height);
-        }
+        static float text(const std::shared_ptr<Font> & font, const std::string& text, const glm::vec2 & position, float size, const glm::vec4 & color = glm::vec4(1.0f), bool center = false, bool text_shadow = false);
+        static void line(const glm::vec2 & from, const glm::vec2 & to, const glm::vec4 & color = glm::vec4(1.0f), float thickness = 1.0f);
+        static void circle(const glm::vec2 & position, float radius, const glm::vec4 & color = glm::vec4(1.0f), float thickness = 1.0f, uint32_t segments = 16);
+        static void circleFilled(const glm::vec2 & position, float radius, const glm::vec4 & color = glm::vec4(1.0f), uint32_t segments = 16);
+        static void rect(const glm::vec2 & from, const glm::vec2 & to, const glm::vec4 & color = glm::vec4(1.0f), float rounding = 0.0f, uint32_t roundingCornersFlags = ImDrawCornerFlags_All, float thickness = 1.0f);
+        static void rectFilled(const glm::vec2 & from, const glm::vec2 & to, const glm::vec4 & color = glm::vec4(1.0f), float rounding = 0.0f, uint32_t roundingCornersFlags = ImDrawCornerFlags_All);
+        static void image(std::shared_ptr<Texture> pTexture, const glm::vec2 & from, const glm::vec2 & to, const glm::vec4 & color = glm::vec4(1.0f));
+        static void imageRounded(std::shared_ptr<Texture> pTexture, const glm::vec2 & from, const glm::vec2 & to, const glm::vec4 & color = glm::vec4(1.0f), float rounding = 0.0f, uint32_t roundingCornersFlags = ImDrawCornerFlags_All);
 
     private:
         static glm::vec2 m_window_size;
