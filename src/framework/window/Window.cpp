@@ -3,6 +3,7 @@
 #include "framework/utilities/DebugOutputGL.h"
 #include "framework/gui/GUI.h"
 #include "core_engine/VertexCore.h"
+#include "core_engine/CoreServices.h"
 
 namespace Vertex
 {
@@ -134,13 +135,12 @@ namespace Vertex
 
     void Window::framebuffer_size_callback(GLFWwindow * window, int width, int height)
     {
-        {
-            glViewport(0, 0, width, height);
+        glViewport(0, 0, width, height);
 
-            m_window_size.x = float(width);
-            m_window_size.y = float(height);
+        m_window_size.x = float(width);
+        m_window_size.y = float(height);
 
-            GUI::updateWindowSize(float(width), float(height));
-        }
+        GUI::updateWindowSize(float(width), float(height));
+        CoreServices::getRenderer()->resize(width, height);
     }
 }

@@ -17,7 +17,7 @@ namespace Vertex
         }
     }
 
-    void PostprocessEffect::init(unsigned width, unsigned height, const std::string & filter_name, const std::string & fragment_shader_path)
+    void PostprocessEffect::init(const std::string & filter_name, const std::string & fragment_shader_path)
     {
         m_postprocess = CoreAssetManager::createShader(filter_name, "FSQ.vert", fragment_shader_path);
         m_postprocess->link();

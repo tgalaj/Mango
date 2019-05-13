@@ -58,7 +58,7 @@ namespace Vertex
         m_scene_ambient_color = glm::vec3(0.18f);
 
         m_hdr_filter = std::make_shared<PostprocessEffect>();
-        m_hdr_filter->init(Window::getWidth(), Window::getHeight(), "PS-HDR", "PS-HDR.frag");
+        m_hdr_filter->init("PS-HDR", "PS-HDR.frag");
 
         m_main_render_target = std::make_shared<RenderTarget>();
         m_main_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::RGBA16F, RenderTarget::Depth24);
@@ -132,6 +132,12 @@ namespace Vertex
     void RenderingSystem::setSkybox(const std::shared_ptr<Skybox>& skybox)
     {
         m_default_skybox = skybox;
+    }
+
+    void RenderingSystem::resize(unsigned width, unsigned height)
+    {
+        m_main_render_target->clear();
+        m_main_render_target->create(width, height, RenderTarget::RGBA16F, RenderTarget::Depth24);
     }
 
     entityx::ComponentHandle<TransformComponent> RenderingSystem::getCameraTransform()

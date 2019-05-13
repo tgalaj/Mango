@@ -10,7 +10,7 @@ namespace Vertex
         PostprocessEffect();
         virtual ~PostprocessEffect();
 
-        virtual void init(unsigned width, unsigned height, const std::string & filter_name, const std::string & fragment_shader_path);
+        virtual void init(const std::string & filter_name, const std::string & fragment_shader_path);
         
         void bind() const;
         void render() const;

@@ -25,6 +25,7 @@ namespace Vertex
         void receive(const entityx::ComponentRemovedEvent<ModelRendererComponent>& event);
 
         void setSkybox(const std::shared_ptr<Skybox> & skybox);
+        void resize(unsigned width, unsigned height);
 
         entityx::ComponentHandle<TransformComponent> getCameraTransform();
         entityx::ComponentHandle<CameraComponent> getCamera();

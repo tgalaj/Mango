@@ -40,6 +40,7 @@ namespace Vertex
 
         /* Creates Render Target with Depth attachment only aka Shadow Map */
         void create(unsigned width, unsigned height, DepthType depth, RenderTargetType rt_type = Tex2D, bool use_filtering = true);
+        void clear();
 
         void bind() const;
         void bindTexture(GLuint texture_unit = 0) const;

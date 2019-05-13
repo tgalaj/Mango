@@ -15,23 +15,7 @@ namespace Vertex
 
     RenderTarget::~RenderTarget()
     {
-        if (m_to_id != 0)
-        {
-            glDeleteTextures(1, &m_to_id);
-            m_to_id = 0;
-        }
-
-        if (m_depth_rbo_id != 0)
-        {
-            glDeleteRenderbuffers(1, &m_depth_rbo_id);
-            m_depth_rbo_id = 0;
-        }
-
-        if(m_fbo_id != 0)
-        {
-            glDeleteFramebuffers(1, &m_fbo_id);
-            m_fbo_id = 0;
-        }
+        clear();
     }
 
     void RenderTarget::create(unsigned width, unsigned height, ColorType color, DepthType depth, RenderTargetType rt_type, bool use_filtering)
@@ -166,6 +150,27 @@ namespace Vertex
         glReadBuffer(GL_NONE);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void RenderTarget::clear()
+    {
+        if (m_to_id != 0)
+        {
+            glDeleteTextures(1, &m_to_id);
+            m_to_id = 0;
+        }
+
+        if (m_depth_rbo_id != 0)
+        {
+            glDeleteRenderbuffers(1, &m_depth_rbo_id);
+            m_depth_rbo_id = 0;
+        }
+
+        if(m_fbo_id != 0)
+        {
+            glDeleteFramebuffers(1, &m_fbo_id);
+            m_fbo_id = 0;
+        }
     }
 
     void RenderTarget::bind() const
