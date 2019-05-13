@@ -2,9 +2,9 @@
 #include "framework/gui/imgui_impl_opengl3.h"
 
 #include <glm/vec2.hpp>
+#include <glm/common.hpp>
 #include <imgui_internal.h>
 #include <sstream>
-#include <glm/common.hpp>
 
 namespace Vertex
 {
