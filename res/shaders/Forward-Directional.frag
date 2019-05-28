@@ -12,7 +12,7 @@ float shadowCalculation(vec4 frag_pos_light_space, vec3 normal)
     proj_coords      = proj_coords * 0.5f + 0.5f; /* Map from [-1, 1] to [0, 1] */
 
     if(proj_coords.z > 1.0f)
-        return 1.0f;
+        return 0.0f;
 
     float bias = max(0.0001f * (1.0 - dot(normal, -s_directional_light.direction)), 0.00001f); /* Removes shadow acne artifact */
     proj_coords.z = proj_coords.z - bias;

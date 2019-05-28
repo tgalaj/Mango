@@ -14,8 +14,9 @@ namespace Vertex
         static GameObject createGameObject();
 
         static std::shared_ptr<Font>    createFont          (const std::string & font_name, const std::string& filepathname, GLuint font_height);
-        static std::shared_ptr<Texture> createTexture2D     (const std::string & filepathname,  bool is_srgb = false, GLint base_level = 0);
-        static std::shared_ptr<Texture> createCubeMapTexture(const std::string * filepathnames, bool is_srgb = false, GLint base_level = 0);
+        static std::shared_ptr<Texture> createTexture2D     (const std::string & filepathname,  bool is_srgb = false, GLint num_mipmaps = 1);
+        static std::shared_ptr<Texture> createTexture2D1x1  (const std::string & texture_name,  const glm::uvec4 & color);
+        static std::shared_ptr<Texture> createCubeMapTexture(const std::string * filepathnames, bool is_srgb = false, GLint num_mipmaps = 1);
 
         static Model createModel(const std::string & filepathname);
         static Model createModel();
@@ -46,7 +47,7 @@ namespace Vertex
                                                     const std::string & tessellation_evaluation_shader_filepathname);
 
         static std::shared_ptr<Font> getFont(const std::string & font_name);
-        static std::shared_ptr<Texture> getTexture2D(const std::string & filepathname);
+        static std::shared_ptr<Texture> getTexture2D(const std::string & texture_name);
 
     private:
         CoreAssetManager() {}

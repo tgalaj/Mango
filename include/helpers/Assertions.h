@@ -27,8 +27,9 @@
 
 #pragma once
 
-#define VERTEX_ASSERTS_ENABLED
-
+#ifndef NDEBUG
+    #define VERTEX_ASSERTS_ENABLED
+#endif
 namespace Vertex
 {
     namespace Assert
@@ -54,7 +55,12 @@ namespace Vertex
     }
 }
 
-#define VERTEX_HALT() __debugbreak()
+#ifdef _MSC_VER
+    #define VERTEX_HALT() __debugbreak()
+#else
+    #define VERTEX_HALT() raise(SIGTRAP);
+#endif
+
 #define VERTEX_UNUSED(x) do { (void)sizeof(x); } while(0)
 
 #ifdef VERTEX_ASSERTS_ENABLED

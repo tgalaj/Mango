@@ -7,6 +7,7 @@
 #include "core_components/PointLightComponent.h"
 #include "core_components/SpotLightComponent.h"
 #include "framework/utilities/ShaderGlobals.h"
+#include "helpers/Assertions.h"
 
 namespace Vertex
 {
@@ -26,6 +27,10 @@ namespace Vertex
         events.subscribe<entityx::ComponentAddedEvent<CameraComponent>>(*this);
         events.subscribe<entityx::ComponentAddedEvent<ModelRendererComponent>>(*this);
         events.subscribe<entityx::ComponentRemovedEvent<ModelRendererComponent>>(*this);
+
+        CoreAssetManager::createTexture2D1x1("default_white",  glm::uvec4(255, 255, 255, 255));
+        CoreAssetManager::createTexture2D1x1("default_black",  glm::uvec4(0,   0,   0,   255));
+        CoreAssetManager::createTexture2D1x1("default_normal", glm::uvec4(128, 127, 254, 255));
 
         m_opaque_queue.reserve(50);
         m_alpha_queue.reserve(5);
@@ -54,23 +59,37 @@ namespace Vertex
         m_blending_shader = CoreAssetManager::createShader("Blending-Shader", "Blending.vert", "Blending.frag");
         m_blending_shader->link();
 
+        m_gbuffer_shader = CoreAssetManager::createShader("GBuffer", "GBuffer.vert", "GBuffer.frag");
+        m_gbuffer_shader->link();
+
         M_DEBUG_WINDOW_WIDTH = Window::getWidth() / 5.0f;
         m_scene_ambient_color = glm::vec3(0.18f);
 
         m_hdr_filter = std::make_shared<PostprocessEffect>();
         m_hdr_filter->init("PS-HDR", "PS-HDR.frag");
 
+        std::vector<RenderTarget::MRTEntry> mrt_entries(5);
+        mrt_entries[0] = { RenderTarget::Color, RenderTarget::RGB16F }; // positions
+        mrt_entries[1] = { RenderTarget::Color, RenderTarget::RGB16F }; // texcoords
+        mrt_entries[2] = { RenderTarget::Color, RenderTarget::RGB16F }; // normals
+
+        mrt_entries[3] = { RenderTarget::Color, RenderTarget::RGBA16F }; // albedo + specular
+        mrt_entries[4] = { RenderTarget::Depth, RenderTarget::NoColor, RenderTarget::Depth24 }; //depth
+
+        m_gbuffer = std::make_shared<RenderTarget>();
+        m_gbuffer->createMRT(mrt_entries, Window::getWidth(), Window::getHeight());
+
         m_main_render_target = std::make_shared<RenderTarget>();
         m_main_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::RGBA16F, RenderTarget::Depth24);
 
         m_dir_shadow_map = std::make_shared<RenderTarget>();
-        m_dir_shadow_map->create(2048, 2048, RenderTarget::Depth16);
+        m_dir_shadow_map->create(2048, 2048, RenderTarget::Depth24);
 
         m_spot_shadow_map = std::make_shared<RenderTarget>();
-        m_spot_shadow_map->create(1024, 1024, RenderTarget::Depth16);
+        m_spot_shadow_map->create(1024, 1024, RenderTarget::Depth24);
 
         m_omni_shadow_map = std::make_shared<RenderTarget>();
-        m_omni_shadow_map->create(512, 512, RenderTarget::Depth16, RenderTarget::TexCube);
+        m_omni_shadow_map->create(512, 512, RenderTarget::Depth24, RenderTarget::TexCube);
 
         initRenderingStates();
     }
@@ -231,6 +250,17 @@ namespace Vertex
 
         /* Apply postprocess effect */
         applyPostprocess(m_hdr_filter, &m_main_render_target, 0);
+
+        /* Render to GBuffer */
+        /* NOTE: Total proof of concept - needs improvement! */
+        m_gbuffer->bind();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        m_gbuffer_shader->bind();
+        renderOpaque(m_gbuffer_shader);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, Window::getWidth(), Window::getHeight());
     }
 
     void RenderingSystem::renderDebug()
@@ -310,10 +340,10 @@ namespace Vertex
 
             if(shadow_info.getCastsShadows())
             {
+                m_shadow_map_generator->bind();
+
                 m_dir_shadow_map->bind();
                 glClear(GL_DEPTH_BUFFER_BIT);
-
-                m_shadow_map_generator->bind();
 
                 light_matrix = shadow_info.getProjection() * glm::lookAt(-transform->direction(), glm::vec3(0.0f), glm::vec3(0, 1, 0));
                 m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
@@ -345,10 +375,10 @@ namespace Vertex
 
             if (shadow_info.getCastsShadows())
             {
+                m_omni_shadow_map_generator->bind();
+
                 m_omni_shadow_map->bind();
                 glClear(GL_DEPTH_BUFFER_BIT);
-
-                m_omni_shadow_map_generator->bind();
 
                 light_matrices[0] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 1,  0,  0), glm::vec3(0, -1,  0));
                 light_matrices[1] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3(-1,  0,  0), glm::vec3(0, -1,  0));
@@ -392,10 +422,10 @@ namespace Vertex
 
             if (shadow_info.getCastsShadows())
             {
+                m_shadow_map_generator->bind();
+
                 m_spot_shadow_map->bind();
                 glClear(GL_DEPTH_BUFFER_BIT);
-
-                m_shadow_map_generator->bind();
 
                 light_matrix = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + transform->direction(), glm::vec3(0, 1, 0));
                 m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);

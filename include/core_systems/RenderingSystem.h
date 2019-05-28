@@ -49,10 +49,12 @@ namespace Vertex
         std::shared_ptr<Shader> m_omni_shadow_map_generator;
         std::shared_ptr<Shader> m_blending_shader;
 
+        std::shared_ptr<Shader> m_gbuffer_shader;
         std::shared_ptr<Shader> m_debug_rendering;
 
         std::shared_ptr<PostprocessEffect> m_hdr_filter;
 
+        std::shared_ptr<RenderTarget> m_gbuffer;
         std::shared_ptr<RenderTarget> m_main_render_target;
         std::shared_ptr<RenderTarget> m_dir_shadow_map;
         std::shared_ptr<RenderTarget> m_spot_shadow_map;

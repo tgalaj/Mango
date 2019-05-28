@@ -1,5 +1,6 @@
 #include "framework/rendering/Material.h"
 #include "core_engine/CoreAssetManager.h"
+#include "helpers/Assertions.h"
 
 namespace Vertex
 {
@@ -20,6 +21,12 @@ namespace Vertex
         addFloat("alpha_cutoff", 0.2f);
 
         m_blend_mode = BlendMode::NONE;
+
+        m_texture_map[TextureType::DIFFUSE]  = CoreAssetManager::getTexture2D("default_white");
+        m_texture_map[TextureType::SPECULAR] = CoreAssetManager::getTexture2D("default_black");
+        m_texture_map[TextureType::NORMAL]   = CoreAssetManager::getTexture2D("default_normal");
+        m_texture_map[TextureType::EMISSION] = CoreAssetManager::getTexture2D("default_black");
+        m_texture_map[TextureType::DEPTH]    = CoreAssetManager::getTexture2D("default_black");
     }
 
 
@@ -49,25 +56,7 @@ namespace Vertex
             return m_texture_map[texture_type];
         }
 
-        if (texture_type == TextureType::DIFFUSE)
-        {
-            return CoreAssetManager::createTexture2D("res/textures/diff_default.jpg");
-        }
-
-        if (texture_type == TextureType::SPECULAR)
-        {
-            return CoreAssetManager::createTexture2D("res/textures/spec_default.jpg");
-        }
-
-        if (texture_type == TextureType::NORMAL)
-        {
-            return CoreAssetManager::createTexture2D("res/textures/normal_default.jpg");
-        }
-
-        if (texture_type == TextureType::DEPTH)
-        {
-            return CoreAssetManager::createTexture2D("res/textures/spec_default.jpg");
-        }
+        VERTEX_ASSERT_MSG(false, "Couldn't find texture with the specified texture type!");
 
         return nullptr;
     }

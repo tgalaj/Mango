@@ -1,13 +1,15 @@
 #include "framework/rendering/Texture.h"
 #include "framework/utilities/Util.h"
 #include <iostream>
+#include <glm/common.hpp>
+#include <glm/exponential.hpp>
 
 namespace Vertex
 {
     Texture::Texture()
         : m_to_id(0),
           m_to_type(GL_TEXTURE_2D),
-          m_base_level(0), 
+          m_num_mipmaps(1), 
           m_format(0),
           m_internal_format(0)
     {
@@ -22,7 +24,7 @@ namespace Vertex
         }
     }
 
-    void Texture::genTexture2D(const std::string & filename, GLint base_level, bool is_srgb)
+    void Texture::genTexture2D(const std::string & filename, GLuint num_mipmaps, bool is_srgb)
     {
         /* Pointer to the image */
         unsigned char* data = Util::loadTexture(filename, m_tex_data);
@@ -33,13 +35,16 @@ namespace Vertex
         }
 
         m_to_type = GL_TEXTURE_2D;
-        m_format  = GL_RGBA;
+        m_format  = m_tex_data.channels == 4 ? GL_RGBA : GL_RGB;
         m_internal_format = is_srgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
+
+        const GLuint max_num_mipmaps = 1 + glm::floor(glm::log2(glm::max(float(m_tex_data.width), float(m_tex_data.height))));
+        m_num_mipmaps = glm::clamp(num_mipmaps, 1u, max_num_mipmaps);
 
         /* Generate GL texture object */
         glCreateTextures(m_to_type, 1, &m_to_id);
         glTextureStorage2D(m_to_id,
-                           base_level > 0 ? 2 : base_level + 2,
+                           m_num_mipmaps,
                            m_internal_format,
                            m_tex_data.width,
                            m_tex_data.height);
@@ -66,7 +71,43 @@ namespace Vertex
         stbi_image_free(data);
     }
 
-    void Texture::genCubeMapTexture(const std::string * filenames, GLint base_level, bool is_srgb)
+    void Texture::genTexture2D1x1(const glm::uvec4 & color)
+    {
+        m_tex_data.width    = 1;
+        m_tex_data.height   = 1;
+        m_tex_data.channels = 4;
+
+        m_to_type         = GL_TEXTURE_2D;
+        m_format          = GL_RGBA;
+        m_internal_format = GL_RGBA8;
+
+        GLubyte pixel_data[] = { color.r, color.g, color.b, color.a };
+
+        /* Generate GL texture object */
+        glCreateTextures(m_to_type, 1, &m_to_id);
+        glTextureStorage2D(m_to_id,
+                           m_num_mipmaps,
+                           m_internal_format,
+                           m_tex_data.width,
+                           m_tex_data.height);
+
+        glTextureSubImage2D(m_to_id,
+                            0 /*level*/,
+                            0 /*xoffset*/,
+                            0 /*yoffset*/,
+                            m_tex_data.width,
+                            m_tex_data.height,
+                            m_format,
+                            GL_UNSIGNED_BYTE,
+                            pixel_data);
+
+        glTextureParameteri(m_to_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(m_to_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(m_to_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTextureParameteri(m_to_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    }
+
+    void Texture::genCubeMapTexture(const std::string * filenames, GLuint num_mipmaps, bool is_srgb)
     {
         const int numCubeFaces = 6;
 
@@ -78,14 +119,17 @@ namespace Vertex
             imgs_data[i] = Util::loadTexture(filenames[i], m_tex_data);
         }
 
-        m_to_type = GL_TEXTURE_CUBE_MAP;
-        m_format = GL_RGBA;
+        m_to_type         = GL_TEXTURE_CUBE_MAP;
+        m_format          = m_tex_data.channels == 4 ? GL_RGBA : GL_RGB;
         m_internal_format = is_srgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
-
+       
+        const GLuint max_num_mipmaps = 1 + glm::floor(glm::log2(glm::max(float(m_tex_data.width), float(m_tex_data.height))));
+        m_num_mipmaps = glm::clamp(num_mipmaps, 1u, max_num_mipmaps);
+        
         /* Generate GL texture object */
         glCreateTextures(m_to_type, 1, &m_to_id);
         glTextureStorage2D(m_to_id,
-                           base_level > 0 ? 2 : base_level + 2,
+                           m_num_mipmaps,
                            m_internal_format,
                            m_tex_data.width,
                            m_tex_data.height);

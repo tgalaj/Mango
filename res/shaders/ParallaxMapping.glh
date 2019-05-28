@@ -8,20 +8,20 @@ vec2 parallaxMapping(vec3 view_dir)
     
     float layer_depths = 1.0f / num_layers;
     float current_layer_depth = 0.0f;
-
+	
     vec2 p = view_dir.xy / view_dir.z * m_depth_scale;
     vec2 delta_texcoord = p / num_layers;
-
+	
     vec2 current_texcoord = texcoord;
     float current_depth = texture(m_texture_depth, current_texcoord).r;
-
+	
     while(current_layer_depth < current_depth)
     {
         current_texcoord -= delta_texcoord;
         current_layer_depth += layer_depths;
         current_depth = texture(m_texture_depth, current_texcoord).r;
     }
-
+	
     vec2 prev_texcoord = current_texcoord + delta_texcoord;
     float after_depth = current_depth - current_layer_depth;
     float before_depth = texture(m_texture_depth, prev_texcoord).r - current_layer_depth + layer_depths;

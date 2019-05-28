@@ -30,7 +30,7 @@ namespace Vertex
         return font;
     }
 
-    std::shared_ptr<Texture> CoreAssetManager::createTexture2D(const std::string& filepathname, bool is_srgb, GLint base_level)
+    std::shared_ptr<Texture> CoreAssetManager::createTexture2D(const std::string& filepathname, bool is_srgb, GLint num_mipmaps)
     {
         if(m_loaded_textures.count(filepathname))
         {
@@ -38,13 +38,27 @@ namespace Vertex
         }
 
         auto texture2d = std::make_shared<Texture>();
-        texture2d->genTexture2D(filepathname, base_level, is_srgb);
+        texture2d->genTexture2D(filepathname, num_mipmaps, is_srgb);
         m_loaded_textures[filepathname] = texture2d;
 
         return texture2d;
     }
 
-    std::shared_ptr<Texture> CoreAssetManager::createCubeMapTexture(const std::string * filepathnames, bool is_srgb, GLint base_level)
+    std::shared_ptr<Texture> CoreAssetManager::createTexture2D1x1(const std::string& texture_name, const glm::uvec4& color)
+    {
+        if(m_loaded_textures.count(texture_name))
+        {
+            return m_loaded_textures[texture_name];
+        }
+
+        auto texture2d = std::make_shared<Texture>();
+        texture2d->genTexture2D1x1(color);
+        m_loaded_textures[texture_name] = texture2d;
+
+        return texture2d;
+    }
+
+    std::shared_ptr<Texture> CoreAssetManager::createCubeMapTexture(const std::string * filepathnames, bool is_srgb, GLint num_mipmaps)
     {
         if (m_loaded_textures.count(filepathnames[0]))
         {
@@ -52,7 +66,7 @@ namespace Vertex
         }
 
         auto texture_cube = std::make_shared<Texture>();
-        texture_cube->genCubeMapTexture(filepathnames, base_level, is_srgb);
+        texture_cube->genCubeMapTexture(filepathnames, num_mipmaps, is_srgb);
         m_loaded_textures[filepathnames[0]] = texture_cube;
 
         return texture_cube;
@@ -176,11 +190,11 @@ namespace Vertex
 
         return nullptr;
     }
-    std::shared_ptr<Texture> CoreAssetManager::getTexture2D(const std::string& filepathname)
+    std::shared_ptr<Texture> CoreAssetManager::getTexture2D(const std::string& texture_name)
     {
-        if(m_loaded_textures.count(filepathname))
+        if(m_loaded_textures.count(texture_name))
         {
-            return m_loaded_textures[filepathname];
+            return m_loaded_textures[texture_name];
         }
 
         return nullptr;

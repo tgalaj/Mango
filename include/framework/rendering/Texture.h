@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 #include <string>
-#include <vector>
+#include <glm/vec4.hpp>
 
 namespace Vertex
 {
@@ -32,13 +32,14 @@ namespace Vertex
         GLuint getID()     const {  return m_to_id; }
 
     private:
-        void genTexture2D     (const std::string & filename,  GLint base_level, bool is_srgb = false);
-        void genCubeMapTexture(const std::string * filenames, GLint base_level, bool is_srgb = false);
+        void genTexture2D     (const std::string & filename,  GLuint num_mipmaps, bool is_srgb = false);
+        void genTexture2D1x1  (const glm::uvec4 & color);
+        void genCubeMapTexture(const std::string * filenames, GLuint num_mipmaps, bool is_srgb = false);
 
         ImageData m_tex_data;
         GLuint m_to_id;
         GLenum m_to_type;
-        GLint  m_base_level;
+        GLuint  m_num_mipmaps;
         GLenum m_format;
         GLint m_internal_format;
 
