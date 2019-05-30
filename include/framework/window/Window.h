@@ -27,6 +27,7 @@ namespace Vertex
         static const std::string & getTitle();
 
         static void setVSync(bool enabled);
+        static void bindDefaultFramebuffer();
 
     private:
         static GLFWwindow * m_window;

@@ -133,6 +133,12 @@ namespace Vertex
         glfwSwapInterval(value);
     }
 
+    void Window::bindDefaultFramebuffer()
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, m_window_size.x, m_window_size.y);
+    }
+
     void Window::framebuffer_size_callback(GLFWwindow * window, int width, int height)
     {
         glViewport(0, 0, width, height);

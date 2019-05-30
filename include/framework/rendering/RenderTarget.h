@@ -49,6 +49,12 @@ namespace Vertex
             AttachmentType   m_attachment_type = Color;
             ColorType        m_color_type      = NoColor;
             DepthType        m_depth_type      = NoDepth;
+
+            MRTEntry() = default;
+            MRTEntry(AttachmentType attachment, ColorType color_type = NoColor, DepthType depth_type = NoDepth)
+                : m_attachment_type(attachment),
+                  m_color_type     (color_type),
+                  m_depth_type     (depth_type) {}
         };
 
         RenderTarget();

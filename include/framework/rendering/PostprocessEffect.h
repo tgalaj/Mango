@@ -12,10 +12,10 @@ namespace Vertex
 
         virtual void init(const std::string & filter_name, const std::string & fragment_shader_path);
         
-        void bind() const;
-        void render() const;
+        virtual void bind() const;
+        virtual void render() const;
 
-    private:
+    protected:
         std::shared_ptr<Shader> m_postprocess;
         GLuint m_dummy_vao_id;
     };

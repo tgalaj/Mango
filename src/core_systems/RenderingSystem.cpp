@@ -59,25 +59,15 @@ namespace Vertex
         m_blending_shader = CoreAssetManager::createShader("Blending-Shader", "Blending.vert", "Blending.frag");
         m_blending_shader->link();
 
-        m_gbuffer_shader = CoreAssetManager::createShader("GBuffer", "GBuffer.vert", "GBuffer.frag");
-        m_gbuffer_shader->link();
-
         M_DEBUG_WINDOW_WIDTH = Window::getWidth() / 5.0f;
         m_scene_ambient_color = glm::vec3(0.18f);
 
         m_hdr_filter = std::make_shared<PostprocessEffect>();
         m_hdr_filter->init("PS-HDR", "PS-HDR.frag");
 
-        std::vector<RenderTarget::MRTEntry> mrt_entries(5);
-        mrt_entries[0] = { RenderTarget::Color, RenderTarget::RGB16F }; // positions
-        mrt_entries[1] = { RenderTarget::Color, RenderTarget::RGB16F }; // texcoords
-        mrt_entries[2] = { RenderTarget::Color, RenderTarget::RGB16F }; // normals
-
-        mrt_entries[3] = { RenderTarget::Color, RenderTarget::RGBA16F }; // albedo + specular
-        mrt_entries[4] = { RenderTarget::Depth, RenderTarget::NoColor, RenderTarget::Depth24 }; //depth
-
-        m_gbuffer = std::make_shared<RenderTarget>();
-        m_gbuffer->createMRT(mrt_entries, Window::getWidth(), Window::getHeight());
+        m_deferred_rendering = std::make_shared<DeferredRendering>();
+        m_deferred_rendering->init("DeferredShading", "DeferredShading.frag");
+        m_deferred_rendering->createGBuffer();
 
         m_main_render_target = std::make_shared<RenderTarget>();
         m_main_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::RGBA16F, RenderTarget::Depth24);
@@ -222,15 +212,24 @@ namespace Vertex
 
     void RenderingSystem::render(entityx::EntityManager& entities)
     {
+        /* Render data to GBuffer */
+        m_deferred_rendering->bindGBuffer();
+        m_deferred_rendering->m_gbuffer_shader->bind();
+        renderOpaque(m_deferred_rendering->m_gbuffer_shader);
+
         /* Render everything to offscreen FBO */
         m_main_render_target->bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        m_forward_ambient->bind();
-        m_forward_ambient->setUniform("s_scene_ambient", m_scene_ambient_color);
-        renderOpaque(m_forward_ambient);
+        /* Render deferred shading */
+        m_deferred_rendering->bind();
+        m_deferred_rendering->bindTextures();
+        m_deferred_rendering->render();
 
-        renderLights(entities);
+        //m_forward_ambient->bind();
+        //m_forward_ambient->setUniform("s_scene_ambient", m_scene_ambient_color);
+        //renderOpaque(m_forward_ambient); 
+        //renderLightsForward(entities);
 
         /* Sort transparent objects back to front */
         sortAlpha();
@@ -250,17 +249,6 @@ namespace Vertex
 
         /* Apply postprocess effect */
         applyPostprocess(m_hdr_filter, &m_main_render_target, 0);
-
-        /* Render to GBuffer */
-        /* NOTE: Total proof of concept - needs improvement! */
-        m_gbuffer->bind();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        m_gbuffer_shader->bind();
-        renderOpaque(m_gbuffer_shader);
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glViewport(0, 0, Window::getWidth(), Window::getHeight());
     }
 
     void RenderingSystem::renderDebug()
@@ -319,7 +307,7 @@ namespace Vertex
         }
     }
 
-    void RenderingSystem::renderLights(entityx::EntityManager& entities)
+    void RenderingSystem::renderLightsForward(entityx::EntityManager& entities)
     {
         /*
          * TODO:
