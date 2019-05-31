@@ -37,7 +37,7 @@ namespace Vertex
         static unsigned int M_DEBUG_WINDOW_WIDTH;
 
     private:
-        enum TextureMaps { SHADOW_MAP = 5 };
+        enum TextureMaps { SHADOW_MAP = 5 }; //TODO: move to Material class
 
         std::vector<entityx::Entity> m_opaque_queue;
         std::vector<entityx::Entity> m_alpha_queue;
@@ -52,7 +52,7 @@ namespace Vertex
         std::shared_ptr<Shader> m_debug_rendering;
 
         std::shared_ptr<PostprocessEffect> m_hdr_filter;
-        std::shared_ptr<DeferredRendering> m_deferred_rendering;
+        std::shared_ptr<DeferredRendering> m_deferred_rendering ;
 
         std::shared_ptr<RenderTarget> m_main_render_target;
         std::shared_ptr<RenderTarget> m_dir_shadow_map;

@@ -15,24 +15,19 @@ namespace Vertex
 
     void DeferredRendering::createGBuffer()
     {
-        std::vector<RenderTarget::MRTEntry> mrt_entries(5);
-        mrt_entries[POSITION] = RenderTarget::MRTEntry(RenderTarget::Color, RenderTarget::RGB16F); 
-        mrt_entries[TEXCOORD] = RenderTarget::MRTEntry(RenderTarget::Color, RenderTarget::RGB16F); 
-        mrt_entries[NORMAL]   = RenderTarget::MRTEntry(RenderTarget::Color, RenderTarget::RGB16F); 
-                         
-        mrt_entries[ALBEDO_SPECULAR] = RenderTarget::MRTEntry(RenderTarget::Color, RenderTarget::RGBA16F);
-        mrt_entries[DEPTH]           = RenderTarget::MRTEntry(RenderTarget::Depth, RenderTarget::NoColor, RenderTarget::Depth24);
+        std::vector<RenderTarget::MRTEntry> mrt_entries(4);
+        mrt_entries[GLuint(GBufferPropertyName::POSITION)]        = RenderTarget::MRTEntry(RenderTarget::AttachmentType::Color, RenderTarget::ColorInternalFormat::RGB32F); 
+        mrt_entries[GLuint(GBufferPropertyName::NORMAL)]          = RenderTarget::MRTEntry(RenderTarget::AttachmentType::Color, RenderTarget::ColorInternalFormat::RGB32F); 
+        mrt_entries[GLuint(GBufferPropertyName::ALBEDO_SPECULAR)] = RenderTarget::MRTEntry(RenderTarget::AttachmentType::Color, RenderTarget::ColorInternalFormat::RGBA8);
+        mrt_entries[GLuint(GBufferPropertyName::DEPTH)]           = RenderTarget::MRTEntry(RenderTarget::AttachmentType::Depth, RenderTarget::ColorInternalFormat::NoColor, RenderTarget::DepthInternalFormat::DEPTH32F);
 
-        m_gbuffer = std::make_shared<RenderTarget>();
+        m_gbuffer = std::make_shared<RenderTarget>(); 
         m_gbuffer->createMRT(mrt_entries, Window::getWidth(), Window::getHeight());
     }
 
     void DeferredRendering::bindGBuffer()
     {
-        m_gbuffer->bind();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        m_gbuffer_shader->bind();
+        m_gbuffer->bind(); 
     }
 
     void DeferredRendering::bindTexture(GLuint unit, GLuint gbuffer_property_id)
@@ -42,10 +37,9 @@ namespace Vertex
 
     void DeferredRendering::bindTextures()
     {
-        m_gbuffer->bindTexture(0, POSITION);
-        m_gbuffer->bindTexture(1, TEXCOORD);
-        m_gbuffer->bindTexture(2, NORMAL);
-        m_gbuffer->bindTexture(3, ALBEDO_SPECULAR);
-        m_gbuffer->bindTexture(4, DEPTH);
+        m_gbuffer->bindTexture(0, GLuint(GBufferPropertyName::POSITION));
+        m_gbuffer->bindTexture(1, GLuint(GBufferPropertyName::NORMAL));
+        m_gbuffer->bindTexture(2, GLuint(GBufferPropertyName::ALBEDO_SPECULAR));
+        m_gbuffer->bindTexture(3, GLuint(GBufferPropertyName::DEPTH));
     }
 }

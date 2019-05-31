@@ -1,10 +1,4 @@
 ﻿#version 450
-layout (location = 0) out vec4 positions;
-layout (location = 1) out vec4 texcoords;
-layout (location = 2) out vec4 normals;
-layout (location = 3) out vec4 albedo_specular;
-layout (location = 4) out vec4 depth;
-
 in vec2 texcoord;
 in vec3 world_pos;
 in mat3 tbn;
@@ -20,6 +14,10 @@ layout(binding = 4) uniform sampler2D m_texture_depth;
 
 vec2 parallax_texcoord;
 
+layout (location = 0) out vec3 positions;
+layout (location = 1) out vec3 normals;
+layout (location = 2) out vec4 albedo_specular;
+
 #include "ParallaxMapping.glh"
 
 void main()
@@ -28,7 +26,6 @@ void main()
     parallax_texcoord = parallaxMapping(dir_to_eye);
 
     vec4 diffuse_tex_color = texture(m_texture_diffuse, texcoord);
-    float specular         = texture(m_texture_specular, parallax_texcoord).r;
 
 	if(diffuse_tex_color.a < alpha_cutoff)
 	{
@@ -38,9 +35,8 @@ void main()
     vec3 normal = texture(m_texture_normal, parallax_texcoord).rgb;
     normal = normalize(tbn * (normal * 2.0f - 1.0f));
 
-	positions       = vec4(world_pos, 1.0f);
-	texcoords       = vec4(parallax_texcoord, 0.0f, 1.0f);
-	normals         = vec4(normal, 1.0f);
-	albedo_specular = diffuse_tex_color;//vec4(diffuse_tex_color.rgb, specular);
-	depth           = vec4(gl_FragCoord.z, 0.0f, 0.0f, 0.0f);
+	positions           = world_pos;
+	normals             = normal;
+	albedo_specular.rgb = diffuse_tex_color.rgb;
+	albedo_specular.a   = texture(m_texture_specular, parallax_texcoord).r;
 }

@@ -70,16 +70,16 @@ namespace Vertex
         m_deferred_rendering->createGBuffer();
 
         m_main_render_target = std::make_shared<RenderTarget>();
-        m_main_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::RGBA16F, RenderTarget::Depth24);
+        m_main_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH24);
 
         m_dir_shadow_map = std::make_shared<RenderTarget>();
-        m_dir_shadow_map->create(2048, 2048, RenderTarget::Depth24);
-
+        m_dir_shadow_map->create(2048, 2048, RenderTarget::DepthInternalFormat::DEPTH24);
+         
         m_spot_shadow_map = std::make_shared<RenderTarget>();
-        m_spot_shadow_map->create(1024, 1024, RenderTarget::Depth24);
+        m_spot_shadow_map->create(1024, 1024, RenderTarget::DepthInternalFormat::DEPTH24);
 
         m_omni_shadow_map = std::make_shared<RenderTarget>();
-        m_omni_shadow_map->create(512, 512, RenderTarget::Depth24, RenderTarget::TexCube);
+        m_omni_shadow_map->create(512, 512, RenderTarget::DepthInternalFormat::DEPTH24, RenderTarget::RenderTargetType::TexCube);
 
         initRenderingStates();
     }
@@ -146,7 +146,7 @@ namespace Vertex
     void RenderingSystem::resize(unsigned width, unsigned height)
     {
         m_main_render_target->clear();
-        m_main_render_target->create(width, height, RenderTarget::RGBA16F, RenderTarget::Depth24);
+        m_main_render_target->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH24);
     }
 
     entityx::ComponentHandle<TransformComponent> RenderingSystem::getCameraTransform()
@@ -213,7 +213,11 @@ namespace Vertex
     void RenderingSystem::render(entityx::EntityManager& entities)
     {
         /* Render data to GBuffer */
-        m_deferred_rendering->bindGBuffer();
+        glDisable(GL_BLEND);
+
+        m_deferred_rendering->bindGBuffer(); 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         m_deferred_rendering->m_gbuffer_shader->bind();
         renderOpaque(m_deferred_rendering->m_gbuffer_shader);
 
@@ -225,6 +229,8 @@ namespace Vertex
         m_deferred_rendering->bind();
         m_deferred_rendering->bindTextures();
         m_deferred_rendering->render();
+
+        glEnable(GL_BLEND);
 
         //m_forward_ambient->bind();
         //m_forward_ambient->setUniform("s_scene_ambient", m_scene_ambient_color);
