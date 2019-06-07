@@ -4,13 +4,9 @@
 
 namespace Vertex
 {
-    void DeferredRendering::init(const std::string & filter_name, const std::string & fragment_shader_path)
+    void DeferredRendering::init()
     {
-        m_postprocess = CoreAssetManager::createShader(filter_name, "FSQ.vert", fragment_shader_path);
-        m_postprocess->link();
-
-        m_gbuffer_shader = CoreAssetManager::createShader("GBuffer", "GBuffer.vert", "GBuffer.frag");
-        m_gbuffer_shader->link();
+        m_postprocess = CoreAssetManager::getShader("GBuffer");
     }
 
     void DeferredRendering::createGBuffer()
@@ -21,8 +17,11 @@ namespace Vertex
         mrt_entries[GLuint(GBufferPropertyName::ALBEDO_SPECULAR)] = RenderTarget::MRTEntry(RenderTarget::AttachmentType::Color, RenderTarget::ColorInternalFormat::RGBA8);
         mrt_entries[GLuint(GBufferPropertyName::DEPTH)]           = RenderTarget::MRTEntry(RenderTarget::AttachmentType::Depth, RenderTarget::ColorInternalFormat::NoColor, RenderTarget::DepthInternalFormat::DEPTH32F);
 
-        m_gbuffer = std::make_shared<RenderTarget>(); 
+        m_gbuffer = std::make_shared<RenderTarget>();
         m_gbuffer->createMRT(mrt_entries, Window::getWidth(), Window::getHeight());
+
+        m_light_buffer = std::make_shared<RenderTarget>();
+        m_light_buffer->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA8, RenderTarget::DepthInternalFormat::NoDepth);
     }
 
     void DeferredRendering::bindGBuffer()
@@ -30,16 +29,26 @@ namespace Vertex
         m_gbuffer->bind(); 
     }
 
-    void DeferredRendering::bindTexture(GLuint unit, GLuint gbuffer_property_id)
+    void DeferredRendering::bindLightBuffer()
+    {
+        m_light_buffer->bind();
+    }
+
+    void DeferredRendering::bindGBufferTexture(GLuint unit, GLuint gbuffer_property_id)
     {
         m_gbuffer->bindTexture(unit, gbuffer_property_id);
     }
 
-    void DeferredRendering::bindTextures()
+    void DeferredRendering::bindGBufferTextures()
     {
         m_gbuffer->bindTexture(0, GLuint(GBufferPropertyName::POSITION));
         m_gbuffer->bindTexture(1, GLuint(GBufferPropertyName::NORMAL));
         m_gbuffer->bindTexture(2, GLuint(GBufferPropertyName::ALBEDO_SPECULAR));
         m_gbuffer->bindTexture(3, GLuint(GBufferPropertyName::DEPTH));
+    }
+
+    void DeferredRendering::bindLightTexture(GLuint unit)
+    {
+        m_light_buffer->bindTexture(unit);
     }
 }

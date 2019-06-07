@@ -14,18 +14,20 @@ namespace Vertex
 
         DeferredRendering() = default;
 
-        void init(const std::string & filter_name, const std::string & fragment_shader_path) override;
+        void init();
         
         void createGBuffer();  
         void bindGBuffer();
+        void bindLightBuffer();
 
-        void bindTexture(GLuint unit, GLuint gbuffer_property_id);
-        void bindTextures();
+        void bindGBufferTexture(GLuint unit, GLuint gbuffer_property_id);
+        void bindGBufferTextures();
+        void bindLightTexture(GLuint unit = 0);
 
     private:
-        friend class RenderingSystem;
-
         std::shared_ptr<RenderTarget> m_gbuffer;
+        std::shared_ptr<RenderTarget> m_light_buffer;
+
         std::shared_ptr<Shader>       m_gbuffer_shader;
     };
 }

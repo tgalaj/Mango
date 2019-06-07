@@ -7,7 +7,6 @@
 #include "core_components/PointLightComponent.h"
 #include "core_components/SpotLightComponent.h"
 #include "framework/utilities/ShaderGlobals.h"
-#include "helpers/Assertions.h"
 
 namespace Vertex
 {
@@ -47,7 +46,7 @@ namespace Vertex
         m_forward_spot = CoreAssetManager::createShader("Forward-Spot", "Forward-Light.vert", "Forward-Spot.frag");
         m_forward_spot->link();
 
-        m_debug_rendering = CoreAssetManager::createShader("Debug-Rendering", "Forward-Light.vert", "DebugRendering.frag");
+        m_debug_rendering = CoreAssetManager::createShader("Debug-Rendering", "FSQ.vert", "DebugRendering.frag");
         m_debug_rendering->link();
 
         m_shadow_map_generator = CoreAssetManager::createShader("Shadow-Map-Gen", "Shadow-Map-Gen.vert", "Shadow-Map-Gen.frag");
@@ -59,14 +58,20 @@ namespace Vertex
         m_blending_shader = CoreAssetManager::createShader("Blending-Shader", "Blending.vert", "Blending.frag");
         m_blending_shader->link();
 
-        M_DEBUG_WINDOW_WIDTH = Window::getWidth() / 5.0f;
+        m_gbuffer_shader = CoreAssetManager::createShader("GBuffer", "GBuffer.vert", "GBuffer.frag");
+        m_gbuffer_shader->link();
+
+        m_deferred_directional = CoreAssetManager::createShader("Deferred-Directional", "FSQ.vert", "Deferred-Directional.frag");
+        m_deferred_directional->link();
+
+        M_DEBUG_WINDOW_WIDTH = GLuint(Window::getWidth() / 5.0f);
         m_scene_ambient_color = glm::vec3(0.18f);
 
         m_hdr_filter = std::make_shared<PostprocessEffect>();
         m_hdr_filter->init("PS-HDR", "PS-HDR.frag");
 
         m_deferred_rendering = std::make_shared<DeferredRendering>();
-        m_deferred_rendering->init("DeferredShading", "DeferredShading.frag");
+        m_deferred_rendering->init();
         m_deferred_rendering->createGBuffer();
 
         m_main_render_target = std::make_shared<RenderTarget>();
@@ -176,12 +181,24 @@ namespace Vertex
         glBlendFunc(GL_ONE, GL_ONE);
         glDepthMask(GL_FALSE);
         glDepthFunc(GL_EQUAL);
+
     }
 
     void RenderingSystem::endForwardRendering()
     {
         glDepthMask(GL_TRUE);
         glDepthFunc(GL_LESS);
+    }
+
+    void RenderingSystem::beginDeferredRendering()
+    {
+        glDisable(GL_DEPTH_TEST);
+        glBlendFunc(GL_ONE, GL_ONE);
+    }
+
+    void RenderingSystem::endDeferredRendering()
+    {
+        glEnable(GL_DEPTH_TEST);
     }
 
     void RenderingSystem::bindMainRenderTarget()
@@ -218,24 +235,31 @@ namespace Vertex
         m_deferred_rendering->bindGBuffer(); 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        m_deferred_rendering->m_gbuffer_shader->bind();
-        renderOpaque(m_deferred_rendering->m_gbuffer_shader);
+        m_gbuffer_shader->bind();
+        renderOpaque(m_gbuffer_shader);
 
         /* Render everything to offscreen FBO */
-        m_main_render_target->bind();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //m_main_render_target->bind();
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         /* Render deferred shading */
-        m_deferred_rendering->bind();
-        m_deferred_rendering->bindTextures();
-        m_deferred_rendering->render();
+        //m_deferred_rendering->bind();
+        //m_deferred_rendering->bindGBufferTextures();
+        //m_deferred_rendering->render();
 
+
+
+        /* Render lights to light buffer */
         glEnable(GL_BLEND);
+        renderLightsDeferred(entities);
 
         //m_forward_ambient->bind();
         //m_forward_ambient->setUniform("s_scene_ambient", m_scene_ambient_color);
         //renderOpaque(m_forward_ambient); 
         //renderLightsForward(entities);
+
+        m_main_render_target->bind();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         /* Sort transparent objects back to front */
         sortAlpha();
@@ -259,28 +283,34 @@ namespace Vertex
 
     void RenderingSystem::renderDebug()
     {
+        glDisable(GL_BLEND);
         glClear(GL_DEPTH_BUFFER_BIT);
+
         m_debug_rendering->bind();
 
-        m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugPositions");
+        m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugColorTarget");
+        m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::POSITION);
         glViewport(M_DEBUG_WINDOW_WIDTH * 0, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        renderOpaque(m_debug_rendering);
+        m_deferred_rendering->render();
 
-        m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugNormals");
+        m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::ALBEDO_SPECULAR);
         glViewport(M_DEBUG_WINDOW_WIDTH * 1, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        renderOpaque(m_debug_rendering);
+        m_deferred_rendering->render();
 
-        m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugTexCoords");
+        m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::NORMAL);
         glViewport(M_DEBUG_WINDOW_WIDTH * 2, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        renderOpaque(m_debug_rendering);
+        m_deferred_rendering->render();
 
-        m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugDiffuse");
-        glViewport(M_DEBUG_WINDOW_WIDTH * 3, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        renderOpaque(m_debug_rendering);
-
-        m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugDepth");
+        m_deferred_rendering->bindLightTexture();
         glViewport(M_DEBUG_WINDOW_WIDTH * 4, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        renderOpaque(m_debug_rendering);
+        m_deferred_rendering->render();
+
+        m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugDepthTarget");
+        m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::DEPTH);
+        glViewport(M_DEBUG_WINDOW_WIDTH * 3, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
+        m_deferred_rendering->render();
+
+        glEnable(GL_BLEND);
     }
 
     void RenderingSystem::renderOpaque(const std::shared_ptr<Shader> & shader)
@@ -448,6 +478,54 @@ namespace Vertex
             beginForwardRendering();
             renderOpaque(m_forward_spot);
             endForwardRendering();
+        }
+    }
+
+    void RenderingSystem::renderLightsDeferred(entityx::EntityManager& entities)
+    {
+        entityx::ComponentHandle<DirectionalLightComponent> directional_light;
+        entityx::ComponentHandle<PointLightComponent>       point_light;
+        entityx::ComponentHandle<SpotLightComponent>        spot_light;
+        entityx::ComponentHandle<TransformComponent>        transform;
+
+
+        m_deferred_rendering->bindLightBuffer();
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        /* Deferred Directional Lights */
+        for(auto entity : entities.entities_with_components(directional_light, transform))
+        {
+//            ShadowInfo shadow_info = directional_light->getShadowInfo();
+//            glm::mat4 light_matrix = glm::mat4(1.0f);
+//
+//            if(shadow_info.getCastsShadows())
+//            {
+//                m_shadow_map_generator->bind();
+//
+//                m_dir_shadow_map->bind();
+//                glClear(GL_DEPTH_BUFFER_BIT);
+//
+//                light_matrix = shadow_info.getProjection() * glm::lookAt(-transform->direction(), glm::vec3(0.0f), glm::vec3(0, 1, 0));
+//                m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
+//
+//                glCullFace(GL_FRONT);
+//                renderOpaque(m_shadow_map_generator);
+//                glCullFace(GL_BACK);
+//            }
+
+            m_deferred_directional->bind();
+            m_deferred_rendering->bindLightBuffer();
+            m_deferred_rendering->bindGBufferTextures();
+            //m_dir_shadow_map->bindTexture(SHADOW_MAP);
+
+            m_deferred_directional->setUniform(S_DIRECTIONAL_LIGHT ".base.color",     directional_light->m_color);
+            m_deferred_directional->setUniform(S_DIRECTIONAL_LIGHT ".base.intensity", directional_light->m_intensity);
+            m_deferred_directional->setUniform(S_DIRECTIONAL_LIGHT ".direction",      transform->direction());
+            //m_deferred_directional->setUniform("s_light_matrix", light_matrix);
+
+            beginDeferredRendering();
+            m_deferred_rendering->render();
+            endDeferredRendering();
         }
     }
 

@@ -51,6 +51,12 @@ namespace Vertex
         std::shared_ptr<Shader> m_blending_shader;
         std::shared_ptr<Shader> m_debug_rendering;
 
+        std::shared_ptr<Shader> m_gbuffer_shader;
+        std::shared_ptr<Shader> m_deferred_ambient; // TODO
+        std::shared_ptr<Shader> m_deferred_directional; // TODO
+        std::shared_ptr<Shader> m_deferred_point; // TODO
+        std::shared_ptr<Shader> m_deferred_spot; // TODO
+
         std::shared_ptr<PostprocessEffect> m_hdr_filter;
         std::shared_ptr<DeferredRendering> m_deferred_rendering ;
 
@@ -68,6 +74,9 @@ namespace Vertex
         static void beginForwardRendering();
         static void endForwardRendering();
 
+        static void beginDeferredRendering();
+        static void endDeferredRendering();
+
         void bindMainRenderTarget();
 
         void applyPostprocess(std::shared_ptr<PostprocessEffect> & effect, std::shared_ptr<RenderTarget> * src, std::shared_ptr<RenderTarget> * dst);
@@ -78,6 +87,7 @@ namespace Vertex
         void renderOpaque(const std::shared_ptr<Shader> & shader);
         void renderAlpha(const std::shared_ptr<Shader>& shader);
         void renderLightsForward(entityx::EntityManager& entities);
+        void renderLightsDeferred(entityx::EntityManager& entities);
 
         void sortAlpha();
     };

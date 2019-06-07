@@ -199,4 +199,14 @@ namespace Vertex
 
         return nullptr;
     }
+
+    std::shared_ptr<Shader> CoreAssetManager::getShader(const std::string& shader_name)
+    {
+        if(m_loaded_shaders.count(shader_name))
+        {
+            return m_loaded_shaders[shader_name];
+        }
+
+        return nullptr;
+    }
 }

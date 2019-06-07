@@ -24,7 +24,9 @@ namespace Vertex
         std::vector<MRTEntry> mrt_entries(1);
         mrt_entries[0] = { AttachmentType::Color, color };
 
-        createMRT(mrt_entries, width, height, rt_type, use_filtering, depth);
+        auto default_depth_format = (depth == DepthInternalFormat::NoDepth) ? DepthInternalFormat::DEPTH24 : depth;
+
+        createMRT(mrt_entries, width, height, rt_type, use_filtering, default_depth_format);
     }
 
     void RenderTarget::create(unsigned width, unsigned height, DepthInternalFormat depth, RenderTargetType rt_type, bool use_filtering)
