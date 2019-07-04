@@ -226,7 +226,16 @@ namespace Vertex
     void RenderTarget::bind() const
     {
         glBindFramebuffer(GL_FRAMEBUFFER, m_fbo_id);
-        glViewport(0, 0, m_width, m_height);
+    }
+
+    void RenderTarget::bindReadOnly() const
+    {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo_id);
+    }
+
+    void RenderTarget::bindWriteOnly() const
+    {
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo_id);
     }
 
     void RenderTarget::bindTexture(GLuint texture_unit, GLuint render_target_id) const

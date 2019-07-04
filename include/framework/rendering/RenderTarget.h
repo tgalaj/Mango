@@ -125,7 +125,9 @@ namespace Vertex
 
         void clear();
 
-        void bind() const;
+        void bind()          const;
+        void bindReadOnly()  const;
+        void bindWriteOnly() const;
         void bindTexture(GLuint texture_unit = 0, GLuint render_target_id = 0) const;
         void releaseTexture() const { glBindTexture(m_type, 0); }
 

@@ -18,16 +18,12 @@ namespace Vertex
         
         void createGBuffer();  
         void bindGBuffer();
-        void bindLightBuffer();
+        void bindGBufferReadOnly();
 
         void bindGBufferTexture(GLuint unit, GLuint gbuffer_property_id);
         void bindGBufferTextures();
-        void bindLightTexture(GLuint unit = 0);
 
     private:
         std::shared_ptr<RenderTarget> m_gbuffer;
-        std::shared_ptr<RenderTarget> m_light_buffer;
-
-        std::shared_ptr<Shader>       m_gbuffer_shader;
     };
 }

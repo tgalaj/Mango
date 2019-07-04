@@ -74,9 +74,6 @@ namespace Vertex
         static void beginForwardRendering();
         static void endForwardRendering();
 
-        static void beginDeferredRendering();
-        static void endDeferredRendering();
-
         void bindMainRenderTarget();
 
         void applyPostprocess(std::shared_ptr<PostprocessEffect> & effect, std::shared_ptr<RenderTarget> * src, std::shared_ptr<RenderTarget> * dst);

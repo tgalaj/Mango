@@ -27,16 +27,16 @@ void main()
 
     vec4 diffuse_tex_color = texture(m_texture_diffuse, texcoord);
 
-	if(diffuse_tex_color.a < alpha_cutoff)
-	{
-		discard;
-	}
+    if(diffuse_tex_color.a < alpha_cutoff)
+    {
+        discard;
+    }
 
     vec3 normal = texture(m_texture_normal, parallax_texcoord).rgb;
     normal = normalize(tbn * (normal * 2.0f - 1.0f));
 
-	positions           = world_pos;
-	normals             = normal;
-	albedo_specular.rgb = diffuse_tex_color.rgb;
-	albedo_specular.a   = texture(m_texture_specular, parallax_texcoord).r;
+    positions           = world_pos;
+    normals             = normal;
+    albedo_specular.rgb = diffuse_tex_color.rgb;
+    albedo_specular.a   = texture(m_texture_specular, parallax_texcoord).r;
 }

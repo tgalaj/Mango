@@ -19,9 +19,6 @@ namespace Vertex
 
         m_gbuffer = std::make_shared<RenderTarget>();
         m_gbuffer->createMRT(mrt_entries, Window::getWidth(), Window::getHeight());
-
-        m_light_buffer = std::make_shared<RenderTarget>();
-        m_light_buffer->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA8, RenderTarget::DepthInternalFormat::NoDepth);
     }
 
     void DeferredRendering::bindGBuffer()
@@ -29,9 +26,9 @@ namespace Vertex
         m_gbuffer->bind(); 
     }
 
-    void DeferredRendering::bindLightBuffer()
+    void DeferredRendering::bindGBufferReadOnly()
     {
-        m_light_buffer->bind();
+        m_gbuffer->bindReadOnly();
     }
 
     void DeferredRendering::bindGBufferTexture(GLuint unit, GLuint gbuffer_property_id)
@@ -45,10 +42,5 @@ namespace Vertex
         m_gbuffer->bindTexture(1, GLuint(GBufferPropertyName::NORMAL));
         m_gbuffer->bindTexture(2, GLuint(GBufferPropertyName::ALBEDO_SPECULAR));
         m_gbuffer->bindTexture(3, GLuint(GBufferPropertyName::DEPTH));
-    }
-
-    void DeferredRendering::bindLightTexture(GLuint unit)
-    {
-        m_light_buffer->bindTexture(unit);
     }
 }
