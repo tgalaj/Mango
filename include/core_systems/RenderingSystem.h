@@ -78,7 +78,8 @@ namespace Vertex
 
         void applyPostprocess(std::shared_ptr<PostprocessEffect> & effect, std::shared_ptr<RenderTarget> * src, std::shared_ptr<RenderTarget> * dst);
 
-        void render(entityx::EntityManager& entities);
+        void renderForward(entityx::EntityManager& entities);
+        void renderDeferred(entityx::EntityManager& entities);
         void renderDebug();
 
         void renderOpaque(const std::shared_ptr<Shader> & shader);

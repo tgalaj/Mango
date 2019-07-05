@@ -1,8 +1,4 @@
-﻿#ifndef POINT_LIGHT
-in vec4 frag_pos_light_space;
-#endif
-
-in vec2 texcoord;
+﻿in vec2 texcoord;
 
 out vec4 light_info;
 
@@ -52,7 +48,6 @@ struct SpotLight
 
 vec4 blinnPhong(BaseLight base, vec3 direction, vec3 normal, vec3 world_pos)
 {
-    vec4  albedo                 = vec4(texture(gbuffer_albedo_spec, texcoord).rgb, 1.0f);
     float specular_map_intensity = texture(gbuffer_albedo_spec, texcoord).a;
 
     float diffuse = max(dot(normal, -direction), 0.0f);
@@ -64,7 +59,7 @@ vec4 blinnPhong(BaseLight base, vec3 direction, vec3 normal, vec3 world_pos)
     vec4 diffuse_color  = vec4(base.color, 1.0f) * base.intensity * diffuse;
     vec4 specular_color = vec4(base.color, 1.0f) * (specular_map_intensity + specular_intensity) * specular;
 
-    return albedo * (vec4(s_scene_ambient, 1.0f) + diffuse_color + specular_color);
+    return diffuse_color + specular_color;
 }
 
 vec4 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 world_pos)
