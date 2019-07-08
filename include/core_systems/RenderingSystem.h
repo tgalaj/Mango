@@ -52,13 +52,17 @@ namespace Vertex
         std::shared_ptr<Shader> m_debug_rendering;
 
         std::shared_ptr<Shader> m_gbuffer_shader;
-        std::shared_ptr<Shader> m_deferred_ambient; // TODO
-        std::shared_ptr<Shader> m_deferred_directional; // TODO
-        std::shared_ptr<Shader> m_deferred_point; // TODO
-        std::shared_ptr<Shader> m_deferred_spot; // TODO
+        std::shared_ptr<Shader> m_deferred_directional;
+        std::shared_ptr<Shader> m_deferred_point;
+        std::shared_ptr<Shader> m_deferred_spot;
+
+        std::shared_ptr<Shader> m_boundingbox_shader;
+        std::shared_ptr<Shader> m_null_shader;
+        Model m_light_bsphere;
+        Model m_light_bcone;
 
         std::shared_ptr<PostprocessEffect> m_hdr_filter;
-        std::shared_ptr<DeferredRendering> m_deferred_rendering ;
+        std::shared_ptr<DeferredRendering> m_deferred_rendering;
 
         std::shared_ptr<RenderTarget> m_main_render_target;
         std::shared_ptr<RenderTarget> m_dir_shadow_map;
@@ -81,6 +85,7 @@ namespace Vertex
         void renderForward(entityx::EntityManager& entities);
         void renderDeferred(entityx::EntityManager& entities);
         void renderDebug();
+        void renderDebugLightsBoundingBoxes(entityx::EntityManager& entities);
 
         void renderOpaque(const std::shared_ptr<Shader> & shader);
         void renderAlpha(const std::shared_ptr<Shader>& shader);

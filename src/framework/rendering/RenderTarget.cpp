@@ -169,17 +169,31 @@ namespace Vertex
             else
             if(mrt_entries[i].m_attachment_type == AttachmentType::Depth)
             {
-                has_depth = true;
+                has_depth       = true;
                 draw_buffers[i] = GL_NONE;
+
+                GLenum attachment_type = GL_DEPTH_ATTACHMENT;
+                GLuint depth_format    = GLuint(mrt_entries[i].m_depth_internalformat);
+
+                switch(depth_format)
+                {
+                    case GLuint(DepthInternalFormat::DEPTH24_STENCIL8):
+                    case GLuint(DepthInternalFormat ::DEPTH32F_STENCIL8):
+                        attachment_type = GL_DEPTH_STENCIL_ATTACHMENT;
+                        break;
+                    case GLuint(DepthInternalFormat::STENCIL_INDEX8):
+                        attachment_type = GL_STENCIL_ATTACHMENT;
+                        break;
+                }
 
                 if (m_type == GLenum(RenderTargetType::Tex2D))
                 {
-                    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_type, m_to_ids[i], 0);
+                    glFramebufferTexture2D(GL_FRAMEBUFFER, attachment_type, m_type, m_to_ids[i], 0);
                 }
 
                 if(m_type == GLenum(RenderTargetType::TexCube))
                 {
-                    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_to_ids[i], 0);
+                    glFramebufferTexture(GL_FRAMEBUFFER, attachment_type, m_to_ids[i], 0);
                 }
             }
         }

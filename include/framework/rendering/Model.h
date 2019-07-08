@@ -30,6 +30,9 @@ namespace Vertex
         void load(const std::string & filename);
         void render(Shader & shader);
 
+        void setDrawMode(GLenum draw_mode);
+        GLenum getDrawMode() { return getMesh(0).getDrawMode(); }
+
         Mesh & getMesh(unsigned int index = 0)
         {
             if (index > m_meshes.size())

@@ -30,6 +30,12 @@ namespace Vertex
             setShadowInfo(ShadowInfo(glm::perspective(glm::radians(90.0f), 1.0f, 0.001f, 100.0f), true));
         }
 
+        void setAttenuation(float constant, float linear, float quadratic)
+        {
+            m_attenuation = Attenuation(constant, linear, quadratic);
+            calculateRange();
+        }
+
         Attenuation m_attenuation;
         float m_range;
 

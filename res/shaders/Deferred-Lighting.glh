@@ -1,4 +1,8 @@
-﻿in vec2 texcoord;
+﻿#ifndef POINT_LIGHT
+in vec2 texcoord;
+#else
+vec2 texcoord;
+#endif
 
 out vec4 light_info;
 

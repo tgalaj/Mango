@@ -64,11 +64,23 @@ namespace Vertex
         m_deferred_directional = CoreAssetManager::createShader("Deferred-Directional", "FSQ.vert", "Deferred-Directional.frag");
         m_deferred_directional->link();
 
-        m_deferred_point = CoreAssetManager::createShader("Deferred-Point", "FSQ.vert", "Deferred-Point.frag");
+        m_deferred_point = CoreAssetManager::createShader("Deferred-Point", "DebugObjectGeometry.vert", "Deferred-Point.frag");
         m_deferred_point->link();
 
         m_deferred_spot = CoreAssetManager::createShader("Deferred-Spot", "FSQ.vert", "Deferred-Spot.frag");
         m_deferred_spot->link();
+
+        m_boundingbox_shader = CoreAssetManager::createShader("DebugRenderBB", "DebugObjectGeometry.vert", "DebugObjectGeometry.frag");
+        m_boundingbox_shader->link();
+
+        m_null_shader = CoreAssetManager::createShader("NullShader", "DebugObjectGeometry.vert", "Shadow-Map-Gen.frag");
+        m_null_shader->link();
+
+        m_light_bsphere = Model();
+        m_light_bsphere.genSphere(1.0f, 12);
+
+        m_light_bcone = Model();
+        m_light_bcone.genCone(1.0f, 1.0f, 6, 6);
 
         M_DEBUG_WINDOW_WIDTH = GLuint(Window::getWidth() / 5.0f);
         m_scene_ambient_color = glm::vec3(0.18f);
@@ -81,7 +93,7 @@ namespace Vertex
         m_deferred_rendering->createGBuffer();
 
         m_main_render_target = std::make_shared<RenderTarget>();
-        m_main_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F);
+        m_main_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
 
         m_dir_shadow_map = std::make_shared<RenderTarget>();
         m_dir_shadow_map->create(2048, 2048, RenderTarget::DepthInternalFormat::DEPTH24);
@@ -102,6 +114,7 @@ namespace Vertex
 
         if (M_DEBUG_RENDERING)
         {
+            //renderDebugLightsBoundingBoxes(entities);
             renderDebug();
         }
     }
@@ -158,7 +171,7 @@ namespace Vertex
     void RenderingSystem::resize(unsigned width, unsigned height)
     {
         m_main_render_target->clear();
-        m_main_render_target->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F);
+        m_main_render_target->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
     }
 
     entityx::ComponentHandle<TransformComponent> RenderingSystem::getCameraTransform()
@@ -244,6 +257,11 @@ namespace Vertex
         renderAlpha(m_blending_shader);
         glEnable(GL_CULL_FACE);
 
+        if (M_DEBUG_RENDERING)
+        {
+            renderDebugLightsBoundingBoxes(entities);
+        }
+
         /* Render skybox */
         if (m_default_skybox != nullptr)
         {
@@ -290,10 +308,16 @@ namespace Vertex
         glEnable(GL_DEPTH_TEST);
         glDepthMask(GL_TRUE);
 
+        if (M_DEBUG_RENDERING)
+        {
+            renderDebugLightsBoundingBoxes(entities);
+        }
+
         /* Sort transparent objects back to front */
         sortAlpha();
 
         /* Render transparent objects */
+        glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDisable(GL_CULL_FACE);
         m_blending_shader->bind();
@@ -334,6 +358,34 @@ namespace Vertex
         m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::DEPTH);
         glViewport(M_DEBUG_WINDOW_WIDTH * 3, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
         m_deferred_rendering->render();
+
+        glEnable(GL_BLEND);
+    }
+
+    void RenderingSystem::renderDebugLightsBoundingBoxes(entityx::EntityManager& entities)
+    {
+        entityx::ComponentHandle<PointLightComponent> point_light;
+        entityx::ComponentHandle<SpotLightComponent>  spot_light;
+        entityx::ComponentHandle<TransformComponent>  transform;
+
+        glDisable(GL_BLEND);
+
+        /* Point Lights */
+        m_light_bsphere.setDrawMode(GL_LINES);
+        for (auto entity : entities.entities_with_components(point_light, transform))
+        {
+            auto model       = glm::translate(glm::mat4(1.0f), transform->position()) *
+                               glm::scale(glm::mat4(1.0f), glm::vec3(point_light->m_range));
+            auto view        = CoreServices::getRenderer()->getCamera()->m_view;
+            auto projection  = CoreServices::getRenderer()->getCamera()->m_projection;
+
+            m_boundingbox_shader->bind();
+            m_boundingbox_shader->setUniform("g_mvp", projection * view * model);
+            m_boundingbox_shader->setUniform("color", glm::vec4(1.0f, 1.0, 1.0, 1.0f));
+
+            m_light_bsphere.render(*m_boundingbox_shader);
+        }
+        m_light_bsphere.setDrawMode(GL_TRIANGLES);
 
         glEnable(GL_BLEND);
     }
@@ -557,7 +609,55 @@ namespace Vertex
             m_deferred_rendering->render();
         }
 
+        /* Spot Lights */
+        for (auto entity : entities.entities_with_components(spot_light, transform))
+        {
+            ShadowInfo shadow_info = spot_light->getShadowInfo();
+            glm::mat4 light_matrix = glm::mat4(1.0f);
+
+            if (shadow_info.getCastsShadows())
+            {
+                glEnable(GL_DEPTH_TEST);
+                glDepthMask(GL_TRUE);
+
+                m_shadow_map_generator->bind();
+
+                m_spot_shadow_map->bind();
+                glClear(GL_DEPTH_BUFFER_BIT);
+
+                light_matrix = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + transform->direction(), glm::vec3(0, 1, 0));
+                m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
+
+                glCullFace(GL_FRONT);
+                renderOpaque(m_shadow_map_generator);
+                glCullFace(GL_BACK);
+
+                glDepthMask(GL_FALSE);
+                glDisable(GL_DEPTH_TEST);
+            }
+
+            bindMainRenderTarget();
+
+            m_deferred_spot->bind();
+            m_deferred_rendering->bindGBufferTextures();
+            m_spot_shadow_map->bindTexture(SHADOW_MAP);
+
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.base.color",      spot_light->m_color);
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.base.intensity",  spot_light->m_intensity);
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spot_light->m_attenuation.m_constant);
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spot_light->m_attenuation.m_linear);
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spot_light->m_attenuation.m_quadratic);
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.position",        transform->position());
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.range",           spot_light->m_range);
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".direction",             transform->direction());
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".cutoff",                spot_light->getCutOffAngle());
+            m_deferred_spot->setUniform("s_light_matrix", light_matrix);
+
+            m_deferred_rendering->render();
+        }
+
         /* Point Lights */
+        glEnable(GL_STENCIL_TEST);
         for (auto entity : entities.entities_with_components(point_light, transform))
         {
             ShadowInfo shadow_info = point_light->getShadowInfo();
@@ -594,6 +694,40 @@ namespace Vertex
 
             bindMainRenderTarget();
 
+            /* Bounding sphere MVP matrix setup */
+            auto model       = glm::translate(glm::mat4(1.0f), transform->position()) *
+                               glm::scale(glm::mat4(1.0f), glm::vec3(point_light->m_range));
+            auto view        = CoreServices::getRenderer()->getCamera()->m_view;
+            auto projection  = CoreServices::getRenderer()->getCamera()->m_projection;
+            auto mvp = projection * view * model;
+
+            /* Stencil pass */
+            m_null_shader->bind();
+            glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+            glEnable(GL_DEPTH_TEST);
+            glDisable(GL_CULL_FACE);
+
+            glClear(GL_STENCIL_BUFFER_BIT);
+            glStencilFunc(GL_ALWAYS, 0, 0);
+            glStencilOpSeparate(GL_BACK, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
+            glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
+
+            m_null_shader->setUniform("g_mvp", mvp);
+            m_light_bsphere.render(*m_null_shader);
+
+            glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+            /* Lighting pass */
+            glStencilFunc(GL_NOTEQUAL, 0, 0xFF);
+            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_BLEND);
+            glBlendEquation(GL_FUNC_ADD);
+            glBlendFunc(GL_ONE, GL_ONE);
+
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_FRONT);
+
             m_deferred_point->bind();
             m_deferred_rendering->bindGBufferTextures();
             m_omni_shadow_map->bindTexture(SHADOW_MAP);
@@ -607,55 +741,13 @@ namespace Vertex
             m_deferred_point->setUniform(S_POINT_LIGHT ".range",           point_light->m_range);
             m_deferred_point->setUniform("s_far_plane", 100.0f);
 
-            m_deferred_rendering->render();
+            m_deferred_point->setUniform("g_mvp", mvp);
+            m_light_bsphere.render(*m_deferred_point);
+
+            glCullFace(GL_BACK);
+            glDisable(GL_BLEND);
         }
-
-        /* Spot Lights */
-        for (auto entity : entities.entities_with_components(spot_light, transform))
-        {
-            ShadowInfo shadow_info = spot_light->getShadowInfo();
-            glm::mat4 light_matrix = glm::mat4(1.0f);
-
-            if (shadow_info.getCastsShadows())
-            {
-                glEnable(GL_DEPTH_TEST);
-                glDepthMask(GL_TRUE);
-
-                m_shadow_map_generator->bind();
-
-                m_spot_shadow_map->bind();
-                glClear(GL_DEPTH_BUFFER_BIT);
-
-                light_matrix = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + transform->direction(), glm::vec3(0, 1, 0));
-                m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
-
-                glCullFace(GL_FRONT);
-                renderOpaque(m_shadow_map_generator);
-                glCullFace(GL_BACK);
-
-                glDepthMask(GL_FALSE);
-                glDisable(GL_DEPTH_TEST); 
-            }
-
-            bindMainRenderTarget();
-
-            m_deferred_spot->bind();
-            m_deferred_rendering->bindGBufferTextures();
-            m_spot_shadow_map->bindTexture(SHADOW_MAP);
-
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.base.color",      spot_light->m_color);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.base.intensity",  spot_light->m_intensity);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spot_light->m_attenuation.m_constant);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spot_light->m_attenuation.m_linear);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spot_light->m_attenuation.m_quadratic);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.position",        transform->position());
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.range",           spot_light->m_range);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".direction",             transform->direction());
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".cutoff",                spot_light->getCutOffAngle());
-            m_deferred_spot->setUniform("s_light_matrix", light_matrix);
-
-            m_deferred_rendering->render();
-        }
+        glDisable(GL_STENCIL_TEST);
     }
 
     void RenderingSystem::sortAlpha()

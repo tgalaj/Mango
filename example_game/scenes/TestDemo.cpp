@@ -160,17 +160,6 @@ void TestDemo::init()
     sphere2.setPosition(5, 3, -12.5);
     sphere2.setScale(0.5f);
 
-    auto point_light1 = Vertex::CoreAssetManager::createGameObject();
-    point_light1.addComponent<Vertex::PointLightComponent>();
-    point_light1.getComponent<Vertex::PointLightComponent>()->m_color = glm::vec3(1.0f);
-    point_light1.getComponent<Vertex::PointLightComponent>()->m_intensity = 10.0f;
-    point_light1.setPosition(-10, 15, -6.5);
-    
-    auto plight = Vertex::CoreAssetManager::createGameObject();
-    plight.addComponent<Vertex::ModelRendererComponent>(sphere_model);
-    plight.setPosition(-10, 15, -6.5);
-    plight.setScale(0.25f);
-
     float offset = 15.0f / 10.0f;
     float num_objects = 10;
 
@@ -221,8 +210,9 @@ void TestDemo::init()
     {
         auto point_light = Vertex::CoreAssetManager::createGameObject();
         point_light.addComponent<Vertex::PointLightComponent>();
+        point_light.getComponent<Vertex::PointLightComponent>()->setAttenuation(3.0f, 4.0f, 10.0f);
         point_light.getComponent<Vertex::PointLightComponent>()->m_color = colors[i];
-        point_light.getComponent<Vertex::PointLightComponent>()->m_intensity = 50.0f;
+        point_light.getComponent<Vertex::PointLightComponent>()->m_intensity = 200.0f;
         point_light.setPosition(positions[i].x, positions[i].y, positions[i].z);
         point_light.addComponent<MoveSystemComponent>();
 

@@ -247,4 +247,12 @@ namespace Vertex
             m_meshes[i].render();
         }
     }
+
+    void Model::setDrawMode(GLenum draw_mode)
+    {
+        for(unsigned i = 0; i < m_meshes.size(); ++i)
+        {
+            m_meshes[i].setDrawMode(draw_mode);
+        }
+    }
 }
