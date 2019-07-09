@@ -80,7 +80,7 @@ namespace Vertex
 		{ \
 			if (!(cond)) \
 			{ \
-				if (Vertex::Assert::reportFailure(#cond, __FILE__, __LINE__, (msg), __VA_ARGS__) == \
+				if (Vertex::Assert::reportFailure(#cond, __FILE__, __LINE__, (msg), ##__VA_ARGS__) == \
 					Vertex::Assert::Halt) \
 					VERTEX_HALT(); \
 			} \
@@ -89,7 +89,7 @@ namespace Vertex
 #define VERTEX_ASSERT_FAIL(msg, ...) \
 		do \
 		{ \
-			if (Vertex::Assert::reportFailure(0, __FILE__, __LINE__, (msg), __VA_ARGS__) == \
+			if (Vertex::Assert::reportFailure(0, __FILE__, __LINE__, (msg), ##__VA_ARGS__) == \
 				Vertex::Assert::Halt) \
 			VERTEX_HALT(); \
 		} while(0)
