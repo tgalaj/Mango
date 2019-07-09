@@ -369,16 +369,14 @@ namespace Vertex
 
     void GeomPrimitive::genCone(VertexBuffers & buffers, float height, float r, unsigned int slices, unsigned int stacks)
     {
-        float halfHeight = height * 0.5f;
-        glm::vec3 p = glm::vec3(0.0f, halfHeight, 0.0f);
-
         float thetaInc = glm::two_pi<float>() / float(slices);
         float theta = 0.0f;
-        float sign = -1.0f;
 
         VertexBuffers::Vertex vertex;
 
         /* Center bottom */
+        glm::vec3 p = glm::vec3(0.0f, height, 0.0f);
+
         vertex.m_position = -p;
         vertex.m_normal   = glm::vec3(0.0f, -1.0f, 0.0f);
         vertex.m_texcoord = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -389,7 +387,7 @@ namespace Vertex
         for (unsigned int sideCount = 0; sideCount <= slices; ++sideCount, theta += thetaInc)
         {
             VertexBuffers::Vertex v;
-            v.m_position = glm::vec3(glm::cos(theta) * r, -halfHeight, -glm::sin(theta) * r);
+            v.m_position = glm::vec3(glm::cos(theta) * r, -height, -glm::sin(theta) * r);
             v.m_normal   = glm::vec3(0.0f, -1.0f, 0.0f);
             v.m_texcoord = glm::vec3(0.0f, 0.0f, 0.0f);
             v.m_tangent  = glm::vec3(0.0f);
@@ -408,7 +406,7 @@ namespace Vertex
             {
                 VertexBuffers::Vertex v;
                 v.m_position = glm::vec3(glm::cos(theta) * r * (1.0f - level),
-                                         -halfHeight + 2.0f * halfHeight * level,
+                                         -height + height * level,
                                          -glm::sin(theta) * r * (1.0f - level));
                 v.m_normal   = glm::vec3(glm::cos(theta) * height / l, r / l, -glm::sin(theta) * height / l);
                 v.m_texcoord = glm::vec3(sliceCount / float(slices), level, 0.0f);

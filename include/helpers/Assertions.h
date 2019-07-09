@@ -58,7 +58,7 @@ namespace Vertex
 #ifdef _MSC_VER
     #define VERTEX_HALT() __debugbreak()
 #else
-    #define VERTEX_HALT() raise(SIGTRAP);
+    #define VERTEX_HALT()
 #endif
 
 #define VERTEX_UNUSED(x) do { (void)sizeof(x); } while(0)

@@ -1,5 +1,6 @@
 #version 450
-#define POINT_LIGHT
+
+vec2 texcoord;
 #include "Deferred-Lighting.glh"
 
 layout(binding = 5) uniform samplerCubeShadow shadow_map;

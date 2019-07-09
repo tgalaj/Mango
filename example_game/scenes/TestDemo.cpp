@@ -226,7 +226,8 @@ void TestDemo::init()
     spot_light.getComponent<Vertex::SpotLightComponent>()->m_intensity = 1000;
     spot_light.getComponent<Vertex::SpotLightComponent>()->setCutOffAngle(30.0f);
     spot_light.setPosition(1.5, 5, 1.5);
-    spot_light.setOrientation(-90, 0, 0);
+    spot_light.setOrientation(-135, -45, 0);
+    spot_light.getComponent<Vertex::SpotLightComponent>()->setCastsShadows(true);
 }
 
 void TestDemo::input(float delta)

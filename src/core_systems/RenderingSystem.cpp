@@ -67,7 +67,7 @@ namespace Vertex
         m_deferred_point = CoreAssetManager::createShader("Deferred-Point", "DebugObjectGeometry.vert", "Deferred-Point.frag");
         m_deferred_point->link();
 
-        m_deferred_spot = CoreAssetManager::createShader("Deferred-Spot", "FSQ.vert", "Deferred-Spot.frag");
+        m_deferred_spot = CoreAssetManager::createShader("Deferred-Spot", "DebugObjectGeometry.vert", "Deferred-Spot.frag");
         m_deferred_spot->link();
 
         m_boundingbox_shader = CoreAssetManager::createShader("DebugRenderBB", "DebugObjectGeometry.vert", "DebugObjectGeometry.frag");
@@ -80,7 +80,7 @@ namespace Vertex
         m_light_bsphere.genSphere(1.0f, 12);
 
         m_light_bcone = Model();
-        m_light_bcone.genCone(1.0f, 1.0f, 6, 6);
+        m_light_bcone.genCone(1.0f, 1.0f, 12, 1);
 
         M_DEBUG_WINDOW_WIDTH = GLuint(Window::getWidth() / 5.0f);
         m_scene_ambient_color = glm::vec3(0.18f);
@@ -97,7 +97,7 @@ namespace Vertex
 
         m_dir_shadow_map = std::make_shared<RenderTarget>();
         m_dir_shadow_map->create(2048, 2048, RenderTarget::DepthInternalFormat::DEPTH24);
-         
+
         m_spot_shadow_map = std::make_shared<RenderTarget>();
         m_spot_shadow_map->create(1024, 1024, RenderTarget::DepthInternalFormat::DEPTH24);
 
@@ -171,7 +171,10 @@ namespace Vertex
     void RenderingSystem::resize(unsigned width, unsigned height)
     {
         m_main_render_target->clear();
+        m_deferred_rendering->clearGBuffer();
+
         m_main_render_target->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
+        m_deferred_rendering->createGBuffer();
     }
 
     entityx::ComponentHandle<TransformComponent> RenderingSystem::getCameraTransform()
@@ -387,6 +390,26 @@ namespace Vertex
         }
         m_light_bsphere.setDrawMode(GL_TRIANGLES);
 
+        /* Spot Lights */
+        m_light_bcone.setDrawMode(GL_LINES);
+        for (auto entity : entities.entities_with_components(spot_light, transform))
+        {
+            float scale_height = spot_light->m_range;
+            float scale_radius = spot_light->m_range * glm::tan(glm::acos(spot_light->getCutOffAngle()) * 1.0f);
+
+            auto model      = glm::translate(glm::mat4(1.0f), transform->position()) *
+                              glm::mat4_cast(glm::inverse(transform->orientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
+                              glm::scale(glm::mat4(1.0f), glm::vec3(scale_radius, scale_height, scale_radius));
+            auto view       = CoreServices::getRenderer()->getCamera()->m_view;
+            auto projection = CoreServices::getRenderer()->getCamera()->m_projection;
+
+            m_boundingbox_shader->bind();
+            m_boundingbox_shader->setUniform("g_mvp", projection * view * model);
+            m_boundingbox_shader->setUniform("color", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
+
+            m_light_bcone.render(*m_boundingbox_shader);
+        }
+        m_light_bcone.setDrawMode(GL_TRIANGLES);
         glEnable(GL_BLEND);
     }
 
@@ -438,7 +461,7 @@ namespace Vertex
         for(auto entity : entities.entities_with_components(directional_light, transform))
         {
             ShadowInfo shadow_info = directional_light->getShadowInfo();
-            glm::mat4 light_matrix = glm::mat4(1.0f);
+            glm::mat4 light_matrix = glm::mat4(0.0f);
 
             if(shadow_info.getCastsShadows())
             {
@@ -522,7 +545,7 @@ namespace Vertex
         for (auto entity : entities.entities_with_components(spot_light, transform))
         {
             ShadowInfo shadow_info = spot_light->getShadowInfo();
-            glm::mat4 light_matrix = glm::mat4(1.0f);
+            glm::mat4 light_matrix = glm::mat4(0.0f);
 
             if (shadow_info.getCastsShadows())
             {
@@ -572,7 +595,7 @@ namespace Vertex
         for(auto entity : entities.entities_with_components(directional_light, transform))
         {
             ShadowInfo shadow_info = directional_light->getShadowInfo();
-            glm::mat4 light_matrix = glm::mat4(1.0f);
+            glm::mat4 light_matrix = glm::mat4(0.0f);
 
             if(shadow_info.getCastsShadows())
             {
@@ -605,53 +628,6 @@ namespace Vertex
             m_deferred_directional->setUniform(S_DIRECTIONAL_LIGHT ".base.intensity", directional_light->m_intensity);
             m_deferred_directional->setUniform(S_DIRECTIONAL_LIGHT ".direction",      transform->direction());
             m_deferred_directional->setUniform("s_light_matrix", light_matrix);
-
-            m_deferred_rendering->render();
-        }
-
-        /* Spot Lights */
-        for (auto entity : entities.entities_with_components(spot_light, transform))
-        {
-            ShadowInfo shadow_info = spot_light->getShadowInfo();
-            glm::mat4 light_matrix = glm::mat4(1.0f);
-
-            if (shadow_info.getCastsShadows())
-            {
-                glEnable(GL_DEPTH_TEST);
-                glDepthMask(GL_TRUE);
-
-                m_shadow_map_generator->bind();
-
-                m_spot_shadow_map->bind();
-                glClear(GL_DEPTH_BUFFER_BIT);
-
-                light_matrix = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + transform->direction(), glm::vec3(0, 1, 0));
-                m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
-
-                glCullFace(GL_FRONT);
-                renderOpaque(m_shadow_map_generator);
-                glCullFace(GL_BACK);
-
-                glDepthMask(GL_FALSE);
-                glDisable(GL_DEPTH_TEST);
-            }
-
-            bindMainRenderTarget();
-
-            m_deferred_spot->bind();
-            m_deferred_rendering->bindGBufferTextures();
-            m_spot_shadow_map->bindTexture(SHADOW_MAP);
-
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.base.color",      spot_light->m_color);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.base.intensity",  spot_light->m_intensity);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spot_light->m_attenuation.m_constant);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spot_light->m_attenuation.m_linear);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spot_light->m_attenuation.m_quadratic);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.position",        transform->position());
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.range",           spot_light->m_range);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".direction",             transform->direction());
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".cutoff",                spot_light->getCutOffAngle());
-            m_deferred_spot->setUniform("s_light_matrix", light_matrix);
 
             m_deferred_rendering->render();
         }
@@ -743,6 +719,95 @@ namespace Vertex
 
             m_deferred_point->setUniform("g_mvp", mvp);
             m_light_bsphere.render(*m_deferred_point);
+
+            glCullFace(GL_BACK);
+            glDisable(GL_BLEND);
+        }
+
+        /* Spot Lights */
+        for (auto entity : entities.entities_with_components(spot_light, transform))
+        {
+            ShadowInfo shadow_info = spot_light->getShadowInfo();
+            glm::mat4 light_matrix = glm::mat4(0.0f);
+
+            if (shadow_info.getCastsShadows())
+            {
+                glEnable(GL_DEPTH_TEST);
+                glDepthMask(GL_TRUE);
+
+                m_shadow_map_generator->bind();
+
+                m_spot_shadow_map->bind();
+                glClear(GL_DEPTH_BUFFER_BIT);
+
+                light_matrix = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + transform->direction(), glm::vec3(0, 1, 0));
+                m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
+
+                glCullFace(GL_FRONT);
+                renderOpaque(m_shadow_map_generator);
+                glCullFace(GL_BACK);
+
+                glDepthMask(GL_FALSE);
+                glDisable(GL_DEPTH_TEST);
+            }
+
+            bindMainRenderTarget();
+
+            /* Bounding cone MVP matrix setup */
+            float scale_height = spot_light->m_range;
+            float scale_radius = spot_light->m_range * glm::tan(glm::acos(spot_light->getCutOffAngle()) * 1.0f);
+
+            auto model      = glm::translate(glm::mat4(1.0f), transform->position()) *
+                              glm::mat4_cast(glm::inverse(transform->orientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
+                              glm::scale(glm::mat4(1.0f), glm::vec3(scale_radius, scale_height, scale_radius));
+            auto view        = CoreServices::getRenderer()->getCamera()->m_view;
+            auto projection  = CoreServices::getRenderer()->getCamera()->m_projection;
+            auto mvp = projection * view * model;
+
+            /* Stencil pass */
+            m_null_shader->bind();
+            glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+            glEnable(GL_DEPTH_TEST);
+            glDisable(GL_CULL_FACE);
+
+            glClear(GL_STENCIL_BUFFER_BIT);
+            glStencilFunc(GL_ALWAYS, 0, 0);
+            glStencilOpSeparate(GL_BACK, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
+            glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
+
+            m_null_shader->setUniform("g_mvp", mvp);
+            m_light_bcone.render(*m_null_shader);
+
+            glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+            /* Lighting pass */
+            glStencilFunc(GL_NOTEQUAL, 0, 0xFF);
+            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_BLEND);
+            glBlendEquation(GL_FUNC_ADD);
+            glBlendFunc(GL_ONE, GL_ONE);
+
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_FRONT);
+
+            m_deferred_spot->bind();
+            m_deferred_rendering->bindGBufferTextures();
+            m_spot_shadow_map->bindTexture(SHADOW_MAP);
+
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.base.color",      spot_light->m_color);
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.base.intensity",  spot_light->m_intensity);
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spot_light->m_attenuation.m_constant);
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spot_light->m_attenuation.m_linear);
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spot_light->m_attenuation.m_quadratic);
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.position",        transform->position());
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.range",           spot_light->m_range);
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".direction",             transform->direction());
+            m_deferred_spot->setUniform(S_SPOT_LIGHT ".cutoff",                spot_light->getCutOffAngle());
+            m_deferred_spot->setUniform("s_light_matrix", light_matrix);
+
+            m_deferred_spot->setUniform("g_mvp", mvp);
+            m_light_bcone.render(*m_deferred_point);
 
             glCullFace(GL_BACK);
             glDisable(GL_BLEND);

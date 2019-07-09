@@ -1,4 +1,6 @@
 ﻿#version 450
+
+in vec2 texcoord;
 #include "Deferred-Lighting.glh"
 
 layout(binding = 5) uniform sampler2DShadow shadow_map;

@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/Shot511/VertexEngine.svg?branch=master)](https://travis-ci.org/Shot511/VertexEngine)
 
 # Vertex Engine
-This is open source 3D graphics engine mostly for proof of concept graphics application purposes. In the future it may evolve into some kind of game engine.
+This is an open source 3D graphics engine mostly for proof of concept graphics applications purposes. In the future it may evolve into some kind of a game engine.
 
 ## Short-term TODOs
 - [x] Refactor engine's architecture
@@ -10,17 +10,18 @@ This is open source 3D graphics engine mostly for proof of concept graphics appl
 - [x] Improve scene graph
 - [x] Easy to use toolkit to create demo/game scenes
 - [x] Is CoreAssetManager necessary? Ans: Yes, it, is
-- [ ] Better resource management 
+- [x] Better resource management 
 - [x] Easy to use material system
 - [x] Refactored & enhanced shader class
 - [x] Add feature to add #include directive in shaders (generic default shaders)
 - [x] Update & move dlls to bin32/bin64 subfolders
 - [x] Add Forward rendering technique
-- [ ] Add Deferred rendering technique
+- [x] Add Deferred rendering technique
 - [ ] Add easy to use interface to switch between different rendering techniques
 - [ ] Easy to use interface for postprocess effects
-- [x] Shadow mapping
-- [ ] Variance Shadow Mapping
+- [x] Basic Shadow mapping
+- [ ] Soft shadows
+- [ ] Variance Shadow Mapping / Exponential Shadow Mapping, etc.
 - [ ] Models' animation (linear blend skinning, dual quaternion skinning)
 - [x] Directional ligths support
 - [x] Spot ligths support
@@ -32,7 +33,7 @@ This is open source 3D graphics engine mostly for proof of concept graphics appl
 
 ## Long-term TODOs
 - [x] Convert project to use CMake
-- [ ] Graphical editor to creation of demo/game scenes easier
+- [ ] Graphical editor to ease creation of demo/game scenes
 - [ ] Support for Lua scripting language
 - [ ] Constructive solid geometry
 - [ ] GPU supported ray tracing, photon mapping

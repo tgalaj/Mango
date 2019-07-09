@@ -16,7 +16,9 @@ namespace Vertex
 
         void init();
         
-        void createGBuffer();  
+        void createGBuffer();
+        void clearGBuffer();
+
         void bindGBuffer();
         void bindGBufferReadOnly();
 

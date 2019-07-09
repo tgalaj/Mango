@@ -1,4 +1,6 @@
 #version 450
+
+vec2 texcoord;
 #include "Deferred-Lighting.glh"
 
 layout(binding = 5) uniform sampler2DShadow shadow_map;
@@ -23,8 +25,15 @@ float shadowCalculation(vec4 frag_pos_light_space, vec3 normal, vec3 world_pos)
     return shadow;
 }
 
+vec2 calcTexCoord()
+{
+    return gl_FragCoord.xy / vec2(textureSize(gbuffer_positions, 0));
+}
+
 void main()
 {
+    texcoord = calcTexCoord();
+
     vec4 albedo    = vec4(texture(gbuffer_albedo_spec, texcoord).rgb, 1.0f);
     vec4 ambient   = vec4(s_scene_ambient, 1.0f);
     vec3 world_pos = texture(gbuffer_positions,   texcoord).xyz;

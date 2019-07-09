@@ -21,6 +21,11 @@ namespace Vertex
         m_gbuffer->createMRT(mrt_entries, Window::getWidth(), Window::getHeight());
     }
 
+    void DeferredRendering::clearGBuffer()
+    {
+        m_gbuffer->clear();
+    }
+
     void DeferredRendering::bindGBuffer()
     {
         m_gbuffer->bind(); 

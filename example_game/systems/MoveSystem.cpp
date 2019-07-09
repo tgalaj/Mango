@@ -28,6 +28,6 @@ void MoveSystem::update(entityx::EntityManager& entities, entityx::EventManager&
         position.x = r * glm::cos(current_angle + dt);
         position.z = r * glm::sin(current_angle + dt);
 
-        transform->setPosition(position);
+        //transform->setPosition(position);
     }
 }
