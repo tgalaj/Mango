@@ -1,5 +1,7 @@
 ﻿#include "MoveSystem.h"
 #include "core_components/TransformComponent.h"
+#include "core_components/PointLightComponent.h"
+#include "core_components/SpotLightComponent.h"
 
 MoveSystem::~MoveSystem()
 {
@@ -13,11 +15,13 @@ void MoveSystem::update(entityx::EntityManager& entities, entityx::EventManager&
 {
     entityx::ComponentHandle<Vertex::TransformComponent> transform;
     entityx::ComponentHandle<MoveSystemComponent> msc;
+    entityx::ComponentHandle<Vertex::PointLightComponent> point_light;
+    entityx::ComponentHandle<Vertex::SpotLightComponent> spot_light;
     
     static float acc = 0.0f;
     acc += dt / 6.0f;
 
-    for(auto entity : entities.entities_with_components(transform, msc))
+    for(auto entity : entities.entities_with_components(transform, msc, point_light))
     {
         glm::vec3 delta = transform->position() - glm::vec3(0.0f);
 
@@ -28,6 +32,14 @@ void MoveSystem::update(entityx::EntityManager& entities, entityx::EventManager&
         position.x = r * glm::cos(current_angle + dt);
         position.z = r * glm::sin(current_angle + dt);
 
-        //transform->setPosition(position);
+        transform->setPosition(position);
+    }
+
+    for(auto entity : entities.entities_with_components(transform, msc, spot_light))
+    {
+        glm::quat previous_orientation = transform->orientation();
+
+        transform->setOrientation(0.0f, 0.025f, 0.0f);
+        transform->setOrientation(previous_orientation * transform->orientation());
     }
 }

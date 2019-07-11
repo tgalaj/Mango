@@ -70,7 +70,7 @@ void TestDemo::init()
     auto bricks2_normal       = Vertex::CoreAssetManager::createTexture2D("res/textures/bricks2_normal.jpg");
     auto window_tex           = Vertex::CoreAssetManager::createTexture2D("res/textures/window.png");
     auto grass_tex            = Vertex::CoreAssetManager::createTexture2D("res/textures/grass.png");
-    auto vulkan_logo          = Vertex::CoreAssetManager::createTexture2D("res/textures/vulkan.png");
+    auto opengl_logo          = Vertex::CoreAssetManager::createTexture2D("res/textures/opengl.png");
 
     auto cyborg = Vertex::CoreAssetManager::createGameObject();
     cyborg.addComponent<Vertex::ModelRendererComponent>(cyborg_model);
@@ -228,6 +228,7 @@ void TestDemo::init()
     spot_light.setPosition(1.5, 5, 1.5);
     spot_light.setOrientation(-135, -45, 0);
     spot_light.getComponent<Vertex::SpotLightComponent>()->setCastsShadows(true);
+    spot_light.addComponent<MoveSystemComponent>();
 }
 
 void TestDemo::input(float delta)
@@ -271,10 +272,10 @@ void TestDemo::onGUI(float delta)
 
     Vertex::GUI::beginHUD();
 
-    Vertex::GUI::circleFilled({ Vertex::Window::getWidth() / 2.0f, Vertex::Window::getHeight() / 2.0f}, 2.0f, glm::vec4(0.0, 1.0, 0.0, 1.0));
-    auto pos = Vertex::GUI::text(Vertex::CoreAssetManager::getFont("Droid48"), "Hello ImGUI Text Demo!", { Vertex::Window::getWidth() / 2.0f, Vertex::Window::getHeight() / 2.0f + 100.0f}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, true);
-    Vertex::GUI::text(Vertex::CoreAssetManager::getFont("Droid48"), "Hello ImGUI Text Demo2!", { Vertex::Window::getWidth() / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
-    Vertex::GUI::image(Vertex::CoreAssetManager::getTexture2D("res/textures/vulkan.png"), { Vertex::Window::getWidth() - 250, 0 }, { Vertex::Window::getWidth(), 150 }, { 1.0f, 1.0f, 1.0f, 0.5f });
+//    Vertex::GUI::circleFilled({ Vertex::Window::getWidth() / 2.0f, Vertex::Window::getHeight() / 2.0f}, 2.0f, glm::vec4(0.0, 1.0, 0.0, 1.0));
+//    auto pos = Vertex::GUI::text(Vertex::CoreAssetManager::getFont("Droid48"), "Hello ImGUI Text Demo!", { Vertex::Window::getWidth() / 2.0f, Vertex::Window::getHeight() / 2.0f + 100.0f}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, true);
+//    Vertex::GUI::text(Vertex::CoreAssetManager::getFont("Droid48"), "Hello ImGUI Text Demo2!", { Vertex::Window::getWidth() / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
+    Vertex::GUI::image(Vertex::CoreAssetManager::getTexture2D("res/textures/opengl.png"), { Vertex::Window::getWidth() - 200, 0 }, { Vertex::Window::getWidth(), 100 }, { 1.0f, 1.0f, 1.0f, 0.5f });
 
     Vertex::GUI::endHUD();
 }

@@ -25,7 +25,7 @@ void main()
     vec3 dir_to_eye = normalize(g_cam_pos - world_pos) * tbn;
     parallax_texcoord = parallaxMapping(dir_to_eye);
 
-    vec4 diffuse_tex_color = texture(m_texture_diffuse, texcoord);
+    vec4 diffuse_tex_color = texture(m_texture_diffuse, parallax_texcoord);
 
     if(diffuse_tex_color.a < alpha_cutoff)
     {
