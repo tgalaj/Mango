@@ -5,6 +5,8 @@ in vec2 texcoord;
 
 layout(binding = 5) uniform sampler2DShadow shadow_map;
 
+uniform int pcf_kernel_size = 2;
+
 uniform DirectionalLight s_directional_light;
 uniform mat4 s_light_matrix;
 
@@ -14,14 +16,26 @@ float shadowCalculation(vec4 frag_pos_light_space, vec3 normal)
     proj_coords      = proj_coords * 0.5f + 0.5f; /* Map from [-1, 1] to [0, 1] */
 
     if(proj_coords.z > 1.0f)
-        return 0.0f;
+       return 0.0f;
 
     float bias = max(0.0001f * (1.0 - dot(normal, -s_directional_light.direction)), 0.00001f); /* Removes shadow acne artifact */
     proj_coords.z = proj_coords.z - bias;
 
-    float shadow = texture(shadow_map, proj_coords);
+    /* PCF filtering */
+    float shadow = 0.0;
+    float sampling_range = 0.5 * pcf_kernel_size - 0.5;
+    vec3 shadow_map_texel_size = vec3(1.0 / textureSize(shadow_map, 0), 0.0);
 
-    return shadow;
+    for(float x = -sampling_range; x <= sampling_range; x += 1.0f)
+    {
+        for(float y = -sampling_range; y <= sampling_range; y += 1.0f)
+        {
+            float pcf = texture(shadow_map, proj_coords.xyz + vec3(x, y, 0.0) * shadow_map_texel_size);
+            shadow += pcf;
+        }
+    }
+
+    return shadow / float(pcf_kernel_size * pcf_kernel_size);
 }
 
 void main()

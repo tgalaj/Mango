@@ -9,15 +9,35 @@ uniform float s_far_plane;
 
 uniform PointLight s_point_light;
 
+vec3 sample_offset_directions[20] = vec3[]
+(
+    vec3( 1,  1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1,  1,  1),
+    vec3( 1,  1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1,  1, -1),
+    vec3( 1,  1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1,  1,  0),
+    vec3( 1,  0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1,  0, -1),
+    vec3( 0,  1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0,  1, -1)
+);
+
 float shadowCalculation(vec3 frag_pos)
 {
     vec3 frag_to_light = (frag_pos - s_point_light.position);
     float compare = length(frag_to_light / s_far_plane);
 
-    float bias = 0.00005; 
-    float shadow = texture(shadow_map, vec4(frag_to_light, compare - bias));
+    float bias = 0.00005;
+    float shadow = 0.0;
 
-    return shadow;
+    /* PCF */
+    int samples = 20;
+    float view_distance = length(g_cam_pos - frag_pos);
+    float disk_radius = (1.0 + (view_distance / s_far_plane)) / 25.0;
+
+    for(int i = 0; i < samples; ++i)
+    {
+        float pcf = texture(shadow_map, vec4(frag_to_light + sample_offset_directions[i] * disk_radius, compare - bias));
+        shadow += pcf;
+    }
+
+    return shadow / float(samples);
 }
 
 void main()

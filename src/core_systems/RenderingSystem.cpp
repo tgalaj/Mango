@@ -109,7 +109,7 @@ namespace Vertex
 
     void RenderingSystem::update(entityx::EntityManager & entities, entityx::EventManager & events, entityx::TimeDelta dt)
     {
-        //renderForward(entities); 
+        //renderForward(entities);
         renderDeferred(entities);
 
         if (M_DEBUG_RENDERING)

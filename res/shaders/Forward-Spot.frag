@@ -4,6 +4,8 @@
 
 layout(binding = 5) uniform sampler2DShadow shadow_map;
 
+uniform int pcf_kernel_size = 4;
+
 uniform SpotLight s_spot_light;
 
 float shadowCalculation(vec4 frag_pos_light_space, vec3 normal)
@@ -18,9 +20,21 @@ float shadowCalculation(vec4 frag_pos_light_space, vec3 normal)
     float bias = max(0.000005f * (1.0 - dot(normal, -dir_to_frag)), 0.0000005f); /* Removes shadow acne artifact */
     proj_coords.z = proj_coords.z - bias;
 
-    float shadow = texture(shadow_map, proj_coords);
+    /* PCF filtering */
+    float shadow = 0.0;
+    float sampling_range = 0.5 * pcf_kernel_size - 0.5;
+    vec3 shadow_map_texel_size = vec3(1.0 / textureSize(shadow_map, 0), 0.0);
 
-    return shadow;
+    for(float x = -sampling_range; x <= sampling_range; x += 1.0f)
+    {
+        for(float y = -sampling_range; y <= sampling_range; y += 1.0f)
+        {
+            float pcf = texture(shadow_map, proj_coords.xyz + vec3(x, y, 0.0) * shadow_map_texel_size);
+            shadow += pcf;
+        }
+    }
+
+    return shadow / float(pcf_kernel_size * pcf_kernel_size);
 }
 
 void main()
