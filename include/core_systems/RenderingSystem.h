@@ -62,9 +62,11 @@ namespace Vertex
         Model m_light_bcone;
 
         std::shared_ptr<PostprocessEffect> m_hdr_filter;
+        std::shared_ptr<PostprocessEffect> m_fxaa_filter;
         std::shared_ptr<DeferredRendering> m_deferred_rendering;
 
         std::shared_ptr<RenderTarget> m_main_render_target;
+        std::shared_ptr<RenderTarget> m_helper_render_target;
         std::shared_ptr<RenderTarget> m_dir_shadow_map;
         std::shared_ptr<RenderTarget> m_spot_shadow_map;
         std::shared_ptr<RenderTarget> m_omni_shadow_map;

@@ -77,10 +77,10 @@ namespace Vertex
         m_null_shader->link();
 
         m_light_bsphere = Model();
-        m_light_bsphere.genSphere(1.0f, 12);
+        m_light_bsphere.genSphere(1.1f, 12);
 
         m_light_bcone = Model();
-        m_light_bcone.genCone(1.0f, 1.0f, 12, 1);
+        m_light_bcone.genCone(1.1f, 1.1f, 12, 1);
 
         M_DEBUG_WINDOW_WIDTH = GLuint(Window::getWidth() / 5.0f);
         m_scene_ambient_color = glm::vec3(0.18f);
@@ -88,12 +88,18 @@ namespace Vertex
         m_hdr_filter = std::make_shared<PostprocessEffect>();
         m_hdr_filter->init("PS-HDR", "PS-HDR.frag");
 
+        m_fxaa_filter = std::make_shared<PostprocessEffect>();
+        m_fxaa_filter->init("PS-FXAA", "FXAA.frag"); 
+
         m_deferred_rendering = std::make_shared<DeferredRendering>();
         m_deferred_rendering->init();
         m_deferred_rendering->createGBuffer();
 
         m_main_render_target = std::make_shared<RenderTarget>();
         m_main_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
+
+        m_helper_render_target = std::make_shared<RenderTarget>();
+        m_helper_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
 
         m_dir_shadow_map = std::make_shared<RenderTarget>();
         m_dir_shadow_map->create(2048, 2048, RenderTarget::DepthInternalFormat::DEPTH24);
@@ -171,9 +177,11 @@ namespace Vertex
     void RenderingSystem::resize(unsigned width, unsigned height)
     {
         m_main_render_target->clear();
+        m_helper_render_target->clear();
         m_deferred_rendering->clearGBuffer();
 
         m_main_render_target->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
+        m_helper_render_target->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
         m_deferred_rendering->createGBuffer();
     }
 
@@ -272,7 +280,8 @@ namespace Vertex
         }
 
         /* Apply postprocess effect */
-        applyPostprocess(m_hdr_filter, &m_main_render_target, 0);
+        applyPostprocess(m_hdr_filter, &m_main_render_target, &m_helper_render_target);
+        applyPostprocess(m_fxaa_filter, &m_helper_render_target, 0);
     }
 
     void RenderingSystem::renderDeferred(entityx::EntityManager& entities)
@@ -334,7 +343,8 @@ namespace Vertex
         }
 
         /* Apply postprocess effect */
-        applyPostprocess(m_hdr_filter, &m_main_render_target, 0);
+        applyPostprocess(m_hdr_filter, &m_main_render_target, &m_helper_render_target);
+        applyPostprocess(m_fxaa_filter, &m_helper_render_target, 0);
     }
 
     void RenderingSystem::renderDebug()
@@ -755,7 +765,7 @@ namespace Vertex
 
             /* Bounding cone MVP matrix setup */
             float scale_height = spot_light->m_range;
-            float scale_radius = spot_light->m_range * glm::tan(glm::acos(spot_light->getCutOffAngle()) * 1.0f);
+            float scale_radius = spot_light->m_range * glm::tan(glm::acos(spot_light->getCutOffAngle()));
 
             auto model      = glm::translate(glm::mat4(1.0f), transform->position()) *
                               glm::mat4_cast(glm::inverse(transform->orientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
