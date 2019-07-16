@@ -186,7 +186,7 @@ void TestDemo::init()
 
     /* Lights */
     auto dir_light = Vertex::CoreAssetManager::createGameObject();
-    dir_light.addComponent<Vertex::DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 200.0f);
+    dir_light.addComponent<Vertex::DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f);
     dir_light.setOrientation(-45.0f, 180.0f, 0.0f);
 
     float d = 8;

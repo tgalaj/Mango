@@ -58,9 +58,6 @@ namespace Vertex
         m_blending_shader = CoreAssetManager::createShader("Blending-Shader", "Blending.vert", "Blending.frag");
         m_blending_shader->link();
 
-        m_gbuffer_shader = CoreAssetManager::createShader("GBuffer", "GBuffer.vert", "GBuffer.frag");
-        m_gbuffer_shader->link();
-
         m_deferred_directional = CoreAssetManager::createShader("Deferred-Directional", "FSQ.vert", "Deferred-Directional.frag");
         m_deferred_directional->link();
 
@@ -86,14 +83,20 @@ namespace Vertex
         m_scene_ambient_color = glm::vec3(0.18f);
 
         m_hdr_filter = std::make_shared<PostprocessEffect>();
-        m_hdr_filter->init("PS-HDR", "PS-HDR.frag");
+        m_hdr_filter->init("HDR_PS", "HDR_PS.frag");
 
         m_fxaa_filter = std::make_shared<PostprocessEffect>();
-        m_fxaa_filter->init("PS-FXAA", "FXAA.frag"); 
+        m_fxaa_filter->init("FXAA_PS", "FXAA_PS.frag");
 
         m_deferred_rendering = std::make_shared<DeferredRendering>();
         m_deferred_rendering->init();
         m_deferred_rendering->createGBuffer();
+
+        m_gbuffer_shader = CoreAssetManager::getShader("GBuffer");
+
+        m_bloom_filter = std::make_shared<BloomPS>();
+        m_bloom_filter->init("Bloom_PS", "Bloom_PS.frag");
+        m_bloom_filter->create();
 
         m_main_render_target = std::make_shared<RenderTarget>();
         m_main_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
@@ -179,10 +182,12 @@ namespace Vertex
         m_main_render_target->clear();
         m_helper_render_target->clear();
         m_deferred_rendering->clearGBuffer();
+        m_bloom_filter->clear();
 
         m_main_render_target->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
         m_helper_render_target->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
         m_deferred_rendering->createGBuffer();
+        m_bloom_filter->create();
     }
 
     entityx::ComponentHandle<TransformComponent> RenderingSystem::getCameraTransform()
@@ -280,6 +285,10 @@ namespace Vertex
         }
 
         /* Apply postprocess effect */
+        m_bloom_filter->extractBrightness(m_main_render_target, 1.0);
+        m_bloom_filter->blurGaussian(2);
+        m_bloom_filter->bindBrightnessTexture(1);
+
         applyPostprocess(m_hdr_filter, &m_main_render_target, &m_helper_render_target);
         applyPostprocess(m_fxaa_filter, &m_helper_render_target, 0);
     }
@@ -343,6 +352,10 @@ namespace Vertex
         }
 
         /* Apply postprocess effect */
+        m_bloom_filter->extractBrightness(m_main_render_target, 1.0);
+        m_bloom_filter->blurGaussian(2);
+        m_bloom_filter->bindBrightnessTexture(1);
+
         applyPostprocess(m_hdr_filter, &m_main_render_target, &m_helper_render_target);
         applyPostprocess(m_fxaa_filter, &m_helper_render_target, 0);
     }

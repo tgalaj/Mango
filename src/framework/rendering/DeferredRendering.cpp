@@ -6,7 +6,8 @@ namespace Vertex
 {
     void DeferredRendering::init()
     {
-        m_postprocess = CoreAssetManager::getShader("GBuffer");
+        m_postprocess = CoreAssetManager::createShader("GBuffer", "GBuffer.vert", "GBuffer.frag");
+        m_postprocess->link();
     }
 
     void DeferredRendering::createGBuffer()

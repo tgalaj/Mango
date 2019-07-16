@@ -26,6 +26,7 @@ namespace Vertex
         ~Texture();
 
         void bind(GLuint unit = 0) const;
+        static void unbindTextureUnit(GLuint unit);
         
         GLuint getWidth()  const { return m_tex_data.width; }
         GLuint getHeight() const { return m_tex_data.height; }

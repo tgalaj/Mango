@@ -169,4 +169,9 @@ namespace Vertex
     {
         glBindTextureUnit(unit, m_to_id);
     }
+
+    void Texture::unbindTextureUnit(GLuint unit)
+    {
+        glBindTextureUnit(unit, 0);
+    }
 }
