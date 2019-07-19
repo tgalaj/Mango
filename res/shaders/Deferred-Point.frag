@@ -49,7 +49,7 @@ void main()
     texcoord = calcTexCoord();
 
     vec4 albedo    = vec4(texture(gbuffer_albedo_spec, texcoord).rgb, 1.0f);
-    vec4 ambient   = vec4(s_scene_ambient, 1.0f);
+    vec4 ambient   = vec4(s_scene_ambient * texture(ambient_occlusion_texture, texcoord).r, 1.0f);
     vec3 world_pos = texture(gbuffer_positions,   texcoord).xyz;
     vec3 normal    = texture(gbuffer_normals,     texcoord).xyz;
 

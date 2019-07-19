@@ -56,6 +56,7 @@ namespace Vertex
         void setUniform(const std::string & uniformName, unsigned int value);
         void setUniform(const std::string & uniformName, GLsizei count, float * value);
         void setUniform(const std::string & uniformName, GLsizei count, int * value);
+        void setUniform(const std::string & uniformName, GLsizei count, glm::vec3 * vectors);
         void setUniform(const std::string & uniformName, const glm::vec2 & vector);
         void setUniform(const std::string & uniformName, const glm::vec3 & vector);
         void setUniform(const std::string & uniformName, const glm::vec4 & vector);

@@ -98,6 +98,10 @@ namespace Vertex
         m_bloom_filter->init("Bloom_PS", "Bloom_PS.frag");
         m_bloom_filter->create();
 
+        m_ssao_rendering = std::make_shared<SSAO>();
+        m_ssao_rendering->init("SSAO_PS", "SSAO.frag");
+        m_ssao_rendering->create();
+
         m_main_render_target = std::make_shared<RenderTarget>();
         m_main_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
 
@@ -183,11 +187,13 @@ namespace Vertex
         m_helper_render_target->clear();
         m_deferred_rendering->clearGBuffer();
         m_bloom_filter->clear();
+        m_ssao_rendering->clear();
 
         m_main_render_target->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
         m_helper_render_target->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
         m_deferred_rendering->createGBuffer();
         m_bloom_filter->create();
+        m_ssao_rendering->create();
     }
 
     entityx::ComponentHandle<TransformComponent> RenderingSystem::getCameraTransform()
@@ -306,6 +312,10 @@ namespace Vertex
         m_gbuffer_shader->bind();
         renderOpaque(m_gbuffer_shader);
 
+        /* Compute SSAO */
+        m_ssao_rendering->computeSSAO(m_deferred_rendering, getCamera()->m_view, getCamera()->m_projection);
+        m_ssao_rendering->blurSSAO();
+
         /* Light Pass - compute lighting */
         glDepthMask(GL_FALSE);
         glDisable(GL_DEPTH_TEST);
@@ -317,6 +327,7 @@ namespace Vertex
         m_main_render_target->bind();
         glClear(GL_COLOR_BUFFER_BIT);
 
+        m_ssao_rendering->bindBlurredSSAOTexture(4); //TODO: replace magic number with a variable
         renderLightsDeferred(entities);
 
         m_deferred_rendering->bindGBufferReadOnly();
@@ -381,7 +392,8 @@ namespace Vertex
         m_deferred_rendering->render();
 
         m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugDepthTarget");
-        m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::DEPTH);
+        //m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::DEPTH);
+        m_ssao_rendering->bindSSAOTexture(0);
         glViewport(M_DEBUG_WINDOW_WIDTH * 3, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
         m_deferred_rendering->render();
 

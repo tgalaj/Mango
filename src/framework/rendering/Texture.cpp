@@ -81,7 +81,10 @@ namespace Vertex
         m_format          = GL_RGBA;
         m_internal_format = GL_RGBA8;
 
-        GLubyte pixel_data[] = { color.r, color.g, color.b, color.a };
+        GLubyte pixel_data[] = { static_cast<GLubyte>(color.r),
+                                 static_cast<GLubyte>(color.g),
+                                 static_cast<GLubyte>(color.b),
+                                 static_cast<GLubyte>(color.a) };
 
         /* Generate GL texture object */
         glCreateTextures(m_to_type, 1, &m_to_id);

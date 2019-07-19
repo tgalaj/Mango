@@ -443,6 +443,21 @@ namespace Vertex
         }
     }
 
+    void Shader::setUniform(const std::string & uniformName, GLsizei count, glm::vec3 * vectors)
+    {
+        if (m_uniforms_locations.count(uniformName))
+        {
+            glProgramUniform3fv(m_program_id, m_uniforms_locations[uniformName], count, glm::value_ptr(vectors[0]));
+        }
+        else
+        {
+            if (getUniformLocation(uniformName))
+            {
+                glProgramUniform3fv(m_program_id, m_uniforms_locations[uniformName], count, glm::value_ptr(vectors[0]));
+            }
+        }
+    }
+
     void Shader::setUniform(const std::string & uniformName, const glm::vec2 & vector)
     {
         if (m_uniforms_locations.count(uniformName))

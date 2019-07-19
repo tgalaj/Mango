@@ -9,7 +9,8 @@
 #include "framework/rendering/RenderTarget.h"
 #include "framework/rendering/Skybox.h"
 #include "framework/rendering/DeferredRendering.h"
-#include <framework/rendering/BloomPS.h>
+#include "framework/rendering/BloomPS.h"
+#include "framework/rendering/SSAO.h"
 
 namespace Vertex
 {
@@ -66,6 +67,7 @@ namespace Vertex
         std::shared_ptr<PostprocessEffect> m_fxaa_filter;
         std::shared_ptr<DeferredRendering> m_deferred_rendering;
         std::shared_ptr<BloomPS> m_bloom_filter;
+        std::shared_ptr<SSAO> m_ssao_rendering;
 
         std::shared_ptr<RenderTarget> m_main_render_target;
         std::shared_ptr<RenderTarget> m_helper_render_target;
