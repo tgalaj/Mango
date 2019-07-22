@@ -30,6 +30,7 @@ namespace Vertex
         ~Skybox();
 
         void render(const glm::mat4 & projection, const glm::mat4 & view);
+        void bindSkyboxTexture(GLuint unit = 0);
 
     private:
         glm::mat4 m_world;

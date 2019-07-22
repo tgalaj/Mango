@@ -115,4 +115,9 @@ namespace Vertex
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glDepthFunc(GL_LESS);
     }
+
+    void Skybox::bindSkyboxTexture(GLuint unit)
+    {
+        m_cube_map_texture->bind(unit);
+    }
 }

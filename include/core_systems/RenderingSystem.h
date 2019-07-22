@@ -43,6 +43,8 @@ namespace Vertex
 
         std::vector<entityx::Entity> m_opaque_queue;
         std::vector<entityx::Entity> m_alpha_queue;
+        std::vector<entityx::Entity> m_enviro_static_queue;
+        std::vector<entityx::Entity> m_enviro_dynamic_queue;
 
         std::shared_ptr<Shader> m_forward_ambient;
         std::shared_ptr<Shader> m_forward_directional;
@@ -51,6 +53,7 @@ namespace Vertex
         std::shared_ptr<Shader> m_shadow_map_generator;
         std::shared_ptr<Shader> m_omni_shadow_map_generator;
         std::shared_ptr<Shader> m_blending_shader;
+        std::shared_ptr<Shader> m_enviro_mapping_shader;
         std::shared_ptr<Shader> m_debug_rendering;
 
         std::shared_ptr<Shader> m_gbuffer_shader;
@@ -95,6 +98,8 @@ namespace Vertex
 
         void renderOpaque(const std::shared_ptr<Shader> & shader);
         void renderAlpha(const std::shared_ptr<Shader>& shader);
+        void renderEnviroMappingStatic(const std::shared_ptr<Shader>& shader);
+        void renderEnviroMappingDynamic(const std::shared_ptr<Shader>& shader);
         void renderLightsForward(entityx::EntityManager& entities);
         void renderLightsDeferred(entityx::EntityManager& entities);
 

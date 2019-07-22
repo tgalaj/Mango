@@ -19,6 +19,8 @@ namespace Vertex
     {
         m_opaque_queue.clear();
         m_alpha_queue.clear();
+        m_enviro_static_queue.clear();
+        m_enviro_dynamic_queue.clear();
     }
 
     void RenderingSystem::configure(entityx::EntityManager & entities, entityx::EventManager & events)
@@ -57,6 +59,9 @@ namespace Vertex
 
         m_blending_shader = CoreAssetManager::createShader("Blending-Shader", "Blending.vert", "Blending.frag");
         m_blending_shader->link();
+
+        m_enviro_mapping_shader = CoreAssetManager::createShader("EnviroMapping", "EnviroMapping.vert", "EnviroMapping.frag");
+        m_enviro_mapping_shader->link();
 
         m_deferred_directional = CoreAssetManager::createShader("Deferred-Directional", "FSQ.vert", "Deferred-Directional.frag");
         m_deferred_directional->link();
@@ -150,6 +155,12 @@ namespace Vertex
         case ModelRendererComponent::RenderQueue::RQ_ALPHA:
             m_alpha_queue.push_back(event.entity);
             break;
+        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
+            m_enviro_static_queue.push_back(event.entity);
+            break;
+        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
+            m_enviro_dynamic_queue.push_back(event.entity);
+            break;
         }
     }
 
@@ -171,6 +182,20 @@ namespace Vertex
             if (entity_it != m_alpha_queue.end())
             {
                 m_alpha_queue.erase(entity_it);
+            }
+            break;
+        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
+            entity_it = std::find(m_enviro_static_queue.begin(), m_enviro_static_queue.end(), event.entity);
+            if (entity_it != m_enviro_static_queue.end())
+            {
+                m_enviro_static_queue.erase(entity_it);
+            }
+            break;
+        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
+            entity_it = std::find(m_enviro_dynamic_queue.begin(), m_enviro_dynamic_queue.end(), event.entity);
+            if (entity_it != m_enviro_dynamic_queue.end())
+            {
+                m_enviro_dynamic_queue.erase(entity_it);
             }
             break;
         }
@@ -288,6 +313,12 @@ namespace Vertex
         if (m_default_skybox != nullptr)
         {
             m_default_skybox->render(getCamera()->m_projection, getCamera()->m_view);
+
+            m_enviro_mapping_shader->bind();
+            m_enviro_mapping_shader->setSubroutine(Shader::Type::FRAGMENT, "reflection"); // TODO: control this using Material class
+
+            m_default_skybox->bindSkyboxTexture();
+            renderEnviroMappingStatic(m_enviro_mapping_shader);
         }
 
         /* Apply postprocess effect */
@@ -360,6 +391,13 @@ namespace Vertex
         if (m_default_skybox != nullptr)
         {
             m_default_skybox->render(getCamera()->m_projection, getCamera()->m_view);
+
+            m_enviro_mapping_shader->bind();
+            //m_enviro_mapping_shader->setSubroutine(Shader::Type::FRAGMENT, "refraction"); // TODO: control this using Material class
+            m_enviro_mapping_shader->setSubroutine(Shader::Type::FRAGMENT, "reflection");
+
+            m_default_skybox->bindSkyboxTexture();
+            renderEnviroMappingStatic(m_enviro_mapping_shader);
         }
 
         /* Apply postprocess effect */
@@ -392,8 +430,7 @@ namespace Vertex
         m_deferred_rendering->render();
 
         m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugDepthTarget");
-        //m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::DEPTH);
-        m_ssao_rendering->bindSSAOTexture(0);
+        m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::DEPTH);
         glViewport(M_DEBUG_WINDOW_WIDTH * 3, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
         m_deferred_rendering->render();
 
@@ -478,6 +515,26 @@ namespace Vertex
         }
     }
 
+    void RenderingSystem::renderEnviroMappingStatic(const std::shared_ptr<Shader>& shader)
+    {
+        ModelRendererComponent* model_renderer;
+        TransformComponent* transform;
+
+        for (auto& entity : m_enviro_static_queue)
+        {
+            model_renderer = entity.component<ModelRendererComponent>().get();
+            transform = entity.component<TransformComponent>().get();
+
+            shader->updateGlobalUniforms(*transform);
+            model_renderer->m_model.render(*shader);
+        }
+    }
+
+    void RenderingSystem::renderEnviroMappingDynamic(const std::shared_ptr<Shader>& shader)
+    {
+
+    }
+
     void RenderingSystem::renderLightsForward(entityx::EntityManager& entities)
     {
         /*
@@ -510,6 +567,7 @@ namespace Vertex
 
                 glCullFace(GL_FRONT);
                 renderOpaque(m_shadow_map_generator);
+                renderEnviroMappingStatic(m_shadow_map_generator);
                 glCullFace(GL_BACK);
             }
 
@@ -554,6 +612,7 @@ namespace Vertex
 
                 glCullFace(GL_FRONT);
                 renderOpaque(m_omni_shadow_map_generator);
+                renderEnviroMappingStatic(m_omni_shadow_map_generator);
                 glCullFace(GL_BACK);
             }
 
@@ -594,6 +653,7 @@ namespace Vertex
 
                 glCullFace(GL_FRONT);
                 renderOpaque(m_shadow_map_generator);
+                renderEnviroMappingStatic(m_shadow_map_generator);
                 glCullFace(GL_BACK);
             }
 
@@ -646,6 +706,7 @@ namespace Vertex
 
                 glCullFace(GL_FRONT);
                 renderOpaque(m_shadow_map_generator);
+                renderEnviroMappingStatic(m_shadow_map_generator);
                 glCullFace(GL_BACK);
 
                 glDepthMask(GL_FALSE);
@@ -697,6 +758,7 @@ namespace Vertex
 
                 glCullFace(GL_FRONT);
                 renderOpaque(m_omni_shadow_map_generator);
+                renderEnviroMappingStatic(m_omni_shadow_map_generator);
                 glCullFace(GL_BACK);
 
                 glDepthMask(GL_FALSE);
@@ -780,6 +842,7 @@ namespace Vertex
 
                 glCullFace(GL_FRONT);
                 renderOpaque(m_shadow_map_generator);
+                renderEnviroMappingStatic(m_shadow_map_generator);
                 glCullFace(GL_BACK);
 
                 glDepthMask(GL_FALSE);

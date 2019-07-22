@@ -151,7 +151,7 @@ void TestDemo::init()
     plane2.setPosition(5, 0.5, -11.5);
 
     auto sphere1 = Vertex::CoreAssetManager::createGameObject();
-    sphere1.addComponent<Vertex::ModelRendererComponent>(sphere_model);
+    sphere1.addComponent<Vertex::ModelRendererComponent>(sphere_model, Vertex::ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC);
     sphere1.setPosition(5, 2, -11.5);
     sphere1.setScale(0.5f);
 

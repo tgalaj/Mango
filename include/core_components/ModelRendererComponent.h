@@ -8,7 +8,7 @@ namespace Vertex
     class ModelRendererComponent
     {
     public:
-        enum class RenderQueue { RQ_OPAQUE, RQ_ALPHA };
+        enum class RenderQueue { RQ_OPAQUE, RQ_ALPHA, RQ_ENVIRO_MAPPING_STATIC, RQ_ENVIRO_MAPPING_DYNAMIC };
 
         ModelRendererComponent()
             : m_render_queue(RenderQueue::RQ_OPAQUE) 
