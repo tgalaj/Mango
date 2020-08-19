@@ -30,7 +30,7 @@ cd build
 cmake ..
 ```
 
-These will create project (inside the *build* directory) with your system-default build system which will allow you to build and run the engine.
+These commands will create the project files (inside the *build* directory) with your system-default build system which will allow you to build and run the engine.
 
 ## Short-term TODOs
 - [x] Refactor engine's architecture
