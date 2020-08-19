@@ -3,6 +3,35 @@
 # Vertex Engine
 This is an open source 3D graphics engine mostly for proof of concept graphics applications purposes. In the future it may evolve into some kind of a game engine.
 
+## How to build
+Make sure to clone the repository with the one of the following commands (to also clone the sources of the dependencies):
+
+```
+git clone --recurse-submodules -j8 https://github.com/Shot511/VertexEngine
+
+OR
+
+git clone --recurse-submodules https://github.com/Shot511/VertexEngine
+
+OR
+
+git clone --recursive https://github.com/Shot511/VertexEngine
+```
+
+If you've already cloned the repo run the following command in the root directory:
+
+```git submodule update --init --recursive```
+
+Then, simply run the following commands in the root directory:
+
+```
+mkdir build
+cd build
+cmake ..
+```
+
+These will create project (inside the *build* directory) with your system-default build system which will allow you to build and run the engine.
+
 ## Short-term TODOs
 - [x] Refactor engine's architecture
 - [x] Remove watch_ptr class
