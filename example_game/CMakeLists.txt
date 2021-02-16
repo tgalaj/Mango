@@ -21,6 +21,7 @@ target_include_directories(${SAMPLE_NAME} PRIVATE ${VertexEngine_SOURCE_DIR}/inc
 # Define the link libraries
 target_link_libraries(${SAMPLE_NAME} "${PROJECT_NAME}")
 
+# TODO: Better use config file with macro to res directory than copying it after building
 add_custom_command(TARGET  ${SAMPLE_NAME} POST_BUILD
 				   COMMAND ${CMAKE_COMMAND} -E copy_directory
 						   ${VertexEngine_SOURCE_DIR}/res

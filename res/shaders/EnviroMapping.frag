@@ -16,7 +16,10 @@ layout(index = 0) subroutine(enviroMapping) vec4 reflection()
     vec3 i = normalize(world_pos - g_cam_pos);
     vec3 r = reflect(i, normalize(world_normal));
 
-    return vec4(texture(skybox, r).rgb, 1.0f);
+    float ratio = 1.0f / 1.52f;
+    vec3 r_r = refract(i, normalize(world_normal), ratio);
+
+    return mix(vec4(texture(skybox, r).rgb, 1.0f), vec4(texture(skybox, r_r).rgb, 1.0f), 0.5);
 }
 
 layout(index = 1) subroutine(enviroMapping) vec4 refraction()
