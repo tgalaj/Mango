@@ -1,7 +1,9 @@
-# Copyright (C) 2018 Tomasz Gałaj
+# Copyright (C) 2022 Tomasz Gałaj
 
 cmake_minimum_required(VERSION 3.9.2 FATAL_ERROR)
 project(VertexEngine VERSION 0.1)
+
+set(OpenGL_GL_PREFERENCE GLVND)
 
 option(BUILD_EXAMPLE_GAME 
 	   "Build example game project to see Vertex Engine in action."
