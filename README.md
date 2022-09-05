@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/Shot511/VertexEngine.svg?branch=master)](https://travis-ci.com/Shot511/VertexEngine)
+[![Build Status](https://github.com/Shot511/VertexEngine/actions/workflows/cpp_cmake.yml/badge.svg)](https://github.com/Shot511/VertexEngine/actions)
 
 # Vertex Engine
 This is an open source 3D graphics engine mostly for proof of concept graphics applications purposes. In the future it may evolve into some kind of a game engine.
