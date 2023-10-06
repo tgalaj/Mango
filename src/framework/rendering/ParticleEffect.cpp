@@ -3,6 +3,8 @@
 #include <glm/vec4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <cstring>
+
 namespace Vertex
 {
     ParticleEffect::ParticleEffect(GLuint _max_particles)

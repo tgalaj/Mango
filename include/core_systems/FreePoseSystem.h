@@ -9,7 +9,8 @@ namespace Vertex
     {
     public:
         FreePoseSystem()
-            : m_free_look_locked(false)
+            : m_mouse_pressed_position(0.0, 0.0),
+              m_is_mouse_move(false)
         {}
 
         void configure(entityx::EntityManager& entities, entityx::EventManager& events) override;
@@ -18,6 +19,7 @@ namespace Vertex
     private:
         void move(TransformComponent & transform, const glm::vec3 & dir, float amount);
 
-        bool m_free_look_locked;
+        glm::vec2 m_mouse_pressed_position;
+        bool m_is_mouse_move;
     };
 }

@@ -38,20 +38,25 @@ namespace Vertex
         entities.each<FreeLookComponent, TransformComponent>(
         [this](entityx::Entity entity, FreeLookComponent & free_look, TransformComponent & transform)
         {
-            if(/*Input::getKey(free_look.m_unlock_mouse_key) ||*/ Input::getMouseDown(free_look.m_unlock_mouse_key))
+            if(Input::getMouse(free_look.m_unlock_mouse_key))
             {
-                m_free_look_locked = !m_free_look_locked;
-                Input::setMouseCursorVisibility(!m_free_look_locked);
-
-                if (m_free_look_locked)
+                if (!m_is_mouse_move)
                 {
-                    Input::setMouseCursorPosition(Window::getCenter());
+                    m_mouse_pressed_position = Input::getMousePosition();
+                    Input::setMouseCursorVisibility(false);
                 }
+
+                m_is_mouse_move = true;
+            }
+            else
+            {
+                m_is_mouse_move = false;
+                Input::setMouseCursorVisibility(true);
             }
 
-            if(m_free_look_locked)
+            if(m_is_mouse_move)
             {
-                auto delta_pos = Input::getMousePosition() - Window::getCenter();
+                auto delta_pos = Input::getMousePosition() - m_mouse_pressed_position;
 
                 auto rot_y = delta_pos.x != 0.0f;
                 auto rot_x = delta_pos.y != 0.0f;
@@ -70,7 +75,7 @@ namespace Vertex
 
                 if(rot_x || rot_y)
                 {
-                    Input::setMouseCursorPosition(Window::getCenter());
+                    m_mouse_pressed_position = Input::getMousePosition();
                 }
             }
         });

@@ -11,7 +11,7 @@ However, the aim of this project is to create a game engine with featuring a ren
 Make sure to clone the repository with the one of the following commands (to also clone the sources of the dependencies):
 
 ```
-git clone --recursive https://github.com/Shot511/VertexEngine
+git clone --recursive https://github.com/tgalaj/Mango.git
 ```
 
 If you've already cloned the repo run the following command in the root directory to download the submodules:
