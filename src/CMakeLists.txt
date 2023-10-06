@@ -1,3 +1,6 @@
+# Copyright (C) 2023 Tomasz Gałaj
+set(CORE_LIB_NAME "Mango" CACHE STRING "Name of the engine")
+
 # Add source files
 file(GLOB_RECURSE SOURCE_FILES 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/*.c
@@ -12,33 +15,38 @@ file(GLOB_RECURSE HEADER_FILES
 file(GLOB_RECURSE RES_FILES 
 	 ${CMAKE_SOURCE_DIR}/res/*.*)
 
-# Define the library
-add_library(${PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES} ${RES_FILES})
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
-
 set_source_files_properties(${RES_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
+source_group(TREE ${CMAKE_SOURCE_DIR}/res PREFIX "res" FILES ${RES_FILES})
 
-# Define the include DIRs
-target_include_directories(${PROJECT_NAME} PUBLIC "${VertexEngine_SOURCE_DIR}/include")
-target_include_directories(${PROJECT_NAME} PUBLIC "${ASSIMP_INCLUDE_DIR}")
-target_include_directories(${PROJECT_NAME} PUBLIC "${ENTITYX_INCLUDE_DIR}")
-target_include_directories(${PROJECT_NAME} PUBLIC "${GLFW_INCLUDE_DIR}")
-target_include_directories(${PROJECT_NAME} PUBLIC "${GLAD_INCLUDE_DIR}")
-target_include_directories(${PROJECT_NAME} PUBLIC "${GLM_INCLUDE_DIR}")
-target_include_directories(${PROJECT_NAME} PUBLIC "${IMGUI_INCLUDE_DIR}")
-target_include_directories(${PROJECT_NAME} PUBLIC "${STB_IMAGE_INCLUDE_DIR}")
+# Define the library
+add_library(${CORE_LIB_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES} ${RES_FILES})
 
-target_link_libraries(${PROJECT_NAME} "${OPENGL_LIBRARY}")
-target_link_libraries(${PROJECT_NAME} "${ASSIMP_LIBRARY}")
-target_link_libraries(${PROJECT_NAME} "${ENTITYX_LIBRARY}")
-target_link_libraries(${PROJECT_NAME} "${GLFW_LIBRARY}")
-target_link_libraries(${PROJECT_NAME} "${GLAD_LIBRARY}"      "${CMAKE_DL_LIBS}")
-target_link_libraries(${PROJECT_NAME} "${IMGUI_LIBRARY}"     "${CMAKE_DL_LIBS}")
-target_link_libraries(${PROJECT_NAME} "${STB_IMAGE_LIBRARY}" "${CMAKE_DL_LIBS}")
+target_compile_definitions(${CORE_LIB_NAME} PRIVATE GLFW_INCLUDE_NONE)
+target_compile_definitions(${CORE_LIB_NAME} PRIVATE LIBRARY_SUFFIX="")
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
-target_compile_definitions(${PROJECT_NAME} PRIVATE LIBRARY_SUFFIX="")
+target_include_directories(${CORE_LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+												   ${CMAKE_SOURCE_DIR}/include
+												   ${CMAKE_SOURCE_DIR}/include/framework/gui
+												   ${CMAKE_SOURCE_DIR}/thirdparty
+												   ${glad_SOURCE_DIR}
+												   ${stb_image_SOURCE_DIR}
+												   ${imgui_SOURCE_DIR})
 
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "sources"   FILES ${SOURCE_FILES})						   
-source_group(TREE ${CMAKE_SOURCE_DIR}/include PREFIX "headers"   FILES ${HEADER_FILES})
-source_group(TREE ${CMAKE_SOURCE_DIR}/res     PREFIX "res" 	     FILES ${RES_FILES})
+target_link_libraries(${CORE_LIB_NAME} ${OPENGL_LIBRARIES}
+                                       glad
+                                       stb_image
+                                       assimp
+									   entityx
+                                       glfw
+                                       imgui
+                                       spdlog
+                                       glm::glm
+                                       tinyddsloader)
+
+if(MinGW)
+    target_link_libraries(${CORE_LIB_NAME} bz2)
+endif()
+
+if(MSVC)
+    target_compile_definitions(${CORE_LIB_NAME} PUBLIC NOMINMAX)
+endif()
