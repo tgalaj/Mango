@@ -6,7 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/vec2.hpp>
 
-namespace Vertex
+namespace mango
 {
     class Window final
     {

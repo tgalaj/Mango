@@ -2,7 +2,7 @@
 #include <imgui.h>
 #include <string>
 
-namespace Vertex
+namespace mango
 {
     class Font
     {

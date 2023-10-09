@@ -1,11 +1,11 @@
 #include "core_engine/CoreServices.h"
 
-namespace Vertex
+namespace mango
 {
-    VertexCore      * CoreServices::m_core_engine  = nullptr;
+    Core      * CoreServices::m_core_engine  = nullptr;
     RenderingSystem * CoreServices::m_renderer     = nullptr;
 
-    VertexCore * const CoreServices::getCore()
+    Core * const CoreServices::getCore()
     {
         return m_core_engine;
     }
@@ -15,7 +15,7 @@ namespace Vertex
         return m_renderer;
     }
 
-    void CoreServices::provide(VertexCore * core)
+    void CoreServices::provide(Core * core)
     {
         m_core_engine = core;
     }

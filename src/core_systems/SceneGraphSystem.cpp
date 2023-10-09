@@ -1,6 +1,6 @@
 ﻿#include "core_systems/SceneGraphSystem.h"
 
-namespace Vertex
+namespace mango
 {
     TransformComponent SceneGraphSystem::M_ROOT_NODE;
 

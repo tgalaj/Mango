@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <vector>
 
-namespace Vertex
+namespace mango
 {
     class RenderTarget
     {

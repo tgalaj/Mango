@@ -7,16 +7,16 @@
 #define MIN_GL_VERSION_MAJOR 4
 #define MIN_GL_VERSION_MINOR 6
 
-namespace Vertex
+namespace mango
 {
-    class VertexCore final : public entityx::EntityX
+    class Core final : public entityx::EntityX
     {
     public:
-        explicit VertexCore(const std::shared_ptr<BaseGame> & game, double framerate = 60.0);
-        ~VertexCore();
+        explicit Core(const std::shared_ptr<BaseGame> & game, double framerate = 60.0);
+        ~Core();
 
-        VertexCore(const VertexCore &) = delete;
-        VertexCore & operator=(const VertexCore &) = delete;
+        Core(const Core &) = delete;
+        Core & operator=(const Core &) = delete;
 
         /**
          * All systems must be added before calling init().

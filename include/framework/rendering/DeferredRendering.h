@@ -2,7 +2,7 @@
 #include "PostprocessEffect.h"
 #include "RenderTarget.h"
 
-namespace Vertex
+namespace mango
 {
     class DeferredRendering : public PostprocessEffect
     {

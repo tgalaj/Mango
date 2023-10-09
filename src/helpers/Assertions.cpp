@@ -30,12 +30,12 @@
 #include <cstdio>
 #include <cstdarg>
 
-namespace Vertex
+namespace mango
 {
     namespace
     {
 
-        Assert::FailBehavior DefaultHandler(const char* condition,
+        asserts::FailBehavior DefaultHandler(const char* condition,
                                             const char* msg,
                                             const char* file,
                                             const int line)
@@ -50,28 +50,28 @@ namespace Vertex
 
             std::printf("\n");
 
-            return Assert::Halt;
+            return asserts::Halt;
         }
 
-        Assert::Handler& GetAssertHandlerInstance()
+        asserts::Handler& GetAssertHandlerInstance()
         {
-            static Assert::Handler s_handler = &DefaultHandler;
+            static asserts::Handler s_handler = &DefaultHandler;
             return s_handler;
         }
 
     }
 
-    Assert::Handler Assert::getHandler()
+    asserts::Handler asserts::getHandler()
     {
         return GetAssertHandlerInstance();
     }
 
-    void Assert::setHandler(Handler newHandler)
+    void asserts::setHandler(Handler newHandler)
     {
         GetAssertHandlerInstance() = newHandler;
     }
 
-    Assert::FailBehavior Assert::reportFailure(const char* condition,
+    asserts::FailBehavior asserts::reportFailure(const char* condition,
                                                const char* file,
                                                const int   line,
                                                const char* msg, ...)

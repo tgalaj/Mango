@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <entityx/System.h>
 
-namespace Vertex
+namespace mango
 {
     class CameraSystem : public entityx::System<CameraSystem>
     {

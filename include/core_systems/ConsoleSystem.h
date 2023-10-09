@@ -2,7 +2,7 @@
 #include <entityx/System.h>
 #include "Events.h"
 
-namespace Vertex
+namespace mango
 {
     class ConsoleSystem : public entityx::System<ConsoleSystem>, public entityx::Receiver<ConsoleSystem>
     {

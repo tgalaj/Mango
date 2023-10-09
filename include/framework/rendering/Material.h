@@ -5,7 +5,7 @@
 #include <memory>
 #include "Texture.h"
 
-namespace Vertex
+namespace mango
 {
     class Material
     {

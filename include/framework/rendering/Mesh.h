@@ -6,7 +6,7 @@
 
 #include "Material.h"
 
-namespace Vertex
+namespace mango
 {
     struct VertexBuffers
     {

@@ -5,7 +5,7 @@
 #include <string>
 #include <stb_image.h>
 
-namespace Vertex
+namespace mango
 {
     class Util
     {

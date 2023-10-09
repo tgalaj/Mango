@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace Vertex
+namespace mango
 {
     class Cloth
     {

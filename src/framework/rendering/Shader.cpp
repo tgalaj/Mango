@@ -7,7 +7,7 @@
 #include "framework/utilities/ShaderGlobals.h"
 #include "core_engine/CoreServices.h"
 
-namespace Vertex
+namespace mango
 {
     Shader::Shader()
         : m_program_id(0),

@@ -2,7 +2,7 @@
 #include "framework/rendering/Mesh.h"
 #include "framework/utilities/GeomPrimitive.h"
 
-namespace Vertex
+namespace mango
 {
     Skybox::Skybox(const std::string & skybox_directory,
                    const std::string & left_face,

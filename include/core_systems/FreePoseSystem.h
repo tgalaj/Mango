@@ -3,7 +3,7 @@
 
 #include "core_components/TransformComponent.h"
 
-namespace Vertex
+namespace mango
 {
     class FreePoseSystem : public entityx::System<FreePoseSystem>
     {

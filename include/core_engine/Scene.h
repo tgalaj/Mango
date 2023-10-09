@@ -2,7 +2,7 @@
 #include <map>
 #include "Prefab.h"
 
-namespace Vertex
+namespace mango
 {
     class Scene final
     {

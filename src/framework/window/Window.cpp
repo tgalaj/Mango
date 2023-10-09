@@ -2,10 +2,10 @@
 #include "framework/window/Input.h"
 #include "framework/utilities/DebugOutputGL.h"
 #include "framework/gui/GUI.h"
-#include "core_engine/VertexCore.h"
+#include "core_engine/Core.h"
 #include "core_engine/CoreServices.h"
 
-namespace Vertex
+namespace mango
 {
     GLFWwindow * Window::m_window = nullptr;
     std::string  Window::m_title = "";

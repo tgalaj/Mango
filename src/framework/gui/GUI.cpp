@@ -6,7 +6,7 @@
 #include <imgui_internal.h>
 #include <sstream>
 
-namespace Vertex
+namespace mango
 {
     glm::vec2 GUI::m_window_size = glm::vec2(0.0f);
 

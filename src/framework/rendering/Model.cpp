@@ -7,7 +7,7 @@
 #include <assimp/postprocess.h>
 
 
-namespace Vertex
+namespace mango
 {
     Model::Model()
     {
@@ -103,7 +103,7 @@ namespace Vertex
             loadMaterialTextures(ve_mesh, material, aiTextureType_SPECULAR, Material::TextureType::SPECULAR, directory);
         }
 
-        /* Feed Vertex Engine's Mesh with data */
+        /* Feed engine's Mesh with data */
         ve_mesh.setBuffers(buffers);
 
         return ve_mesh;

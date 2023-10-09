@@ -7,7 +7,7 @@
 #include <glm/vec3.hpp>
 #include <math.h>
 
-namespace Vertex
+namespace mango
 {
     Cloth::Cloth(int particles_x, int particles_y, float cloth_size_x, float cloth_size_y)
         : m_particles_dim(particles_x, particles_y),

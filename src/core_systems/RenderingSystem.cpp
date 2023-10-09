@@ -8,7 +8,7 @@
 #include "core_components/SpotLightComponent.h"
 #include "framework/utilities/ShaderGlobals.h"
 
-namespace Vertex
+namespace mango
 {
     bool         RenderingSystem::M_DEBUG_RENDERING    = false;
     unsigned int RenderingSystem::M_DEBUG_WINDOW_WIDTH = 0;

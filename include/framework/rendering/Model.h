@@ -10,7 +10,7 @@
 #include <entityx/Entity.h>
 #include "Shader.h"
 
-namespace Vertex
+namespace mango
 {
     class Model
     {

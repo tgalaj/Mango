@@ -1,6 +1,6 @@
 #include "core_engine/CoreAssetManager.h"
 
-namespace Vertex
+namespace mango
 {
     std::vector<GameObject>      CoreAssetManager::m_game_objects;
     std::map<std::string, Model> CoreAssetManager::m_loaded_models;

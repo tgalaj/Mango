@@ -2,7 +2,7 @@
 #include "core_components/CameraComponent.h"
 #include "core_components/TransformComponent.h"
 
-namespace Vertex
+namespace mango
 {
     void CameraSystem::configure(entityx::EntityManager& entities, entityx::EventManager& events)
     {

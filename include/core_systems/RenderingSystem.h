@@ -12,7 +12,7 @@
 #include "framework/rendering/BloomPS.h"
 #include "framework/rendering/SSAO.h"
 
-namespace Vertex
+namespace mango
 {
     class RenderingSystem : public entityx::System<RenderingSystem>, public entityx::Receiver<RenderingSystem>
     {

@@ -2,7 +2,7 @@
 #include <entityx/Entity.h>
 #include <core_components/TransformComponent.h>
 
-namespace Vertex
+namespace mango
 {
     class GameObject
     {

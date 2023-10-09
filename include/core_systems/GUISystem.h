@@ -3,7 +3,7 @@
 
 #include "game_logic/BaseGame.h"
 
-namespace Vertex
+namespace mango
 {
     class GUISystem : public entityx::System<GUISystem>
     {

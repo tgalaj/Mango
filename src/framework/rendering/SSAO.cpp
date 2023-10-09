@@ -4,7 +4,7 @@
 
 #include <random>
 
-namespace Vertex
+namespace mango
 {
     SSAO::SSAO()
         : m_noise_to_id(0),
@@ -56,7 +56,7 @@ namespace Vertex
         m_blurred_buffer->bindTexture(unit, 0);
     }
 
-    void SSAO::computeSSAO(const std::shared_ptr<Vertex::DeferredRendering> & g_buffer, const glm::mat4 & view, const glm::mat4 & projection)
+    void SSAO::computeSSAO(const std::shared_ptr<mango::DeferredRendering> & g_buffer, const glm::mat4 & view, const glm::mat4 & projection)
     {
         m_postprocess->bind();
         m_postprocess->setSubroutine(Shader::Type::FRAGMENT, "calcSSAO");

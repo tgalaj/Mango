@@ -5,7 +5,7 @@
 
 #include <cstring>
 
-namespace Vertex
+namespace mango
 {
     ParticleEffect::ParticleEffect(GLuint _max_particles)
         : m_color(glm::vec4(0.85f, 0.325f, 0.0f, 0.2f)),
@@ -35,8 +35,8 @@ namespace Vertex
         glm::mat4 transf = glm::translate(glm::mat4(1.0f), glm::vec3(-1, -1, -1));
 
         float dx = 2.0f / (no_particles_in_dim - 1),
-            dy = 2.0f / (no_particles_in_dim - 1),
-            dz = 2.0f / (no_particles_in_dim - 1);
+              dy = 2.0f / (no_particles_in_dim - 1),
+              dz = 2.0f / (no_particles_in_dim - 1);
 
         int counter = 0;
         for (int i = 0; i < no_particles_in_dim; ++i)

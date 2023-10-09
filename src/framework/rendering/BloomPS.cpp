@@ -2,7 +2,7 @@
 #include <framework/window/Window.h>
 #include "framework/rendering/BloomPS.h"
 
-namespace Vertex
+namespace mango
 {
     void BloomPS::create()
     {
@@ -32,7 +32,7 @@ namespace Vertex
         m_blurred_buffer->bindTexture(unit, 0);
     }
 
-    void BloomPS::extractBrightness(const std::shared_ptr<Vertex::RenderTarget> &hdr_rt, float threshold)
+    void BloomPS::extractBrightness(const std::shared_ptr<mango::RenderTarget> &hdr_rt, float threshold)
     {
         m_postprocess->bind();
         m_postprocess->setSubroutine(Shader::Type::FRAGMENT, "extractBrightness");

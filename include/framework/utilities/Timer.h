@@ -1,7 +1,7 @@
 #pragma once
 #include <chrono>
 
-namespace Vertex
+namespace mango
 {
     class Timer final
     {

@@ -1,8 +1,8 @@
 #pragma once
-#include "VertexCore.h"
+#include "Core.h"
 #include "core_systems/RenderingSystem.h"
 
-namespace Vertex
+namespace mango
 {
     class CoreServices final
     {
@@ -10,17 +10,17 @@ namespace Vertex
         CoreServices() = delete;
         ~CoreServices() = delete;
 
-        static VertexCore * const getCore();
+        static Core * const getCore();
         static RenderingSystem * const getRenderer();
 
     private:
-        static void provide(VertexCore * core);
+        static void provide(Core * core);
         static void provide(RenderingSystem * renderer);
 
-        static VertexCore      * m_core_engine;
+        static Core      * m_core_engine;
         static RenderingSystem * m_renderer;
 
-        friend class VertexCore;
+        friend class Core;
     };
 }
 

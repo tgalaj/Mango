@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace Vertex
+namespace mango
 {
     class CameraComponent
     {

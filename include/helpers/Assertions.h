@@ -28,11 +28,11 @@
 #pragma once
 
 #ifndef NDEBUG
-    #define VERTEX_ASSERTS_ENABLED
+    #define MG_ASSERTS_ENABLED
 #endif
-namespace Vertex
+namespace mango
 {
-    namespace Assert
+    namespace asserts
     {
         enum FailBehavior
         {
@@ -56,57 +56,57 @@ namespace Vertex
 }
 
 #ifdef _MSC_VER
-    #define VERTEX_HALT() __debugbreak()
+    #define MG_HALT() __debugbreak()
 #else
-    #define VERTEX_HALT()
+    #define MG_HALT()
 #endif
 
-#define VERTEX_UNUSED(x) do { (void)sizeof(x); } while(0)
+#define MG_UNUSED(x) do { (void)sizeof(x); } while(0)
 
-#ifdef VERTEX_ASSERTS_ENABLED
-#define VERTEX_ASSERT(cond) \
+#ifdef MG_ASSERTS_ENABLED
+#define MG_ASSERT(cond) \
 		do \
 		{ \
 			if (!(cond)) \
 			{ \
-				if (Vertex::Assert::reportFailure(#cond, __FILE__, __LINE__, 0) == \
-					Vertex::Assert::Halt) \
-					VERTEX_HALT(); \
+				if (mango::asserts::reportFailure(#cond, __FILE__, __LINE__, 0) == \
+					mango::asserts::Halt) \
+					MG_HALT(); \
 			} \
 		} while(0)
 
-#define VERTEX_ASSERT_MSG(cond, msg, ...) \
+#define MG_ASSERT_MSG(cond, msg, ...) \
 		do \
 		{ \
 			if (!(cond)) \
 			{ \
-				if (Vertex::Assert::reportFailure(#cond, __FILE__, __LINE__, (msg), ##__VA_ARGS__) == \
-					Vertex::Assert::Halt) \
-					VERTEX_HALT(); \
+				if (mango::asserts::reportFailure(#cond, __FILE__, __LINE__, (msg), ##__VA_ARGS__) == \
+					mango::asserts::Halt) \
+					MG_HALT(); \
 			} \
 		} while(0)
 
-#define VERTEX_ASSERT_FAIL(msg, ...) \
+#define MG_ASSERT_FAIL(msg, ...) \
 		do \
 		{ \
-			if (Vertex::Assert::reportFailure(0, __FILE__, __LINE__, (msg), ##__VA_ARGS__) == \
-				Vertex::Assert::Halt) \
-			VERTEX_HALT(); \
+			if (mango::asserts::reportFailure(0, __FILE__, __LINE__, (msg), ##__VA_ARGS__) == \
+				mango::asserts::Halt) \
+			MG_HALT(); \
 		} while(0)
 
-#define VERTEX_VERIFY(cond) VERTEX_ASSERT(cond)
-#define VERTEX_VERIFY_MSG(cond, msg, ...) VERTEX_ASSERT_MSG(cond, msg, ##__VA_ARGS__)
+#define MG_VERIFY(cond) MG_ASSERT(cond)
+#define MG_VERIFY_MSG(cond, msg, ...) MG_ASSERT_MSG(cond, msg, ##__VA_ARGS__)
 #else
-#define VERTEX_ASSERT(condition) \
-		do { VERTEX_UNUSED(condition); } while(0)
-#define VERTEX_ASSERT_MSG(condition, msg, ...) \
-		do { VERTEX_UNUSED(condition); VERTEX_UNUSED(msg); } while(0)
-#define VERTEX_ASSERT_FAIL(msg, ...) \
-		do { VERTEX_UNUSED(msg); } while(0)
-#define VERTEX_VERIFY(cond) (void)(cond)
-#define VERTEX_VERIFY_MSG(cond, msg, ...) \
-		do { (void)(cond); VERTEX_UNUSED(msg); } while(0)
+#define MG_ASSERT(condition) \
+		do { MG_UNUSED(condition); } while(0)
+#define MG_ASSERT_MSG(condition, msg, ...) \
+		do { MG_UNUSED(condition); MG_UNUSED(msg); } while(0)
+#define MG_ASSERT_FAIL(msg, ...) \
+		do { MG_UNUSED(msg); } while(0)
+#define MG_VERIFY(cond) (void)(cond)
+#define MG_VERIFY_MSG(cond, msg, ...) \
+		do { (void)(cond); MG_UNUSED(msg); } while(0)
 #endif
 
-#define VERTEX_STATIC_ASSERT(x) \
-	typedef char vertexStaticAssert[(x) ? 1 : -1];
+#define MG_STATIC_ASSERT(x) \
+	typedef char mangoStaticAssert[(x) ? 1 : -1];

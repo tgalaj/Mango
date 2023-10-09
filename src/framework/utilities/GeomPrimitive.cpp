@@ -1,7 +1,7 @@
 #include "framework/utilities/GeomPrimitive.h"
 #include <glm/gtc/constants.hpp>
 
-namespace Vertex
+namespace mango
 {
     void GeomPrimitive::genCube(VertexBuffers & buffers, float radius)
     {

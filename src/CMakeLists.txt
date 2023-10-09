@@ -1,5 +1,5 @@
 # Copyright (C) 2023 Tomasz Gałaj
-set(CORE_LIB_NAME "Mango" CACHE STRING "Name of the engine")
+set(CORE_LIB_NAME ${CMAKE_PROJECT_NAME})
 
 # Add source files
 file(GLOB_RECURSE SOURCE_FILES 

@@ -6,7 +6,7 @@
 #include "framework/rendering/Model.h"
 #include "framework/gui/Font.h"
 
-namespace Vertex
+namespace mango
 {
     class CoreAssetManager final
     {

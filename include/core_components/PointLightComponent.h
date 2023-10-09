@@ -7,7 +7,7 @@
 #include "framework/rendering/Attenuation.h"
 
 
-namespace Vertex
+namespace mango
 {
     class PointLightComponent : public BaseLightComponent
     {

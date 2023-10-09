@@ -3,7 +3,7 @@
 #include "core_components/FreeLookComponent.h"
 #include "framework/window/Window.h"
 
-namespace Vertex
+namespace mango
 {
     void FreePoseSystem::configure(entityx::EntityManager & entities, entityx::EventManager & events)
     {

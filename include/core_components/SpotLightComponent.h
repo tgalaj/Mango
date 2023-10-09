@@ -1,7 +1,7 @@
 #pragma once
 #include "PointLightComponent.h"
 
-namespace Vertex
+namespace mango
 {
     class SpotLightComponent : public PointLightComponent
     {

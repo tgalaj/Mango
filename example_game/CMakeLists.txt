@@ -1,4 +1,4 @@
-set(SAMPLE_NAME "SampleGame")
+set(SAMPLE_NAME "example_game")
 
 # Add source files
 file(GLOB_RECURSE SOURCE_FILES_EXE 

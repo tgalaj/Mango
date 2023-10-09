@@ -1,7 +1,7 @@
 #include "framework/rendering/PostprocessEffect.h"
 #include "core_engine/CoreAssetManager.h"
 
-namespace Vertex
+namespace mango
 {
     PostprocessEffect::PostprocessEffect()
     {

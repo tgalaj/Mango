@@ -4,7 +4,7 @@
 #include <string>
 #include <glm/vec4.hpp>
 
-namespace Vertex
+namespace mango
 {
     struct ImageData
     {

@@ -2,7 +2,7 @@
 #include "core_engine/CoreAssetManager.h"
 #include "framework/window/Window.h"
 
-namespace Vertex
+namespace mango
 {
     void DeferredRendering::init()
     {

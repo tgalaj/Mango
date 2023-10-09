@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Vertex
+namespace mango
 {
     class BaseGame
     {

@@ -4,7 +4,7 @@
 #include <glm/common.hpp>
 #include <glm/exponential.hpp>
 
-namespace Vertex
+namespace mango
 {
     Texture::Texture()
         : m_to_id(0),

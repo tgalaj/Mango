@@ -1,7 +1,7 @@
 ﻿#include "core_systems/ConsoleSystem.h"
 #include <entityx/entityx.h>
 
-namespace Vertex
+namespace mango
 {
     void ConsoleSystem::configure(entityx::EventManager& events)
     {

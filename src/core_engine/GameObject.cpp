@@ -5,7 +5,7 @@
 #include "core_systems/SceneGraphSystem.h"
 #include "core_engine/CoreServices.h"
 
-namespace Vertex
+namespace mango
 {
     GameObject::GameObject()
     {

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "GameObject.h"
 
-namespace Vertex
+namespace mango
 {
     class Prefab
     {

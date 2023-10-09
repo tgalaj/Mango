@@ -1,7 +1,7 @@
 #pragma once
 #include "game_logic/BaseGame.h"
 
-class TestDemo : public Vertex::BaseGame
+class TestDemo : public mango::BaseGame
 {
 public:
     TestDemo();

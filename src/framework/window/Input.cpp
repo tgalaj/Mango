@@ -1,6 +1,6 @@
 #include "framework/window/Input.h"
 
-namespace Vertex
+namespace mango
 {
     GLFWwindow * Input::m_window = nullptr;
 

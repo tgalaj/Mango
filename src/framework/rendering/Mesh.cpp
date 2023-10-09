@@ -1,6 +1,6 @@
 #include "framework/rendering/Mesh.h"
 
-namespace Vertex
+namespace mango
 {
     MeshData::MeshData()
         : m_indices_count(0),

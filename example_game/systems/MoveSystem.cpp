@@ -13,10 +13,10 @@ void MoveSystem::configure(entityx::EntityManager& entities, entityx::EventManag
 
 void MoveSystem::update(entityx::EntityManager& entities, entityx::EventManager& events, entityx::TimeDelta dt)
 {
-    entityx::ComponentHandle<Vertex::TransformComponent> transform;
+    entityx::ComponentHandle<mango::TransformComponent> transform;
     entityx::ComponentHandle<MoveSystemComponent> msc;
-    entityx::ComponentHandle<Vertex::PointLightComponent> point_light;
-    entityx::ComponentHandle<Vertex::SpotLightComponent> spot_light;
+    entityx::ComponentHandle<mango::PointLightComponent> point_light;
+    entityx::ComponentHandle<mango::SpotLightComponent> spot_light;
     
     static float acc = 0.0f;
     acc += dt / 6.0f;

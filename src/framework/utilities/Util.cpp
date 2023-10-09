@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 
-namespace Vertex
+namespace mango
 {
     std::string Util::loadFile(const std::string & filename)
     {

@@ -2,7 +2,7 @@
 #include "core_engine/CoreAssetManager.h"
 #include "helpers/Assertions.h"
 
-namespace Vertex
+namespace mango
 {
     std::map<Material::TextureType, std::string> Material::m_texture_uniform_map
     {
@@ -56,7 +56,7 @@ namespace Vertex
             return m_texture_map[texture_type];
         }
 
-        VERTEX_ASSERT_MSG(false, "Couldn't find texture with the specified texture type!");
+        MG_ASSERT_MSG(false, "Couldn't find texture with the specified texture type!");
 
         return nullptr;
     }

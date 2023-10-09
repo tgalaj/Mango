@@ -12,7 +12,7 @@
 
 #include <memory>
 
-namespace Vertex
+namespace mango
 {
     class GUI
     {

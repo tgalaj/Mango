@@ -2,7 +2,7 @@
 #include <memory>
 #include "Shader.h"
 
-namespace Vertex
+namespace mango
 {
     class PostprocessEffect
     {

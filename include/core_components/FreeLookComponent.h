@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "framework/window/Input.h"
 
-namespace Vertex
+namespace mango
 {
     class FreeLookComponent
     {

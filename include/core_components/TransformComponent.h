@@ -10,7 +10,7 @@
 
 #include <vector>
 
-namespace Vertex
+namespace mango
 {
     class TransformComponent
     {

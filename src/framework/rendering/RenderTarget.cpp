@@ -1,7 +1,7 @@
 #include "framework/rendering/RenderTarget.h"
 #include "helpers/Assertions.h"
 
-namespace Vertex
+namespace mango
 {
     RenderTarget::RenderTarget()
         : m_fbo_id(0),
@@ -31,7 +31,7 @@ namespace Vertex
 
     void RenderTarget::create(unsigned width, unsigned height, DepthInternalFormat depth, RenderTargetType rt_type, bool use_filtering)
     {
-        VERTEX_ASSERT(depth != DepthInternalFormat::NoDepth);
+        MG_ASSERT(depth != DepthInternalFormat::NoDepth);
 
         glGenFramebuffers(1, &m_fbo_id);
         glBindFramebuffer(GL_FRAMEBUFFER, m_fbo_id);

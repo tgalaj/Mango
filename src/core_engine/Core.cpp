@@ -1,4 +1,4 @@
-#include "core_engine/VertexCore.h"
+#include "core_engine/Core.h"
 #include "core_engine/CoreServices.h"
 #include "core_systems/SceneGraphSystem.h"
 #include "core_systems/ConsoleSystem.h"
@@ -10,9 +10,9 @@
 #include "framework/window/Input.h"
 #include "framework/window/Window.h"
 
-namespace Vertex
+namespace mango
 {
-    VertexCore::VertexCore(const std::shared_ptr<BaseGame> & game, double framerate)
+    Core::Core(const std::shared_ptr<BaseGame> & game, double framerate)
         : m_users_systems(entities, events), 
           m_game(game),
           m_frame_time(1.0 / framerate),
@@ -22,11 +22,11 @@ namespace Vertex
     {
     }
 
-    VertexCore::~VertexCore()
+    Core::~Core()
     {
     }
 
-    void VertexCore::init(unsigned int width, unsigned int height, const std::string & title)
+    void Core::init(unsigned int width, unsigned int height, const std::string & title)
     {
         /* Init window */
         Window::createWindow(width, height, title);
@@ -54,12 +54,12 @@ namespace Vertex
         m_game->init();
     }
 
-    unsigned int VertexCore::getFPS() const
+    unsigned int Core::getFPS() const
     {
         return m_fpsToReturn;
     }
 
-    void VertexCore::start()
+    void Core::start()
     {
         if (m_is_running)
         {
@@ -69,7 +69,7 @@ namespace Vertex
         run();
     }
 
-    void VertexCore::stop()
+    void Core::stop()
     {
         if (!m_is_running)
         {
@@ -79,7 +79,7 @@ namespace Vertex
         m_is_running = false;
     }
 
-    void VertexCore::updateSystems(entityx::TimeDelta dt)
+    void Core::updateSystems(entityx::TimeDelta dt)
     {
         /** 
          * Update core engine systems in specific order 
@@ -93,13 +93,13 @@ namespace Vertex
         m_users_systems.update_all(dt);
     }
 
-    void VertexCore::updateRenderingSystems(entityx::TimeDelta dt)
+    void Core::updateRenderingSystems(entityx::TimeDelta dt)
     {
         systems.update<RenderingSystem>(dt);
         systems.update<GUISystem>(dt);
     }
 
-    void VertexCore::run()
+    void Core::run()
     {
         m_is_running = true;
 

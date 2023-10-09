@@ -5,7 +5,7 @@
 #include "core_engine/CoreAssetManager.h"
 #include "Texture.h"
 
-namespace Vertex
+namespace mango
 {
     class Skybox
     {

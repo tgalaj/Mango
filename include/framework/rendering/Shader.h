@@ -8,7 +8,7 @@
 #include "core_components/TransformComponent.h"
 #include "Material.h"
 
-namespace Vertex
+namespace mango
 {
     class Shader final
     {

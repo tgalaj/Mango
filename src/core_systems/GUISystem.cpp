@@ -1,7 +1,7 @@
 ﻿#include "core_systems/GUISystem.h"
 #include "framework/gui/GUI.h"
 
-namespace Vertex
+namespace mango
 {
     void GUISystem::configure(entityx::EventManager& events)
     {

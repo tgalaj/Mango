@@ -3,7 +3,7 @@
 
 #include "core_components/TransformComponent.h"
 
-namespace Vertex
+namespace mango
 {
     class SceneGraphSystem : public entityx::System<SceneGraphSystem>
     {

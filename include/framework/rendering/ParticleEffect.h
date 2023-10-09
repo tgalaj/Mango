@@ -5,7 +5,7 @@
 #include "core_components/CameraComponent.h"
 #include "Shader.h"
 
-namespace Vertex
+namespace mango
 {
     class ParticleEffect
     {

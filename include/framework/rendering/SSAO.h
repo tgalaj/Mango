@@ -3,7 +3,7 @@
 #include "RenderTarget.h"
 #include "DeferredRendering.h"
 
-namespace Vertex
+namespace mango
 {
     class SSAO : public PostprocessEffect
     {
@@ -22,7 +22,7 @@ namespace Vertex
         void bindSSAOTexture(GLuint unit);
         void bindBlurredSSAOTexture(GLuint unit);
 
-        void computeSSAO(const std::shared_ptr<Vertex::DeferredRendering> & g_buffer, const glm::mat4 & view, const glm::mat4 & projection);
+        void computeSSAO(const std::shared_ptr<mango::DeferredRendering> & g_buffer, const glm::mat4 & view, const glm::mat4 & projection);
         void blurSSAO();
 
         void setKernelSize(unsigned kernel_size) { m_kernel_size = kernel_size; genKernel(); }

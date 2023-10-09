@@ -12,7 +12,7 @@
     #define STDCALL
 #endif
 
-namespace Vertex
+namespace mango
 {
     class DebugOutputGL final
     {

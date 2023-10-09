@@ -2,7 +2,7 @@
 
 #include "framework/rendering/Model.h"
 
-namespace Vertex
+namespace mango
 {
     class GeomPrimitive
     {
