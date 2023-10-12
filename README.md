@@ -1,4 +1,5 @@
 [![Build Status](https://github.com/tgalaj/Mango/actions/workflows/cpp_cmake.yml/badge.svg)](https://github.com/tgalaj/Mango/actions)
+[![License](https://img.shields.io/github/license/tgalaj/Mango)](https://github.com/tgalaj/Mango/blob/master/LICENSE)
 
 # Mango
 For the time being, Mango (previously Vertex Engine) is an early-stage open source 3D graphics framework mostly for proof of concept graphics applications purposes. 
@@ -33,3 +34,6 @@ cmake -B build
 ```
 
 Either of these approaches will create project files in the *build* directory.
+
+## Documentation
+Online documentation can be found [here](https://tgalaj.github.io/Mango/).
