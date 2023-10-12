@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; Mango  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Mango" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Mango
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Mango</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#_CPPv45mango"><code class="docutils literal notranslate"><span class="pre">mango</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5mango4CoreE"><code class="docutils literal notranslate"><span class="pre">mango::Core</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0DpEN5mango4Core9addSystemEvDpRR4Args"><code class="docutils literal notranslate"><span class="pre">mango::Core::addSystem()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core4CoreERK4Core"><code class="docutils literal notranslate"><span class="pre">mango::Core::Core()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core4CoreERKNSt10shared_ptrI8BaseGameEEd"><code class="docutils literal notranslate"><span class="pre">mango::Core::Core()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK5mango4Core6getFPSEv"><code class="docutils literal notranslate"><span class="pre">mango::Core::getFPS()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core4initEjjRKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">mango::Core::init()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4CoreaSERK4Core"><code class="docutils literal notranslate"><span class="pre">mango::Core::operator=()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core5startEv"><code class="docutils literal notranslate"><span class="pre">mango::Core::start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core4stopEv"><code class="docutils literal notranslate"><span class="pre">mango::Core::stop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4CoreD0Ev"><code class="docutils literal notranslate"><span class="pre">mango::Core::~Core()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core3runEv"><code class="docutils literal notranslate"><span class="pre">mango::Core::run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core22updateRenderingSystemsEN7entityx9TimeDeltaE"><code class="docutils literal notranslate"><span class="pre">mango::Core::updateRenderingSystems()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core13updateSystemsEN7entityx9TimeDeltaE"><code class="docutils literal notranslate"><span class="pre">mango::Core::updateSystems()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core5m_fpsE"><code class="docutils literal notranslate"><span class="pre">mango::Core::m_fps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core13m_fpsToReturnE"><code class="docutils literal notranslate"><span class="pre">mango::Core::m_fpsToReturn</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core12m_frame_timeE"><code class="docutils literal notranslate"><span class="pre">mango::Core::m_frame_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core6m_gameE"><code class="docutils literal notranslate"><span class="pre">mango::Core::m_game</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core12m_is_runningE"><code class="docutils literal notranslate"><span class="pre">mango::Core::m_is_running</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5mango4Core15m_users_systemsE"><code class="docutils literal notranslate"><span class="pre">mango::Core::m_users_systems</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Mango</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/tgalaj/Mango/blob/master/docs/mango.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-reference">
+<span id="id1"></span><h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.MIN_GL_VERSION_MAJOR">
+<span class="target" id="_core_8h_1ad09b78c8f1473596ff79bc96ee80eb05"></span><span class="sig-name descname"><span class="n"><span class="pre">MIN_GL_VERSION_MAJOR</span></span></span><a class="headerlink" href="#c.MIN_GL_VERSION_MAJOR" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.MIN_GL_VERSION_MINOR">
+<span class="target" id="_core_8h_1abec09774e2f147bc07cea0370e0a4b54"></span><span class="sig-name descname"><span class="n"><span class="pre">MIN_GL_VERSION_MINOR</span></span></span><a class="headerlink" href="#c.MIN_GL_VERSION_MINOR" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv45mango">
+<span id="_CPPv35mango"></span><span id="_CPPv25mango"></span><span id="mango"></span><span class="target" id="namespacemango"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mango</span></span></span><a class="headerlink" href="#_CPPv45mango" title="Link to this definition"></a><br /></dt>
+<dd><dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4CoreE">
+<span id="_CPPv3N5mango4CoreE"></span><span id="_CPPv2N5mango4CoreE"></span><span id="mango::Core"></span><span class="target" id="classmango_1_1_core"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Core</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">entityx</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">EntityX</span></span><a class="headerlink" href="#_CPPv4N5mango4CoreE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0DpEN5mango4Core9addSystemEvDpRR4Args">
+<span id="_CPPv3I0DpEN5mango4Core9addSystemEDpRR4Args"></span><span id="_CPPv2I0DpEN5mango4Core9addSystemEDpRR4Args"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">Args</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classmango_1_1_core_1aeffc84370930cded1c66e447db989d6a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">addSystem</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpEN5mango4Core9addSystemEvDpRR4Args" title="mango::Core::addSystem::Args"><span class="n"><span class="pre">Args</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">args</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0DpEN5mango4Core9addSystemEvDpRR4Args" title="Link to this definition"></a><br /></dt>
+<dd><p>All systems must be added before calling init(). </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core4CoreERK4Core">
+<span id="_CPPv3N5mango4Core4CoreERK4Core"></span><span id="_CPPv2N5mango4Core4CoreERK4Core"></span><span id="mango::Core::Core__CoreCR"></span><span class="target" id="classmango_1_1_core_1a45ef30d4f9a9ed4cf4cb6b4c8f648a19"></span><span class="sig-name descname"><span class="n"><span class="pre">Core</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5mango4Core4CoreERK4Core" title="mango::Core::Core"><span class="n"><span class="pre">Core</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N5mango4Core4CoreERK4Core" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core4CoreERKNSt10shared_ptrI8BaseGameEEd">
+<span id="_CPPv3N5mango4Core4CoreERKNSt10shared_ptrI8BaseGameEEd"></span><span id="_CPPv2N5mango4Core4CoreERKNSt10shared_ptrI8BaseGameEEd"></span><span id="mango::Core::Core__std::shared_ptr:BaseGame:CR.double"></span><span class="target" id="classmango_1_1_core_1a620a58ca0bcb7cef6b3ab42e19df832c"></span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Core</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">BaseGame</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">game</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">framerate</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">60.0</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5mango4Core4CoreERKNSt10shared_ptrI8BaseGameEEd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5mango4Core6getFPSEv">
+<span id="_CPPv3NK5mango4Core6getFPSEv"></span><span id="_CPPv2NK5mango4Core6getFPSEv"></span><span id="mango::Core::getFPSC"></span><span class="target" id="classmango_1_1_core_1abb7f2b44157399568806392b0f3e8f32"></span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getFPS</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5mango4Core6getFPSEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core4initEjjRKNSt6stringE">
+<span id="_CPPv3N5mango4Core4initEjjRKNSt6stringE"></span><span id="_CPPv2N5mango4Core4initEjjRKNSt6stringE"></span><span id="mango::Core::init__unsigned-i.unsigned-i.ssCR"></span><span class="target" id="classmango_1_1_core_1a35fbd803a2e69b2f11c566c8940beff8"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">width</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">height</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">title</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5mango4Core4initEjjRKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4CoreaSERK4Core">
+<span id="_CPPv3N5mango4CoreaSERK4Core"></span><span id="_CPPv2N5mango4CoreaSERK4Core"></span><span id="mango::Core::assign-operator__CoreCR"></span><span class="target" id="classmango_1_1_core_1ae305ca94a25c270e732f33a01ab9d1c1"></span><a class="reference internal" href="#_CPPv4N5mango4CoreE" title="mango::Core"><span class="n"><span class="pre">Core</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5mango4CoreE" title="mango::Core"><span class="n"><span class="pre">Core</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N5mango4CoreaSERK4Core" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core5startEv">
+<span id="_CPPv3N5mango4Core5startEv"></span><span id="_CPPv2N5mango4Core5startEv"></span><span id="mango::Core::start"></span><span class="target" id="classmango_1_1_core_1a4023bdd546c0416715955ecf32edba40"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">start</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5mango4Core5startEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core4stopEv">
+<span id="_CPPv3N5mango4Core4stopEv"></span><span id="_CPPv2N5mango4Core4stopEv"></span><span id="mango::Core::stop"></span><span class="target" id="classmango_1_1_core_1afda6063205fcf30a13d99d7a2b6caa11"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stop</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5mango4Core4stopEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4CoreD0Ev">
+<span id="_CPPv3N5mango4CoreD0Ev"></span><span id="_CPPv2N5mango4CoreD0Ev"></span><span id="mango::Core::~Core"></span><span class="target" id="classmango_1_1_core_1a53540258214ad4124b6cf4c9d3c1b521"></span><span class="sig-name descname"><span class="n"><span class="pre">~Core</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5mango4CoreD0Ev" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core3runEv">
+<span id="_CPPv3N5mango4Core3runEv"></span><span id="_CPPv2N5mango4Core3runEv"></span><span id="mango::Core::run"></span><span class="target" id="classmango_1_1_core_1a42b5b000f4b82eccfe5439ad0ca86b3b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">run</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5mango4Core3runEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core22updateRenderingSystemsEN7entityx9TimeDeltaE">
+<span id="_CPPv3N5mango4Core22updateRenderingSystemsEN7entityx9TimeDeltaE"></span><span id="_CPPv2N5mango4Core22updateRenderingSystemsEN7entityx9TimeDeltaE"></span><span id="mango::Core::updateRenderingSystems__entityx::TimeDelta"></span><span class="target" id="classmango_1_1_core_1ad77d4ca8392e6dcabf03584f30fc633c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">updateRenderingSystems</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">entityx</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TimeDelta</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dt</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5mango4Core22updateRenderingSystemsEN7entityx9TimeDeltaE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core13updateSystemsEN7entityx9TimeDeltaE">
+<span id="_CPPv3N5mango4Core13updateSystemsEN7entityx9TimeDeltaE"></span><span id="_CPPv2N5mango4Core13updateSystemsEN7entityx9TimeDeltaE"></span><span id="mango::Core::updateSystems__entityx::TimeDelta"></span><span class="target" id="classmango_1_1_core_1a5dbabeb9679883bf818541bac3626439"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">updateSystems</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">entityx</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TimeDelta</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dt</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5mango4Core13updateSystemsEN7entityx9TimeDeltaE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core5m_fpsE">
+<span id="_CPPv3N5mango4Core5m_fpsE"></span><span id="_CPPv2N5mango4Core5m_fpsE"></span><span id="mango::Core::m_fps__unsigned-i"></span><span class="target" id="classmango_1_1_core_1a693560e6cb044320d664a095efb9430f"></span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_fps</span></span></span><a class="headerlink" href="#_CPPv4N5mango4Core5m_fpsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core13m_fpsToReturnE">
+<span id="_CPPv3N5mango4Core13m_fpsToReturnE"></span><span id="_CPPv2N5mango4Core13m_fpsToReturnE"></span><span id="mango::Core::m_fpsToReturn__unsigned-i"></span><span class="target" id="classmango_1_1_core_1afce25ec00c63d22b40e59abda46ce063"></span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_fpsToReturn</span></span></span><a class="headerlink" href="#_CPPv4N5mango4Core13m_fpsToReturnE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core12m_frame_timeE">
+<span id="_CPPv3N5mango4Core12m_frame_timeE"></span><span id="_CPPv2N5mango4Core12m_frame_timeE"></span><span id="mango::Core::m_frame_time__double"></span><span class="target" id="classmango_1_1_core_1ae0418bc4a500e217d15e221cb672980b"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_frame_time</span></span></span><a class="headerlink" href="#_CPPv4N5mango4Core12m_frame_timeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core6m_gameE">
+<span id="_CPPv3N5mango4Core6m_gameE"></span><span id="_CPPv2N5mango4Core6m_gameE"></span><span id="mango::Core::m_game__std::shared_ptr:BaseGame:"></span><span class="target" id="classmango_1_1_core_1af67fb8245b54030eb2b16370ed8bb774"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">BaseGame</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_game</span></span></span><a class="headerlink" href="#_CPPv4N5mango4Core6m_gameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core12m_is_runningE">
+<span id="_CPPv3N5mango4Core12m_is_runningE"></span><span id="_CPPv2N5mango4Core12m_is_runningE"></span><span id="mango::Core::m_is_running__b"></span><span class="target" id="classmango_1_1_core_1a55ef68f85c35eff9f514a4ec9b0f292a"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_is_running</span></span></span><a class="headerlink" href="#_CPPv4N5mango4Core12m_is_runningE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5mango4Core15m_users_systemsE">
+<span id="_CPPv3N5mango4Core15m_users_systemsE"></span><span id="_CPPv2N5mango4Core15m_users_systemsE"></span><span id="mango::Core::m_users_systems__entityx::SystemManager"></span><span class="target" id="classmango_1_1_core_1a61bc2b875d396c8f5bac8e586e87c949"></span><span class="n"><span class="pre">entityx</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">SystemManager</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_users_systems</span></span></span><a class="headerlink" href="#_CPPv4N5mango4Core15m_users_systemsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Mango" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Tomasz Gałaj.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
