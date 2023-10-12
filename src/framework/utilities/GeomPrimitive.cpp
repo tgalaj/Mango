@@ -455,22 +455,35 @@ namespace mango
         float halfWidth = width * 0.5f;
         float halfHeight = height * 0.5f;
 
-        std::vector<glm::vec3> positions, normals, texcoords;
+        std::vector<glm::vec3> positions, normals, texcoords, tangents;
 
-        positions.push_back(glm::vec3(-halfWidth, 0.0f, -halfHeight));
-        positions.push_back(glm::vec3(-halfWidth, 0.0f, halfHeight));
-        positions.push_back(glm::vec3(halfWidth, 0.0f, -halfHeight));
-        positions.push_back(glm::vec3(halfWidth, 0.0f, halfHeight));
+        positions = { 
+            glm::vec3(-halfWidth, 0.0f, -halfHeight),
+            glm::vec3(-halfWidth, 0.0f,  halfHeight),
+            glm::vec3(halfWidth,  0.0f, -halfHeight),
+            glm::vec3(halfWidth,  0.0f,  halfHeight)
+        };
 
-        normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-        normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-        normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-        normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+        normals = {
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+        };
 
-        texcoords.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-        texcoords.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
-        texcoords.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
-        texcoords.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+        texcoords = {
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 1.0f, 0.0f),
+        };
+
+        tangents = {
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+        };
 
         for(unsigned i = 0; i < positions.size(); ++i)
         {
@@ -478,7 +491,7 @@ namespace mango
             v.m_position = positions[i];
             v.m_normal   = normals[i];
             v.m_texcoord = texcoords[i];
-            v.m_tangent  = glm::vec3(0.0f);
+            v.m_tangent  = tangents[i];
 
             buffers.m_vertices.push_back(v);
         }

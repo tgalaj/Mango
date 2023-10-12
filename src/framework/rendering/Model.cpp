@@ -131,12 +131,12 @@ namespace mango
 
     void Model::calcTangentSpace(VertexBuffers & buffers) const
     {
-        for(unsigned i = 0; i < buffers.m_vertices.size(); ++i)
+        for (unsigned i = 0; i < buffers.m_vertices.size(); ++i)
         {
             buffers.m_vertices[i].m_tangent = glm::vec3(0.0f);
         }
 
-        for(unsigned i = 0; i < buffers.m_indices.size(); i += 3)
+        for (unsigned i = 0; i < buffers.m_indices.size(); i += 3)
         {
             auto i0 = buffers.m_indices[i];
             auto i1 = buffers.m_indices[i + 1];
@@ -149,7 +149,9 @@ namespace mango
             auto delta_uv2 = buffers.m_vertices[i2].m_texcoord - buffers.m_vertices[i0].m_texcoord;
 
             float dividend = (delta_uv1.x * delta_uv2.y - delta_uv2.x * delta_uv1.y);
-            float f = dividend == 0.0f ? 0.0f : 1.0f / dividend;
+                  dividend = (dividend == 0.0f) ? 1e-5f : dividend;
+
+            float f = 1.0f / dividend;
 
             glm::vec3 tangent(0.0f);
             tangent.x = f * (delta_uv2.y * edge1.x - delta_uv1.y * edge2.x);
@@ -167,11 +169,11 @@ namespace mango
         }
     }
 
-    void Model::genPrimitive(VertexBuffers & buffers)
+    void Model::genPrimitive(VertexBuffers & buffers, bool calc_tangents)
     {
         Mesh mesh;
 
-        calcTangentSpace(buffers);
+        if (calc_tangents) calcTangentSpace(buffers);
         mesh.setBuffers(buffers);
 
         if(m_meshes.size() > 0)
@@ -235,7 +237,8 @@ namespace mango
         VertexBuffers buffers;
         GeomPrimitive::genQuad(buffers, width, height);
 
-        genPrimitive(buffers);
+        // quad has its own predefined tangents
+        genPrimitive(buffers, false);
         m_meshes[m_meshes.size() - 1].setDrawMode(GL_TRIANGLE_STRIP);
     }
 

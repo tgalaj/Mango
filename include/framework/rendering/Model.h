@@ -47,7 +47,7 @@ namespace mango
 
     private:
         void calcTangentSpace(VertexBuffers & buffers) const;
-        void genPrimitive(VertexBuffers & buffers);
+        void genPrimitive(VertexBuffers & buffers, bool calc_tangents = true);
 
         void processNode(aiNode * node, const aiScene * scene, aiString & directory);
         Mesh processMesh(aiMesh * mesh, const aiScene * scene, aiString & directory) const;

@@ -60,7 +60,7 @@ void TestDemo::init()
     auto sponza_model = mango::CoreAssetManager::createModel("res/models/sponza/Sponza.gltf");
 
     auto wall_model = mango::CoreAssetManager::createModel();
-    wall_model.genPlane(5, 5, 1, 1);
+    wall_model.genQuad(5, 5);
 
     auto ground_tex           = mango::CoreAssetManager::createTexture2D("res/textures/trak_tile_g.jpg", true);
     auto brickwall_tex        = mango::CoreAssetManager::createTexture2D("res/textures/brickwall.jpg", true);
