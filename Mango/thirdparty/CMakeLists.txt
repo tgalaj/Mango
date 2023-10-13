@@ -1,6 +1,21 @@
 # CPM - package manager
 include(CPM)
 
+# Set Assimp variables
+set(ASSIMP_NO_EXPORT                      ON  CACHE BOOL "")
+set(ASSIMP_BUILD_ASSIMP_TOOLS             OFF CACHE BOOL "")
+set(ASSIMP_BUILD_TESTS                    OFF CACHE BOOL "")
+set(ASSIMP_INSTALL_PDB                    OFF CACHE BOOL "")
+set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF CACHE BOOL "")
+set(ASSIMP_BUILD_OBJ_IMPORTER             ON  CACHE BOOL "")
+set(ASSIMP_BUILD_GLTF_IMPORTER            ON  CACHE BOOL "")
+set(ASSIMP_BUILD_FBX_IMPORTER             ON  CACHE BOOL "")
+set(ASSIMP_BUILD_MD5_IMPORTER             ON  CACHE BOOL "")
+
+# Set entityX variables
+set(ENTITYX_BUILD_SHARED  FALSE CACHE INTERNAL "Build shared libraries?")
+set(ENTITYX_BUILD_TESTING FALSE CACHE INTERNAL "Enable building of tests.")
+
 # OpenGL
 find_package(OpenGL REQUIRED)
 
@@ -57,18 +72,3 @@ set_target_properties(glad
 if (TARGET zlibstatic)
     set_target_properties(zlibstatic PROPERTIES FOLDER "thirdparty")
 endif()
-
-# Set Assimp variables
-set(ASSIMP_NO_EXPORT                      ON  CACHE BOOL "")
-set(ASSIMP_BUILD_ASSIMP_TOOLS             OFF CACHE BOOL "")
-set(ASSIMP_BUILD_TESTS                    OFF CACHE BOOL "")
-set(ASSIMP_INSTALL_PDB                    OFF CACHE BOOL "")
-set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF CACHE BOOL "")
-set(ASSIMP_BUILD_OBJ_IMPORTER             ON  CACHE BOOL "")
-set(ASSIMP_BUILD_GLTF_IMPORTER            ON  CACHE BOOL "")
-set(ASSIMP_BUILD_FBX_IMPORTER             ON  CACHE BOOL "")
-set(ASSIMP_BUILD_MD5_IMPORTER             ON  CACHE BOOL "")
-
-# Set entityX variables
-set(ENTITYX_BUILD_SHARED  FALSE CACHE INTERNAL "Build shared libraries?")
-set(ENTITYX_BUILD_TESTING FALSE CACHE INTERNAL "Enable building of tests.")
