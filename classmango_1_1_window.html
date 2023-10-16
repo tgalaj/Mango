@@ -87,30 +87,45 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>getWidth</b> ()
 <tr class="memitem:a28bbc318a86774254b2ee43c395569fd" id="r_a28bbc318a86774254b2ee43c395569fd"><td class="memItemLeft" align="right" valign="top"><a id="a28bbc318a86774254b2ee43c395569fd" name="a28bbc318a86774254b2ee43c395569fd"></a>
 static int&#160;</td><td class="memItemRight" valign="bottom"><b>isCloseRequested</b> ()</td></tr>
 <tr class="separator:a28bbc318a86774254b2ee43c395569fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b3cd10e131e6d35d66619368b1eb7de" id="r_a7b3cd10e131e6d35d66619368b1eb7de"><td class="memItemLeft" align="right" valign="top"><a id="a7b3cd10e131e6d35d66619368b1eb7de" name="a7b3cd10e131e6d35d66619368b1eb7de"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isFullscreen</b> ()</td></tr>
+<tr class="separator:a7b3cd10e131e6d35d66619368b1eb7de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad04ce2baee580f1140b37f870e0398f9" id="r_ad04ce2baee580f1140b37f870e0398f9"><td class="memItemLeft" align="right" valign="top"><a id="ad04ce2baee580f1140b37f870e0398f9" name="ad04ce2baee580f1140b37f870e0398f9"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>setFullscreen</b> (bool fullscreen)</td></tr>
+<tr class="separator:ad04ce2baee580f1140b37f870e0398f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0e18bd89d51d7149f6d830285991e60" id="r_ab0e18bd89d51d7149f6d830285991e60"><td class="memItemLeft" align="right" valign="top"><a id="ab0e18bd89d51d7149f6d830285991e60" name="ab0e18bd89d51d7149f6d830285991e60"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>setVSync</b> (bool enabled)</td></tr>
 <tr class="separator:ab0e18bd89d51d7149f6d830285991e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
-<tr class="memitem:a6d6fc897cf48fd49ace91d3705cda880" id="r_a6d6fc897cf48fd49ace91d3705cda880"><td class="memItemLeft" align="right" valign="top"><a id="a6d6fc897cf48fd49ace91d3705cda880" name="a6d6fc897cf48fd49ace91d3705cda880"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>error_callback</b> (int error, const char *description)</td></tr>
-<tr class="separator:a6d6fc897cf48fd49ace91d3705cda880"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5cae7b472f954079b8bdc0f491ce081d" id="r_a5cae7b472f954079b8bdc0f491ce081d"><td class="memItemLeft" align="right" valign="top"><a id="a5cae7b472f954079b8bdc0f491ce081d" name="a5cae7b472f954079b8bdc0f491ce081d"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>framebuffer_size_callback</b> (GLFWwindow *window, int width, int height)</td></tr>
-<tr class="separator:a5cae7b472f954079b8bdc0f491ce081d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57dcd9f46becaf5dd7880d55fde649a5" id="r_a57dcd9f46becaf5dd7880d55fde649a5"><td class="memItemLeft" align="right" valign="top"><a id="a57dcd9f46becaf5dd7880d55fde649a5" name="a57dcd9f46becaf5dd7880d55fde649a5"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errorCallback</b> (int error, const char *description)</td></tr>
+<tr class="separator:a57dcd9f46becaf5dd7880d55fde649a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05eded17e68b37f0934390271584df38" id="r_a05eded17e68b37f0934390271584df38"><td class="memItemLeft" align="right" valign="top"><a id="a05eded17e68b37f0934390271584df38" name="a05eded17e68b37f0934390271584df38"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>framebufferSizeCallback</b> (GLFWwindow *window, int width, int height)</td></tr>
+<tr class="separator:a05eded17e68b37f0934390271584df38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
+<tr class="memitem:a24ecca6c6cf645d97731583dd1c7681b" id="r_a24ecca6c6cf645d97731583dd1c7681b"><td class="memItemLeft" align="right" valign="top"><a id="a24ecca6c6cf645d97731583dd1c7681b" name="a24ecca6c6cf645d97731583dd1c7681b"></a>
+static GLFWmonitor *&#160;</td><td class="memItemRight" valign="bottom"><b>m_monitor</b> = nullptr</td></tr>
+<tr class="separator:a24ecca6c6cf645d97731583dd1c7681b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab24d95fcebda43c1600bb97aacf0adc2" id="r_ab24d95fcebda43c1600bb97aacf0adc2"><td class="memItemLeft" align="right" valign="top"><a id="ab24d95fcebda43c1600bb97aacf0adc2" name="ab24d95fcebda43c1600bb97aacf0adc2"></a>
 static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_title</b> = &quot;&quot;</td></tr>
 <tr class="separator:ab24d95fcebda43c1600bb97aacf0adc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa485a8d70c03f08d4f86dccd23cec905" id="r_aa485a8d70c03f08d4f86dccd23cec905"><td class="memItemLeft" align="right" valign="top"><a id="aa485a8d70c03f08d4f86dccd23cec905" name="aa485a8d70c03f08d4f86dccd23cec905"></a>
+static glm::ivec2&#160;</td><td class="memItemRight" valign="bottom"><b>m_viewport_size</b> = glm::ivec2(0)</td></tr>
+<tr class="separator:aa485a8d70c03f08d4f86dccd23cec905"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a881e1cf55608205230c566044e77c527" id="r_a881e1cf55608205230c566044e77c527"><td class="memItemLeft" align="right" valign="top"><a id="a881e1cf55608205230c566044e77c527" name="a881e1cf55608205230c566044e77c527"></a>
 static GLFWwindow *&#160;</td><td class="memItemRight" valign="bottom"><b>m_window</b> = nullptr</td></tr>
 <tr class="separator:a881e1cf55608205230c566044e77c527"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79ad46ca8ea31463989b2a43e536b619" id="r_a79ad46ca8ea31463989b2a43e536b619"><td class="memItemLeft" align="right" valign="top"><a id="a79ad46ca8ea31463989b2a43e536b619" name="a79ad46ca8ea31463989b2a43e536b619"></a>
-static glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><b>m_window_size</b> = glm::vec2(0)</td></tr>
-<tr class="separator:a79ad46ca8ea31463989b2a43e536b619"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3be2ffd65340e925c1106c732230e2aa" id="r_a3be2ffd65340e925c1106c732230e2aa"><td class="memItemLeft" align="right" valign="top"><a id="a3be2ffd65340e925c1106c732230e2aa" name="a3be2ffd65340e925c1106c732230e2aa"></a>
+static glm::ivec2&#160;</td><td class="memItemRight" valign="bottom"><b>m_window_pos</b> = glm::ivec2(0)</td></tr>
+<tr class="separator:a3be2ffd65340e925c1106c732230e2aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92806bd778db641efc9b4f95c58e2d13" id="r_a92806bd778db641efc9b4f95c58e2d13"><td class="memItemLeft" align="right" valign="top"><a id="a92806bd778db641efc9b4f95c58e2d13" name="a92806bd778db641efc9b4f95c58e2d13"></a>
+static glm::ivec2&#160;</td><td class="memItemRight" valign="bottom"><b>m_window_size</b> = glm::ivec2(0)</td></tr>
+<tr class="separator:a92806bd778db641efc9b4f95c58e2d13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/Users/runner/work/Mango/Mango/Mango/src/framework/window/<a class="el" href="_window_8h_source.html">Window.h</a></li>
