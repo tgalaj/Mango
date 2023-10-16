@@ -25,10 +25,9 @@ add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${ASSETS_FILES})
 
 # Define the include DIRs
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-#target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 # Define the link libraries
-target_link_libraries(${PROJECT_NAME} "${CMAKE_PROJECT_NAME}")
+target_link_libraries(${PROJECT_NAME} Mango::Mango)
 
 # TODO: Better use config file with macro to res directory than copying it after building
 add_custom_command(TARGET  ${PROJECT_NAME} POST_BUILD

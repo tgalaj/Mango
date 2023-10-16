@@ -24,7 +24,8 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${HEADER_FILES})
 
 # Define the library
-add_library(${CMAKE_PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES} ${ASSETS_FILES})
+add_library(Mango STATIC ${HEADER_FILES} ${SOURCE_FILES} ${ASSETS_FILES})
+add_library(Mango::Mango ALIAS Mango)
 
 set_target_properties(Mango PROPERTIES
                       VERSION ${Mango_VERSION}
