@@ -245,6 +245,13 @@ void TestDemo::input(float delta)
         is_debug_render = !is_debug_render;
         mango::RenderingSystem::M_DEBUG_RENDERING = is_debug_render;
     }
+
+    static bool fullscreen = mango::Window::isFullscreen();
+    if (mango::Input::getKeyUp(mango::KeyCode::F11))
+    {
+        fullscreen = !fullscreen;
+        mango::Window::setFullscreen(fullscreen);
+    }
 }
 
 void TestDemo::onGUI(float delta)

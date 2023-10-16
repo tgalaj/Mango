@@ -7,9 +7,12 @@
 
 namespace mango
 {
-    GLFWwindow * Window::m_window = nullptr;
-    std::string  Window::m_title = "";
-    glm::vec2    Window::m_window_size = glm::vec2(0);
+    GLFWwindow*  Window::m_window        = nullptr;
+    GLFWmonitor* Window::m_monitor       = nullptr;
+    std::string  Window::m_title         = "";
+    glm::ivec2   Window::m_window_pos    = glm::ivec2(0);
+    glm::ivec2   Window::m_window_size   = glm::ivec2(0);
+    glm::ivec2   Window::m_viewport_size = glm::ivec2(0);
 
     Window::Window()
     {
@@ -32,7 +35,7 @@ namespace mango
             exit(EXIT_FAILURE);
         }
 
-        glfwSetErrorCallback(error_callback);
+        glfwSetErrorCallback(errorCallback);
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MIN_GL_VERSION_MAJOR);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MIN_GL_VERSION_MINOR);
@@ -80,10 +83,16 @@ namespace mango
         #endif
 
         /* Set the viewport */
-        glViewport(0, 0, width, height);
+        glfwGetFramebufferSize(m_window, &m_viewport_size.x, &m_viewport_size.y);
+        glViewport(0, 0, m_viewport_size.x, m_viewport_size.y);
         
         setVSync(false);
-        glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
+        glfwSetWindowSizeCallback(m_window, framebufferSizeCallback);
+
+        m_monitor = glfwGetPrimaryMonitor();
+
+        glfwGetWindowSize(m_window, &m_window_size.x, &m_window_size.y);
+        glfwGetWindowPos(m_window, &m_window_pos.x, &m_window_pos.y);
 
         /* Init Input & GUI */
         Input::init(m_window);
@@ -103,22 +112,22 @@ namespace mango
 
     int Window::getWidth()
     {
-        return int(m_window_size.x);
+        return m_viewport_size.x;
     }
 
     int Window::getHeight()
     {
-        return  int(m_window_size.y);
+        return  m_viewport_size.y;
     }
 
     glm::vec2 Window::getCenter()
     {
-        return m_window_size / 2.0f;
+        return glm::vec2(m_viewport_size) / 2.0f;
     }
 
     float Window::getAspectRatio()
     {
-        return (m_window_size.x / m_window_size.y);
+        return float(m_viewport_size.x) / float(m_viewport_size.y);
     }
 
     const std::string& Window::getTitle()
@@ -128,7 +137,7 @@ namespace mango
 
     void Window::setVSync(bool enabled)
     {
-        auto value = enabled ? 1 : 0;
+        auto value = enabled ? true : false;
 
         glfwSwapInterval(value);
     }
@@ -136,15 +145,41 @@ namespace mango
     void Window::bindDefaultFramebuffer()
     {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glViewport(0, 0, m_window_size.x, m_window_size.y);
+        glViewport(0, 0, m_viewport_size.x, m_viewport_size.y);
     }
 
-    void Window::framebuffer_size_callback(GLFWwindow * window, int width, int height)
+    bool Window::isFullscreen()
     {
-        glViewport(0, 0, width, height);
+        return glfwGetWindowMonitor(m_window) != nullptr;
+    }
 
-        m_window_size.x = float(width);
-        m_window_size.y = float(height);
+    void Window::setFullscreen(bool fullscreen)
+    {
+        if (isFullscreen() == fullscreen) return;
+
+        if (fullscreen)
+        {
+            // backup window position and window size
+            glfwGetWindowSize(m_window, &m_window_size.x, &m_window_size.y);
+            glfwGetWindowPos(m_window, &m_window_pos.x, &m_window_pos.y);
+
+            // get resolution of the monitor
+            const GLFWvidmode* vid_mode = glfwGetVideoMode(m_monitor);
+
+            // switch to fullscreen
+            glfwSetWindowMonitor(m_window, m_monitor, 0, 0, vid_mode->width, vid_mode->height, vid_mode->refreshRate);
+        }
+        else
+        {
+            // restore last window size and position
+            glfwSetWindowMonitor(m_window, nullptr, m_window_pos.x, m_window_pos.y, m_window_size.x, m_window_size.y, 0);
+        }
+    }
+
+    void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
+    {
+        glfwGetFramebufferSize(window, &m_viewport_size.x, &m_viewport_size.y);
+        glViewport(0, 0, m_viewport_size.x, m_viewport_size.y);
 
         GUI::updateWindowSize(float(width), float(height));
         CoreServices::getRenderer()->resize(width, height);

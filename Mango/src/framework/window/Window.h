@@ -29,16 +29,22 @@ namespace mango
         static void setVSync(bool enabled);
         static void bindDefaultFramebuffer();
 
-    private:
-        static GLFWwindow * m_window;
-        static std::string  m_title;
-        static glm::vec2    m_window_size;
+        static bool isFullscreen();
+        static void setFullscreen(bool fullscreen);
 
-        static void error_callback(int error, const char* description)
+    private:
+        static GLFWwindow*  m_window;
+        static GLFWmonitor* m_monitor;
+        static std::string  m_title;
+        static glm::ivec2 m_window_pos;
+        static glm::ivec2 m_window_size;
+        static glm::ivec2 m_viewport_size;
+
+        static void errorCallback(int error, const char* description)
         {
             std::cerr << description << std::endl;
         }
 
-        static void framebuffer_size_callback(GLFWwindow * window, int width, int height);
+        static void framebufferSizeCallback(GLFWwindow * window, int width, int height);
     };
 }
