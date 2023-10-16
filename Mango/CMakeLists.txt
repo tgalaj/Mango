@@ -26,25 +26,32 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${HEADER_FILES})
 # Define the library
 add_library(${CMAKE_PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES} ${ASSETS_FILES})
 
+set_target_properties(Mango PROPERTIES
+                      VERSION ${Mango_VERSION}
+                      SOVERSION ${Mango_VERSION_MAJOR})
+
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE LIBRARY_SUFFIX="")
 
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
-												        ${CMAKE_CURRENT_SOURCE_DIR}/src/framework/gui
-												        ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty
-												        ${glad_SOURCE_DIR}
-												        ${stb_image_SOURCE_DIR}
-												        ${imgui_SOURCE_DIR})
+list(APPEND INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src
+						 ${CMAKE_CURRENT_SOURCE_DIR}/src/framework/gui
+						 ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty
+						 ${glad_SOURCE_DIR}
+						 ${stb_image_SOURCE_DIR}
+						 ${imgui_SOURCE_DIR})
+						 
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${INCLUDE_PATH}>")
 
-target_link_libraries(${CMAKE_PROJECT_NAME} ${OPENGL_LIBRARIES} glad
-                                                                stb_image
-                                                                assimp
-									                            entityx
-                                                                glfw
-                                                                imgui
-                                                                spdlog
-                                                                glm::glm
-                                                                tinyddsloader)
+target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} 
+													glad
+										            stb_image
+                                                    assimp
+									                entityx
+                                                    glfw
+                                                    imgui
+                                                    spdlog
+                                                    glm::glm
+                                                    tinyddsloader)
 
 if(MinGW)
     target_link_libraries(${CMAKE_PROJECT_NAME} bz2)

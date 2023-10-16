@@ -23,6 +23,7 @@ set(ASSIMP_BUILD_OBJ_IMPORTER             ON  CACHE BOOL "")
 set(ASSIMP_BUILD_GLTF_IMPORTER            ON  CACHE BOOL "")
 set(ASSIMP_BUILD_FBX_IMPORTER             ON  CACHE BOOL "")
 set(ASSIMP_BUILD_MD5_IMPORTER             ON  CACHE BOOL "")
+set(ASSIMP_BUILD_X_IMPORTER               ON  CACHE BOOL "")
 
 # Set entityX variables
 set(ENTITYX_BUILD_SHARED  FALSE CACHE INTERNAL "Build shared libraries?")

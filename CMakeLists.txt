@@ -1,7 +1,7 @@
 # Copyright (C) 2023 Tomasz Gałaj
 
 cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
-project(Mango VERSION 1.0)
+project(Mango VERSION 1.0.0)
 
 set(OpenGL_GL_PREFERENCE GLVND)
 
