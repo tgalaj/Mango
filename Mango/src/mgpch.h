@@ -6,7 +6,9 @@
 #include <algorithm>
 #include <functional>
 #include <random>
+
 #include <cmath>
+#include <cstring>
 
 #include <string>
 #include <sstream>
