@@ -4,13 +4,13 @@
 #include "core_components/CameraComponent.h"
 #include "core_components/TransformComponent.h"
 #include "core_components/ModelRendererComponent.h"
-#include "framework/rendering/Shader.h"
-#include "framework/rendering/PostprocessEffect.h"
-#include "framework/rendering/RenderTarget.h"
-#include "framework/rendering/Skybox.h"
-#include "framework/rendering/DeferredRendering.h"
-#include "framework/rendering/BloomPS.h"
-#include "framework/rendering/SSAO.h"
+#include "rendering/Shader.h"
+#include "rendering/PostprocessEffect.h"
+#include "rendering/RenderTarget.h"
+#include "rendering/Skybox.h"
+#include "rendering/DeferredRendering.h"
+#include "rendering/BloomPS.h"
+#include "rendering/SSAO.h"
 
 namespace mango
 {

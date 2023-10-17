@@ -2,9 +2,9 @@
 #include <map>
 
 #include "GameObject.h"
-#include "framework/rendering/Texture.h"
-#include "framework/rendering/Model.h"
-#include "framework/gui/Font.h"
+#include "rendering/Texture.h"
+#include "rendering/Model.h"
+#include "gui/Font.h"
 
 namespace mango
 {

@@ -1,4 +1,4 @@
-#include "framework/window/Input.h"
+#include "window/Input.h"
 
 namespace mango
 {

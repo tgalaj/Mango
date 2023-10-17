@@ -1,5 +1,5 @@
-#include "framework/rendering/Texture.h"
-#include "framework/utilities/Util.h"
+#include "rendering/Texture.h"
+#include "utilities/Util.h"
 #include <iostream>
 #include <glm/common.hpp>
 #include <glm/exponential.hpp>

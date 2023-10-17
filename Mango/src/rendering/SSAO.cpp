@@ -1,6 +1,6 @@
-#include "framework/rendering/SSAO.h"
-#include <core_engine/CoreAssetManager.h>
-#include <framework/window/Window.h>
+#include "rendering/SSAO.h"
+#include "core_engine/CoreAssetManager.h"
+#include "window/Window.h"
 
 #include <random>
 

@@ -1,5 +1,5 @@
-﻿#include "framework/gui/GUI.h"
-#include "framework/gui/imgui_impl_opengl3.h"
+﻿#include "gui/GUI.h"
+#include "gui/imgui_impl_opengl3.h"
 
 #include <glm/vec2.hpp>
 #include <glm/common.hpp>

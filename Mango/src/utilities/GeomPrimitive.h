@@ -1,6 +1,6 @@
 #pragma once
 
-#include "framework/rendering/Model.h"
+#include "rendering/Model.h"
 
 namespace mango
 {

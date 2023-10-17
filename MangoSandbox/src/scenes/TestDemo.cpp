@@ -1,7 +1,7 @@
 #include "TestDemo.h"
 #include "core_engine/CoreAssetManager.h"
 #include "core_components/CameraComponent.h"
-#include "framework/window/Window.h"
+#include "window/Window.h"
 #include "core_components/FreeLookComponent.h"
 #include "core_components/FreeMoveComponent.h"
 #include "core_components/ModelRendererComponent.h"
@@ -9,12 +9,12 @@
 #include "core_components/DirectionalLightComponent.h"
 #include "core_components/TransformComponent.h"
 #include "core_components/SpotLightComponent.h"
-#include "framework/window/Input.h"
+#include "window/Input.h"
 #include "core_engine/CoreServices.h"
 #include "imgui.h"
 #include "core_engine/GameObject.h"
 #include "systems/MoveSystem.h"
-#include "framework/gui/GUI.h"
+#include "gui/GUI.h"
 
 TestDemo::TestDemo()
 {

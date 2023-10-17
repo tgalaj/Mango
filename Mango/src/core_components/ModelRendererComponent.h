@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <memory>
 
-#include "framework/rendering/Model.h"
+#include "rendering/Model.h"
 
 namespace mango
 {

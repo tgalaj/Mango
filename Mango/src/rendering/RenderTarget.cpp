@@ -1,4 +1,4 @@
-#include "framework/rendering/RenderTarget.h"
+#include "rendering/RenderTarget.h"
 #include "helpers/Assertions.h"
 
 namespace mango

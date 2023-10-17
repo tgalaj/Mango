@@ -1,7 +1,7 @@
-#include "framework/window/Window.h"
-#include "framework/window/Input.h"
-#include "framework/utilities/DebugOutputGL.h"
-#include "framework/gui/GUI.h"
+#include "window/Window.h"
+#include "window/Input.h"
+#include "utilities/DebugOutputGL.h"
+#include "gui/GUI.h"
 #include "core_engine/Core.h"
 #include "core_engine/CoreServices.h"
 

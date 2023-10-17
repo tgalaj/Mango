@@ -1,5 +1,5 @@
 ﻿#include "core_systems/GUISystem.h"
-#include "framework/gui/GUI.h"
+#include "gui/GUI.h"
 
 namespace mango
 {

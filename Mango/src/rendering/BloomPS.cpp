@@ -1,6 +1,6 @@
-#include <core_engine/CoreAssetManager.h>
-#include <framework/window/Window.h>
-#include "framework/rendering/BloomPS.h"
+#include "core_engine/CoreAssetManager.h"
+#include "window/Window.h"
+#include "rendering/BloomPS.h"
 
 namespace mango
 {

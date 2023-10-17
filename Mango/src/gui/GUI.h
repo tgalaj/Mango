@@ -3,9 +3,9 @@
 #include <imgui.h>
 #include "imgui_impl_glfw.h"
 
-#include "framework/window/Window.h"
-#include "framework/rendering/Texture.h"
-#include "framework/gui/Font.h"
+#include "window/Window.h"
+#include "rendering/Texture.h"
+#include "gui/Font.h"
 
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>

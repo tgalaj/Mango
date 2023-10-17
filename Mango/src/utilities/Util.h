@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "framework/rendering/Texture.h"
+#include "rendering/Texture.h"
 
 #include <string>
 #include <stb_image.h>

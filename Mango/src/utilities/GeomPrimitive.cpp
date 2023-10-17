@@ -1,4 +1,4 @@
-#include "framework/utilities/GeomPrimitive.h"
+#include "utilities/GeomPrimitive.h"
 #include <glm/gtc/constants.hpp>
 
 namespace mango

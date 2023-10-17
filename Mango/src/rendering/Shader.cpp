@@ -1,10 +1,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <memory>
 
-#include "framework/rendering/Shader.h"
+#include "rendering/Shader.h"
 #include "core_engine/CoreAssetManager.h"
-#include "framework/utilities/Util.h"
-#include "framework/utilities/ShaderGlobals.h"
+#include "utilities/Util.h"
+#include "utilities/ShaderGlobals.h"
 #include "core_engine/CoreServices.h"
 
 namespace mango

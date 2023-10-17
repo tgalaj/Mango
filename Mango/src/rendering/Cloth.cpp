@@ -1,4 +1,4 @@
-#include "framework/rendering/Cloth.h"
+#include "rendering/Cloth.h"
 #include "core_engine/CoreAssetManager.h"
 
 #include <glm/gtc/matrix_transform.hpp>

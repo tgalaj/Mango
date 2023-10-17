@@ -1,4 +1,4 @@
-#include "framework/rendering/Material.h"
+#include "rendering/Material.h"
 #include "core_engine/CoreAssetManager.h"
 #include "helpers/Assertions.h"
 

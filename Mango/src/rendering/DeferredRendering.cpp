@@ -1,6 +1,6 @@
-﻿#include "framework/rendering/DeferredRendering.h"
+﻿#include "rendering/DeferredRendering.h"
 #include "core_engine/CoreAssetManager.h"
-#include "framework/window/Window.h"
+#include "window/Window.h"
 
 namespace mango
 {

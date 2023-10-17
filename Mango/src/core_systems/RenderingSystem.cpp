@@ -2,11 +2,11 @@
 
 #include "core_engine/CoreAssetManager.h"
 #include "core_engine/CoreServices.h"
-#include "framework/window/Window.h"
+#include "window/Window.h"
 #include "core_components/DirectionalLightComponent.h"
 #include "core_components/PointLightComponent.h"
 #include "core_components/SpotLightComponent.h"
-#include "framework/utilities/ShaderGlobals.h"
+#include "utilities/ShaderGlobals.h"
 
 namespace mango
 {

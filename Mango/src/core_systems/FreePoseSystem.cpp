@@ -1,7 +1,7 @@
 ﻿#include "core_systems/FreePoseSystem.h"
 #include "core_components/FreeMoveComponent.h"
 #include "core_components/FreeLookComponent.h"
-#include "framework/window/Window.h"
+#include "window/Window.h"
 
 namespace mango
 {

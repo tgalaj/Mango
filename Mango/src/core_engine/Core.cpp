@@ -6,9 +6,9 @@
 #include "core_systems/GUISystem.h"
 #include "core_systems/RenderingSystem.h"
 #include "core_systems/FreePoseSystem.h"
-#include "framework/utilities/Timer.h"
-#include "framework/window/Input.h"
-#include "framework/window/Window.h"
+#include "utilities/Timer.h"
+#include "window/Input.h"
+#include "window/Window.h"
 
 namespace mango
 {

@@ -1,6 +1,6 @@
-#include "framework/rendering/Model.h"
+#include "rendering/Model.h"
 #include "core_engine/CoreServices.h"
-#include "framework/utilities/GeomPrimitive.h"
+#include "utilities/GeomPrimitive.h"
 #include "core_engine/CoreAssetManager.h"
 
 #include <glm/gtc/matrix_transform.hpp>

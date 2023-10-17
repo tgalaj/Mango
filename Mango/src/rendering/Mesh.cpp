@@ -1,4 +1,4 @@
-#include "framework/rendering/Mesh.h"
+#include "rendering/Mesh.h"
 
 namespace mango
 {

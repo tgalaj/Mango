@@ -34,12 +34,7 @@ set_target_properties(Mango PROPERTIES
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE LIBRARY_SUFFIX="")
 
-list(APPEND INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src
-						 ${CMAKE_CURRENT_SOURCE_DIR}/src/framework/gui
-						 ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty
-						 ${glad_SOURCE_DIR}
-						 ${stb_image_SOURCE_DIR}
-						 ${imgui_SOURCE_DIR})
+list(APPEND INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src)
 						 
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${INCLUDE_PATH}>")
 

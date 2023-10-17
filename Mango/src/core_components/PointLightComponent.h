@@ -4,7 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "BaseLightComponent.h"
-#include "framework/rendering/Attenuation.h"
+#include "rendering/Attenuation.h"
 
 
 namespace mango
@@ -40,7 +40,7 @@ namespace mango
         float m_range;
 
     private:
-        static const int COLOR_DEPTH = 256;
+        static const int COLOR_DEPTH = 255;
 
         void calculateRange()
         {
