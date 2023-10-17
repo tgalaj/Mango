@@ -1,9 +1,9 @@
+#include "mgpch.h"
+
 #include "rendering/ParticleEffect.h"
 
-#include <glm/vec4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <cstring>
+#include "glm/vec4.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace mango
 {

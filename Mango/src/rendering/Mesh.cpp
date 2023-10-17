@@ -1,3 +1,5 @@
+#include "mgpch.h"
+
 #include "rendering/Mesh.h"
 
 namespace mango

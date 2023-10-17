@@ -1,5 +1,6 @@
-#include <glm/gtc/type_ptr.hpp>
-#include <memory>
+#include "mgpch.h"
+
+#include "glm/gtc/type_ptr.hpp"
 
 #include "rendering/Shader.h"
 #include "core_engine/CoreAssetManager.h"

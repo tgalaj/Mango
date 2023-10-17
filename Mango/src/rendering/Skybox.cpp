@@ -1,3 +1,5 @@
+#include "mgpch.h"
+
 #include "rendering/Skybox.h"
 #include "rendering/Mesh.h"
 #include "utilities/GeomPrimitive.h"

@@ -1,6 +1,7 @@
-﻿#include "utilities/Util.h"
+﻿#include "mgpch.h"
+
+#include "utilities/Util.h"
 #include <fstream>
-#include <sstream>
 
 namespace mango
 {

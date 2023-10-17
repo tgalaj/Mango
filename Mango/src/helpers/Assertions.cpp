@@ -25,6 +25,8 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "mgpch.h"
+
 #include "helpers/Assertions.h"
 
 #include <cstdio>

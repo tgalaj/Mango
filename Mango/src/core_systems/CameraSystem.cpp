@@ -1,4 +1,6 @@
-﻿#include "core_systems/CameraSystem.h"
+﻿#include "mgpch.h"
+
+#include "core_systems/CameraSystem.h"
 #include "core_components/CameraComponent.h"
 #include "core_components/TransformComponent.h"
 

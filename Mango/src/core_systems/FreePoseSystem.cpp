@@ -1,4 +1,6 @@
-﻿#include "core_systems/FreePoseSystem.h"
+﻿#include "mgpch.h"
+
+#include "core_systems/FreePoseSystem.h"
 #include "core_components/FreeMoveComponent.h"
 #include "core_components/FreeLookComponent.h"
 #include "window/Window.h"

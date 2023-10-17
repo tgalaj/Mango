@@ -1,3 +1,5 @@
+#include "mgpch.h"
+
 #include "core_engine/Core.h"
 #include "core_engine/CoreServices.h"
 #include "core_systems/SceneGraphSystem.h"

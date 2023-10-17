@@ -1,8 +1,8 @@
+#include "mgpch.h"
+
 #include "rendering/SSAO.h"
 #include "core_engine/CoreAssetManager.h"
 #include "window/Window.h"
-
-#include <random>
 
 namespace mango
 {

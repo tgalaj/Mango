@@ -1,5 +1,7 @@
+#include "mgpch.h"
+
 #include "utilities/GeomPrimitive.h"
-#include <glm/gtc/constants.hpp>
+#include "glm/gtc/constants.hpp"
 
 namespace mango
 {

@@ -1,3 +1,5 @@
+#include "mgpch.h"
+
 #include "rendering/PostprocessEffect.h"
 #include "core_engine/CoreAssetManager.h"
 

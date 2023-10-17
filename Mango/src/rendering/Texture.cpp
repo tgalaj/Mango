@@ -1,8 +1,9 @@
+#include "mgpch.h"
+
 #include "rendering/Texture.h"
 #include "utilities/Util.h"
-#include <iostream>
-#include <glm/common.hpp>
-#include <glm/exponential.hpp>
+#include "glm/common.hpp"
+#include "glm/exponential.hpp"
 
 namespace mango
 {

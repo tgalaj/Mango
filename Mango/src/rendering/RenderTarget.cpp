@@ -1,3 +1,5 @@
+#include "mgpch.h"
+
 #include "rendering/RenderTarget.h"
 #include "helpers/Assertions.h"
 

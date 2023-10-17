@@ -1,3 +1,5 @@
+#include "mgpch.h"
+
 #include "window/Window.h"
 #include "window/Input.h"
 #include "utilities/DebugOutputGL.h"

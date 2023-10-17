@@ -1,4 +1,6 @@
-﻿#include "rendering/DeferredRendering.h"
+﻿#include "mgpch.h"
+
+#include "rendering/DeferredRendering.h"
 #include "core_engine/CoreAssetManager.h"
 #include "window/Window.h"
 

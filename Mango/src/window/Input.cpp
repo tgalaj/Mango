@@ -1,3 +1,5 @@
+#include "mgpch.h"
+
 #include "window/Input.h"
 
 namespace mango

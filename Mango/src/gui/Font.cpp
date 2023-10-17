@@ -1,4 +1,6 @@
-﻿#include "gui/Font.h"
+﻿#include "mgpch.h"
+
+#include "gui/Font.h"
 
 
 mango::Font::Font()

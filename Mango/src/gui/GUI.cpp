@@ -1,10 +1,11 @@
-﻿#include "gui/GUI.h"
-#include "gui/imgui_impl_opengl3.h"
+﻿#include "mgpch.h"
 
-#include <glm/vec2.hpp>
-#include <glm/common.hpp>
-#include <imgui_internal.h>
-#include <sstream>
+#include "glm/vec2.hpp"
+#include "glm/common.hpp"
+#include "imgui_internal.h"
+
+#include "gui/GUI.h"
+#include "gui/imgui_impl_opengl3.h"
 
 namespace mango
 {

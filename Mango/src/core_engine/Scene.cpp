@@ -1,4 +1,6 @@
-﻿#include "core_engine/Scene.h"
+﻿#include "mgpch.h"
+
+#include "core_engine/Scene.h"
 
 namespace mango
 {

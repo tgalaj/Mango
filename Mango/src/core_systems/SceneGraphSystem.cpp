@@ -1,4 +1,6 @@
-﻿#include "core_systems/SceneGraphSystem.h"
+﻿#include "mgpch.h"
+
+#include "core_systems/SceneGraphSystem.h"
 
 namespace mango
 {
