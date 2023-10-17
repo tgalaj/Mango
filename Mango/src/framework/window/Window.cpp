@@ -125,9 +125,35 @@ namespace mango
         return glm::vec2(m_viewport_size) / 2.0f;
     }
 
+    glm::vec2 Window::getDpiScale()
+    {
+        glm::vec2 dpi_scale{};
+
+        glfwGetWindowContentScale(m_window, &dpi_scale.x, &dpi_scale.y);
+
+        return dpi_scale;
+    }
+
     float Window::getAspectRatio()
     {
         return float(m_viewport_size.x) / float(m_viewport_size.y);
+    }
+
+    std::vector<MonitorVideoMode> Window::getPrimaryMonitorVideoModes()
+    {
+        if (m_monitor == nullptr) return {};
+
+        int modes_count;
+        const GLFWvidmode* modes = glfwGetVideoModes(m_monitor, &modes_count);
+
+        std::vector<MonitorVideoMode> video_modes(modes_count);
+
+        for (uint32_t i = 0; i < modes_count; ++i)
+        {
+            video_modes[i] = { modes[i].width, modes[i].height, modes[i].refreshRate };
+        }
+
+        return video_modes;
     }
 
     const std::string& Window::getTitle()
@@ -164,10 +190,10 @@ namespace mango
             glfwGetWindowPos(m_window, &m_window_pos.x, &m_window_pos.y);
 
             // get resolution of the monitor
-            const GLFWvidmode* vid_mode = glfwGetVideoMode(m_monitor);
+            const GLFWvidmode* mode = glfwGetVideoMode(m_monitor);
 
             // switch to fullscreen
-            glfwSetWindowMonitor(m_window, m_monitor, 0, 0, vid_mode->width, vid_mode->height, vid_mode->refreshRate);
+            glfwSetWindowMonitor(m_window, m_monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
         }
         else
         {
