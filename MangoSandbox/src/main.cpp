@@ -1,6 +1,6 @@
-#include "scenes/TestDemo.h"
-#include "systems/MoveSystem.h"
-#include "core_engine/Core.h"
+#include "Scenes/TestDemo.h"
+#include "Systems/MoveSystem.h"
+#include "CoreEngine/Core.h"
 #include <memory>
 
 int main(int argc, char * args[])
