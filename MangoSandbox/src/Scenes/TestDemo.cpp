@@ -13,7 +13,7 @@
 #include "CoreEngine/CoreServices.h"
 #include "imgui.h"
 #include "CoreEngine/GameObject.h"
-#include "systems/MoveSystem.h"
+#include "Systems/MoveSystem.h"
 #include "GUI/GUI.h"
 
 TestDemo::TestDemo()
