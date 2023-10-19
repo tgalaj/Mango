@@ -1,7 +1,7 @@
 #include "mgpch.h"
 
+#include "GeomPrimitive.h"
 #include "glm/gtc/constants.hpp"
-#include "Utilities/GeomPrimitive.h"
 
 namespace mango
 {
@@ -111,15 +111,15 @@ namespace mango
         for(unsigned i = 0; i < positions.size(); ++i)
         {
             VertexBuffers::Vertex vertex;
-            vertex.m_position = positions[i];
-            vertex.m_normal   = normals[i];
-            vertex.m_texcoord = texcoords[i];
-            vertex.m_tangent  = glm::vec3(0.0f);
+            vertex.position = positions[i];
+            vertex.normal   = normals[i];
+            vertex.texcoord = texcoords[i];
+            vertex.tangent  = glm::vec3(0.0f);
 
-            buffers.m_vertices.push_back(vertex);
+            buffers.vertices.push_back(vertex);
         }
 
-        buffers.m_indices = 
+        buffers.indices = 
         {
             0,  2,  1,  0,  3,  2,
             4,  5,  6,  4,  6,  7,
@@ -171,15 +171,15 @@ namespace mango
         for(unsigned i = 0; i < positions.size(); ++i)
         {
             VertexBuffers::Vertex vertex;
-            vertex.m_position = positions[i];
-            vertex.m_normal   = glm::vec3(0.0f);
-            vertex.m_texcoord = glm::vec3(0.0f);
-            vertex.m_tangent  = glm::vec3(0.0f);
+            vertex.position = positions[i];
+            vertex.normal   = glm::vec3(0.0f);
+            vertex.texcoord = glm::vec3(0.0f);
+            vertex.tangent  = glm::vec3(0.0f);
 
-            buffers.m_vertices.push_back(vertex);
+            buffers.vertices.push_back(vertex);
         }
 
-        buffers.m_indices = 
+        buffers.indices = 
         {
             0,  2,  1,  0,  3,  2,
             4,  6,  5,  4,  7,  6,
@@ -192,7 +192,7 @@ namespace mango
 
     void GeomPrimitive::genTorus(VertexBuffers & buffers, float innerRadius, float outerRadius, unsigned int slices, unsigned int stacks)
     {
-        float phi = 0.0f;
+        float phi   = 0.0f;
         float theta = 0.0f;
 
         float cos2PIp = 0.0f;
@@ -203,11 +203,11 @@ namespace mango
         float torusRadius = (outerRadius - innerRadius) * 0.5f;
         float centerRadius = outerRadius - torusRadius;
 
-        float phiInc = 1.0f / float(slices);
+        float phiInc   = 1.0f / float(slices);
         float thetaInc = 1.0f / float(stacks);
 
-        buffers.m_vertices.reserve((stacks + 1) * (slices + 1));
-        buffers.m_indices.reserve(stacks * slices * 2 * 3);
+        buffers.vertices.reserve((stacks + 1) * (slices + 1));
+        buffers.indices.reserve(stacks * slices * 2 * 3);
 
         for (unsigned int sideCount = 0; sideCount <= slices; ++sideCount, phi += phiInc)
         {
@@ -221,19 +221,19 @@ namespace mango
                 sin2PIt = glm::sin(glm::two_pi<float>() * theta);
 
                 VertexBuffers::Vertex vertex;
-                vertex.m_position = glm::vec3((centerRadius + torusRadius * cos2PIt) * cos2PIp,
-                                              (centerRadius + torusRadius * cos2PIt) * sin2PIp,
-                                               torusRadius * sin2PIt);
+                vertex.position = glm::vec3((centerRadius + torusRadius * cos2PIt) * cos2PIp,
+                                            (centerRadius + torusRadius * cos2PIt) * sin2PIp,
+                                             torusRadius * sin2PIt);
 
-                vertex.m_normal = glm::vec3(cos2PIp * cos2PIt,
+                vertex.normal = glm::vec3(cos2PIp * cos2PIt,
                                             sin2PIp * cos2PIt,
                                             sin2PIt);
 
-                vertex.m_texcoord = glm::vec3(phi, theta, 0.0f);
+                vertex.texcoord = glm::vec3(phi, theta, 0.0f);
 
-                vertex.m_tangent = glm::vec3(0.0f);
+                vertex.tangent = glm::vec3(0.0f);
 
-                buffers.m_vertices.push_back(vertex);
+                buffers.vertices.push_back(vertex);
             }
         }
 
@@ -246,65 +246,65 @@ namespace mango
                 GLushort v2 = (sideCount + 1) * (stacks + 1) + (faceCount + 1);
                 GLushort v3 = sideCount      * (stacks + 1) + (faceCount + 1);
 
-                buffers.m_indices.push_back(v0);
-                buffers.m_indices.push_back(v1);
-                buffers.m_indices.push_back(v2);
+                buffers.indices.push_back(v0);
+                buffers.indices.push_back(v1);
+                buffers.indices.push_back(v2);
 
-                buffers.m_indices.push_back(v0);
-                buffers.m_indices.push_back(v2);
-                buffers.m_indices.push_back(v3);
+                buffers.indices.push_back(v0);
+                buffers.indices.push_back(v2);
+                buffers.indices.push_back(v3);
             }
         }
     }
 
     void GeomPrimitive::genCylinder(VertexBuffers & buffers, float height, float r, unsigned int slices)
     {
-        float halfHeight = height * 0.5f;
-        glm::vec3 p1 = glm::vec3(0.0f, halfHeight, 0.0f);
-        glm::vec3 p2 = -p1;
+        float     halfHeight = height * 0.5f;
+        glm::vec3 p1         = glm::vec3(0.0f, halfHeight, 0.0f);
+        glm::vec3 p2         = -p1;
 
         float thetaInc = glm::two_pi<float>() / float(slices);
-        float theta = 0.0f;
-        float sign = -1.0f;
+        float theta    = 0.0f;
+        float sign     = -1.0f;
 
         VertexBuffers::Vertex vertex;
 
         /* Center bottom */
-        vertex.m_position = p2;
-        vertex.m_normal   = glm::vec3(0.0f, -1.0f, 0.0f);
-        vertex.m_texcoord = glm::vec3(0.5f, 0.5f, 0.0f);
-        vertex.m_tangent  = glm::vec3(0.0f);
-        buffers.m_vertices.push_back(vertex);
+        vertex.position = p2;
+        vertex.normal   = glm::vec3(0.0f, -1.0f, 0.0f);
+        vertex.texcoord = glm::vec3(0.5f, 0.5f, 0.0f);
+        vertex.tangent  = glm::vec3(0.0f);
+        buffers.vertices.push_back(vertex);
 
         /* Bottom */
         for (unsigned int sideCount = 0; sideCount <= slices; ++sideCount, theta += thetaInc)
         {
             VertexBuffers::Vertex v;
 
-            v.m_position = glm::vec3(glm::cos(theta) * r, -halfHeight, -glm::sin(theta) * r);
-            v.m_normal   = glm::vec3(0.0f, -1.0f, 0.0f);
-            v.m_texcoord = glm::vec3(glm::cos(theta) * 0.5f + 0.5f, glm::sin(theta) * 0.5f + 0.5f, 0.0f);
-            v.m_tangent  = glm::vec3(0.0f);
-            buffers.m_vertices.push_back(v);
+            v.position = glm::vec3(glm::cos(theta) * r, -halfHeight, -glm::sin(theta) * r);
+            v.normal   = glm::vec3(0.0f, -1.0f, 0.0f);
+            v.texcoord = glm::vec3(glm::cos(theta) * 0.5f + 0.5f, glm::sin(theta) * 0.5f + 0.5f, 0.0f);
+            v.tangent  = glm::vec3(0.0f);
+            buffers.vertices.push_back(v);
         }
 
         /* Center top */
-        vertex.m_position = p1;
-        vertex.m_normal   = glm::vec3(0.0f, 1.0f, 0.0f);
-        vertex.m_texcoord = glm::vec3(0.5f, 0.5f, 0.0f);
-        vertex.m_tangent  = glm::vec3(0.0f);
-        buffers.m_vertices.push_back(vertex);
+        vertex.position = p1;
+        vertex.normal   = glm::vec3(0.0f, 1.0f, 0.0f);
+        vertex.texcoord = glm::vec3(0.5f, 0.5f, 0.0f);
+        vertex.tangent  = glm::vec3(0.0f);
+        buffers.vertices.push_back(vertex);
 
         /* Top */
         for (unsigned int sideCount = 0; sideCount <= slices; ++sideCount, theta += thetaInc)
         {
             VertexBuffers::Vertex v;
 
-            v.m_position = glm::vec3(glm::cos(theta) * r, halfHeight, -glm::sin(theta) * r);
-            v.m_normal   = glm::vec3(0.0f, 1.0f, 0.0f);
-            v.m_texcoord = glm::vec3(glm::cos(theta) * 0.5f + 0.5f, glm::sin(theta) * 0.5f + 0.5f, 0.0f);
-            v.m_tangent  = glm::vec3(0.0f);
-            buffers.m_vertices.push_back(v);
+            v.position = glm::vec3(glm::cos(theta) * r, halfHeight, -glm::sin(theta) * r);
+            v.normal   = glm::vec3(0.0f, 1.0f, 0.0f);
+            v.texcoord = glm::vec3(glm::cos(theta) * 0.5f + 0.5f, glm::sin(theta) * 0.5f + 0.5f, 0.0f);
+            v.tangent  = glm::vec3(0.0f);
+            buffers.vertices.push_back(v);
         }
 
         /* Sides */
@@ -316,11 +316,11 @@ namespace mango
             {
                 VertexBuffers::Vertex v;
 
-                v.m_position = glm::vec3(glm::cos(theta) * r, halfHeight * sign, -glm::sin(theta) * r);
-                v.m_normal   = glm::vec3(glm::cos(theta), 0.0f, -glm::sin(theta));
-                v.m_texcoord = glm::vec3(sideCount / (float)slices, (sign + 1.0f) * 0.5f, 0.0f);
-                v.m_tangent  = glm::vec3(0.0f);
-                buffers.m_vertices.push_back(v);
+                v.position = glm::vec3(glm::cos(theta) * r, halfHeight * sign, -glm::sin(theta) * r);
+                v.normal   = glm::vec3(glm::cos(theta), 0.0f, -glm::sin(theta));
+                v.texcoord = glm::vec3(sideCount / (float)slices, (sign + 1.0f) * 0.5f, 0.0f);
+                v.tangent  = glm::vec3(0.0f);
+                buffers.vertices.push_back(v);
 
                 sign = 1.0f;
             }
@@ -332,9 +332,9 @@ namespace mango
         /* Indices Bottom */
         for (unsigned int sideCount = 0; sideCount < slices; ++sideCount)
         {
-            buffers.m_indices.push_back(centerIdx);
-            buffers.m_indices.push_back(idx + 1);
-            buffers.m_indices.push_back(idx);
+            buffers.indices.push_back(centerIdx);
+            buffers.indices.push_back(idx + 1);
+            buffers.indices.push_back(idx);
 
             ++idx;
         }
@@ -346,9 +346,9 @@ namespace mango
 
         for (unsigned int sideCount = 0; sideCount < slices; ++sideCount)
         {
-            buffers.m_indices.push_back(centerIdx);
-            buffers.m_indices.push_back(idx);
-            buffers.m_indices.push_back(idx + 1);
+            buffers.indices.push_back(centerIdx);
+            buffers.indices.push_back(idx);
+            buffers.indices.push_back(idx + 1);
 
             ++idx;
         }
@@ -357,13 +357,13 @@ namespace mango
         /* Indices Sides */
         for (unsigned int sideCount = 0; sideCount < slices; ++sideCount)
         {
-            buffers.m_indices.push_back(idx);
-            buffers.m_indices.push_back(idx + 2);
-            buffers.m_indices.push_back(idx + 1);
+            buffers.indices.push_back(idx);
+            buffers.indices.push_back(idx + 2);
+            buffers.indices.push_back(idx + 1);
 
-            buffers.m_indices.push_back(idx + 2);
-            buffers.m_indices.push_back(idx + 3);
-            buffers.m_indices.push_back(idx + 1);
+            buffers.indices.push_back(idx + 2);
+            buffers.indices.push_back(idx + 3);
+            buffers.indices.push_back(idx + 1);
 
             idx += 2;
         }
@@ -379,22 +379,22 @@ namespace mango
         /* Center bottom */
         glm::vec3 p = glm::vec3(0.0f, height, 0.0f);
 
-        vertex.m_position = -p;
-        vertex.m_normal   = glm::vec3(0.0f, -1.0f, 0.0f);
-        vertex.m_texcoord = glm::vec3(0.0f, 0.0f, 0.0f);
-        vertex.m_tangent  = glm::vec3(0.0f);
-        buffers.m_vertices.push_back(vertex);
+        vertex.position = -p;
+        vertex.normal   = glm::vec3(0.0f, -1.0f, 0.0f);
+        vertex.texcoord = glm::vec3(0.0f, 0.0f, 0.0f);
+        vertex.tangent  = glm::vec3(0.0f);
+        buffers.vertices.push_back(vertex);
 
         /* Bottom */
         for (unsigned int sideCount = 0; sideCount <= slices; ++sideCount, theta += thetaInc)
         {
             VertexBuffers::Vertex v;
-            v.m_position = glm::vec3(glm::cos(theta) * r, -height, -glm::sin(theta) * r);
-            v.m_normal   = glm::vec3(0.0f, -1.0f, 0.0f);
-            v.m_texcoord = glm::vec3(0.0f, 0.0f, 0.0f);
-            v.m_tangent  = glm::vec3(0.0f);
+            v.position = glm::vec3(glm::cos(theta) * r, -height, -glm::sin(theta) * r);
+            v.normal   = glm::vec3(0.0f, -1.0f, 0.0f);
+            v.texcoord = glm::vec3(0.0f, 0.0f, 0.0f);
+            v.tangent  = glm::vec3(0.0f);
 
-            buffers.m_vertices.push_back(v);
+            buffers.vertices.push_back(v);
         }
 
         /* Sides */
@@ -407,14 +407,18 @@ namespace mango
             for (unsigned int sliceCount = 0; sliceCount <= slices; ++sliceCount, theta += thetaInc)
             {
                 VertexBuffers::Vertex v;
-                v.m_position = glm::vec3(glm::cos(theta) * r * (1.0f - level),
-                                         -height + height * level,
-                                         -glm::sin(theta) * r * (1.0f - level));
-                v.m_normal   = glm::vec3(glm::cos(theta) * height / l, r / l, -glm::sin(theta) * height / l);
-                v.m_texcoord = glm::vec3(sliceCount / float(slices), level, 0.0f);
-                v.m_tangent  = glm::vec3(0.0f);
+                v.position = glm::vec3(glm::cos(theta) * r * (1.0f - level),
+                                       -height + height * level,
+                                       -glm::sin(theta) * r * (1.0f - level));
 
-                buffers.m_vertices.push_back(v);
+                v.normal   = glm::vec3(glm::cos(theta) * height / l, 
+                                       r / l, 
+                                       -glm::sin(theta) * height / l);
+
+                v.texcoord = glm::vec3(sliceCount / float(slices), level, 0.0f);
+                v.tangent  = glm::vec3(0.0f);
+
+                buffers.vertices.push_back(v);
             }
         }
 
@@ -424,9 +428,9 @@ namespace mango
         /* Indices Bottom */
         for (unsigned int sliceCount = 0; sliceCount < slices; ++sliceCount)
         {
-            buffers.m_indices.push_back(centerIdx);
-            buffers.m_indices.push_back(idx + 1);
-            buffers.m_indices.push_back(idx);
+            buffers.indices.push_back(centerIdx);
+            buffers.indices.push_back(idx + 1);
+            buffers.indices.push_back(idx);
 
             ++idx;
         }
@@ -437,13 +441,13 @@ namespace mango
         {
             for (unsigned int sliceCount = 0; sliceCount < slices; ++sliceCount)
             {
-                buffers.m_indices.push_back(idx);
-                buffers.m_indices.push_back(idx + 1);
-                buffers.m_indices.push_back(idx + slices + 1);
+                buffers.indices.push_back(idx);
+                buffers.indices.push_back(idx + 1);
+                buffers.indices.push_back(idx + slices + 1);
 
-                buffers.m_indices.push_back(idx + 1);
-                buffers.m_indices.push_back(idx + slices + 2);
-                buffers.m_indices.push_back(idx + slices + 1);
+                buffers.indices.push_back(idx + 1);
+                buffers.indices.push_back(idx + slices + 2);
+                buffers.indices.push_back(idx + slices + 1);
 
                 ++idx;
             }
@@ -490,18 +494,18 @@ namespace mango
         for(unsigned i = 0; i < positions.size(); ++i)
         {
             VertexBuffers::Vertex v;
-            v.m_position = positions[i];
-            v.m_normal   = normals[i];
-            v.m_texcoord = texcoords[i];
-            v.m_tangent  = tangents[i];
+            v.position = positions[i];
+            v.normal   = normals[i];
+            v.texcoord = texcoords[i];
+            v.tangent  = tangents[i];
 
-            buffers.m_vertices.push_back(v);
+            buffers.vertices.push_back(v);
         }
 
-        buffers.m_indices.push_back(0);
-        buffers.m_indices.push_back(1);
-        buffers.m_indices.push_back(2);
-        buffers.m_indices.push_back(3);
+        buffers.indices.push_back(0);
+        buffers.indices.push_back(1);
+        buffers.indices.push_back(2);
+        buffers.indices.push_back(3);
     }
 
     void GeomPrimitive::genPlane(VertexBuffers & buffers, float width, float height, unsigned int slices, unsigned int stacks)
@@ -519,12 +523,12 @@ namespace mango
                 //buffers.m_texcoords.push_back(glm::vec2(i / (float) slices, j / (float) stacks));
 
                 VertexBuffers::Vertex v;
-                v.m_position = glm::vec3(w, 0.0f, h);
-                v.m_normal   = glm::vec3(0.0f, 1.0f, 0.0f);
-                v.m_texcoord = glm::vec3(i, j, 0.0f);
-                v.m_tangent  = glm::vec3(0.0f);
+                v.position = glm::vec3(w, 0.0f, h);
+                v.normal   = glm::vec3(0.0f, 1.0f, 0.0f);
+                v.texcoord = glm::vec3(i, j, 0.0f);
+                v.tangent  = glm::vec3(0.0f);
 
-                buffers.m_vertices.push_back(v);
+                buffers.vertices.push_back(v);
             }
             w = -width * 0.5f;
         }
@@ -535,13 +539,13 @@ namespace mango
         {
             for (unsigned int i = 0; i < slices; ++i)
             {
-                buffers.m_indices.push_back(idx);
-                buffers.m_indices.push_back(idx + slices + 1);
-                buffers.m_indices.push_back(idx + 1);
+                buffers.indices.push_back(idx);
+                buffers.indices.push_back(idx + slices + 1);
+                buffers.indices.push_back(idx + 1);
 
-                buffers.m_indices.push_back(idx + 1);
-                buffers.m_indices.push_back(idx + slices + 1);
-                buffers.m_indices.push_back(idx + slices + 2);
+                buffers.indices.push_back(idx + 1);
+                buffers.indices.push_back(idx + slices + 1);
+                buffers.indices.push_back(idx + slices + 2);
 
                 ++idx;
             }
@@ -554,24 +558,27 @@ namespace mango
     {
         float deltaPhi = glm::two_pi<float>() / static_cast<float>(slices);
 
-        unsigned int parallels = static_cast<unsigned int>(slices * 0.5f);
+        auto parallels = static_cast<unsigned int>(slices * 0.5f);
 
         for (unsigned int i = 0; i <= parallels; ++i)
         {
             for (unsigned int j = 0; j <= slices; ++j)
             {
                 VertexBuffers::Vertex v;
-                v.m_position = glm::vec3(r * glm::sin(deltaPhi * i) * glm::sin(deltaPhi * j),
-                                         r * glm::cos(deltaPhi * i),
-                                         r * glm::sin(deltaPhi * i) * glm::cos(deltaPhi * j));
-                v.m_normal = glm::vec3(r * glm::sin(deltaPhi * i) * glm::sin(deltaPhi * j) / r,
-                                       r * glm::cos(deltaPhi * i) / r,
-                                       r * glm::sin(deltaPhi * i) * glm::cos(deltaPhi * j) / r);
-                v.m_texcoord = glm::vec3(j / static_cast<float>(slices),
-                                         1.0f - i / static_cast<float>(parallels), 0.0f);
-                v.m_tangent = glm::vec3(0.0f);
+                v.position = glm::vec3(r * glm::sin(deltaPhi * i) * glm::sin(deltaPhi * j),
+                                       r * glm::cos(deltaPhi * i),
+                                       r * glm::sin(deltaPhi * i) * glm::cos(deltaPhi * j));
 
-                buffers.m_vertices.push_back(v);
+                v.normal = glm::vec3(r * glm::sin(deltaPhi * i) * glm::sin(deltaPhi * j) / r,
+                                     r * glm::cos(deltaPhi * i) / r,
+                                     r * glm::sin(deltaPhi * i) * glm::cos(deltaPhi * j) / r);
+
+                v.texcoord = glm::vec3(j / static_cast<float>(slices),
+                                       1.0f - i / static_cast<float>(parallels), 0.0f);
+
+                v.tangent = glm::vec3(0.0f);
+
+                buffers.vertices.push_back(v);
             }
         }
 
@@ -579,13 +586,13 @@ namespace mango
         {
             for (unsigned int j = 0; j < slices; ++j)
             {
-                buffers.m_indices.push_back(i      * (slices + 1) + j);
-                buffers.m_indices.push_back((i + 1) * (slices + 1) + j);
-                buffers.m_indices.push_back((i + 1) * (slices + 1) + (j + 1));
+                buffers.indices.push_back(i       * (slices + 1) + j);
+                buffers.indices.push_back((i + 1) * (slices + 1) + j);
+                buffers.indices.push_back((i + 1) * (slices + 1) + (j + 1));
 
-                buffers.m_indices.push_back(i      * (slices + 1) + j);
-                buffers.m_indices.push_back((i + 1) * (slices + 1) + (j + 1));
-                buffers.m_indices.push_back(i      * (slices + 1) + (j + 1));
+                buffers.indices.push_back(i       * (slices + 1) + j);
+                buffers.indices.push_back((i + 1) * (slices + 1) + (j + 1));
+                buffers.indices.push_back(i       * (slices + 1) + (j + 1));
             }
         }
     }

@@ -1,12 +1,11 @@
 #include "mgpch.h"
-
 #include "Window/Input.h"
 
 namespace mango
 {
     GLFWwindow * Input::m_window = nullptr;
 
-    std::unordered_map<KeyCode, bool> Input::m_last_keys_states = {
+    std::unordered_map<KeyCode, bool> Input::m_lastKeysStates = {
         { KeyCode::Backspace,      false },
         { KeyCode::Delete,         false },
         { KeyCode::Tab,            false },
@@ -113,7 +112,7 @@ namespace mango
         { KeyCode::Menu,           false }
     };
 
-    std::unordered_map<KeyCode, bool> Input::m_last_mouse_states = {
+    std::unordered_map<KeyCode, bool> Input::m_lastMouseStates = {
         { KeyCode::Mouse1,      false},
         { KeyCode::Mouse2,      false},
         { KeyCode::Mouse3,      false}
@@ -126,12 +125,12 @@ namespace mango
 
     void Input::update()
     {
-        for (auto & kv : m_last_keys_states)
+        for (auto & kv : m_lastKeysStates)
         {
             kv.second = getKey(kv.first);
         }
 
-        for (auto & kv : m_last_mouse_states)
+        for (auto & kv : m_lastMouseStates)
         {
             kv.second = getMouse(kv.first);
         }
@@ -144,12 +143,12 @@ namespace mango
 
     bool Input::getKeyDown(KeyCode keyCode)
     {
-        return getKey(keyCode) && !m_last_keys_states[keyCode];
+        return getKey(keyCode) && !m_lastKeysStates[keyCode];
     }
 
     bool Input::getKeyUp(KeyCode keyCode)
     {
-        return !getKey(keyCode) && m_last_keys_states[keyCode];
+        return !getKey(keyCode) && m_lastKeysStates[keyCode];
     }
 
     bool Input::getMouse(KeyCode keyCode)
@@ -159,25 +158,25 @@ namespace mango
 
     bool Input::getMouseDown(KeyCode keyCode)
     {
-        return getMouse(keyCode) && !m_last_mouse_states[keyCode];
+        return getMouse(keyCode) && !m_lastMouseStates[keyCode];
     }
 
     bool Input::getMouseUp(KeyCode keyCode)
     {
-        return !getMouse(keyCode) && m_last_mouse_states[keyCode];
+        return !getMouse(keyCode) && m_lastMouseStates[keyCode];
     }
 
     glm::vec2 Input::getMousePosition()
     {
-        double x_pos, y_pos;
-        glfwGetCursorPos(m_window, &x_pos, &y_pos);
+        double x, y;
+        glfwGetCursorPos(m_window, &x, &y);
 
-        return glm::vec2(x_pos, y_pos);
+        return glm::vec2(x, y);
     }
 
-    void Input::setMouseCursorVisibility(bool is_visible)
+    void Input::setMouseCursorVisibility(bool isVisible)
     {
-        if (is_visible)
+        if (isVisible)
         {
             glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         }
@@ -187,8 +186,8 @@ namespace mango
         }
     }
 
-    void Input::setMouseCursorPosition(const glm::vec2 & cursor_position)
+    void Input::setMouseCursorPosition(const glm::vec2 & cursorPosition)
     {
-        glfwSetCursorPos(m_window, cursor_position.x, cursor_position.y);
+        glfwSetCursorPos(m_window, cursorPosition.x, cursorPosition.y);
     }
 }

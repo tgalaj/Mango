@@ -3,7 +3,6 @@
 #include <cassert>
 #include <cstdio>
 #include <string>
-
 #include <glad/glad.h>
 
 #if defined(_WIN32) && !defined(_WIN64)
@@ -21,12 +20,12 @@ namespace mango
         ~DebugOutputGL() {}
 
         static void STDCALL GLerrorCallback(GLenum source,
-                                              GLenum type,
-                                              GLuint id,
-                                              GLenum severity,
-                                              GLsizei length,
-                                              const GLchar * msg,
-                                              const void   * data)
+                                            GLenum type,
+                                            GLuint id,
+                                            GLenum severity,
+                                            GLsizei length,
+                                            const GLchar * msg,
+                                            const void   * data)
         {
             if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
                 return;

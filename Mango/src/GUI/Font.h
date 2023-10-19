@@ -1,5 +1,6 @@
 ﻿#pragma once
-#include <imgui.h>
+#include "imgui.h"
+#include <filesystem>
 #include <string>
 
 namespace mango
@@ -8,12 +9,12 @@ namespace mango
     {
     public:
         Font();
-        Font(const std::string & filepathname, unsigned size_pixels);
+        Font(const std::filesystem::path& filepath, unsigned sizeInPixels);
         ~Font() = default;
 
     private:
-        friend class GUI;
-
         ImFont * m_font;
+
+        friend class GUI;
     };
 }

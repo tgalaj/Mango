@@ -6,13 +6,13 @@
 namespace mango
 {
     RenderTarget::RenderTarget()
-        : m_fbo_id(0),
-          m_to_ids(nullptr),
-          m_num_textures(0),
-          m_depth_rbo_id(0),
-          m_width(0),
-          m_height(0),
-          m_type(0)
+        : m_fbo        (0),
+          m_textureID  (nullptr),
+          m_numTextures(0),
+          m_depthRBO   (0),
+          m_width      (0),
+          m_height     (0),
+          m_type       (0)
     {
     }
 
@@ -21,36 +21,36 @@ namespace mango
         clear();
     }
 
-    void RenderTarget::create(unsigned width, unsigned height, ColorInternalFormat color, DepthInternalFormat depth, RenderTargetType rt_type, bool use_filtering)
+    void RenderTarget::create(unsigned width, unsigned height, ColorInternalFormat color, DepthInternalFormat depth, RenderTargetType rtType, bool useFiltering)
     {
-        std::vector<MRTEntry> mrt_entries(1);
-        mrt_entries[0] = { AttachmentType::Color, color };
+        std::vector<MRTEntry> mrtEntries(1);
+        mrtEntries[0] = { AttachmentType::Color, color };
 
-        auto default_depth_format = (depth == DepthInternalFormat::NoDepth) ? DepthInternalFormat::DEPTH24 : depth;
+        auto defaultDepthFormat = (depth == DepthInternalFormat::NoDepth) ? DepthInternalFormat::DEPTH24 : depth;
 
-        createMRT(mrt_entries, width, height, rt_type, use_filtering, default_depth_format);
+        createMRT(mrtEntries, width, height, rtType, useFiltering, defaultDepthFormat);
     }
 
-    void RenderTarget::create(unsigned width, unsigned height, DepthInternalFormat depth, RenderTargetType rt_type, bool use_filtering)
+    void RenderTarget::create(unsigned width, unsigned height, DepthInternalFormat depth, RenderTargetType rtType, bool useFiltering)
     {
         MG_ASSERT(depth != DepthInternalFormat::NoDepth);
 
-        glGenFramebuffers(1, &m_fbo_id);
-        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo_id);
+        glGenFramebuffers(1, &m_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
         m_width  = width;
         m_height = height;
-        m_type   = GLenum(rt_type);
+        m_type   = GLenum(rtType);
 
-        m_num_textures = 1;
-        m_to_ids = new GLuint[m_num_textures];
+        m_numTextures = 1;
+        m_textureID = new GLuint[m_numTextures];
 
-        glGenTextures(m_num_textures, m_to_ids);
-        glBindTexture(m_type, m_to_ids[0]);
+        glGenTextures(m_numTextures, m_textureID);
+        glBindTexture(m_type, m_textureID[0]);
 
-        GLuint depth_format = GLuint(depth);
+        GLuint depthFormat = GLuint(depth);
 
-        glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, use_filtering ? GL_LINEAR : GL_NEAREST);
-        glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, use_filtering ? GL_LINEAR : GL_NEAREST);
+        glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, useFiltering ? GL_LINEAR : GL_NEAREST);
+        glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, useFiltering ? GL_LINEAR : GL_NEAREST);
 
         /* For sampler<type>Shadow */
         glTexParameteri(m_type, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
@@ -64,51 +64,51 @@ namespace mango
             float border_color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
             glTexParameterfv(m_type, GL_TEXTURE_BORDER_COLOR, border_color);
 
-            glTexStorage2D(m_type, 1 /* levels */, depth_format, m_width, m_height);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_type, m_to_ids[0], 0);
+            glTexStorage2D(m_type, 1 /* levels */, depthFormat, m_width, m_height);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_type, m_textureID[0], 0);
         }
 
-        if(m_type == GLenum(RenderTargetType::TexCube))
+        if (m_type == GLenum(RenderTargetType::TexCube))
         {
             glTexParameteri(m_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(m_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(m_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-            glTexStorage2D(m_type, 1 /* levels */, depth_format, m_width, m_height);
-            glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_to_ids[0], 0);
+            glTexStorage2D(m_type, 1 /* levels */, depthFormat, m_width, m_height);
+            glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_textureID[0], 0);
         }
 
         glDrawBuffer(GL_NONE);
     }
 
-    void RenderTarget::createMRT(const std::vector<MRTEntry>& mrt_entries, unsigned width, unsigned height, RenderTargetType rt_type, bool use_filtering, DepthInternalFormat default_renderbuffer_format)
+    void RenderTarget::createMRT(const std::vector<MRTEntry>& mrtEntries, unsigned width, unsigned height, RenderTargetType rtType, bool useFiltering, DepthInternalFormat defaultRenderbufferFormat)
     {
         m_width  = width;
         m_height = height;
-        m_type   = GLenum(rt_type);
+        m_type   = GLenum(rtType);
 
-        m_num_textures = mrt_entries.size();
-        m_to_ids = new GLuint[m_num_textures];
+        m_numTextures = mrtEntries.size();
+        m_textureID   = new GLuint[m_numTextures];
 
-        glGenTextures(m_num_textures, m_to_ids);
+        glGenTextures(m_numTextures, m_textureID);
 
-        for(unsigned i = 0; i < mrt_entries.size(); ++i)
+        for (unsigned i = 0; i < mrtEntries.size(); ++i)
         {
-            glBindTexture(m_type, m_to_ids[i]);
+            glBindTexture(m_type, m_textureID[i]);
 
-            if(mrt_entries[i].m_attachment_type == AttachmentType::Color)
+            if (mrtEntries[i].attachmentType == AttachmentType::Color)
             {
-                GLuint color_format = GLuint(mrt_entries[i].m_color_internalformat);
+                GLuint colorFormat = GLuint(mrtEntries[i].colorInternalFormat);
 
-                glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, use_filtering ? GL_LINEAR : GL_NEAREST);
-                glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, use_filtering ? GL_LINEAR : GL_NEAREST);
+                glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, useFiltering ? GL_LINEAR : GL_NEAREST);
+                glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, useFiltering ? GL_LINEAR : GL_NEAREST);
 
                 if (m_type == GLenum(RenderTargetType::Tex2D))
                 {
                     glTexParameterf(m_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
                     glTexParameterf(m_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-                    glTexStorage2D(m_type, 1 /* levels */, color_format, m_width, m_height);
+                    glTexStorage2D(m_type, 1 /* levels */, colorFormat, m_width, m_height);
                 }
 
                 if (m_type == GLenum(RenderTargetType::TexCube))
@@ -117,148 +117,148 @@ namespace mango
                     glTexParameteri(m_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
                     glTexParameteri(m_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-                    glTexStorage2D(m_type, 1 /* levels */, color_format, m_width, m_height);
+                    glTexStorage2D(m_type, 1 /* levels */, colorFormat, m_width, m_height);
                 }
             }
             else
-            if(mrt_entries[i].m_attachment_type == AttachmentType::Depth)
+            if (mrtEntries[i].attachmentType == AttachmentType::Depth)
             {
-                GLuint depth_format = GLuint(mrt_entries[i].m_depth_internalformat);
+                GLuint depthFormat = GLuint(mrtEntries[i].depthInternalFormat);
 
-                glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, use_filtering ? GL_LINEAR : GL_NEAREST);
-                glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, use_filtering ? GL_LINEAR : GL_NEAREST);
+                glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, useFiltering ? GL_LINEAR : GL_NEAREST);
+                glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, useFiltering ? GL_LINEAR : GL_NEAREST);
 
                 if (m_type == GLenum(RenderTargetType::Tex2D))
                 {
                     glTexParameteri(m_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
                     glTexParameteri(m_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-                    glTexStorage2D(m_type, 1 /* levels */, depth_format, m_width, m_height);
+                    glTexStorage2D(m_type, 1 /* levels */, depthFormat, m_width, m_height);
                 }
 
-                if(m_type == GLenum(RenderTargetType::TexCube))
+                if (m_type == GLenum(RenderTargetType::TexCube))
                 {
                     glTexParameteri(m_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
                     glTexParameteri(m_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
                     glTexParameteri(m_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-                    glTexStorage2D(m_type, 1 /* levels */, depth_format, m_width, m_height);
+                    glTexStorage2D(m_type, 1 /* levels */, depthFormat, m_width, m_height);
                 }
             }
         }
 
-        glGenFramebuffers(1, &m_fbo_id);
-        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo_id);
+        glGenFramebuffers(1, &m_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 
-        auto draw_buffers = new GLenum[m_num_textures];
+        auto drawBuffers = new GLenum[m_numTextures];
 
-        bool has_depth = false;
-        for(unsigned i = 0; i < mrt_entries.size(); ++i)
+        bool hasDepth = false;
+        for (unsigned i = 0; i < mrtEntries.size(); ++i)
         {
-            if(mrt_entries[i].m_attachment_type == AttachmentType::Color)
+            if (mrtEntries[i].attachmentType == AttachmentType::Color)
             {
-                draw_buffers[i] = GL_COLOR_ATTACHMENT0 + i;
+                drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
                 if (m_type == GLenum(RenderTargetType::Tex2D))
                 {
-                    glFramebufferTexture2D(GL_FRAMEBUFFER, draw_buffers[i], m_type, m_to_ids[i], 0);
+                    glFramebufferTexture2D(GL_FRAMEBUFFER, drawBuffers[i], m_type, m_textureID[i], 0);
                 }
 
                 if(m_type == GLenum(RenderTargetType::TexCube))
                 {
-                    glFramebufferTexture(GL_FRAMEBUFFER, draw_buffers[i], m_to_ids[i], 0);
+                    glFramebufferTexture(GL_FRAMEBUFFER, drawBuffers[i], m_textureID[i], 0);
                 }
             }
             else
-            if(mrt_entries[i].m_attachment_type == AttachmentType::Depth)
+            if (mrtEntries[i].attachmentType == AttachmentType::Depth)
             {
-                has_depth       = true;
-                draw_buffers[i] = GL_NONE;
+                hasDepth       = true;
+                drawBuffers[i] = GL_NONE;
 
-                GLenum attachment_type = GL_DEPTH_ATTACHMENT;
-                GLuint depth_format    = GLuint(mrt_entries[i].m_depth_internalformat);
+                GLenum attachmentType = GL_DEPTH_ATTACHMENT;
+                GLuint depthFormat    = GLuint(mrtEntries[i].depthInternalFormat);
 
-                switch(depth_format)
+                switch(depthFormat)
                 {
                     case GLuint(DepthInternalFormat::DEPTH24_STENCIL8):
                     case GLuint(DepthInternalFormat ::DEPTH32F_STENCIL8):
-                        attachment_type = GL_DEPTH_STENCIL_ATTACHMENT;
+                        attachmentType = GL_DEPTH_STENCIL_ATTACHMENT;
                         break;
                     case GLuint(DepthInternalFormat::STENCIL_INDEX8):
-                        attachment_type = GL_STENCIL_ATTACHMENT;
+                        attachmentType = GL_STENCIL_ATTACHMENT;
                         break;
                 }
 
                 if (m_type == GLenum(RenderTargetType::Tex2D))
                 {
-                    glFramebufferTexture2D(GL_FRAMEBUFFER, attachment_type, m_type, m_to_ids[i], 0);
+                    glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, m_type, m_textureID[i], 0);
                 }
 
                 if(m_type == GLenum(RenderTargetType::TexCube))
                 {
-                    glFramebufferTexture(GL_FRAMEBUFFER, attachment_type, m_to_ids[i], 0);
+                    glFramebufferTexture(GL_FRAMEBUFFER, attachmentType, m_textureID[i], 0);
                 }
             }
         }
 
-        if(!has_depth)
+        if (!hasDepth)
         {
-            glGenRenderbuffers(1, &m_depth_rbo_id);
-            glBindRenderbuffer(GL_RENDERBUFFER, m_depth_rbo_id);
+            glGenRenderbuffers(1, &m_depthRBO);
+            glBindRenderbuffer(GL_RENDERBUFFER, m_depthRBO);
 
-            GLuint depth_format = GLuint(default_renderbuffer_format);
+            GLuint depthFormat = GLuint(defaultRenderbufferFormat);
 
-            glRenderbufferStorage(GL_RENDERBUFFER, depth_format, m_width, m_height);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depth_rbo_id);
+            glRenderbufferStorage(GL_RENDERBUFFER, depthFormat, m_width, m_height);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRBO);
         }
 
-        glDrawBuffers(m_num_textures, draw_buffers);
+        glDrawBuffers(m_numTextures, drawBuffers);
 
-        delete[] draw_buffers;
+        delete[] drawBuffers;
     }
 
     void RenderTarget::clear()
     {
-        if (m_to_ids != nullptr)
+        if (m_textureID != nullptr)
         {
-            glDeleteTextures(m_num_textures, m_to_ids);
+            glDeleteTextures(m_numTextures, m_textureID);
 
-            delete[] m_to_ids;
-            m_to_ids = nullptr;
+            delete[] m_textureID;
+            m_textureID = nullptr;
         }
 
-        if (m_depth_rbo_id != 0)
+        if (m_depthRBO != 0)
         {
-            glDeleteRenderbuffers(1, &m_depth_rbo_id);
-            m_depth_rbo_id = 0;
+            glDeleteRenderbuffers(1, &m_depthRBO);
+            m_depthRBO = 0;
         }
 
-        if(m_fbo_id != 0)
+        if(m_fbo != 0)
         {
-            glDeleteFramebuffers(1, &m_fbo_id);
-            m_fbo_id = 0;
+            glDeleteFramebuffers(1, &m_fbo);
+            m_fbo = 0;
         }
     }
 
     void RenderTarget::bind() const
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo_id);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
         glViewport(0, 0, m_width, m_height);
     }
 
     void RenderTarget::bindReadOnly() const
     {
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo_id);
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);
     }
 
     void RenderTarget::bindWriteOnly() const
     {
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo_id);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
     }
 
-    void RenderTarget::bindTexture(GLuint texture_unit, GLuint render_target_id) const
+    void RenderTarget::bindTexture(GLuint textureUnit /*= 0*/, GLuint renderTargetID /*= 0*/) const
     {
-        glActiveTexture(GL_TEXTURE0 + texture_unit);
-        glBindTexture  (m_type, m_to_ids[render_target_id]);
+        glActiveTexture(GL_TEXTURE0 + textureUnit);
+        glBindTexture  (m_type, m_textureID[renderTargetID]);
     }
 
     bool RenderTarget::validate() const

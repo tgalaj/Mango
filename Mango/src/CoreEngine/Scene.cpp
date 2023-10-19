@@ -1,5 +1,4 @@
 ﻿#include "mgpch.h"
-
 #include "CoreEngine/Scene.h"
 
 namespace mango

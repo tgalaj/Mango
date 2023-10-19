@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <entityx/System.h>
-
 #include "GameLogic/BaseGame.h"
 
 namespace mango
@@ -11,11 +10,11 @@ namespace mango
         GUISystem() {}
 
         void configure(entityx::EventManager & events) override;
-        void update(entityx::EntityManager & entities, entityx::EventManager & events, entityx::TimeDelta dt) override;
+        void update   (entityx::EntityManager & entities, entityx::EventManager & events, entityx::TimeDelta dt) override;
 
         void registerGame(const std::shared_ptr<BaseGame> & game);
 
     private:
-        std::shared_ptr<BaseGame> m_game;
+        std::shared_ptr<BaseGame> m_game{};
     };
 }

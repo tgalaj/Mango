@@ -1,15 +1,14 @@
 #include "mgpch.h"
-
 #include "CoreEngine/CoreServices.h"
 
 namespace mango
 {
-    Core      * CoreServices::m_core_engine  = nullptr;
-    RenderingSystem * CoreServices::m_renderer     = nullptr;
+    Core            * CoreServices::m_coreEngine  = nullptr;
+    RenderingSystem * CoreServices::m_renderer    = nullptr;
 
     Core * const CoreServices::getCore()
     {
-        return m_core_engine;
+        return m_coreEngine;
     }
 
     RenderingSystem * const CoreServices::getRenderer()
@@ -19,7 +18,7 @@ namespace mango
 
     void CoreServices::provide(Core * core)
     {
-        m_core_engine = core;
+        m_coreEngine = core;
     }
 
     void CoreServices::provide(RenderingSystem * renderer)

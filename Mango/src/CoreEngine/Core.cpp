@@ -15,12 +15,12 @@
 namespace mango
 {
     Core::Core(const std::shared_ptr<BaseGame> & game, double framerate)
-        : m_users_systems(entities, events), 
-          m_game(game),
-          m_frame_time(1.0 / framerate),
-          m_fps(0),
-          m_fpsToReturn(0),
-          m_is_running(false)
+        : m_usersSystems(entities, events), 
+          m_game        (game),
+          m_frameTime   (1.0 / framerate),
+          m_fps         (0),
+          m_fpsToReturn (0),
+          m_isRunning   (false)
     {
     }
 
@@ -28,12 +28,12 @@ namespace mango
     {
     }
 
-    void Core::init(unsigned int width, unsigned int height, const std::string & title)
+    void Core::init(uint32_t width, uint32_t height, const std::string & title)
     {
         /* Init window */
-        Window::createWindow(width, height, title);
+        Window::create(width, height, title);
 
-        /* Add core systems - do not forget to update them! */
+        /* Ad{}d core systems - do not forget to update them! */
         //systems.add<AudioSystem>();
         systems.add<SceneGraphSystem>();
         systems.add<ConsoleSystem>();
@@ -44,7 +44,7 @@ namespace mango
         systems.configure();
 
         /* Configure user's systems */
-        m_users_systems.configure();
+        m_usersSystems.configure();
 
         /* Set up Core Services */
         CoreServices::provide(this);
@@ -63,7 +63,7 @@ namespace mango
 
     void Core::start()
     {
-        if (m_is_running)
+        if (m_isRunning)
         {
             return;
         }
@@ -73,12 +73,12 @@ namespace mango
 
     void Core::stop()
     {
-        if (!m_is_running)
+        if (!m_isRunning)
         {
             return;
         }
 
-        m_is_running = false;
+        m_isRunning = false;
     }
 
     void Core::updateSystems(entityx::TimeDelta dt)
@@ -92,7 +92,7 @@ namespace mango
         systems.update<CameraSystem>(dt);
         systems.update<SceneGraphSystem>(dt);
 
-        m_users_systems.update_all(dt);
+        m_usersSystems.update_all(dt);
     }
 
     void Core::updateRenderingSystems(entityx::TimeDelta dt)
@@ -103,61 +103,57 @@ namespace mango
 
     void Core::run()
     {
-        m_is_running = true;
+        m_isRunning = true;
 
-        int frames = 0;
-        double frame_counter = 0.0;
+        int    frames       = 0;
+        double frameCounter = 0.0;
 
-        double last_time = Timer::getTime();
-        double unprocessed_time = 0.0;
+        double lastTime        = Timer::getTime();
+        double unprocessedTime = 0.0;
 
-        double start_time = 0.0;
-        double passed_time = 0.0;
+        double startTime  = 0.0;
+        double passedTime = 0.0;
 
-        bool should_render = false;
+        bool shouldRender = false;
 
-        while (m_is_running)
+        while (m_isRunning)
         {
-            should_render = false;
+            shouldRender = false;
 
-            start_time = Timer::getTime();
-            passed_time = start_time - last_time;
+            startTime  = Timer::getTime();
+            passedTime = startTime - lastTime;
 
-            last_time = start_time;
+            lastTime = startTime;
 
-            unprocessed_time += passed_time;
-            frame_counter += passed_time;
+            unprocessedTime += passedTime;
+            frameCounter    += passedTime;
 
-            while (unprocessed_time > m_frame_time)
+            while (unprocessedTime > m_frameTime)
             {
-                should_render = true;
+                shouldRender = true;
 
-                unprocessed_time -= m_frame_time;
+                unprocessedTime -= m_frameTime;
 
                 if (Window::isCloseRequested())
                 {
                     stop();
                 }
 
-                m_game->input(float(m_frame_time));
-                updateSystems(m_frame_time);
+                m_game->input(float(m_frameTime));
+                updateSystems(m_frameTime);
                 Input::update();
 
-                if (frame_counter >= 1.0)
+                if (frameCounter >= 1.0)
                 {
-                    #ifdef _DEBUG
-                    //std::cout << 1000.0 / (double)frames << std::endl;
-                    #endif
-
-                    frames = 0;
-                    frame_counter = 0;
+                    frames       = 0;
+                    frameCounter = 0;
                 }
             }
 
-            if (should_render)
+            if (shouldRender)
             {
                 /* Update Rendering and GUI systems */
-                updateRenderingSystems(m_frame_time);
+                updateRenderingSystems(m_frameTime);
 
                 Window::endFrame();
                 frames++;

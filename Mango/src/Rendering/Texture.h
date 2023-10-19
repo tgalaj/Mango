@@ -1,8 +1,9 @@
 #pragma once
 
+#include <filesystem>
 #include <glad/glad.h>
-#include <string>
 #include <glm/vec4.hpp>
+#include <string>
 
 namespace mango
 {
@@ -28,21 +29,22 @@ namespace mango
         void bind(GLuint unit = 0) const;
         static void unbindTextureUnit(GLuint unit);
         
-        GLuint getWidth()  const { return m_tex_data.width; }
-        GLuint getHeight() const { return m_tex_data.height; }
-        GLuint getID()     const {  return m_to_id; }
+        GLuint getWidth()  const { return m_texData.width; }
+        GLuint getHeight() const { return m_texData.height; }
+        GLuint getID()     const { return m_id; }
 
     private:
-        void genTexture2D     (const std::string & filename,  GLuint num_mipmaps, bool is_srgb = false);
+        void genTexture2D     (const std::filesystem::path & filepath,  GLuint numMipmaps, bool isSrgb = false);
         void genTexture2D1x1  (const glm::uvec4 & color);
-        void genCubeMapTexture(const std::string * filenames, GLuint num_mipmaps, bool is_srgb = false);
 
-        ImageData m_tex_data;
-        GLuint m_to_id;
-        GLenum m_to_type;
-        GLuint  m_num_mipmaps;
-        GLenum m_format;
-        GLint m_internal_format;
+        void genCubeMapTexture(const std::filesystem::path * filepaths, GLuint numMipmaps, bool isSrgb = false);
+
+        ImageData m_texData;
+        GLuint    m_id;
+        GLenum    m_type;
+        GLuint    m_numMipmaps;
+        GLenum    m_format;
+        GLint     m_internalFormat;
 
         friend class CoreAssetManager;
         friend class GUI;

@@ -2,8 +2,9 @@
 
 #include "Rendering/Texture.h"
 
-#include <string>
+#include <filesystem>
 #include <stb_image.h>
+#include <string>
 
 namespace mango
 {
@@ -17,9 +18,10 @@ namespace mango
         *                      needs to be loaded.
         * @returns Full file's source as a std::string.
         */
-        static std::string loadFile(const std::string & filename);
+        static std::string loadFile(const std::filesystem::path & filepath);
 
-        static std::string loadShaderIncludes(const std::string & shader_code);
+        static std::string loadShaderIncludes(const std::string & shaderCode);
+
         /**
         * @brief   Loads a file that contains an image data.
         * @param   std::string Relative path, with file name
@@ -29,6 +31,6 @@ namespace mango
         * @returns Pointer to unsigned char that contains image's data.
         *          Have to be freed with stbi_image_free(data)!
         */
-        static unsigned char* loadTexture(const std::string & filename, ImageData & image_data);
+        static unsigned char* loadTexture(const std::filesystem::path & filepath, ImageData & imageData);
     };
 }

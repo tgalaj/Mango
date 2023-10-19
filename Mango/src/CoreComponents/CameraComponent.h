@@ -1,4 +1,5 @@
 #pragma once
+
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace mango
@@ -7,7 +8,7 @@ namespace mango
     {
     public:
         CameraComponent()
-            : m_is_ortho(false)
+            : isOrtho(false)
         {
         }
 
@@ -15,12 +16,12 @@ namespace mango
          * Perspective camera
          */
         CameraComponent(float fov, 
-                        float aspect_ratio, 
-                        float z_near, 
-                        float z_far)
-            : m_view(glm::mat4(1.0f)),
-              m_projection(glm::perspective(glm::radians(fov), aspect_ratio, z_near, z_far)), 
-              m_is_ortho(false)
+                        float aspectRatio, 
+                        float zNear, 
+                        float zFar)
+            : view      (glm::mat4(1.0f)),
+              projection(glm::perspective(glm::radians(fov), aspectRatio, zNear, zFar)), 
+              isOrtho   (false)
         {
         }
 
@@ -31,16 +32,16 @@ namespace mango
                         float right, 
                         float bottom, 
                         float top,
-                        float z_near, 
-                        float z_far)
-            : m_view(glm::mat4(1.0f)),
-              m_projection(glm::ortho(left, right, bottom, top, z_near, z_far)),
-              m_is_ortho(true)
+                        float zNear, 
+                        float zFar)
+            : view      (glm::mat4(1.0f)),
+              projection(glm::ortho(left, right, bottom, top, zNear, zFar)),
+              isOrtho   (true)
         {
         }
 
-        glm::mat4 m_view;
-        glm::mat4 m_projection;
-        const bool m_is_ortho;
+        glm::mat4  view{};
+        glm::mat4  projection{};
+        const bool isOrtho;
     };
 }

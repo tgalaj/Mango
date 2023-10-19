@@ -1,4 +1,5 @@
 #pragma once
+
 #include "PointLightComponent.h"
 
 namespace mango

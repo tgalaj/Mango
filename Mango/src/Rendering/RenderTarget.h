@@ -100,35 +100,35 @@ namespace mango
 
         struct MRTEntry
         {
-            AttachmentType      m_attachment_type      = AttachmentType::Color;
-            ColorInternalFormat m_color_internalformat = ColorInternalFormat::NoColor;
-            DepthInternalFormat m_depth_internalformat = DepthInternalFormat::NoDepth;
+            AttachmentType      attachmentType      = AttachmentType::Color;
+            ColorInternalFormat colorInternalFormat = ColorInternalFormat::NoColor;
+            DepthInternalFormat depthInternalFormat = DepthInternalFormat::NoDepth;
 
             MRTEntry() = default;
-            MRTEntry(AttachmentType attachment, ColorInternalFormat color_type = ColorInternalFormat::NoColor, DepthInternalFormat depth_type = DepthInternalFormat::NoDepth)
-                : m_attachment_type(attachment),
-                  m_color_internalformat     (color_type),
-                  m_depth_internalformat     (depth_type) {}
+            MRTEntry(AttachmentType attachment, ColorInternalFormat colorType = ColorInternalFormat::NoColor, DepthInternalFormat depthType = DepthInternalFormat::NoDepth)
+                : attachmentType     (attachment),
+                  colorInternalFormat(colorType),
+                  depthInternalFormat(depthType) {}
         };
 
         RenderTarget();
         ~RenderTarget();
 
         /* Creates Render Target with Color attachment and Depth renderbuffer */
-        void create(unsigned width, unsigned height, ColorInternalFormat color, DepthInternalFormat depth, RenderTargetType rt_type = RenderTargetType::Tex2D, bool use_filtering = true);
+        void create(unsigned width, unsigned height, ColorInternalFormat color, DepthInternalFormat depth, RenderTargetType rtType = RenderTargetType::Tex2D, bool useFiltering = true);
 
         /* Creates Render Target with Depth attachment only aka Shadow Map */
-        void create(unsigned width, unsigned height, DepthInternalFormat depth, RenderTargetType rt_type = RenderTargetType::Tex2D, bool use_filtering = true);
+        void create(unsigned width, unsigned height, DepthInternalFormat depth, RenderTargetType rtType = RenderTargetType::Tex2D, bool useFiltering = true);
 
         /* Create multiple render targets */
-        void createMRT(const std::vector<MRTEntry> & mrt_entries, unsigned width, unsigned height, RenderTargetType rt_type = RenderTargetType::Tex2D, bool use_filtering = false, DepthInternalFormat default_renderbuffer_format = DepthInternalFormat::DEPTH24);
+        void createMRT(const std::vector<MRTEntry> & mrtEntries, unsigned width, unsigned height, RenderTargetType rtType = RenderTargetType::Tex2D, bool useFiltering = false, DepthInternalFormat defaultRenderbufferFormat = DepthInternalFormat::DEPTH24);
 
         void clear();
 
         void bind()          const;
         void bindReadOnly()  const;
         void bindWriteOnly() const;
-        void bindTexture(GLuint texture_unit = 0, GLuint render_target_id = 0) const;
+        void bindTexture(GLuint textureUnit = 0, GLuint renderTargetID = 0) const;
         void releaseTexture() const { glBindTexture(m_type, 0); }
 
         bool validate() const;
@@ -137,15 +137,12 @@ namespace mango
         unsigned getHeight() const { return m_height; }
 
     private:
-        void initTextures(std::vector<MRTEntry> & mrt_entries, bool use_filtering = true);
-        void initRenderTargets(const std::vector<MRTEntry> & mrt_entries);
-
-        GLuint m_fbo_id;
+        GLuint m_fbo;
         
-        GLuint * m_to_ids;
-        GLuint m_num_textures;
+        GLuint * m_textureID;
+        GLuint   m_numTextures;
 
-        GLuint m_depth_rbo_id;
+        GLuint m_depthRBO;
 
         GLuint m_width, m_height;
         GLenum m_type;

@@ -22,7 +22,7 @@ namespace mango
         void bindGBuffer();
         void bindGBufferReadOnly();
 
-        void bindGBufferTexture(GLuint unit, GLuint gbuffer_property_id);
+        void bindGBufferTexture(GLuint unit, GLuint gbufferPropertyID);
         void bindGBufferTextures();
 
     private:

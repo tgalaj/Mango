@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
@@ -7,44 +8,43 @@ namespace mango
     class ShadowInfo
     {
     public:
-        explicit ShadowInfo(const glm::mat4 & projection = glm::mat4(1.0f),
-                            bool casts_shadows = true)
-            : m_projection   (projection),
-              m_casts_shadows(casts_shadows){}
+        explicit ShadowInfo(const glm::mat4 & projection = glm::mat4(1.0f), bool castsShadows = true)
+            : m_projection  (projection),
+              m_castsShadows(castsShadows){}
 
         ~ShadowInfo() {}
 
-        const glm::mat4 & getProjection() const { return m_projection; }
-        bool getCastsShadows() const { return m_casts_shadows; }
+        const glm::mat4 & getProjection()   const { return m_projection; }
+        bool              getCastsShadows() const { return m_castsShadows; }
 
-        void setCastsShadows(bool casts_shadows) { m_casts_shadows = casts_shadows; }
+        void setCastsShadows(bool castsShadows) { m_castsShadows = castsShadows; }
 
     private:
-        glm::mat4 m_projection;
-        bool m_casts_shadows;
+        glm::mat4 m_projection{};
+        bool      m_castsShadows;
     };
 
     class BaseLightComponent
     {
     public:
         BaseLightComponent(const glm::vec3 & color, float intensity)
-            : m_color(color),
-              m_intensity(intensity),
-              m_shadow_info(ShadowInfo()) {}
+            : color       (color),
+              intensity   (intensity),
+              m_shadowInfo(ShadowInfo()) {}
 
         virtual ~BaseLightComponent() {}
 
-        const ShadowInfo & getShadowInfo() const { return m_shadow_info; }
+        const ShadowInfo & getShadowInfo() const { return m_shadowInfo; }
 
-        void setCastsShadows(bool casts_shadows) { m_shadow_info.setCastsShadows(casts_shadows); }
+        void setCastsShadows(bool castsShadows) { m_shadowInfo.setCastsShadows(castsShadows); }
 
-        glm::vec3 m_color;
-        float     m_intensity;
+        glm::vec3 color{};
+        float     intensity;
 
     protected:
-        void setShadowInfo(const ShadowInfo & shadow_info) { m_shadow_info = shadow_info; }
+        void setShadowInfo(const ShadowInfo & shadowInfo) { m_shadowInfo = shadowInfo; }
 
     private:
-        ShadowInfo m_shadow_info;
+        ShadowInfo m_shadowInfo;
     };
 }

@@ -40,10 +40,10 @@ namespace mango
             Continue,
         };
 
-        typedef FailBehavior(*Handler)(const char* condition,
-                                       const char* msg,
-                                       const char* file,
-                                       int         line);
+        using Handler = FailBehavior(*)(const char* condition,
+                                        const char* msg,
+                                        const char* file,
+                                        int         line);
 
         Handler getHandler();
         void setHandler(Handler newHandler);
@@ -65,48 +65,48 @@ namespace mango
 
 #ifdef MG_ASSERTS_ENABLED
 #define MG_ASSERT(cond) \
-		do \
-		{ \
-			if (!(cond)) \
-			{ \
-				if (mango::asserts::reportFailure(#cond, __FILE__, __LINE__, 0) == \
-					mango::asserts::Halt) \
-					MG_HALT(); \
-			} \
-		} while(0)
+        do \
+        { \
+            if (!(cond)) \
+            { \
+                if (mango::asserts::reportFailure(#cond, __FILE__, __LINE__, 0) == \
+                    mango::asserts::Halt) \
+                    MG_HALT(); \
+            } \
+        } while(0)
 
 #define MG_ASSERT_MSG(cond, msg, ...) \
-		do \
-		{ \
-			if (!(cond)) \
-			{ \
-				if (mango::asserts::reportFailure(#cond, __FILE__, __LINE__, (msg), ##__VA_ARGS__) == \
-					mango::asserts::Halt) \
-					MG_HALT(); \
-			} \
-		} while(0)
+        do \
+        { \
+            if (!(cond)) \
+            { \
+                if (mango::asserts::reportFailure(#cond, __FILE__, __LINE__, (msg), ##__VA_ARGS__) == \
+                    mango::asserts::Halt) \
+                    MG_HALT(); \
+            } \
+        } while(0)
 
 #define MG_ASSERT_FAIL(msg, ...) \
-		do \
-		{ \
-			if (mango::asserts::reportFailure(0, __FILE__, __LINE__, (msg), ##__VA_ARGS__) == \
-				mango::asserts::Halt) \
-			MG_HALT(); \
-		} while(0)
+        do \
+        { \
+            if (mango::asserts::reportFailure(0, __FILE__, __LINE__, (msg), ##__VA_ARGS__) == \
+                mango::asserts::Halt) \
+            MG_HALT(); \
+        } while(0)
 
 #define MG_VERIFY(cond) MG_ASSERT(cond)
 #define MG_VERIFY_MSG(cond, msg, ...) MG_ASSERT_MSG(cond, msg, ##__VA_ARGS__)
 #else
 #define MG_ASSERT(condition) \
-		do { MG_UNUSED(condition); } while(0)
+        do { MG_UNUSED(condition); } while(0)
 #define MG_ASSERT_MSG(condition, msg, ...) \
-		do { MG_UNUSED(condition); MG_UNUSED(msg); } while(0)
+        do { MG_UNUSED(condition); MG_UNUSED(msg); } while(0)
 #define MG_ASSERT_FAIL(msg, ...) \
-		do { MG_UNUSED(msg); } while(0)
+        do { MG_UNUSED(msg); } while(0)
 #define MG_VERIFY(cond) (void)(cond)
 #define MG_VERIFY_MSG(cond, msg, ...) \
-		do { (void)(cond); MG_UNUSED(msg); } while(0)
+        do { (void)(cond); MG_UNUSED(msg); } while(0)
 #endif
 
 #define MG_STATIC_ASSERT(x) \
-	typedef char mangoStaticAssert[(x) ? 1 : -1];
+    typedef char mangoStaticAssert[(x) ? 1 : -1];

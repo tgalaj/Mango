@@ -1,13 +1,12 @@
 #pragma once
 
 #include <glad/glad.h>
-
-#include "Shader.h"
-#include "Texture.h"
-#include "Material.h"
-
 #include <string>
 #include <vector>
+
+#include "Material.h"
+#include "Shader.h"
+#include "Texture.h"
 
 namespace mango
 {
@@ -19,18 +18,18 @@ namespace mango
         Cloth(int particles_x, int particles_y, float cloth_size_x, float cloth_size_y);
         ~Cloth();
 
-        bool m_simulate;
-        bool m_should_self_collide;
+        bool simulate;
+        bool shouldSelfCollide;
 
-        glm::vec3 m_gravity;
-        float m_particle_mass;
-        float m_spring_k;
-        float m_delta_t;
-        float m_damping;
+        glm::vec3 gravity;
+        float     particleMass;
+        float     springK;
+        float     deltaTime;
+        float     damping;
 
         void reset();
-        void setDiffuseTexture(const std::string & filename);
-        void setSpecularTexture(const std::string & filename);
+        void setDiffuseTexture (const std::filesystem::path & filepath);
+        void setSpecularTexture(const std::filesystem::path & filepath);
 
         void setColor(glm::vec3 & color);
         void setShininess(float shinines);
@@ -38,26 +37,26 @@ namespace mango
         void setPin(int idx, bool isActive);
 
     private:
-        GLfloat * m_init_positions;
-        GLfloat * m_init_velocities;
+        GLfloat * m_initPositions;
+        GLfloat * m_initVelocities;
 
-        Shader * m_compute_cloth_shader;
-        Shader * m_compute_cloth_normals_shader;
+        Shader * m_computeClothShader;
+        Shader * m_computeClothNormalsShader;
 
         std::vector<Texture *> m_textures;
         Material m_material;
 
-        glm::vec2 m_particles_dim;
-        glm::vec2 m_cloth_size;
+        glm::vec2 m_particlesSize;
+        glm::vec2 m_clothSize;
 
-        float m_rest_len_x;
-        float m_rest_len_y;
-        float m_rest_len_diag;
+        float m_xRestLen;
+        float m_yRestLen;
+        float m_diagRestLen;
 
-        GLuint m_vbo_ids[7];
-        GLuint m_vao_id;
-        GLuint m_num_elements;
-        GLchar m_read_buf;
+        GLuint m_vbos[7];
+        GLuint m_vao;
+        GLuint m_numElements;
+        GLchar m_readBuf;
 
         const GLuint PRIM_RESTART;
 

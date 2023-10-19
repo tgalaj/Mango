@@ -6,29 +6,29 @@
 
 namespace mango
 {
-    std::map<Material::TextureType, std::string> Material::m_texture_uniform_map
+    std::unordered_map<Material::TextureType, std::string> Material::m_textureUniformsMap
     {
-        { TextureType::DIFFUSE,              "diffuse_map"  },
-        { TextureType::SPECULAR,             "specular_map" },
-        { TextureType::NORMAL,               "normal_map"   },
-        { TextureType::EMISSION,             "emission_map" },
-        { TextureType::DEPTH,                "depth_map"    },
+        { TextureType::DIFFUSE,  "diffuse_map"  },
+        { TextureType::SPECULAR, "specular_map" },
+        { TextureType::NORMAL,   "normal_map"   },
+        { TextureType::EMISSION, "emission_map" },
+        { TextureType::DEPTH,    "depth_map"    },
     };
 
     Material::Material()
     {
-        addFloat("specular_power", 20.0f);
+        addFloat("specular_power",     20.0f);
         addFloat("specular_intensity", 5.0f);
-        addFloat("m_depth_scale", 0.015f);
-        addFloat("alpha_cutoff", 0.2f);
+        addFloat("m_depth_scale",      0.015f);
+        addFloat("alpha_cutoff",       0.2f);
 
-        m_blend_mode = BlendMode::NONE;
+        m_blendMode = BlendMode::NONE;
 
-        m_texture_map[TextureType::DIFFUSE]  = CoreAssetManager::getTexture2D("default_white");
-        m_texture_map[TextureType::SPECULAR] = CoreAssetManager::getTexture2D("default_black");
-        m_texture_map[TextureType::NORMAL]   = CoreAssetManager::getTexture2D("default_normal");
-        m_texture_map[TextureType::EMISSION] = CoreAssetManager::getTexture2D("default_black");
-        m_texture_map[TextureType::DEPTH]    = CoreAssetManager::getTexture2D("default_black");
+        m_textureMap[TextureType::DIFFUSE]  = CoreAssetManager::getTexture2D("default_white");
+        m_textureMap[TextureType::SPECULAR] = CoreAssetManager::getTexture2D("default_black");
+        m_textureMap[TextureType::NORMAL]   = CoreAssetManager::getTexture2D("default_normal");
+        m_textureMap[TextureType::EMISSION] = CoreAssetManager::getTexture2D("default_black");
+        m_textureMap[TextureType::DEPTH]    = CoreAssetManager::getTexture2D("default_black");
     }
 
 
@@ -36,26 +36,26 @@ namespace mango
     {
     }
 
-    void Material::addTexture(TextureType texture_type, const std::shared_ptr<Texture>& texture)
+    void Material::addTexture(TextureType textureType, const std::shared_ptr<Texture> & texture)
     {
-        m_texture_map[texture_type] = texture;
+        m_textureMap[textureType] = texture;
     }
 
-    void Material::addVector3(const std::string& uniform_name, const glm::vec3& vector3)
+    void Material::addVector3(const std::string & uniformName, const glm::vec3 & vec)
     {
-        m_vec3_map[uniform_name] = vector3;
+        m_vec3Map[uniformName] = vec;
     }
 
-    void Material::addFloat(const std::string& uniform_name, float value)
+    void Material::addFloat(const std::string & uniformName, float value)
     {
-        m_float_map[uniform_name] = value;
+        m_floatMap[uniformName] = value;
     }
 
-    std::shared_ptr<Texture> Material::getTexture(TextureType texture_type)
+    std::shared_ptr<Texture> Material::getTexture(TextureType textureType)
     {
-        if(m_texture_map.count(texture_type))
+        if (m_textureMap.count(textureType))
         {
-            return m_texture_map[texture_type];
+            return m_textureMap[textureType];
         }
 
         MG_ASSERT_MSG(false, "Couldn't find texture with the specified texture type!");
@@ -63,21 +63,21 @@ namespace mango
         return nullptr;
     }
 
-    glm::vec3 Material::getVector3(const std::string& uniform_name)
+    glm::vec3 Material::getVector3(const std::string & uniformName)
     {
-        if (m_vec3_map.count(uniform_name))
+        if (m_vec3Map.count(uniformName))
         {
-            return m_vec3_map[uniform_name];
+            return m_vec3Map[uniformName];
         }
 
         return glm::vec3(1.0f);
     }
 
-    float Material::getFloat(const std::string& uniform_name)
+    float Material::getFloat(const std::string & uniformName)
     {
-        if (m_float_map.count(uniform_name))
+        if (m_floatMap.count(uniformName))
         {
-            return m_float_map[uniform_name];
+            return m_floatMap[uniformName];
         }
 
         return 1.0f;

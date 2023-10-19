@@ -11,63 +11,63 @@
 namespace mango
 {
     Cloth::Cloth(int particles_x, int particles_y, float cloth_size_x, float cloth_size_y)
-        : m_particles_dim(particles_x, particles_y),
-        m_cloth_size(cloth_size_x, cloth_size_y),
-        PRIM_RESTART(0xffffff),
-        m_read_buf(0),
-        m_simulate(true),
-        m_gravity(glm::vec3(0.0f, 10 * -9.81f, 0.0f)),
-        m_particle_mass(0.1f / 1.5f),
-        m_spring_k(4000.0f),
-        m_delta_t(0.00005f*2.0f),
-        m_damping(20.0f*0.1f),
-        m_should_self_collide(1)
+        : m_particlesSize  (particles_x, particles_y),
+          m_clothSize      (cloth_size_x, cloth_size_y),
+          m_readBuf        (0),
+          simulate         (true),
+          gravity          (glm::vec3(0.0f, 10 * -9.81f, 0.0f)),
+          particleMass     (0.1f / 1.5f),
+          springK          (4000.0f),
+          deltaTime        (0.00005f*2.0f),
+          damping          (20.0f*0.1f),
+          shouldSelfCollide(1),
+          PRIM_RESTART     (0xffffff)
     {
         for (auto & pin : m_pins)
         {
             pin = true;
         }
 
-        if (m_particles_dim.x * m_particles_dim.y > 18000000)
+        if (m_particlesSize.x * m_particlesSize.y > 18000000)
         {
-            m_particles_dim.x = 4240;
-            m_particles_dim.y = 4240;
+            m_particlesSize.x = 4240;
+            m_particlesSize.y = 4240;
         }
 
-        if (m_particles_dim.x <= 0 || m_particles_dim.y <= 0)
+        if (m_particlesSize.x <= 0 || m_particlesSize.y <= 0)
         {
-            m_particles_dim.x = 10;
-            m_particles_dim.y = 10;
+            m_particlesSize.x = 10;
+            m_particlesSize.y = 10;
         }
 
-        m_init_positions = new GLfloat[(int)m_particles_dim.x * (int)m_particles_dim.y * 4];
-        m_init_velocities = new GLfloat[(int)m_particles_dim.x * (int)m_particles_dim.y * 4];
+        m_initPositions = new GLfloat[(int)m_particlesSize.x * (int)m_particlesSize.y * 4];
+        m_initVelocities = new GLfloat[(int)m_particlesSize.x * (int)m_particlesSize.y * 4];
 
-        std::vector<GLfloat> init_tc;
-        std::vector<GLuint>  init_el;
+        std::vector<GLfloat> initTc;
+        std::vector<GLuint>  initEl;
 
-        memset(m_init_positions, 0, sizeof(GLfloat) * 4 * (size_t)m_particles_dim.x * (size_t)m_particles_dim.y);
-        memset(m_init_velocities, 0, sizeof(GLfloat) * 4 * (size_t)m_particles_dim.x * (size_t)m_particles_dim.y);
+        memset(m_initPositions, 0, sizeof(GLfloat) * 4 * (size_t)m_particlesSize.x * (size_t)m_particlesSize.y);
+        memset(m_initVelocities, 0, sizeof(GLfloat) * 4 * (size_t)m_particlesSize.x * (size_t)m_particlesSize.y);
 
-        glm::mat4 transf = glm::translate(glm::mat4(1.0), glm::vec3(0, m_cloth_size.y, 0));
-        transf = glm::rotate(transf, glm::radians(80.0f), glm::vec3(1, 0, 0));
-        transf = glm::translate(transf, glm::vec3(0, -m_cloth_size.y, 0));
+        glm::mat4 transf = glm::translate(glm::mat4(1.0), glm::vec3(0, m_clothSize.y, 0));
+                  transf = glm::rotate(transf, glm::radians(80.0f), glm::vec3(1, 0, 0));
+                  transf = glm::translate(transf, glm::vec3(0, -m_clothSize.y, 0));
 
         glm::vec4 p(0.0f, 0.0f, 0.0f, 1.0f);
 
-        float dx = m_cloth_size.x / (m_particles_dim.x - 1),
-            dy = m_cloth_size.y / (m_particles_dim.y - 1),
-            ds = 1.0f / (m_particles_dim.x - 1),
-            dt = 1.0f / (m_particles_dim.y - 1);
+        float dx = m_clothSize.x / (m_particlesSize.x - 1),
+              dy = m_clothSize.y / (m_particlesSize.y - 1),
+              ds = 1.0f / (m_particlesSize.x - 1),
+              dt = 1.0f / (m_particlesSize.y - 1);
 
-        m_rest_len_x = dx;
-        m_rest_len_y = dy;
-        m_rest_len_diag = glm::sqrt(dx * dx + dy * dy);
+        m_xRestLen    = dx;
+        m_yRestLen    = dy;
+        m_diagRestLen = glm::sqrt(dx * dx + dy * dy);
 
         int counter = 0;
-        for (int i = 0; i < m_particles_dim.y; ++i)
+        for (int i = 0; i < m_particlesSize.y; ++i)
         {
-            for (int j = 0; j < m_particles_dim.x; ++j)
+            for (int j = 0; j < m_particlesSize.x; ++j)
             {
                 p.x = dx * j;
                 p.y = dy * i;
@@ -75,77 +75,77 @@ namespace mango
 
                 p = transf * p;
 
-                m_init_positions[counter++] = p.x;
-                m_init_positions[counter++] = p.y;
-                m_init_positions[counter++] = p.z;
-                m_init_positions[counter++] = p.w;
+                m_initPositions[counter++] = p.x;
+                m_initPositions[counter++] = p.y;
+                m_initPositions[counter++] = p.z;
+                m_initPositions[counter++] = p.w;
 
-                init_tc.push_back(ds * j);
-                init_tc.push_back(dt * i);
+                initTc.push_back(ds * j);
+                initTc.push_back(dt * i);
             }
         }
 
-        for (int row = 0; row < m_particles_dim.y - 1; ++row)
+        for (int row = 0; row < m_particlesSize.y - 1; ++row)
         {
-            for (int col = 0; col < m_particles_dim.x; ++col)
+            for (int col = 0; col < m_particlesSize.x; ++col)
             {
-                init_el.push_back((row + 1) * (unsigned)m_particles_dim.x + col);
-                init_el.push_back(row      * (unsigned)m_particles_dim.x + col);
+                initEl.push_back((row + 1) * (unsigned)m_particlesSize.x + col);
+                initEl.push_back(row      * (unsigned)m_particlesSize.x + col);
             }
-            init_el.push_back(PRIM_RESTART);
+            initEl.push_back(PRIM_RESTART);
         }
 
         glEnable(GL_PRIMITIVE_RESTART);
         glPrimitiveRestartIndex(PRIM_RESTART);
 
         /* VBOs */
-        GLuint no_parts = (GLuint)m_particles_dim.x * (GLuint)m_particles_dim.y;
+        GLuint noParts = (GLuint)m_particlesSize.x * (GLuint)m_particlesSize.y;
 
-        glGenBuffers(7, m_vbo_ids);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_vbo_ids[POSITIONS_0]);
-        glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 4 * no_parts, m_init_positions, GL_DYNAMIC_STORAGE_BIT /*flags*/);
+        glGenBuffers(7, m_vbos);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_vbos[POSITIONS_0]);
+        glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 4 * noParts, m_initPositions, GL_DYNAMIC_STORAGE_BIT /*flags*/);
 
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_vbo_ids[POSITIONS_1]);
-        glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 4 * no_parts, NULL, GL_DYNAMIC_STORAGE_BIT /*flags*/);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_vbos[POSITIONS_1]);
+        glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 4 * noParts, NULL, GL_DYNAMIC_STORAGE_BIT /*flags*/);
 
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_vbo_ids[VELOCITIES_0]);
-        glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 4 * no_parts, m_init_velocities, GL_DYNAMIC_STORAGE_BIT /*flags*/);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_vbos[VELOCITIES_0]);
+        glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 4 * noParts, m_initVelocities, GL_DYNAMIC_STORAGE_BIT /*flags*/);
 
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_vbo_ids[VELOCITIES_1]);
-        glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 4 * no_parts, NULL, GL_DYNAMIC_STORAGE_BIT /*flags*/);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_vbos[VELOCITIES_1]);
+        glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 4 * noParts, NULL, GL_DYNAMIC_STORAGE_BIT /*flags*/);
 
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, m_vbo_ids[NORMALS]);
-        glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 4 * no_parts, NULL, GL_DYNAMIC_STORAGE_BIT /*flags*/);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, m_vbos[NORMALS]);
+        glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 4 * noParts, NULL, GL_DYNAMIC_STORAGE_BIT /*flags*/);
 
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbo_ids[INDICES]);
-        glBufferStorage(GL_ARRAY_BUFFER, sizeof(GLuint) * init_el.size(), &init_el[0], GL_DYNAMIC_STORAGE_BIT /*flags*/);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbos[INDICES]);
+        glBufferStorage(GL_ARRAY_BUFFER, sizeof(GLuint) * initEl.size(), &initEl[0], GL_DYNAMIC_STORAGE_BIT /*flags*/);
 
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbo_ids[TEXCOORDS]);
-        glBufferStorage(GL_ARRAY_BUFFER, sizeof(GLfloat) * init_tc.size(), &init_tc[0], GL_DYNAMIC_STORAGE_BIT /*flags*/);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbos[TEXCOORDS]);
+        glBufferStorage(GL_ARRAY_BUFFER, sizeof(GLfloat) * initTc.size(), &initTc[0], GL_DYNAMIC_STORAGE_BIT /*flags*/);
 
-        m_num_elements = init_el.size();
+        m_numElements = initEl.size();
 
         /* Set up VAO */
-        glCreateVertexArrays(1, &m_vao_id);
+        glCreateVertexArrays(1, &m_vao);
 
-        glEnableVertexArrayAttrib(m_vao_id, 0 /*index*/);
-        glEnableVertexArrayAttrib(m_vao_id, 1 /*index*/);
-        glEnableVertexArrayAttrib(m_vao_id, 2 /*index*/);
+        glEnableVertexArrayAttrib(m_vao, 0 /*index*/);
+        glEnableVertexArrayAttrib(m_vao, 1 /*index*/);
+        glEnableVertexArrayAttrib(m_vao, 2 /*index*/);
 
-        glVertexArrayElementBuffer(m_vao_id, m_vbo_ids[INDICES]);
+        glVertexArrayElementBuffer(m_vao, m_vbos[INDICES]);
 
         /* Separate attribute format */
-        glVertexArrayAttribFormat(m_vao_id, 0 /*index*/, 4 /*size*/, GL_FLOAT, GL_FALSE, 0 /*relativeoffset*/);
-        glVertexArrayAttribFormat(m_vao_id, 1 /*index*/, 4 /*size*/, GL_FLOAT, GL_FALSE, 0 /*relativeoffset*/);
-        glVertexArrayAttribFormat(m_vao_id, 2 /*index*/, 2 /*size*/, GL_FLOAT, GL_FALSE, 0 /*relativeoffset*/);
+        glVertexArrayAttribFormat(m_vao, 0 /*index*/, 4 /*size*/, GL_FLOAT, GL_FALSE, 0 /*relativeoffset*/);
+        glVertexArrayAttribFormat(m_vao, 1 /*index*/, 4 /*size*/, GL_FLOAT, GL_FALSE, 0 /*relativeoffset*/);
+        glVertexArrayAttribFormat(m_vao, 2 /*index*/, 2 /*size*/, GL_FLOAT, GL_FALSE, 0 /*relativeoffset*/);
 
-        glVertexArrayAttribBinding(m_vao_id, 0 /*index*/, 0 /*bindingindex*/);
-        glVertexArrayAttribBinding(m_vao_id, 1 /*index*/, 1 /*bindingindex*/);
-        glVertexArrayAttribBinding(m_vao_id, 2 /*index*/, 2 /*bindingindex*/);
+        glVertexArrayAttribBinding(m_vao, 0 /*index*/, 0 /*bindingindex*/);
+        glVertexArrayAttribBinding(m_vao, 1 /*index*/, 1 /*bindingindex*/);
+        glVertexArrayAttribBinding(m_vao, 2 /*index*/, 2 /*bindingindex*/);
 
-        glVertexArrayVertexBuffer(m_vao_id, 0 /*bindingindex*/, m_vbo_ids[POSITIONS_0], 0 /*offset*/, sizeof(glm::vec4) /*stride*/);
-        glVertexArrayVertexBuffer(m_vao_id, 1 /*bindingindex*/, m_vbo_ids[NORMALS], 0 /*offset*/, sizeof(glm::vec4) /*stride*/);
-        glVertexArrayVertexBuffer(m_vao_id, 2 /*bindingindex*/, m_vbo_ids[TEXCOORDS], 0 /*offset*/, sizeof(glm::vec2) /*stride*/);
+        glVertexArrayVertexBuffer(m_vao, 0 /*bindingindex*/, m_vbos[POSITIONS_0], 0 /*offset*/, sizeof(glm::vec4) /*stride*/);
+        glVertexArrayVertexBuffer(m_vao, 1 /*bindingindex*/, m_vbos[NORMALS], 0 /*offset*/, sizeof(glm::vec4) /*stride*/);
+        glVertexArrayVertexBuffer(m_vao, 2 /*bindingindex*/, m_vbos[TEXCOORDS], 0 /*offset*/, sizeof(glm::vec2) /*stride*/);
 
         /* Get shaders */
         //m_compute_cloth_shader = ShaderManager::getShader("ve_compute_cloth");
@@ -163,17 +163,17 @@ namespace mango
        // m_textures.push_back(spec);
 
         /* Compute normals */
-        m_compute_cloth_normals_shader->bind();
-        glDispatchCompute((GLuint)m_particles_dim.x / 10, (GLuint)m_particles_dim.y / 10, 1);
+        m_computeClothNormalsShader->bind();
+        glDispatchCompute((GLuint)m_particlesSize.x / 10, (GLuint)m_particlesSize.y / 10, 1);
         glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
     }
 
     Cloth::~Cloth()
     {
-        delete[] m_init_positions;
-        delete[] m_init_velocities;
+        delete[] m_initPositions;
+        delete[] m_initVelocities;
 
-        for (auto & vbo_id : m_vbo_ids)
+        for (auto & vbo_id : m_vbos)
         {
             if (vbo_id != 0)
             {
@@ -182,37 +182,37 @@ namespace mango
             }
         }
 
-        if (m_vao_id != 0)
+        if (m_vao != 0)
         {
-            glDeleteVertexArrays(1, &m_vao_id);
-            m_vao_id = 0;
+            glDeleteVertexArrays(1, &m_vao);
+            m_vao = 0;
         }
     }
 
     void Cloth::reset()
     {
-        m_read_buf = 0;
+        m_readBuf = 0;
 
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_vbo_ids[POSITIONS_0]);
-        glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * (GLsizeiptr)m_particles_dim.x * (GLsizeiptr)m_particles_dim.y, m_init_positions);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_vbos[POSITIONS_0]);
+        glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * (GLsizeiptr)m_particlesSize.x * (GLsizeiptr)m_particlesSize.y, m_initPositions);
 
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_vbo_ids[POSITIONS_1]);
-        glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * (GLsizeiptr)m_particles_dim.x * (GLsizeiptr)m_particles_dim.y, NULL);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_vbos[POSITIONS_1]);
+        glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * (GLsizeiptr)m_particlesSize.x * (GLsizeiptr)m_particlesSize.y, NULL);
 
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_vbo_ids[VELOCITIES_0]);
-        glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * (GLsizeiptr)m_particles_dim.x * (GLsizeiptr)m_particles_dim.y, m_init_velocities);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_vbos[VELOCITIES_0]);
+        glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * (GLsizeiptr)m_particlesSize.x * (GLsizeiptr)m_particlesSize.y, m_initVelocities);
 
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_vbo_ids[VELOCITIES_1]);
-        glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * (GLsizeiptr)m_particles_dim.x * (GLsizeiptr)m_particles_dim.y, NULL);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_vbos[VELOCITIES_1]);
+        glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * (GLsizeiptr)m_particlesSize.x * (GLsizeiptr)m_particlesSize.y, NULL);
 
         glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_BUFFER_UPDATE_BARRIER_BIT);
 
-        m_compute_cloth_normals_shader->bind();
-        glDispatchCompute((GLuint)m_particles_dim.x / 10, (GLuint)m_particles_dim.y / 10, 1);
+        m_computeClothNormalsShader->bind();
+        glDispatchCompute((GLuint)m_particlesSize.x / 10, (GLuint)m_particlesSize.y / 10, 1);
         glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
     }
 
-    void Cloth::setDiffuseTexture(const std::string & filename)
+    void Cloth::setDiffuseTexture(const std::filesystem::path & filepath)
     {
         //Texture * diff = CoreAssetManager::genTexture2D(filename);
         //diff->setTypeName(std::string("texture_diffuse"));
@@ -220,7 +220,7 @@ namespace mango
         //m_textures[0] = diff;
     }
 
-    void Cloth::setSpecularTexture(const std::string & filename)
+    void Cloth::setSpecularTexture(const std::filesystem::path & filepath)
     {
        /* Texture * spec = CoreAssetManager::genTexture2D(filename);
         spec->setTypeName(std::string("texture_specular"));*/
@@ -255,39 +255,39 @@ namespace mango
 
     void Cloth::compute()
     {
-        if (m_simulate)
+        if (simulate)
         {
-            m_compute_cloth_shader->bind();
+            m_computeClothShader->bind();
 
-            m_compute_cloth_shader->setUniform("pins", 5, &m_pins[0]);
-            m_compute_cloth_shader->setUniform("Gravity", m_gravity);
-            m_compute_cloth_shader->setUniform("ParticleMass", m_particle_mass);
-            m_compute_cloth_shader->setUniform("ParticleInvMass", 1.0f / m_particle_mass);
-            m_compute_cloth_shader->setUniform("RestLengthHoriz", m_rest_len_x);
-            m_compute_cloth_shader->setUniform("RestLengthVert", m_rest_len_y);
-            m_compute_cloth_shader->setUniform("RestLengthDiag", m_rest_len_diag);
-            m_compute_cloth_shader->setUniform("SpringK", m_spring_k);
-            m_compute_cloth_shader->setUniform("DeltaT", m_delta_t);
-            m_compute_cloth_shader->setUniform("DampingConst", m_damping);
-            m_compute_cloth_shader->setUniform("shouldSelfCollide", m_should_self_collide);
+            m_computeClothShader->setUniform("pins", 5, &m_pins[0]);
+            m_computeClothShader->setUniform("Gravity", gravity);
+            m_computeClothShader->setUniform("ParticleMass", particleMass);
+            m_computeClothShader->setUniform("ParticleInvMass", 1.0f / particleMass);
+            m_computeClothShader->setUniform("RestLengthHoriz", m_xRestLen);
+            m_computeClothShader->setUniform("RestLengthVert", m_yRestLen);
+            m_computeClothShader->setUniform("RestLengthDiag", m_diagRestLen);
+            m_computeClothShader->setUniform("SpringK", springK);
+            m_computeClothShader->setUniform("DeltaT", deltaTime);
+            m_computeClothShader->setUniform("DampingConst", damping);
+            m_computeClothShader->setUniform("shouldSelfCollide", shouldSelfCollide);
 
 //            m_compute_cloth_shader->setUniformMatrix4fv("model", m_world_transform);
 
             for (int i = 0; i < 50; ++i)
             {
-                glDispatchCompute((GLuint)m_particles_dim.x / 10, (GLuint)m_particles_dim.y / 10, 1);
+                glDispatchCompute((GLuint)m_particlesSize.x / 10, (GLuint)m_particlesSize.y / 10, 1);
                 glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 
                 /* Swap buffers */
-                m_read_buf = 1 - m_read_buf;
-                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_vbo_ids[m_read_buf]);
-                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_vbo_ids[1 - m_read_buf]);
-                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_vbo_ids[m_read_buf + 2]);
-                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_vbo_ids[1 - m_read_buf + 2]);
+                m_readBuf = 1 - m_readBuf;
+                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_vbos[m_readBuf]);
+                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_vbos[1 - m_readBuf]);
+                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_vbos[m_readBuf + 2]);
+                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_vbos[1 - m_readBuf + 2]);
             }
 
-            m_compute_cloth_normals_shader->bind();
-            glDispatchCompute((GLuint)m_particles_dim.x / 10, (GLuint)m_particles_dim.y / 10, 1);
+            m_computeClothNormalsShader->bind();
+            glDispatchCompute((GLuint)m_particlesSize.x / 10, (GLuint)m_particlesSize.y / 10, 1);
             glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
         }
     }
@@ -305,7 +305,7 @@ namespace mango
         //shader->setUniform1f("material.shininess", m_material.m_shininess);
         //shader->setUniform3fv("material.diffuseColor", m_material.m_diffuse_color);
 
-        glBindVertexArray(m_vao_id);
-        glDrawElements(GL_TRIANGLE_STRIP, m_num_elements, GL_UNSIGNED_INT, NULL);
+        glBindVertexArray(m_vao);
+        glDrawElements(GL_TRIANGLE_STRIP, m_numElements, GL_UNSIGNED_INT, NULL);
     }
 }

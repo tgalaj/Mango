@@ -6,35 +6,34 @@
 
 namespace mango
 {
-    Skybox::Skybox(const std::string & skybox_directory,
-                   const std::string & left_face,
-                   const std::string & right_face,
-                   const std::string & up_face,
-                   const std::string & down_face,
-                   const std::string & front_face,
-                   const std::string & back_face)
-        : m_world(glm::mat4(1.0f))
+    Skybox::Skybox(const std::string & skyboxDirectory,
+                   const std::string & leftFace,
+                   const std::string & rightFace,
+                   const std::string & upFace,
+                   const std::string & downFace,
+                   const std::string & frontFace,
+                   const std::string & backFace) : m_world(glm::mat4(1.0f))
     {
         /* Create cubemap texture object */
-        std::string filenames[6] = { 
-            skybox_directory + "/" + left_face,
-            skybox_directory + "/" + right_face,
-            skybox_directory + "/" + up_face,
-            skybox_directory + "/" + down_face,
-            skybox_directory + "/" + front_face,
-            skybox_directory + "/" + back_face
+        std::filesystem::path filenames[6] = {
+            skyboxDirectory + "/" + leftFace,
+            skyboxDirectory + "/" + rightFace,
+            skyboxDirectory + "/" + upFace,
+            skyboxDirectory + "/" + downFace,
+            skyboxDirectory + "/" + frontFace,
+            skyboxDirectory + "/" + backFace
         };
-        m_cube_map_texture = CoreAssetManager::createCubeMapTexture(filenames, true);
+        m_cubeMapTexture = CoreAssetManager::createCubeMapTexture(filenames, true);
 
         /* Create skybox shader object */
-        m_skybox_shader = CoreAssetManager::createShader("Skybox", "Skybox.vert", "Skybox.frag");
-        m_skybox_shader->link();
+        m_skyboxShader = CoreAssetManager::createShader("Skybox", "Skybox.vert", "Skybox.frag");
+        m_skyboxShader->link();
 
         /* Create buffer objects */
-        glCreateVertexArrays(1, &m_vao_id);
-        glCreateBuffers(1, &m_vbo_id);
+        glCreateVertexArrays(1, &m_vao);
+        glCreateBuffers(1, &m_vbo);
 
-        std::vector<float> skybox_positions = {
+        std::vector<float> skyboxPositions = {
             // positions          
             -1.0f,  1.0f, -1.0f,
             -1.0f, -1.0f, -1.0f,
@@ -80,38 +79,38 @@ namespace mango
         };
 
         /* Set up buffer objects */
-        glNamedBufferStorage(m_vbo_id, skybox_positions.size() * sizeof(skybox_positions[0]), skybox_positions.data(), 0 /*flags*/);
+        glNamedBufferStorage(m_vbo, skyboxPositions.size() * sizeof(skyboxPositions[0]), skyboxPositions.data(), 0 /*flags*/);
 
         /* Set up VAO */
-        glEnableVertexArrayAttrib (m_vao_id, 0 /*index*/);
+        glEnableVertexArrayAttrib (m_vao, 0 /*index*/);
 
         /* Separate attribute format */
-        glVertexArrayAttribFormat (m_vao_id, 0 /*index*/, 3 /*size*/, GL_FLOAT, GL_FALSE, 0 /*relativeoffset*/);
-        glVertexArrayAttribBinding(m_vao_id, 0 /*index*/, 0 /*bindingindex*/);
-        glVertexArrayVertexBuffer (m_vao_id, 0 /*bindingindex*/, m_vbo_id, 0 /*offset*/, sizeof(glm::vec3) /*stride*/);
+        glVertexArrayAttribFormat (m_vao, 0 /*index*/, 3 /*size*/, GL_FLOAT, GL_FALSE, 0 /*relativeoffset*/);
+        glVertexArrayAttribBinding(m_vao, 0 /*index*/, 0 /*bindingindex*/);
+        glVertexArrayVertexBuffer (m_vao, 0 /*bindingindex*/, m_vbo, 0 /*offset*/, sizeof(glm::vec3) /*stride*/);
     }
 
 
     Skybox::~Skybox()
     {
-        if (m_vao_id != 0)
+        if (m_vao != 0)
         {
-            glDeleteVertexArrays(1, &m_vao_id);
+            glDeleteVertexArrays(1, &m_vao);
         }
 
-        if (m_vbo_id != 0)
+        if (m_vbo != 0)
         {
-            glDeleteBuffers(1, &m_vbo_id);
+            glDeleteBuffers(1, &m_vbo);
         }
     }
 
     void Skybox::render(const glm::mat4 & projection, const glm::mat4 & view)
     {
-        m_skybox_shader->bind();
-        m_skybox_shader->setUniform("view_projection", projection * glm::mat4(glm::mat3(view)));
+        m_skyboxShader->bind();
+        m_skyboxShader->setUniform("view_projection", projection * glm::mat4(glm::mat3(view)));
 
-        m_cube_map_texture->bind();
-        glBindVertexArray(m_vao_id);
+        m_cubeMapTexture->bind();
+        glBindVertexArray(m_vao);
 
         glDepthFunc(GL_LEQUAL);
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -120,6 +119,6 @@ namespace mango
 
     void Skybox::bindSkyboxTexture(GLuint unit)
     {
-        m_cube_map_texture->bind(unit);
+        m_cubeMapTexture->bind(unit);
     }
 }

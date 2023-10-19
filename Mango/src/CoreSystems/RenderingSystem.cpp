@@ -1,28 +1,27 @@
 ﻿#include "mgpch.h"
 
-#include "CoreSystems/RenderingSystem.h"
-
-#include "CoreEngine/CoreAssetManager.h"
-#include "CoreEngine/CoreServices.h"
-#include "Window/Window.h"
+#include "RenderingSystem.h"
 #include "CoreComponents/DirectionalLightComponent.h"
 #include "CoreComponents/PointLightComponent.h"
 #include "CoreComponents/SpotLightComponent.h"
+#include "CoreEngine/CoreAssetManager.h"
+#include "CoreEngine/CoreServices.h"
 #include "Utilities/ShaderGlobals.h"
+#include "Window/Window.h"
 
 namespace mango
 {
-    bool         RenderingSystem::M_DEBUG_RENDERING    = false;
-    unsigned int RenderingSystem::M_DEBUG_WINDOW_WIDTH = 0;
+    bool         RenderingSystem::DEBUG_RENDERING    = false;
+    unsigned int RenderingSystem::DEBUG_WINDOW_WIDTH = 0;
 
     RenderingSystem::RenderingSystem() {}
     
     RenderingSystem::~RenderingSystem() 
     {
-        m_opaque_queue.clear();
-        m_alpha_queue.clear();
-        m_enviro_static_queue.clear();
-        m_enviro_dynamic_queue.clear();
+        m_opaqueQueue.clear();
+        m_alphaQueue.clear();
+        m_enviroStaticQueue.clear();
+        m_enviroDynamicQueue.clear();
     }
 
     void RenderingSystem::configure(entityx::EntityManager & entities, entityx::EventManager & events)
@@ -35,94 +34,94 @@ namespace mango
         CoreAssetManager::createTexture2D1x1("default_black",  glm::uvec4(0,   0,   0,   255));
         CoreAssetManager::createTexture2D1x1("default_normal", glm::uvec4(128, 127, 254, 255));
 
-        m_opaque_queue.reserve(50);
-        m_alpha_queue.reserve(5);
+        m_opaqueQueue.reserve(50);
+        m_alphaQueue.reserve(5);
 
-        m_forward_ambient = CoreAssetManager::createShader("Forward-Ambient", "Forward-Light.vert", "Forward-Ambient.frag");
-        m_forward_ambient->link();
+        m_forwardAmbient = CoreAssetManager::createShader("Forward-Ambient", "Forward-Light.vert", "Forward-Ambient.frag");
+        m_forwardAmbient->link();
 
-        m_forward_directional = CoreAssetManager::createShader("Forward-Directional", "Forward-Light.vert", "Forward-Directional.frag");
-        m_forward_directional->link();
+        m_forwardDirectional = CoreAssetManager::createShader("Forward-Directional", "Forward-Light.vert", "Forward-Directional.frag");
+        m_forwardDirectional->link();
 
-        m_forward_point = CoreAssetManager::createShader("Forward-Point", "Forward-Light.vert", "Forward-Point.frag");
-        m_forward_point->link();
+        m_forwardPoint = CoreAssetManager::createShader("Forward-Point", "Forward-Light.vert", "Forward-Point.frag");
+        m_forwardPoint->link();
 
-        m_forward_spot = CoreAssetManager::createShader("Forward-Spot", "Forward-Light.vert", "Forward-Spot.frag");
-        m_forward_spot->link();
+        m_forwardSpot = CoreAssetManager::createShader("Forward-Spot", "Forward-Light.vert", "Forward-Spot.frag");
+        m_forwardSpot->link();
 
-        m_debug_rendering = CoreAssetManager::createShader("Debug-Rendering", "FSQ.vert", "DebugRendering.frag");
-        m_debug_rendering->link();
+        m_debugRendering = CoreAssetManager::createShader("Debug-Rendering", "FSQ.vert", "DebugRendering.frag");
+        m_debugRendering->link();
 
-        m_shadow_map_generator = CoreAssetManager::createShader("Shadow-Map-Gen", "Shadow-Map-Gen.vert", "Shadow-Map-Gen.frag");
-        m_shadow_map_generator->link();
+        m_shadowMapGenerator = CoreAssetManager::createShader("Shadow-Map-Gen", "Shadow-Map-Gen.vert", "Shadow-Map-Gen.frag");
+        m_shadowMapGenerator->link();
 
-        m_omni_shadow_map_generator = CoreAssetManager::createShader("Omni-Shadow-Map-Gen", "Omni-Shadow-Map-Gen.vert", "Omni-Shadow-Map-Gen.frag", "Omni-Shadow-Map-Gen.geom");
-        m_omni_shadow_map_generator->link();
+        m_omniShadowMapGenerator = CoreAssetManager::createShader("Omni-Shadow-Map-Gen", "Omni-Shadow-Map-Gen.vert", "Omni-Shadow-Map-Gen.frag", "Omni-Shadow-Map-Gen.geom");
+        m_omniShadowMapGenerator->link();
 
-        m_blending_shader = CoreAssetManager::createShader("Blending-Shader", "Blending.vert", "Blending.frag");
-        m_blending_shader->link();
+        m_blendingShader = CoreAssetManager::createShader("Blending-Shader", "Blending.vert", "Blending.frag");
+        m_blendingShader->link();
 
-        m_enviro_mapping_shader = CoreAssetManager::createShader("EnviroMapping", "EnviroMapping.vert", "EnviroMapping.frag");
-        m_enviro_mapping_shader->link();
+        m_enviroMappingShader = CoreAssetManager::createShader("EnviroMapping", "EnviroMapping.vert", "EnviroMapping.frag");
+        m_enviroMappingShader->link();
 
-        m_deferred_directional = CoreAssetManager::createShader("Deferred-Directional", "FSQ.vert", "Deferred-Directional.frag");
-        m_deferred_directional->link();
+        m_deferredDirectional = CoreAssetManager::createShader("Deferred-Directional", "FSQ.vert", "Deferred-Directional.frag");
+        m_deferredDirectional->link();
 
-        m_deferred_point = CoreAssetManager::createShader("Deferred-Point", "DebugObjectGeometry.vert", "Deferred-Point.frag");
-        m_deferred_point->link();
+        m_deferredPoint = CoreAssetManager::createShader("Deferred-Point", "DebugObjectGeometry.vert", "Deferred-Point.frag");
+        m_deferredPoint->link();
 
-        m_deferred_spot = CoreAssetManager::createShader("Deferred-Spot", "DebugObjectGeometry.vert", "Deferred-Spot.frag");
-        m_deferred_spot->link();
+        m_deferredSpot = CoreAssetManager::createShader("Deferred-Spot", "DebugObjectGeometry.vert", "Deferred-Spot.frag");
+        m_deferredSpot->link();
 
-        m_boundingbox_shader = CoreAssetManager::createShader("DebugRenderBB", "DebugObjectGeometry.vert", "DebugObjectGeometry.frag");
-        m_boundingbox_shader->link();
+        m_boundingboxShader = CoreAssetManager::createShader("DebugRenderBB", "DebugObjectGeometry.vert", "DebugObjectGeometry.frag");
+        m_boundingboxShader->link();
 
-        m_null_shader = CoreAssetManager::createShader("NullShader", "DebugObjectGeometry.vert", "Shadow-Map-Gen.frag");
-        m_null_shader->link();
+        m_nullShader = CoreAssetManager::createShader("NullShader", "DebugObjectGeometry.vert", "Shadow-Map-Gen.frag");
+        m_nullShader->link();
 
-        m_light_bsphere = Model();
-        m_light_bsphere.genSphere(1.1f, 12);
+        m_lightBoundingSphere = Model();
+        m_lightBoundingSphere.genSphere(1.1f, 12);
 
-        m_light_bcone = Model();
-        m_light_bcone.genCone(1.1f, 1.1f, 12, 1);
+        m_lightBoundingCone = Model();
+        m_lightBoundingCone.genCone(1.1f, 1.1f, 12, 1);
 
-        M_DEBUG_WINDOW_WIDTH = GLuint(Window::getWidth() / 5.0f);
-        m_scene_ambient_color = glm::vec3(0.18f);
+        DEBUG_WINDOW_WIDTH = GLuint(Window::getWidth() / 5.0f);
+        sceneAmbientColor = glm::vec3(0.18f);
 
-        m_hdr_filter = std::make_shared<PostprocessEffect>();
-        m_hdr_filter->init("HDR_PS", "HDR_PS.frag");
+        m_hdrFilter = std::make_shared<PostprocessEffect>();
+        m_hdrFilter->init("HDR_PS", "HDR_PS.frag");
 
-        m_fxaa_filter = std::make_shared<PostprocessEffect>();
-        m_fxaa_filter->init("FXAA_PS", "FXAA_PS.frag");
+        m_fxaaFilter = std::make_shared<PostprocessEffect>();
+        m_fxaaFilter->init("FXAA_PS", "FXAA_PS.frag");
 
-        m_deferred_rendering = std::make_shared<DeferredRendering>();
-        m_deferred_rendering->init();
-        m_deferred_rendering->createGBuffer();
+        m_deferredRendering = std::make_shared<DeferredRendering>();
+        m_deferredRendering->init();
+        m_deferredRendering->createGBuffer();
 
-        m_gbuffer_shader = CoreAssetManager::getShader("GBuffer");
+        m_gbufferShader = CoreAssetManager::getShader("GBuffer");
 
-        m_bloom_filter = std::make_shared<BloomPS>();
-        m_bloom_filter->init("Bloom_PS", "Bloom_PS.frag");
-        m_bloom_filter->create();
+        m_bloomFilter = std::make_shared<BloomPS>();
+        m_bloomFilter->init("Bloom_PS", "Bloom_PS.frag");
+        m_bloomFilter->create();
 
-        m_ssao_rendering = std::make_shared<SSAO>();
-        m_ssao_rendering->init("SSAO_PS", "SSAO.frag");
-        m_ssao_rendering->create();
+        m_ssao = std::make_shared<SSAO>();
+        m_ssao->init("SSAO_PS", "SSAO.frag");
+        m_ssao->create();
 
-        m_main_render_target = std::make_shared<RenderTarget>();
-        m_main_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
+        m_mainRenderTarget = std::make_shared<RenderTarget>();
+        m_mainRenderTarget->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
 
-        m_helper_render_target = std::make_shared<RenderTarget>();
-        m_helper_render_target->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
+        m_helperRenderTarget = std::make_shared<RenderTarget>();
+        m_helperRenderTarget->create(Window::getWidth(), Window::getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
 
-        m_dir_shadow_map = std::make_shared<RenderTarget>();
-        m_dir_shadow_map->create(2048, 2048, RenderTarget::DepthInternalFormat::DEPTH24);
+        m_dirShadowMap = std::make_shared<RenderTarget>();
+        m_dirShadowMap->create(2048, 2048, RenderTarget::DepthInternalFormat::DEPTH24);
 
-        m_spot_shadow_map = std::make_shared<RenderTarget>();
-        m_spot_shadow_map->create(1024, 1024, RenderTarget::DepthInternalFormat::DEPTH24);
+        m_spotShadowMap = std::make_shared<RenderTarget>();
+        m_spotShadowMap->create(1024, 1024, RenderTarget::DepthInternalFormat::DEPTH24);
 
-        m_omni_shadow_map = std::make_shared<RenderTarget>();
-        m_omni_shadow_map->create(512, 512, RenderTarget::DepthInternalFormat::DEPTH24, RenderTarget::RenderTargetType::TexCube);
+        m_omniShadowMap = std::make_shared<RenderTarget>();
+        m_omniShadowMap->create(512, 512, RenderTarget::DepthInternalFormat::DEPTH24, RenderTarget::RenderTargetType::TexCube);
 
         initRenderingStates();
     }
@@ -132,7 +131,7 @@ namespace mango
         //renderForward(entities);
         renderDeferred(entities);
 
-        if (M_DEBUG_RENDERING)
+        if (DEBUG_RENDERING)
         {
             //renderDebugLightsBoundingBoxes(entities);
             renderDebug();
@@ -141,9 +140,9 @@ namespace mango
 
     void RenderingSystem::receive(const entityx::ComponentAddedEvent<CameraComponent>& event)
     {
-        if (!m_main_camera)
+        if (!m_mainCamera)
         {
-            m_main_camera = event.entity;
+            m_mainCamera = event.entity;
         }
     }
 
@@ -152,52 +151,52 @@ namespace mango
         switch (event.component->getRenderQueue())
         {
         case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
-            m_opaque_queue.push_back(event.entity);
+            m_opaqueQueue.push_back(event.entity);
             break;
         case ModelRendererComponent::RenderQueue::RQ_ALPHA:
-            m_alpha_queue.push_back(event.entity);
+            m_alphaQueue.push_back(event.entity);
             break;
         case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
-            m_enviro_static_queue.push_back(event.entity);
+            m_enviroStaticQueue.push_back(event.entity);
             break;
         case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
-            m_enviro_dynamic_queue.push_back(event.entity);
+            m_enviroDynamicQueue.push_back(event.entity);
             break;
         }
     }
 
     void RenderingSystem::receive(const entityx::ComponentRemovedEvent<ModelRendererComponent>& event)
     {
-        std::vector<entityx::Entity>::iterator entity_it;
+        std::vector<entityx::Entity>::iterator entityIterator;
 
         switch (event.component->getRenderQueue())
         {
         case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
-            entity_it = std::find(m_opaque_queue.begin(), m_opaque_queue.end(), event.entity);
-            if (entity_it != m_opaque_queue.end())
+            entityIterator = std::find(m_opaqueQueue.begin(), m_opaqueQueue.end(), event.entity);
+            if (entityIterator != m_opaqueQueue.end())
             {
-                m_opaque_queue.erase(entity_it);
+                m_opaqueQueue.erase(entityIterator);
             }
             break;
         case ModelRendererComponent::RenderQueue::RQ_ALPHA:
-            entity_it = std::find(m_alpha_queue.begin(), m_alpha_queue.end(), event.entity);
-            if (entity_it != m_alpha_queue.end())
+            entityIterator = std::find(m_alphaQueue.begin(), m_alphaQueue.end(), event.entity);
+            if (entityIterator != m_alphaQueue.end())
             {
-                m_alpha_queue.erase(entity_it);
+                m_alphaQueue.erase(entityIterator);
             }
             break;
         case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
-            entity_it = std::find(m_enviro_static_queue.begin(), m_enviro_static_queue.end(), event.entity);
-            if (entity_it != m_enviro_static_queue.end())
+            entityIterator = std::find(m_enviroStaticQueue.begin(), m_enviroStaticQueue.end(), event.entity);
+            if (entityIterator != m_enviroStaticQueue.end())
             {
-                m_enviro_static_queue.erase(entity_it);
+                m_enviroStaticQueue.erase(entityIterator);
             }
             break;
         case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
-            entity_it = std::find(m_enviro_dynamic_queue.begin(), m_enviro_dynamic_queue.end(), event.entity);
-            if (entity_it != m_enviro_dynamic_queue.end())
+            entityIterator = std::find(m_enviroDynamicQueue.begin(), m_enviroDynamicQueue.end(), event.entity);
+            if (entityIterator != m_enviroDynamicQueue.end())
             {
-                m_enviro_dynamic_queue.erase(entity_it);
+                m_enviroDynamicQueue.erase(entityIterator);
             }
             break;
         }
@@ -205,32 +204,32 @@ namespace mango
 
     void RenderingSystem::setSkybox(const std::shared_ptr<Skybox>& skybox)
     {
-        m_default_skybox = skybox;
+        m_skybox = skybox;
     }
 
     void RenderingSystem::resize(unsigned width, unsigned height)
     {
-        m_main_render_target->clear();
-        m_helper_render_target->clear();
-        m_deferred_rendering->clearGBuffer();
-        m_bloom_filter->clear();
-        m_ssao_rendering->clear();
+        m_mainRenderTarget->clear();
+        m_helperRenderTarget->clear();
+        m_deferredRendering->clearGBuffer();
+        m_bloomFilter->clear();
+        m_ssao->clear();
 
-        m_main_render_target->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
-        m_helper_render_target->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
-        m_deferred_rendering->createGBuffer();
-        m_bloom_filter->create();
-        m_ssao_rendering->create();
+        m_mainRenderTarget->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
+        m_helperRenderTarget->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
+        m_deferredRendering->createGBuffer();
+        m_bloomFilter->create();
+        m_ssao->create();
     }
 
     entityx::ComponentHandle<TransformComponent> RenderingSystem::getCameraTransform()
     {
-        return m_main_camera.component<TransformComponent>();
+        return m_mainCamera.component<TransformComponent>();
     }
 
     entityx::ComponentHandle<CameraComponent> RenderingSystem::getCamera()
     {
-        return m_main_camera.component<CameraComponent>();
+        return m_mainCamera.component<CameraComponent>();
     }
 
     void RenderingSystem::initRenderingStates()
@@ -260,7 +259,7 @@ namespace mango
 
     void RenderingSystem::bindMainRenderTarget()
     {
-        m_main_render_target->bind();
+        m_mainRenderTarget->bind();
     }
 
     void RenderingSystem::applyPostprocess(std::shared_ptr<PostprocessEffect> & effect, 
@@ -287,12 +286,12 @@ namespace mango
     void RenderingSystem::renderForward(entityx::EntityManager& entities)
     {
         /* Render everything to offscreen FBO */
-        m_main_render_target->bind();
+        m_mainRenderTarget->bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        m_forward_ambient->bind();
-        m_forward_ambient->setUniform("s_scene_ambient", m_scene_ambient_color);
-        renderOpaque(m_forward_ambient);
+        m_forwardAmbient->bind();
+        m_forwardAmbient->setUniform("s_scene_ambient", sceneAmbientColor);
+        renderOpaque(m_forwardAmbient);
 
         renderLightsForward(entities);
 
@@ -302,34 +301,34 @@ namespace mango
         /* Render transparent objects */
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDisable(GL_CULL_FACE);
-        m_blending_shader->bind();
-        renderAlpha(m_blending_shader);
+        m_blendingShader->bind();
+        renderAlpha(m_blendingShader);
         glEnable(GL_CULL_FACE);
 
-        if (M_DEBUG_RENDERING)
+        if (DEBUG_RENDERING)
         {
             renderDebugLightsBoundingBoxes(entities);
         }
 
         /* Render skybox */
-        if (m_default_skybox != nullptr)
+        if (m_skybox != nullptr)
         {
-            m_default_skybox->render(getCamera()->m_projection, getCamera()->m_view);
+            m_skybox->render(getCamera()->projection, getCamera()->view);
 
-            m_enviro_mapping_shader->bind();
-            m_enviro_mapping_shader->setSubroutine(Shader::Type::FRAGMENT, "reflection"); // TODO: control this using Material class
+            m_enviroMappingShader->bind();
+            m_enviroMappingShader->setSubroutine(Shader::Type::FRAGMENT, "reflection"); // TODO: control this using Material class
 
-            m_default_skybox->bindSkyboxTexture();
-            renderEnviroMappingStatic(m_enviro_mapping_shader);
+            m_skybox->bindSkyboxTexture();
+            renderEnviroMappingStatic(m_enviroMappingShader);
         }
 
         /* Apply postprocess effect */
-        m_bloom_filter->extractBrightness(m_main_render_target, 1.0);
-        m_bloom_filter->blurGaussian(2);
-        m_bloom_filter->bindBrightnessTexture(1);
+        m_bloomFilter->extractBrightness(m_mainRenderTarget, 1.0);
+        m_bloomFilter->blurGaussian(2);
+        m_bloomFilter->bindBrightnessTexture(1);
 
-        applyPostprocess(m_hdr_filter, &m_main_render_target, &m_helper_render_target);
-        applyPostprocess(m_fxaa_filter, &m_helper_render_target, 0);
+        applyPostprocess(m_hdrFilter, &m_mainRenderTarget, &m_helperRenderTarget);
+        applyPostprocess(m_fxaaFilter, &m_helperRenderTarget, 0);
     }
 
     void RenderingSystem::renderDeferred(entityx::EntityManager& entities)
@@ -339,15 +338,15 @@ namespace mango
         glEnable(GL_DEPTH_TEST);
         glDepthMask(GL_TRUE);
 
-        m_deferred_rendering->bindGBuffer();
+        m_deferredRendering->bindGBuffer();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        m_gbuffer_shader->bind();
-        renderOpaque(m_gbuffer_shader);
+        m_gbufferShader->bind();
+        renderOpaque(m_gbufferShader);
 
         /* Compute SSAO */
-        m_ssao_rendering->computeSSAO(m_deferred_rendering, getCamera()->m_view, getCamera()->m_projection);
-        m_ssao_rendering->blurSSAO();
+        m_ssao->computeSSAO(m_deferredRendering, getCamera()->view, getCamera()->projection);
+        m_ssao->blurSSAO();
 
         /* Light Pass - compute lighting */
         glDepthMask(GL_FALSE);
@@ -357,23 +356,23 @@ namespace mango
         glBlendEquation(GL_FUNC_ADD);
         glBlendFunc(GL_ONE, GL_ONE);
 
-        m_main_render_target->bind();
+        m_mainRenderTarget->bind();
         glClear(GL_COLOR_BUFFER_BIT);
 
-        m_ssao_rendering->bindBlurredSSAOTexture(4); //TODO: replace magic number with a variable
+        m_ssao->bindBlurredSSAOTexture(4); //TODO: replace magic number with a variable
         renderLightsDeferred(entities);
 
-        m_deferred_rendering->bindGBufferReadOnly();
-        m_main_render_target->bindWriteOnly();
+        m_deferredRendering->bindGBufferReadOnly();
+        m_mainRenderTarget->bindWriteOnly();
         glBlitFramebuffer(0, 0, Window::getWidth(), Window::getHeight(),
                           0, 0, Window::getWidth(), Window::getHeight(),
                           GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
-        m_main_render_target->bind();
+        m_mainRenderTarget->bind();
         glEnable(GL_DEPTH_TEST);
         glDepthMask(GL_TRUE);
 
-        if (M_DEBUG_RENDERING)
+        if (DEBUG_RENDERING)
         {
             renderDebugLightsBoundingBoxes(entities);
         }
@@ -385,30 +384,30 @@ namespace mango
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDisable(GL_CULL_FACE);
-        m_blending_shader->bind();
-        renderAlpha(m_blending_shader);
+        m_blendingShader->bind();
+        renderAlpha(m_blendingShader);
         glEnable(GL_CULL_FACE);
 
         /* Render skybox */
-        if (m_default_skybox != nullptr)
+        if (m_skybox != nullptr)
         {
-            m_default_skybox->render(getCamera()->m_projection, getCamera()->m_view);
+            m_skybox->render(getCamera()->projection, getCamera()->view);
 
-            m_enviro_mapping_shader->bind();
+            m_enviroMappingShader->bind();
             //m_enviro_mapping_shader->setSubroutine(Shader::Type::FRAGMENT, "refraction"); // TODO: control this using Material class
-            m_enviro_mapping_shader->setSubroutine(Shader::Type::FRAGMENT, "reflection");
+            m_enviroMappingShader->setSubroutine(Shader::Type::FRAGMENT, "reflection");
 
-            m_default_skybox->bindSkyboxTexture();
-            renderEnviroMappingStatic(m_enviro_mapping_shader);
+            m_skybox->bindSkyboxTexture();
+            renderEnviroMappingStatic(m_enviroMappingShader);
         }
 
         /* Apply postprocess effect */
-        m_bloom_filter->extractBrightness(m_main_render_target, 1.0);
-        m_bloom_filter->blurGaussian(2);
-        m_bloom_filter->bindBrightnessTexture(1);
+        m_bloomFilter->extractBrightness(m_mainRenderTarget, 1.0);
+        m_bloomFilter->blurGaussian(2);
+        m_bloomFilter->bindBrightnessTexture(1);
 
-        applyPostprocess(m_hdr_filter, &m_main_render_target, &m_helper_render_target);
-        applyPostprocess(m_fxaa_filter, &m_helper_render_target, 0);
+        applyPostprocess(m_hdrFilter, &m_mainRenderTarget, &m_helperRenderTarget);
+        applyPostprocess(m_fxaaFilter, &m_helperRenderTarget, 0);
     }
 
     void RenderingSystem::renderDebug()
@@ -416,123 +415,123 @@ namespace mango
         glDisable(GL_BLEND);
         glClear(GL_DEPTH_BUFFER_BIT);
 
-        m_debug_rendering->bind();
+        m_debugRendering->bind();
 
-        m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugColorTarget");
-        m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::POSITION);
-        glViewport(M_DEBUG_WINDOW_WIDTH * 0, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        m_deferred_rendering->render();
+        m_debugRendering->setSubroutine(Shader::Type::FRAGMENT, "debugColorTarget");
+        m_deferredRendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::POSITION);
+        glViewport(DEBUG_WINDOW_WIDTH * 0, 0, DEBUG_WINDOW_WIDTH, DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
+        m_deferredRendering->render();
 
-        m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::ALBEDO_SPECULAR);
-        glViewport(M_DEBUG_WINDOW_WIDTH * 1, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        m_deferred_rendering->render();
+        m_deferredRendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::ALBEDO_SPECULAR);
+        glViewport(DEBUG_WINDOW_WIDTH * 1, 0, DEBUG_WINDOW_WIDTH, DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
+        m_deferredRendering->render();
 
-        m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::NORMAL);
-        glViewport(M_DEBUG_WINDOW_WIDTH * 2, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        m_deferred_rendering->render();
+        m_deferredRendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::NORMAL);
+        glViewport(DEBUG_WINDOW_WIDTH * 2, 0, DEBUG_WINDOW_WIDTH, DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
+        m_deferredRendering->render();
 
-        m_debug_rendering->setSubroutine(Shader::Type::FRAGMENT, "debugDepthTarget");
-        m_deferred_rendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::DEPTH);
-        glViewport(M_DEBUG_WINDOW_WIDTH * 3, 0, M_DEBUG_WINDOW_WIDTH, M_DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
-        m_deferred_rendering->render();
+        m_debugRendering->setSubroutine(Shader::Type::FRAGMENT, "debugDepthTarget");
+        m_deferredRendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::DEPTH);
+        glViewport(DEBUG_WINDOW_WIDTH * 3, 0, DEBUG_WINDOW_WIDTH, DEBUG_WINDOW_WIDTH / Window::getAspectRatio());
+        m_deferredRendering->render();
 
         glEnable(GL_BLEND);
     }
 
     void RenderingSystem::renderDebugLightsBoundingBoxes(entityx::EntityManager& entities)
     {
-        entityx::ComponentHandle<PointLightComponent> point_light;
-        entityx::ComponentHandle<SpotLightComponent>  spot_light;
+        entityx::ComponentHandle<PointLightComponent> pointLight;
+        entityx::ComponentHandle<SpotLightComponent>  spotLight;
         entityx::ComponentHandle<TransformComponent>  transform;
 
         glDisable(GL_BLEND);
 
         /* Point Lights */
-        m_light_bsphere.setDrawMode(GL_LINES);
-        for (auto entity : entities.entities_with_components(point_light, transform))
+        m_lightBoundingSphere.setDrawMode(GL_LINES);
+        for (auto entity : entities.entities_with_components(pointLight, transform))
         {
-            auto model       = glm::translate(glm::mat4(1.0f), transform->position()) *
-                               glm::scale(glm::mat4(1.0f), glm::vec3(point_light->m_range));
-            auto view        = CoreServices::getRenderer()->getCamera()->m_view;
-            auto projection  = CoreServices::getRenderer()->getCamera()->m_projection;
+            auto model       = glm::translate(glm::mat4(1.0f), transform->getPosition()) *
+                               glm::scale(glm::mat4(1.0f), glm::vec3(pointLight->range));
+            auto view        = CoreServices::getRenderer()->getCamera()->view;
+            auto projection  = CoreServices::getRenderer()->getCamera()->projection;
 
-            m_boundingbox_shader->bind();
-            m_boundingbox_shader->setUniform("g_mvp", projection * view * model);
-            m_boundingbox_shader->setUniform("color", glm::vec4(1.0f, 1.0, 1.0, 1.0f));
+            m_boundingboxShader->bind();
+            m_boundingboxShader->setUniform("g_mvp", projection * view * model);
+            m_boundingboxShader->setUniform("color", glm::vec4(1.0f, 1.0, 1.0, 1.0f));
 
-            m_light_bsphere.render(*m_boundingbox_shader);
+            m_lightBoundingSphere.render(*m_boundingboxShader);
         }
-        m_light_bsphere.setDrawMode(GL_TRIANGLES);
+        m_lightBoundingSphere.setDrawMode(GL_TRIANGLES);
 
         /* Spot Lights */
-        m_light_bcone.setDrawMode(GL_LINES);
-        for (auto entity : entities.entities_with_components(spot_light, transform))
+        m_lightBoundingCone.setDrawMode(GL_LINES);
+        for (auto entity : entities.entities_with_components(spotLight, transform))
         {
-            float scale_height = spot_light->m_range;
-            float scale_radius = spot_light->m_range * glm::tan(glm::acos(spot_light->getCutOffAngle()) * 1.0f);
+            float heightScale = spotLight->range;
+            float radiusScale = spotLight->range * glm::tan(glm::acos(spotLight->getCutOffAngle()) * 1.0f);
 
-            auto model      = glm::translate(glm::mat4(1.0f), transform->position()) *
-                              glm::mat4_cast(glm::inverse(transform->orientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
-                              glm::scale(glm::mat4(1.0f), glm::vec3(scale_radius, scale_height, scale_radius));
-            auto view       = CoreServices::getRenderer()->getCamera()->m_view;
-            auto projection = CoreServices::getRenderer()->getCamera()->m_projection;
+            auto model      = glm::translate(glm::mat4(1.0f), transform->getPosition()) *
+                              glm::mat4_cast(glm::inverse(transform->getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
+                              glm::scale(glm::mat4(1.0f), glm::vec3(radiusScale, heightScale, radiusScale));
+            auto view       = CoreServices::getRenderer()->getCamera()->view;
+            auto projection = CoreServices::getRenderer()->getCamera()->projection;
 
-            m_boundingbox_shader->bind();
-            m_boundingbox_shader->setUniform("g_mvp", projection * view * model);
-            m_boundingbox_shader->setUniform("color", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
+            m_boundingboxShader->bind();
+            m_boundingboxShader->setUniform("g_mvp", projection * view * model);
+            m_boundingboxShader->setUniform("color", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
 
-            m_light_bcone.render(*m_boundingbox_shader);
+            m_lightBoundingCone.render(*m_boundingboxShader);
         }
-        m_light_bcone.setDrawMode(GL_TRIANGLES);
+        m_lightBoundingCone.setDrawMode(GL_TRIANGLES);
         glEnable(GL_BLEND);
     }
 
     void RenderingSystem::renderOpaque(const std::shared_ptr<Shader> & shader)
     {
-        ModelRendererComponent* model_renderer;
+        ModelRendererComponent* modelRenderer;
         TransformComponent* transform;
 
-        for (auto& entity : m_opaque_queue)
+        for (auto& entity : m_opaqueQueue)
         {
-            model_renderer = entity.component<ModelRendererComponent>().get();
+            modelRenderer = entity.component<ModelRendererComponent>().get();
             transform      = entity.component<TransformComponent>().get();
 
             shader->updateGlobalUniforms(*transform);
-            model_renderer->m_model.render(*shader);
+            modelRenderer->model.render(*shader);
         }
     }
 
     void RenderingSystem::renderAlpha(const std::shared_ptr<Shader>& shader)
     {
-        ModelRendererComponent* model_renderer;
+        ModelRendererComponent* modelRenderer;
         TransformComponent* transform;
 
-        for (auto& entity : m_alpha_queue)
+        for (auto& entity : m_alphaQueue)
         {
-            model_renderer = entity.component<ModelRendererComponent>().get();
+            modelRenderer = entity.component<ModelRendererComponent>().get();
             transform = entity.component<TransformComponent>().get();
 
             shader->updateGlobalUniforms(*transform);
-            model_renderer->m_model.render(*shader);
+            modelRenderer->model.render(*shader);
         }
     }
 
     void RenderingSystem::renderEnviroMappingStatic(const std::shared_ptr<Shader>& shader)
     {
-        ModelRendererComponent* model_renderer;
+        ModelRendererComponent* modelRenderer;
         TransformComponent* transform;
 
-        for (auto& entity : m_enviro_static_queue)
+        for (auto& entity : m_enviroStaticQueue)
         {
-            model_renderer = entity.component<ModelRendererComponent>().get();
+            modelRenderer = entity.component<ModelRendererComponent>().get();
             transform = entity.component<TransformComponent>().get();
 
             shader->updateGlobalUniforms(*transform);
-            model_renderer->m_model.render(*shader);
+            modelRenderer->model.render(*shader);
         }
     }
 
-    void RenderingSystem::renderEnviroMappingDynamic(const std::shared_ptr<Shader>& shader)
+    void RenderingSystem::renderDynamicEnviroMapping(const std::shared_ptr<Shader>& shader)
     {
 
     }
@@ -546,169 +545,169 @@ namespace mango
          * Then render lights with shadows and then lights without shadows;
          */
 
-        entityx::ComponentHandle<DirectionalLightComponent> directional_light;
-        entityx::ComponentHandle<PointLightComponent>       point_light;
-        entityx::ComponentHandle<SpotLightComponent>        spot_light;
+        entityx::ComponentHandle<DirectionalLightComponent> directionalLight;
+        entityx::ComponentHandle<PointLightComponent>       pointLight;
+        entityx::ComponentHandle<SpotLightComponent>        spotLight;
         entityx::ComponentHandle<TransformComponent>        transform;
 
         /* Directional Lights */
-        for(auto entity : entities.entities_with_components(directional_light, transform))
+        for(auto entity : entities.entities_with_components(directionalLight, transform))
         {
-            ShadowInfo shadow_info = directional_light->getShadowInfo();
-            glm::mat4 light_matrix = glm::mat4(0.0f);
+            ShadowInfo shadowInfo = directionalLight->getShadowInfo();
+            glm::mat4 lightMatrix = glm::mat4(0.0f);
 
-            if(shadow_info.getCastsShadows())
+            if(shadowInfo.getCastsShadows())
             {
-                m_shadow_map_generator->bind();
+                m_shadowMapGenerator->bind();
 
-                m_dir_shadow_map->bind();
+                m_dirShadowMap->bind();
                 glClear(GL_DEPTH_BUFFER_BIT);
 
-                light_matrix = shadow_info.getProjection() * glm::lookAt(-transform->direction(), glm::vec3(0.0f), glm::vec3(0, 1, 0));
-                m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
+                lightMatrix = shadowInfo.getProjection() * glm::lookAt(-transform->getDirection(), glm::vec3(0.0f), glm::vec3(0, 1, 0));
+                m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                 glCullFace(GL_FRONT);
-                renderOpaque(m_shadow_map_generator);
-                renderEnviroMappingStatic(m_shadow_map_generator);
+                renderOpaque(m_shadowMapGenerator);
+                renderEnviroMappingStatic(m_shadowMapGenerator);
                 glCullFace(GL_BACK);
             }
 
             bindMainRenderTarget();
             
-            m_forward_directional->bind();
-            m_dir_shadow_map->bindTexture(SHADOW_MAP);
+            m_forwardDirectional->bind();
+            m_dirShadowMap->bindTexture(SHADOW_MAP);
 
-            m_forward_directional->setUniform(S_DIRECTIONAL_LIGHT ".base.color",     directional_light->m_color);
-            m_forward_directional->setUniform(S_DIRECTIONAL_LIGHT ".base.intensity", directional_light->m_intensity);
-            m_forward_directional->setUniform(S_DIRECTIONAL_LIGHT ".direction",      transform->direction());
-            m_forward_directional->setUniform("s_light_matrix", light_matrix);
+            m_forwardDirectional->setUniform(S_DIRECTIONAL_LIGHT ".base.color",     directionalLight->color);
+            m_forwardDirectional->setUniform(S_DIRECTIONAL_LIGHT ".base.intensity", directionalLight->intensity);
+            m_forwardDirectional->setUniform(S_DIRECTIONAL_LIGHT ".direction",      transform->getDirection());
+            m_forwardDirectional->setUniform("s_light_matrix", lightMatrix);
 
             beginForwardRendering();
-            renderOpaque(m_forward_directional);
+            renderOpaque(m_forwardDirectional);
             endForwardRendering();
         }
 
         /* Point Lights */
-        for (auto entity : entities.entities_with_components(point_light, transform))
+        for (auto entity : entities.entities_with_components(pointLight, transform))
         {
-            ShadowInfo shadow_info = point_light->getShadowInfo();
-            glm::mat4 light_matrices[6];
+            ShadowInfo shadowInfo = pointLight->getShadowInfo();
+            glm::mat4 lightMatrices[6];
 
-            if (shadow_info.getCastsShadows())
+            if (shadowInfo.getCastsShadows())
             {
-                m_omni_shadow_map_generator->bind();
+                m_omniShadowMapGenerator->bind();
 
-                m_omni_shadow_map->bind();
+                m_omniShadowMap->bind();
                 glClear(GL_DEPTH_BUFFER_BIT);
 
-                light_matrices[0] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 1,  0,  0), glm::vec3(0, -1,  0));
-                light_matrices[1] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3(-1,  0,  0), glm::vec3(0, -1,  0));
-                light_matrices[2] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 0,  1,  0), glm::vec3(0,  0,  1));
-                light_matrices[3] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 0, -1,  0), glm::vec3(0,  0, -1));
-                light_matrices[4] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 0,  0,  1), glm::vec3(0, -1,  0));
-                light_matrices[5] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 0,  0, -1), glm::vec3(0, -1,  0));
+                lightMatrices[0] = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + glm::vec3( 1,  0,  0), glm::vec3(0, -1,  0));
+                lightMatrices[1] = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + glm::vec3(-1,  0,  0), glm::vec3(0, -1,  0));
+                lightMatrices[2] = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + glm::vec3( 0,  1,  0), glm::vec3(0,  0,  1));
+                lightMatrices[3] = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + glm::vec3( 0, -1,  0), glm::vec3(0,  0, -1));
+                lightMatrices[4] = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + glm::vec3( 0,  0,  1), glm::vec3(0, -1,  0));
+                lightMatrices[5] = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + glm::vec3( 0,  0, -1), glm::vec3(0, -1,  0));
 
-                m_omni_shadow_map_generator->setUniform("s_light_matrices", light_matrices, 6);
-                m_omni_shadow_map_generator->setUniform("s_light_pos", transform->position());
-                m_omni_shadow_map_generator->setUniform("s_far_plane", 100.0f);
+                m_omniShadowMapGenerator->setUniform("s_light_matrices", lightMatrices, 6);
+                m_omniShadowMapGenerator->setUniform("s_light_pos",      transform->getPosition());
+                m_omniShadowMapGenerator->setUniform("s_far_plane",      100.0f);
 
                 glCullFace(GL_FRONT);
-                renderOpaque(m_omni_shadow_map_generator);
-                renderEnviroMappingStatic(m_omni_shadow_map_generator);
+                renderOpaque(m_omniShadowMapGenerator);
+                renderEnviroMappingStatic(m_omniShadowMapGenerator);
                 glCullFace(GL_BACK);
             }
 
             bindMainRenderTarget();
 
-            m_forward_point->bind();
-            m_omni_shadow_map->bindTexture(SHADOW_MAP);
+            m_forwardPoint->bind();
+            m_omniShadowMap->bindTexture(SHADOW_MAP);
 
-            m_forward_point->setUniform(S_POINT_LIGHT ".base.color",      point_light->m_color);
-            m_forward_point->setUniform(S_POINT_LIGHT ".base.intensity",  point_light->m_intensity);
-            m_forward_point->setUniform(S_POINT_LIGHT ".atten.constant",  point_light->m_attenuation.m_constant);
-            m_forward_point->setUniform(S_POINT_LIGHT ".atten.linear",    point_light->m_attenuation.m_linear);
-            m_forward_point->setUniform(S_POINT_LIGHT ".atten.quadratic", point_light->m_attenuation.m_quadratic);
-            m_forward_point->setUniform(S_POINT_LIGHT ".position",        transform->position());
-            m_forward_point->setUniform(S_POINT_LIGHT ".range",           point_light->m_range);
-            m_forward_point->setUniform("s_far_plane", 100.0f);
+            m_forwardPoint->setUniform(S_POINT_LIGHT ".base.color",      pointLight->color);
+            m_forwardPoint->setUniform(S_POINT_LIGHT ".base.intensity",  pointLight->intensity);
+            m_forwardPoint->setUniform(S_POINT_LIGHT ".atten.constant",  pointLight->attenuation.constant);
+            m_forwardPoint->setUniform(S_POINT_LIGHT ".atten.linear",    pointLight->attenuation.linear);
+            m_forwardPoint->setUniform(S_POINT_LIGHT ".atten.quadratic", pointLight->attenuation.quadratic);
+            m_forwardPoint->setUniform(S_POINT_LIGHT ".position",        transform->getPosition());
+            m_forwardPoint->setUniform(S_POINT_LIGHT ".range",           pointLight->range);
+            m_forwardPoint->setUniform("s_far_plane", 100.0f);
 
             beginForwardRendering();
-            renderOpaque(m_forward_point);
+            renderOpaque(m_forwardPoint);
             endForwardRendering();
         }
 
         /* Spot Lights */
-        for (auto entity : entities.entities_with_components(spot_light, transform))
+        for (auto entity : entities.entities_with_components(spotLight, transform))
         {
-            ShadowInfo shadow_info = spot_light->getShadowInfo();
-            glm::mat4 light_matrix = glm::mat4(0.0f);
+            ShadowInfo shadowInfo = spotLight->getShadowInfo();
+            glm::mat4 lightMatrix = glm::mat4(0.0f);
 
-            if (shadow_info.getCastsShadows())
+            if (shadowInfo.getCastsShadows())
             {
-                m_shadow_map_generator->bind();
+                m_shadowMapGenerator->bind();
 
-                m_spot_shadow_map->bind();
+                m_spotShadowMap->bind();
                 glClear(GL_DEPTH_BUFFER_BIT);
 
-                light_matrix = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + transform->direction(), glm::vec3(0, 1, 0));
-                m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
+                lightMatrix = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + transform->getDirection(), glm::vec3(0, 1, 0));
+                m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                 glCullFace(GL_FRONT);
-                renderOpaque(m_shadow_map_generator);
-                renderEnviroMappingStatic(m_shadow_map_generator);
+                renderOpaque(m_shadowMapGenerator);
+                renderEnviroMappingStatic(m_shadowMapGenerator);
                 glCullFace(GL_BACK);
             }
 
             bindMainRenderTarget();
 
-            m_forward_spot->bind();
-            m_spot_shadow_map->bindTexture(SHADOW_MAP);
+            m_forwardSpot->bind();
+            m_spotShadowMap->bindTexture(SHADOW_MAP);
 
-            m_forward_spot->setUniform(S_SPOT_LIGHT ".point.base.color",      spot_light->m_color);
-            m_forward_spot->setUniform(S_SPOT_LIGHT ".point.base.intensity",  spot_light->m_intensity);
-            m_forward_spot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spot_light->m_attenuation.m_constant);
-            m_forward_spot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spot_light->m_attenuation.m_linear);
-            m_forward_spot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spot_light->m_attenuation.m_quadratic);
-            m_forward_spot->setUniform(S_SPOT_LIGHT ".point.position",        transform->position());
-            m_forward_spot->setUniform(S_SPOT_LIGHT ".point.range",           spot_light->m_range);
-            m_forward_spot->setUniform(S_SPOT_LIGHT ".direction",             transform->direction());
-            m_forward_spot->setUniform(S_SPOT_LIGHT ".cutoff",                spot_light->getCutOffAngle());
-            m_forward_spot->setUniform("s_light_matrix", light_matrix);
+            m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.base.color",      spotLight->color);
+            m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.base.intensity",  spotLight->intensity);
+            m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spotLight->attenuation.constant);
+            m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spotLight->attenuation.linear);
+            m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spotLight->attenuation.quadratic);
+            m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.position",        transform->getPosition());
+            m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.range",           spotLight->range);
+            m_forwardSpot->setUniform(S_SPOT_LIGHT ".direction",             transform->getDirection());
+            m_forwardSpot->setUniform(S_SPOT_LIGHT ".cutoff",                spotLight->getCutOffAngle());
+            m_forwardSpot->setUniform("s_light_matrix", lightMatrix);
 
             beginForwardRendering();
-            renderOpaque(m_forward_spot);
+            renderOpaque(m_forwardSpot);
             endForwardRendering();
         }
     }
 
     void RenderingSystem::renderLightsDeferred(entityx::EntityManager& entities)
     {
-        entityx::ComponentHandle<DirectionalLightComponent> directional_light;
-        entityx::ComponentHandle<PointLightComponent>       point_light;
-        entityx::ComponentHandle<SpotLightComponent>        spot_light;
+        entityx::ComponentHandle<DirectionalLightComponent> directionalLight;
+        entityx::ComponentHandle<PointLightComponent>       pointLight;
+        entityx::ComponentHandle<SpotLightComponent>        spotLight;
         entityx::ComponentHandle<TransformComponent>        transform;
 
         /* Directional Lights */
-        for(auto entity : entities.entities_with_components(directional_light, transform))
+        for(auto entity : entities.entities_with_components(directionalLight, transform))
         {
-            ShadowInfo shadow_info = directional_light->getShadowInfo();
-            glm::mat4 light_matrix = glm::mat4(0.0f);
+            ShadowInfo shadowInfo = directionalLight->getShadowInfo();
+            glm::mat4 lightMatrix = glm::mat4(0.0f);
 
-            if(shadow_info.getCastsShadows())
+            if(shadowInfo.getCastsShadows())
             {
                 glEnable(GL_DEPTH_TEST);
                 glDepthMask(GL_TRUE);
 
-                m_shadow_map_generator->bind();
-                m_dir_shadow_map->bind();
+                m_shadowMapGenerator->bind();
+                m_dirShadowMap->bind();
                 glClear(GL_DEPTH_BUFFER_BIT);
 
-                light_matrix = shadow_info.getProjection() * glm::lookAt(-transform->direction(), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-                m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
+                lightMatrix = shadowInfo.getProjection() * glm::lookAt(-transform->getDirection(), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+                m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                 glCullFace(GL_FRONT);
-                renderOpaque(m_shadow_map_generator);
-                renderEnviroMappingStatic(m_shadow_map_generator);
+                renderOpaque(m_shadowMapGenerator);
+                renderEnviroMappingStatic(m_shadowMapGenerator);
                 glCullFace(GL_BACK);
 
                 glDepthMask(GL_FALSE);
@@ -717,50 +716,50 @@ namespace mango
 
             bindMainRenderTarget();
 
-            m_deferred_directional->bind();
-            m_deferred_rendering->bindGBufferTextures();
-            m_dir_shadow_map->bindTexture(SHADOW_MAP);
+            m_deferredDirectional->bind();
+            m_deferredRendering->bindGBufferTextures();
+            m_dirShadowMap->bindTexture(SHADOW_MAP);
 
-            m_deferred_directional->setUniform("s_scene_ambient", m_scene_ambient_color);
-            m_deferred_directional->setUniform(S_DIRECTIONAL_LIGHT ".base.color",     directional_light->m_color);
-            m_deferred_directional->setUniform(S_DIRECTIONAL_LIGHT ".base.intensity", directional_light->m_intensity);
-            m_deferred_directional->setUniform(S_DIRECTIONAL_LIGHT ".direction",      transform->direction());
-            m_deferred_directional->setUniform("s_light_matrix", light_matrix);
+            m_deferredDirectional->setUniform("s_scene_ambient", sceneAmbientColor);
+            m_deferredDirectional->setUniform(S_DIRECTIONAL_LIGHT ".base.color",     directionalLight->color);
+            m_deferredDirectional->setUniform(S_DIRECTIONAL_LIGHT ".base.intensity", directionalLight->intensity);
+            m_deferredDirectional->setUniform(S_DIRECTIONAL_LIGHT ".direction",      transform->getDirection());
+            m_deferredDirectional->setUniform("s_light_matrix", lightMatrix);
 
-            m_deferred_rendering->render();
+            m_deferredRendering->render();
         }
 
         /* Point Lights */
         glEnable(GL_STENCIL_TEST);
-        for (auto entity : entities.entities_with_components(point_light, transform))
+        for (auto entity : entities.entities_with_components(pointLight, transform))
         {
-            ShadowInfo shadow_info = point_light->getShadowInfo();
-            glm::mat4 light_matrices[6];
+            ShadowInfo shadowInfo = pointLight->getShadowInfo();
+            glm::mat4 lightMatrices[6];
 
-            if (shadow_info.getCastsShadows())
+            if (shadowInfo.getCastsShadows())
             {
                 glEnable(GL_DEPTH_TEST);
                 glDepthMask(GL_TRUE);
 
-                m_omni_shadow_map_generator->bind();
+                m_omniShadowMapGenerator->bind();
 
-                m_omni_shadow_map->bind();
+                m_omniShadowMap->bind();
                 glClear(GL_DEPTH_BUFFER_BIT);
 
-                light_matrices[0] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 1,  0,  0), glm::vec3(0, -1,  0));
-                light_matrices[1] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3(-1,  0,  0), glm::vec3(0, -1,  0));
-                light_matrices[2] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 0,  1,  0), glm::vec3(0,  0,  1));
-                light_matrices[3] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 0, -1,  0), glm::vec3(0,  0, -1));
-                light_matrices[4] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 0,  0,  1), glm::vec3(0, -1,  0));
-                light_matrices[5] = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + glm::vec3( 0,  0, -1), glm::vec3(0, -1,  0));
+                lightMatrices[0] = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + glm::vec3( 1,  0,  0), glm::vec3(0, -1,  0));
+                lightMatrices[1] = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + glm::vec3(-1,  0,  0), glm::vec3(0, -1,  0));
+                lightMatrices[2] = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + glm::vec3( 0,  1,  0), glm::vec3(0,  0,  1));
+                lightMatrices[3] = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + glm::vec3( 0, -1,  0), glm::vec3(0,  0, -1));
+                lightMatrices[4] = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + glm::vec3( 0,  0,  1), glm::vec3(0, -1,  0));
+                lightMatrices[5] = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + glm::vec3( 0,  0, -1), glm::vec3(0, -1,  0));
 
-                m_omni_shadow_map_generator->setUniform("s_light_matrices", light_matrices, 6);
-                m_omni_shadow_map_generator->setUniform("s_light_pos", transform->position());
-                m_omni_shadow_map_generator->setUniform("s_far_plane", 100.0f);
+                m_omniShadowMapGenerator->setUniform("s_light_matrices", lightMatrices, 6);
+                m_omniShadowMapGenerator->setUniform("s_light_pos", transform->getPosition());
+                m_omniShadowMapGenerator->setUniform("s_far_plane", 100.0f);
 
                 glCullFace(GL_FRONT);
-                renderOpaque(m_omni_shadow_map_generator);
-                renderEnviroMappingStatic(m_omni_shadow_map_generator);
+                renderOpaque(m_omniShadowMapGenerator);
+                renderEnviroMappingStatic(m_omniShadowMapGenerator);
                 glCullFace(GL_BACK);
 
                 glDepthMask(GL_FALSE);
@@ -770,14 +769,14 @@ namespace mango
             bindMainRenderTarget();
 
             /* Bounding sphere MVP matrix setup */
-            auto model       = glm::translate(glm::mat4(1.0f), transform->position()) *
-                               glm::scale(glm::mat4(1.0f), glm::vec3(point_light->m_range));
-            auto view        = CoreServices::getRenderer()->getCamera()->m_view;
-            auto projection  = CoreServices::getRenderer()->getCamera()->m_projection;
-            auto mvp = projection * view * model;
+            auto model       = glm::translate(glm::mat4(1.0f), transform->getPosition()) *
+                               glm::scale(glm::mat4(1.0f), glm::vec3(pointLight->range));
+            auto view        = CoreServices::getRenderer()->getCamera()->view;
+            auto projection  = CoreServices::getRenderer()->getCamera()->projection;
+            auto mvp         = projection * view * model;
 
             /* Stencil pass */
-            m_null_shader->bind();
+            m_nullShader->bind();
             glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
             glEnable(GL_DEPTH_TEST);
@@ -788,8 +787,8 @@ namespace mango
             glStencilOpSeparate(GL_BACK, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
             glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 
-            m_null_shader->setUniform("g_mvp", mvp);
-            m_light_bsphere.render(*m_null_shader);
+            m_nullShader->setUniform("g_mvp", mvp);
+            m_lightBoundingSphere.render(*m_nullShader);
 
             glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
@@ -803,48 +802,48 @@ namespace mango
             glEnable(GL_CULL_FACE);
             glCullFace(GL_FRONT);
 
-            m_deferred_point->bind();
-            m_deferred_rendering->bindGBufferTextures();
-            m_omni_shadow_map->bindTexture(SHADOW_MAP);
+            m_deferredPoint->bind();
+            m_deferredRendering->bindGBufferTextures();
+            m_omniShadowMap->bindTexture(SHADOW_MAP);
 
-            m_deferred_point->setUniform(S_POINT_LIGHT ".base.color",      point_light->m_color);
-            m_deferred_point->setUniform(S_POINT_LIGHT ".base.intensity",  point_light->m_intensity);
-            m_deferred_point->setUniform(S_POINT_LIGHT ".atten.constant",  point_light->m_attenuation.m_constant);
-            m_deferred_point->setUniform(S_POINT_LIGHT ".atten.linear",    point_light->m_attenuation.m_linear);
-            m_deferred_point->setUniform(S_POINT_LIGHT ".atten.quadratic", point_light->m_attenuation.m_quadratic);
-            m_deferred_point->setUniform(S_POINT_LIGHT ".position",        transform->position());
-            m_deferred_point->setUniform(S_POINT_LIGHT ".range",           point_light->m_range);
-            m_deferred_point->setUniform("s_far_plane", 100.0f);
+            m_deferredPoint->setUniform(S_POINT_LIGHT ".base.color",      pointLight->color);
+            m_deferredPoint->setUniform(S_POINT_LIGHT ".base.intensity",  pointLight->intensity);
+            m_deferredPoint->setUniform(S_POINT_LIGHT ".atten.constant",  pointLight->attenuation.constant);
+            m_deferredPoint->setUniform(S_POINT_LIGHT ".atten.linear",    pointLight->attenuation.linear);
+            m_deferredPoint->setUniform(S_POINT_LIGHT ".atten.quadratic", pointLight->attenuation.quadratic);
+            m_deferredPoint->setUniform(S_POINT_LIGHT ".position",        transform->getPosition());
+            m_deferredPoint->setUniform(S_POINT_LIGHT ".range",           pointLight->range);
+            m_deferredPoint->setUniform("s_far_plane", 100.0f);
 
-            m_deferred_point->setUniform("g_mvp", mvp);
-            m_light_bsphere.render(*m_deferred_point);
+            m_deferredPoint->setUniform("g_mvp", mvp);
+            m_lightBoundingSphere.render(*m_deferredPoint);
 
             glCullFace(GL_BACK);
             glDisable(GL_BLEND);
         }
 
         /* Spot Lights */
-        for (auto entity : entities.entities_with_components(spot_light, transform))
+        for (auto entity : entities.entities_with_components(spotLight, transform))
         {
-            ShadowInfo shadow_info = spot_light->getShadowInfo();
-            glm::mat4 light_matrix = glm::mat4(0.0f);
+            ShadowInfo shadowInfo = spotLight->getShadowInfo();
+            glm::mat4 lightMatrix = glm::mat4(0.0f);
 
-            if (shadow_info.getCastsShadows())
+            if (shadowInfo.getCastsShadows())
             {
                 glEnable(GL_DEPTH_TEST);
                 glDepthMask(GL_TRUE);
 
-                m_shadow_map_generator->bind();
+                m_shadowMapGenerator->bind();
 
-                m_spot_shadow_map->bind();
+                m_spotShadowMap->bind();
                 glClear(GL_DEPTH_BUFFER_BIT);
 
-                light_matrix = shadow_info.getProjection() * glm::lookAt(transform->position(), transform->position() + transform->direction(), glm::vec3(0, 1, 0));
-                m_shadow_map_generator->setUniform("s_light_matrix", light_matrix);
+                lightMatrix = shadowInfo.getProjection() * glm::lookAt(transform->getPosition(), transform->getPosition() + transform->getDirection(), glm::vec3(0, 1, 0));
+                m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                 glCullFace(GL_FRONT);
-                renderOpaque(m_shadow_map_generator);
-                renderEnviroMappingStatic(m_shadow_map_generator);
+                renderOpaque(m_shadowMapGenerator);
+                renderEnviroMappingStatic(m_shadowMapGenerator);
                 glCullFace(GL_BACK);
 
                 glDepthMask(GL_FALSE);
@@ -854,18 +853,18 @@ namespace mango
             bindMainRenderTarget();
 
             /* Bounding cone MVP matrix setup */
-            float scale_height = spot_light->m_range;
-            float scale_radius = spot_light->m_range * glm::tan(glm::acos(spot_light->getCutOffAngle()));
+            float heightScale = spotLight->range;
+            float radiusScale = spotLight->range * glm::tan(glm::acos(spotLight->getCutOffAngle()));
 
-            auto model      = glm::translate(glm::mat4(1.0f), transform->position()) *
-                              glm::mat4_cast(glm::inverse(transform->orientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
-                              glm::scale(glm::mat4(1.0f), glm::vec3(scale_radius, scale_height, scale_radius));
-            auto view        = CoreServices::getRenderer()->getCamera()->m_view;
-            auto projection  = CoreServices::getRenderer()->getCamera()->m_projection;
-            auto mvp = projection * view * model;
+            auto model      = glm::translate(glm::mat4(1.0f), transform->getPosition()) *
+                              glm::mat4_cast(glm::inverse(transform->getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
+                              glm::scale(glm::mat4(1.0f), glm::vec3(radiusScale, heightScale, radiusScale));
+            auto view        = CoreServices::getRenderer()->getCamera()->view;
+            auto projection  = CoreServices::getRenderer()->getCamera()->projection;
+            auto mvp         = projection * view * model;
 
             /* Stencil pass */
-            m_null_shader->bind();
+            m_nullShader->bind();
             glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
             glEnable(GL_DEPTH_TEST);
@@ -876,8 +875,8 @@ namespace mango
             glStencilOpSeparate(GL_BACK, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
             glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 
-            m_null_shader->setUniform("g_mvp", mvp);
-            m_light_bcone.render(*m_null_shader);
+            m_nullShader->setUniform("g_mvp", mvp);
+            m_lightBoundingCone.render(*m_nullShader);
 
             glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
@@ -891,23 +890,23 @@ namespace mango
             glEnable(GL_CULL_FACE);
             glCullFace(GL_FRONT);
 
-            m_deferred_spot->bind();
-            m_deferred_rendering->bindGBufferTextures();
-            m_spot_shadow_map->bindTexture(SHADOW_MAP);
+            m_deferredSpot->bind();
+            m_deferredRendering->bindGBufferTextures();
+            m_spotShadowMap->bindTexture(SHADOW_MAP);
 
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.base.color",      spot_light->m_color);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.base.intensity",  spot_light->m_intensity);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spot_light->m_attenuation.m_constant);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spot_light->m_attenuation.m_linear);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spot_light->m_attenuation.m_quadratic);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.position",        transform->position());
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".point.range",           spot_light->m_range);
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".direction",             transform->direction());
-            m_deferred_spot->setUniform(S_SPOT_LIGHT ".cutoff",                spot_light->getCutOffAngle());
-            m_deferred_spot->setUniform("s_light_matrix", light_matrix);
+            m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.base.color",      spotLight->color);
+            m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.base.intensity",  spotLight->intensity);
+            m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spotLight->attenuation.constant);
+            m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spotLight->attenuation.linear);
+            m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spotLight->attenuation.quadratic);
+            m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.position",        transform->getPosition());
+            m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.range",           spotLight->range);
+            m_deferredSpot->setUniform(S_SPOT_LIGHT ".direction",             transform->getDirection());
+            m_deferredSpot->setUniform(S_SPOT_LIGHT ".cutoff",                spotLight->getCutOffAngle());
+            m_deferredSpot->setUniform("s_light_matrix", lightMatrix);
 
-            m_deferred_spot->setUniform("g_mvp", mvp);
-            m_light_bcone.render(*m_deferred_point);
+            m_deferredSpot->setUniform("g_mvp", mvp);
+            m_lightBoundingCone.render(*m_deferredPoint);
 
             glCullFace(GL_BACK);
             glDisable(GL_BLEND);
@@ -917,15 +916,15 @@ namespace mango
 
     void RenderingSystem::sortAlpha()
     {
-        auto cam_pos = getCameraTransform()->position();
+        auto camPos = getCameraTransform()->getPosition();
 
-        std::sort(m_alpha_queue.begin(), m_alpha_queue.end(), 
-                   [&cam_pos](entityx::Entity & obj1, entityx::Entity & obj2)
+        std::sort(m_alphaQueue.begin(), m_alphaQueue.end(), 
+                   [&camPos](entityx::Entity & obj1, entityx::Entity & obj2)
                          {
-                            const auto pos1 = obj1.component<TransformComponent>()->position();
-                            const auto pos2 = obj2.component<TransformComponent>()->position();
+                            const auto pos1 = obj1.component<TransformComponent>()->getPosition();
+                            const auto pos2 = obj2.component<TransformComponent>()->getPosition();
 
-                            return glm::length(cam_pos - pos1) >= glm::length(cam_pos - pos2);
+                            return glm::length(camPos - pos1) >= glm::length(camPos - pos2);
                          });
     }
 }

@@ -37,17 +37,17 @@ namespace mango
     namespace
     {
 
-        asserts::FailBehavior DefaultHandler(const char* condition,
-                                            const char* msg,
-                                            const char* file,
-                                            const int line)
+        asserts::FailBehavior defaultHandler(const char* condition,
+                                             const char* msg,
+                                             const char* file,
+                                             const int   line)
         {
             std::printf("%s(%d): Assert Failure: ", file, line);
 
-            if (condition != NULL)
+            if (condition != nullptr)
                 std::printf("'%s' ", condition);
 
-            if (msg != NULL)
+            if (msg != nullptr)
                 std::printf("%s", msg);
 
             std::printf("\n");
@@ -55,9 +55,9 @@ namespace mango
             return asserts::Halt;
         }
 
-        asserts::Handler& GetAssertHandlerInstance()
+        asserts::Handler& getAssertHandlerInstance()
         {
-            static asserts::Handler s_handler = &DefaultHandler;
+            static asserts::Handler s_handler = &defaultHandler;
             return s_handler;
         }
 
@@ -65,21 +65,22 @@ namespace mango
 
     asserts::Handler asserts::getHandler()
     {
-        return GetAssertHandlerInstance();
+        return getAssertHandlerInstance();
     }
 
     void asserts::setHandler(Handler newHandler)
     {
-        GetAssertHandlerInstance() = newHandler;
+        getAssertHandlerInstance() = newHandler;
     }
 
     asserts::FailBehavior asserts::reportFailure(const char* condition,
-                                               const char* file,
-                                               const int   line,
-                                               const char* msg, ...)
+                                                 const char* file,
+                                                 const int   line,
+                                                 const char* msg, 
+                                                 ...)
     {
-        const char* message = NULL;
-        if (msg != NULL)
+        const char* message = nullptr;
+        if (msg != nullptr)
         {
             char messageBuffer[1024];
             {
@@ -92,7 +93,7 @@ namespace mango
             message = messageBuffer;
         }
 
-        return GetAssertHandlerInstance()(condition, message, file, line);
+        return getAssertHandlerInstance()(condition, message, file, line);
     }
 
 }

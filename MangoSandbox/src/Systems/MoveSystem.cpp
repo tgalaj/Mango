@@ -15,31 +15,31 @@ void MoveSystem::update(entityx::EntityManager& entities, entityx::EventManager&
 {
     entityx::ComponentHandle<mango::TransformComponent> transform;
     entityx::ComponentHandle<MoveSystemComponent> msc;
-    entityx::ComponentHandle<mango::PointLightComponent> point_light;
-    entityx::ComponentHandle<mango::SpotLightComponent> spot_light;
+    entityx::ComponentHandle<mango::PointLightComponent> pointLight;
+    entityx::ComponentHandle<mango::SpotLightComponent> spotLight;
     
     static float acc = 0.0f;
     acc += dt / 6.0f;
 
-    for(auto entity : entities.entities_with_components(transform, msc, point_light))
+    for(auto entity : entities.entities_with_components(transform, msc, pointLight))
     {
-        glm::vec3 delta = transform->position() - glm::vec3(0.0f);
+        glm::vec3 delta = transform->getPosition() - glm::vec3(0.0f);
 
-        float r = 8.0f * glm::abs(glm::sin(acc));
-        float current_angle = atan2(delta.z, delta.x);
+        float r            = 8.0f * glm::abs(glm::sin(acc));
+        float currentAngle = atan2(delta.z, delta.x);
 
-        auto position = transform->position();
-        position.x = r * glm::cos(current_angle + dt);
-        position.z = r * glm::sin(current_angle + dt);
+        auto position   = transform->getPosition();
+             position.x = r * glm::cos(currentAngle + dt);
+             position.z = r * glm::sin(currentAngle + dt);
 
         transform->setPosition(position);
     }
 
-    for(auto entity : entities.entities_with_components(transform, msc, spot_light))
+    for(auto entity : entities.entities_with_components(transform, msc, spotLight))
     {
-        glm::quat previous_orientation = transform->orientation();
+        glm::quat previousOrientation = transform->getOrientation();
 
         transform->setOrientation(0.0f, 0.025f, 0.0f);
-        transform->setOrientation(previous_orientation * transform->orientation());
+        transform->setOrientation(previousOrientation * transform->getOrientation());
     }
 }

@@ -29,7 +29,7 @@ namespace mango
         void setOrientation(const glm::vec3 & axis, float angle);
         void setOrientation(const glm::quat & quat);
         void setScale(float x, float y, float z);
-        void setScale(float uniform_scale);
+        void setScale(float uniformScale);
         void addChild(GameObject & child);
 
     protected:

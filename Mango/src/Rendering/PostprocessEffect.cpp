@@ -7,21 +7,21 @@ namespace mango
 {
     PostprocessEffect::PostprocessEffect()
     {
-        glGenVertexArrays(1, &m_dummy_vao_id);
+        glGenVertexArrays(1, &m_dummyVao);
     }
 
     PostprocessEffect::~PostprocessEffect()
     {
-        if(m_dummy_vao_id != 0)
+        if(m_dummyVao != 0)
         {
-            glDeleteVertexArrays(1, &m_dummy_vao_id);
-            m_dummy_vao_id = 0;
+            glDeleteVertexArrays(1, &m_dummyVao);
+            m_dummyVao = 0;
         }
     }
 
-    void PostprocessEffect::init(const std::string & filter_name, const std::string & fragment_shader_path)
+    void PostprocessEffect::init(const std::string & filterName, const std::filesystem::path & fragmentShaderFilepath)
     {
-        m_postprocess = CoreAssetManager::createShader(filter_name, "FSQ.vert", fragment_shader_path);
+        m_postprocess = CoreAssetManager::createShader(filterName, "FSQ.vert", fragmentShaderFilepath);
         m_postprocess->link();
     }
 
@@ -32,7 +32,7 @@ namespace mango
 
     void PostprocessEffect::render() const
     {
-        glBindVertexArray(m_dummy_vao_id);
+        glBindVertexArray(m_dummyVao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
     }
 }

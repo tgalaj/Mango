@@ -1,20 +1,22 @@
+#define GLFW_INCLUDE_NONE 
+
 #include "TestDemo.h"
-#include "CoreEngine/CoreAssetManager.h"
 #include "CoreComponents/CameraComponent.h"
-#include "Window/Window.h"
+#include "CoreComponents/DirectionalLightComponent.h"
 #include "CoreComponents/FreeLookComponent.h"
 #include "CoreComponents/FreeMoveComponent.h"
 #include "CoreComponents/ModelRendererComponent.h"
 #include "CoreComponents/PointLightComponent.h"
-#include "CoreComponents/DirectionalLightComponent.h"
-#include "CoreComponents/TransformComponent.h"
 #include "CoreComponents/SpotLightComponent.h"
-#include "Window/Input.h"
+#include "CoreComponents/TransformComponent.h"
+#include "CoreEngine/CoreAssetManager.h"
 #include "CoreEngine/CoreServices.h"
-#include "imgui.h"
 #include "CoreEngine/GameObject.h"
-#include "Systems/MoveSystem.h"
 #include "GUI/GUI.h"
+#include "imgui.h"
+#include "Systems/MoveSystem.h"
+#include "Window/Input.h"
+#include "Window/Window.h"
 
 TestDemo::TestDemo()
 {
@@ -51,130 +53,130 @@ void TestDemo::init()
                                                    "back.jpg" );
     mango::CoreServices::getRenderer()->setSkybox(skybox);
 
-    auto sphere_model = mango::CoreAssetManager::createModel();
-    sphere_model.genSphere(0.5f, 24);
+    auto sphereModel = mango::CoreAssetManager::createModel();
+    sphereModel.genSphere(0.5f, 24);
 
-    auto cyborg_model = mango::CoreAssetManager::createModel("assets/models/cyborg/cyborg.obj");
-    auto zen3c_model = mango::CoreAssetManager::createModel("assets/models/Zen3C/Zen3C.X");
-    auto damaged_helmet_model = mango::CoreAssetManager::createModel("assets/models/damaged_helmet/DamagedHelmet.gltf");
-    auto sponza_model = mango::CoreAssetManager::createModel("assets/models/sponza/Sponza.gltf");
+    auto cyborgModel        = mango::CoreAssetManager::createModel("assets/models/cyborg/cyborg.obj");
+    auto zen3cModel         = mango::CoreAssetManager::createModel("assets/models/Zen3C/Zen3C.X");
+    auto damagedHelmetModel = mango::CoreAssetManager::createModel("assets/models/damaged_helmet/DamagedHelmet.gltf");
+    auto sponzaModel        = mango::CoreAssetManager::createModel("assets/models/sponza/Sponza.gltf");
 
-    auto wall_model = mango::CoreAssetManager::createModel();
-    wall_model.genQuad(5, 5);
+    auto wallModel = mango::CoreAssetManager::createModel();
+    wallModel.genQuad(5, 5);
 
-    auto ground_tex           = mango::CoreAssetManager::createTexture2D("assets/textures/trak_tile_g.jpg", true);
-    auto brickwall_tex        = mango::CoreAssetManager::createTexture2D("assets/textures/brickwall.jpg", true);
-    auto brickwall_normal_tex = mango::CoreAssetManager::createTexture2D("assets/textures/brickwall_normal.jpg");
-    auto bricks2              = mango::CoreAssetManager::createTexture2D("assets/textures/bricks2.jpg", true);
-    auto bricks2_depth        = mango::CoreAssetManager::createTexture2D("assets/textures/bricks2_disp.jpg");
-    auto bricks2_normal       = mango::CoreAssetManager::createTexture2D("assets/textures/bricks2_normal.jpg");
-    auto window_tex           = mango::CoreAssetManager::createTexture2D("assets/textures/window.png");
-    auto grass_tex            = mango::CoreAssetManager::createTexture2D("assets/textures/grass.png");
-    auto opengl_logo          = mango::CoreAssetManager::createTexture2D("assets/textures/opengl.png");
+    auto groundTex           = mango::CoreAssetManager::createTexture2D("assets/textures/trak_tile_g.jpg", true);
+    auto brickwallTex        = mango::CoreAssetManager::createTexture2D("assets/textures/brickwall.jpg", true);
+    auto brickwallNormalTex  = mango::CoreAssetManager::createTexture2D("assets/textures/brickwall_normal.jpg");
+    auto bricks2             = mango::CoreAssetManager::createTexture2D("assets/textures/bricks2.jpg", true);
+    auto bricks2Depth        = mango::CoreAssetManager::createTexture2D("assets/textures/bricks2_disp.jpg");
+    auto bricks2Normal       = mango::CoreAssetManager::createTexture2D("assets/textures/bricks2_normal.jpg");
+    auto windowTex           = mango::CoreAssetManager::createTexture2D("assets/textures/window.png");
+    auto grassTex            = mango::CoreAssetManager::createTexture2D("assets/textures/grass.png");
+    auto openglLogo          = mango::CoreAssetManager::createTexture2D("assets/textures/opengl.png");
 
     auto cyborg = mango::CoreAssetManager::createGameObject();
-    cyborg.addComponent<mango::ModelRendererComponent>(cyborg_model);
+    cyborg.addComponent<mango::ModelRendererComponent>(cyborgModel);
     cyborg.setPosition(0.0f, 0.0f, 0.0f);
     cyborg.setScale(1.0f);
 
     auto zen3c = mango::CoreAssetManager::createGameObject();
-    zen3c.addComponent<mango::ModelRendererComponent>(zen3c_model);
+    zen3c.addComponent<mango::ModelRendererComponent>(zen3cModel);
     zen3c.setPosition(-3.0f, -2.3f, 0.0f);
     zen3c.setScale(0.018f);
 
-    auto damaged_helmet = mango::CoreAssetManager::createGameObject();
-    damaged_helmet.addComponent<mango::ModelRendererComponent>(damaged_helmet_model);
-    damaged_helmet.setPosition(3.0f, 2.5f, 0.0f);
-    damaged_helmet.setScale(1.0f);
+    auto damagedHelmet = mango::CoreAssetManager::createGameObject();
+    damagedHelmet.addComponent<mango::ModelRendererComponent>(damagedHelmetModel);
+    damagedHelmet.setPosition(3.0f, 2.5f, 0.0f);
+    damagedHelmet.setScale(1.0f);
 
     auto sponza = mango::CoreAssetManager::createGameObject();
-    sponza.addComponent<mango::ModelRendererComponent>(sponza_model);
+    sponza.addComponent<mango::ModelRendererComponent>(sponzaModel);
     sponza.setPosition(-1.5f, 0.0f, 10.0f);
     sponza.setOrientation(0.0f, -90.0f, 0.0f);
     sponza.setScale(6.0f);
 
     auto wall = mango::CoreAssetManager::createGameObject();
-    wall.addComponent<mango::ModelRendererComponent>(wall_model);
-    wall.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(mango::Material::TextureType::DIFFUSE, brickwall_tex);
-    wall.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(mango::Material::TextureType::NORMAL, brickwall_normal_tex);
-    //wall.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(mango::Material::TextureType::DEPTH, bricks2_depth);
+    wall.addComponent<mango::ModelRendererComponent>(wallModel);
+    wall.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addTexture(mango::Material::TextureType::DIFFUSE, brickwallTex);
+    wall.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addTexture(mango::Material::TextureType::NORMAL, brickwallNormalTex);
+    //wall.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addTexture(mango::Material::TextureType::DEPTH, bricks2Depth);
     wall.setOrientation(90.0f, 0.0f, 0.0f);
     wall.setPosition(0, 2.0, -9);
 
     auto wall2 = mango::CoreAssetManager::createGameObject();
-    wall2.addComponent<mango::ModelRendererComponent>(wall_model);
-    wall2.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(mango::Material::TextureType::DIFFUSE, bricks2);
-    wall2.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(mango::Material::TextureType::NORMAL, bricks2_normal);
-    wall2.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(mango::Material::TextureType::DEPTH, bricks2_depth);
+    wall2.addComponent<mango::ModelRendererComponent>(wallModel);
+    wall2.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addTexture(mango::Material::TextureType::DIFFUSE, bricks2);
+    wall2.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addTexture(mango::Material::TextureType::NORMAL, bricks2Normal);
+    wall2.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addTexture(mango::Material::TextureType::DEPTH, bricks2Depth);
     wall2.setOrientation(90.0f, 0.0f, 0.0f);
     wall2.setPosition(-5, 2.0, -9);
 
     auto grass = mango::CoreAssetManager::createGameObject();
-    grass.addComponent<mango::ModelRendererComponent>(wall_model);
-    grass.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(mango::Material::TextureType::DIFFUSE, grass_tex);
-    grass.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addFloat("alpha_cutoff", 0.1f);
+    grass.addComponent<mango::ModelRendererComponent>(wallModel);
+    grass.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addTexture(mango::Material::TextureType::DIFFUSE, grassTex);
+    grass.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addFloat("alpha_cutoff", 0.1f);
     grass.setOrientation(90.0f, 0.0f, 0.0f);
     grass.setPosition(-5, 1.2, 9);
     grass.setScale(0.5);
 
     auto window1 = mango::CoreAssetManager::createGameObject();
-    window1.addComponent<mango::ModelRendererComponent>(wall_model, mango::ModelRendererComponent::RenderQueue::RQ_ALPHA);
-    window1.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(mango::Material::TextureType::DIFFUSE, window_tex);
+    window1.addComponent<mango::ModelRendererComponent>(wallModel, mango::ModelRendererComponent::RenderQueue::RQ_ALPHA);
+    window1.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addTexture(mango::Material::TextureType::DIFFUSE, windowTex);
     window1.setOrientation(90.0f, 0.0f, 0.0f);
     window1.setPosition(0, 1.2, 9);
     window1.setScale(0.51);
 
     auto window3 = mango::CoreAssetManager::createGameObject();
-    window3.addComponent<mango::ModelRendererComponent>(wall_model, mango::ModelRendererComponent::RenderQueue::RQ_ALPHA);
-    window3.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(mango::Material::TextureType::DIFFUSE, window_tex);
+    window3.addComponent<mango::ModelRendererComponent>(wallModel, mango::ModelRendererComponent::RenderQueue::RQ_ALPHA);
+    window3.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addTexture(mango::Material::TextureType::DIFFUSE, windowTex);
     window3.setOrientation(90.0f, 0.0f, 0.0f);
     window3.setPosition(3, 1.2, 13);
     window3.setScale(0.5);
 
     auto window2 = mango::CoreAssetManager::createGameObject();
-    window2.addComponent<mango::ModelRendererComponent>(wall_model, mango::ModelRendererComponent::RenderQueue::RQ_ALPHA);
-    window2.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(mango::Material::TextureType::DIFFUSE, window_tex);
+    window2.addComponent<mango::ModelRendererComponent>(wallModel, mango::ModelRendererComponent::RenderQueue::RQ_ALPHA);
+    window2.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addTexture(mango::Material::TextureType::DIFFUSE, windowTex);
     window2.setOrientation(90.0f, 0.0f, 0.0f);
     window2.setPosition(5, 1.2, 9);
     window2.setScale(0.5);
 
     auto plane1 = mango::CoreAssetManager::createGameObject();
-    plane1.addComponent<mango::ModelRendererComponent>(wall_model);
-    plane1.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(mango::Material::TextureType::DIFFUSE, bricks2);
+    plane1.addComponent<mango::ModelRendererComponent>(wallModel);
+    plane1.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addTexture(mango::Material::TextureType::DIFFUSE, bricks2);
     plane1.setOrientation(90.0f, 0.0f, 0.0f);
     plane1.setPosition(5, 3.0, -14);
 
     auto plane2 = mango::CoreAssetManager::createGameObject();
-    plane2.addComponent<mango::ModelRendererComponent>(wall_model);
-    plane2.getComponent<mango::ModelRendererComponent>()->m_model.getMesh().m_material.addTexture(mango::Material::TextureType::DIFFUSE, bricks2);
+    plane2.addComponent<mango::ModelRendererComponent>(wallModel);
+    plane2.getComponent<mango::ModelRendererComponent>()->model.getMesh().material.addTexture(mango::Material::TextureType::DIFFUSE, bricks2);
     plane2.setOrientation(0.0f, 0.0f, 0.0f);
     plane2.setPosition(5, 0.5, -11.5);
 
     auto sphere1 = mango::CoreAssetManager::createGameObject();
-    sphere1.addComponent<mango::ModelRendererComponent>(sphere_model, mango::ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC);
+    sphere1.addComponent<mango::ModelRendererComponent>(sphereModel, mango::ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC);
     sphere1.setPosition(5, 2, -11.5);
     sphere1.setScale(0.5f);
 
     auto sphere2 = mango::CoreAssetManager::createGameObject();
-    sphere2.addComponent<mango::ModelRendererComponent>(sphere_model);
+    sphere2.addComponent<mango::ModelRendererComponent>(sphereModel);
     sphere2.setPosition(5, 3, -12.5);
     sphere2.setScale(0.5f);
 
     float offset = 15.0f / 10.0f;
-    float num_objects = 10;
+    float numObjects = 10;
 
-    for(int i = 0; i < num_objects; ++i)
+    for(int i = 0; i < numObjects; ++i)
     {
-        float pos_x = 15.0f / -2.0f + (i * offset);
+        float xPos = 15.0f / -2.0f + (i * offset);
 
-        for(int j = 0; j < num_objects; ++j)
+        for(int j = 0; j < numObjects; ++j)
         {
             auto object = mango::CoreAssetManager::createGameObject();
-            object.addComponent<mango::ModelRendererComponent>(sphere_model);
+            object.addComponent<mango::ModelRendererComponent>(sphereModel);
             object.setScale(0.75f);
             
-            float pos_z = 15.0f / -2.0f + (j * offset);
-            object.setPosition(pos_x + 0.5f * offset, 0.5f, pos_z + 0.5f * offset);
+            float zPos = 15.0f / -2.0f + (j * offset);
+            object.setPosition(xPos + 0.5f * offset, 0.5f, zPos + 0.5f * offset);
 
             if (i == 2 && j == 2)
             {
@@ -185,9 +187,9 @@ void TestDemo::init()
     }
 
     /* Lights */
-    auto dir_light = mango::CoreAssetManager::createGameObject();
-    dir_light.addComponent<mango::DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f);
-    dir_light.setOrientation(-45.0f, 180.0f, 0.0f);
+    auto dirLight = mango::CoreAssetManager::createGameObject();
+    dirLight.addComponent<mango::DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f);
+    dirLight.setOrientation(-45.0f, 180.0f, 0.0f);
 
     float d = 8;
     glm::vec3 positions[4]
@@ -208,32 +210,32 @@ void TestDemo::init()
 
     for (int i = 0; i < 4; ++i)
     {
-        auto point_light = mango::CoreAssetManager::createGameObject();
-        point_light.addComponent<mango::PointLightComponent>();
-        point_light.getComponent<mango::PointLightComponent>()->setAttenuation(3.0f, 4.0f, 10.0f);
-        point_light.getComponent<mango::PointLightComponent>()->m_color = colors[i];
-        point_light.getComponent<mango::PointLightComponent>()->m_intensity = 200.0f;
-        point_light.setPosition(positions[i].x, positions[i].y, positions[i].z);
-        point_light.addComponent<MoveSystemComponent>();
+        auto pointLight = mango::CoreAssetManager::createGameObject();
+        pointLight.addComponent<mango::PointLightComponent>();
+        pointLight.getComponent<mango::PointLightComponent>()->setAttenuation(3.0f, 4.0f, 10.0f);
+        pointLight.getComponent<mango::PointLightComponent>()->color = colors[i];
+        pointLight.getComponent<mango::PointLightComponent>()->intensity = 200.0f;
+        pointLight.setPosition(positions[i].x, positions[i].y, positions[i].z);
+        pointLight.addComponent<MoveSystemComponent>();
 
         //if (i == 0)
-        //    point_light.getComponent<mango::TransformComponent>()->addChild(nanobot.getComponent<mango::TransformComponent>());
+        //    pointLight.getComponent<mango::TransformComponent>()->addChild(nanobot.getComponent<mango::TransformComponent>());
     }
 
-    auto spot_light = mango::CoreAssetManager::createGameObject();
-    spot_light.addComponent<mango::SpotLightComponent>();
-    spot_light.getComponent<mango::SpotLightComponent>()->m_color = glm::vec3(255, 206, 250) / 255.0f;
-    spot_light.getComponent<mango::SpotLightComponent>()->m_intensity = 1000;
-    spot_light.getComponent<mango::SpotLightComponent>()->setCutOffAngle(30.0f);
-    spot_light.setPosition(1.5, 5, 1.5);
-    spot_light.setOrientation(-135, -45, 0);
-    spot_light.getComponent<mango::SpotLightComponent>()->setCastsShadows(true);
-    spot_light.addComponent<MoveSystemComponent>();
+    auto spotLight = mango::CoreAssetManager::createGameObject();
+    spotLight.addComponent<mango::SpotLightComponent>();
+    spotLight.getComponent<mango::SpotLightComponent>()->color = glm::vec3(255, 206, 250) / 255.0f;
+    spotLight.getComponent<mango::SpotLightComponent>()->intensity = 1000;
+    spotLight.getComponent<mango::SpotLightComponent>()->setCutOffAngle(30.0f);
+    spotLight.setPosition(1.5, 5, 1.5);
+    spotLight.setOrientation(-135, -45, 0);
+    spotLight.getComponent<mango::SpotLightComponent>()->setCastsShadows(true);
+    spotLight.addComponent<MoveSystemComponent>();
 }
 
 void TestDemo::input(float delta)
 {
-    static bool is_debug_render = false;
+    static bool isDebugRender = false;
 
     if (mango::Input::getKeyUp(mango::KeyCode::Escape))
     {
@@ -242,8 +244,8 @@ void TestDemo::input(float delta)
 
     if (mango::Input::getKeyUp(mango::KeyCode::H))
     {
-        is_debug_render = !is_debug_render;
-        mango::RenderingSystem::M_DEBUG_RENDERING = is_debug_render;
+        isDebugRender = !isDebugRender;
+        mango::RenderingSystem::DEBUG_RENDERING = isDebugRender;
     }
 
     static bool fullscreen = mango::Window::isFullscreen();
@@ -257,13 +259,15 @@ void TestDemo::input(float delta)
 void TestDemo::onGUI(float delta)
 {
     /* Overlay start */
-    const float DISTANCE = 10.0f;
-    static int corner = 0;
-    ImVec2 window_pos = ImVec2((corner & 1) ? ImGui::GetIO().DisplaySize.x - DISTANCE : DISTANCE, (corner & 2) ? ImGui::GetIO().DisplaySize.y - DISTANCE : DISTANCE);
-    ImVec2 window_pos_pivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
+    const  float DISTANCE = 10.0f;
+    static int   corner   = 0;
+
+    ImVec2 windowPos      = ImVec2((corner & 1) ? ImGui::GetIO().DisplaySize.x - DISTANCE : DISTANCE, (corner & 2) ? ImGui::GetIO().DisplaySize.y - DISTANCE : DISTANCE);
+    ImVec2 windowPosPivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
+
     if (corner != -1)
     {
-        ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
+        ImGui::SetNextWindowPos(windowPos, ImGuiCond_Always, windowPosPivot);
         ImGui::SetNextWindowSize({ 250, 0 });
     }
 

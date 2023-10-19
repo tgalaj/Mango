@@ -1,6 +1,6 @@
 #pragma once
-#include <map>
 #include "Prefab.h"
+#include <map>
 
 namespace mango
 {
@@ -18,14 +18,14 @@ namespace mango
 
         static std::shared_ptr<GameObject> createPrefab(const std::string & object)
         {
-            std::shared_ptr<GameObject> game_object;
+            std::shared_ptr<GameObject> gameObject;
 
             if (m_prefabs.count(object))
             {
-                game_object = m_prefabs[object]->create();
+                gameObject = m_prefabs[object]->create();
             }
 
-            return game_object;
+            return gameObject;
         }
 
         static std::shared_ptr<GameObject> createEmpty()

@@ -1,17 +1,18 @@
 #pragma once
 
-#include <iostream>
-#include <memory>
-#include <utility>
-#include <algorithm>
-#include <functional>
-#include <random>
+#define GLFW_INCLUDE_NONE 
 
+#include <algorithm>
 #include <cmath>
 #include <cstring>
-
-#include <string>
+#include <filesystem>
+#include <functional>
+#include <iostream>
+#include <memory>
+#include <random>
 #include <sstream>
-#include <vector>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
+#include <vector>

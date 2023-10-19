@@ -5,8 +5,8 @@ namespace mango
     class BaseGame
     {
     public:
-        BaseGame() {};
-        virtual ~BaseGame() {};
+        BaseGame() = default;
+        virtual ~BaseGame() = default;
 
         BaseGame(const BaseGame &) = delete;
         BaseGame & operator=(const BaseGame &) = delete;

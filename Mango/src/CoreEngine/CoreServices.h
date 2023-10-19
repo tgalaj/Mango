@@ -17,7 +17,7 @@ namespace mango
         static void provide(Core * core);
         static void provide(RenderingSystem * renderer);
 
-        static Core      * m_core_engine;
+        static Core      * m_coreEngine;
         static RenderingSystem * m_renderer;
 
         friend class Core;

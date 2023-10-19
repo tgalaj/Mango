@@ -1,6 +1,5 @@
 ﻿#include "mgpch.h"
-
-#include "CoreSystems/GUISystem.h"
+#include "GUISystem.h"
 #include "GUI/GUI.h"
 
 namespace mango

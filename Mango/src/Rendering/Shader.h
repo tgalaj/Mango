@@ -1,10 +1,11 @@
 #pragma once
 
-#include <glad/glad.h>
-
-#include <map>
-#include <vector>
 #include <entityx/Entity.h>
+#include <filesystem>
+#include <glad/glad.h>
+#include <unordered_map>
+#include <vector>
+
 #include "CoreComponents/TransformComponent.h"
 #include "Material.h"
 
@@ -24,25 +25,25 @@ namespace mango
         };
 
         Shader();
-        explicit Shader(const std::string & compute_shader_filename);
+        explicit Shader(const std::filesystem::path & computeShaderFilepath);
 
-        Shader(const std::string & vertex_shader_filename,
-               const std::string & fragment_shader_filename);
+        Shader(const std::filesystem::path & vertexShaderFilepath,
+               const std::filesystem::path & fragmentShaderFilepath);
 
-        Shader(const std::string & vertex_shader_filename,
-               const std::string & fragment_shader_filename,
-               const std::string & geometry_shader_filename);
+        Shader(const std::filesystem::path & vertexShaderFilepath,
+               const std::filesystem::path & fragmentShaderFilepath,
+               const std::filesystem::path & geometryShaderFilepath);
 
-        Shader(const std::string & vertex_shader_filename,
-               const std::string & fragment_shader_filename,
-               const std::string & tessellation_control_shader_filename,
-               const std::string & tessellation_evaluation_shader_filename);
+        Shader(const std::filesystem::path & vertexShaderFilepath,
+               const std::filesystem::path & fragmentShaderFilepath,
+               const std::filesystem::path & tessellationControlShaderFilepath,
+               const std::filesystem::path & tessellationEvaluationShaderFilepath);
 
-        Shader(const std::string & vertex_shader_filename,
-               const std::string & fragment_shader_filename,
-               const std::string & geometry_shader_filename,
-               const std::string & tessellation_control_shader_filename,
-               const std::string & tessellation_evaluation_shader_filename);
+        Shader(const std::filesystem::path & vertexShaderFilepath,
+               const std::filesystem::path & fragmentShaderFilepath,
+               const std::filesystem::path & geometryShaderFilepath,
+               const std::filesystem::path & tessellationControlShaderFilepath,
+               const std::filesystem::path & tessellationEvaluationShaderFilepath);
 
         ~Shader();
 
@@ -64,26 +65,26 @@ namespace mango
         void setUniform(const std::string & uniformName, const glm::mat4 & matrix);
         void setUniform(const std::string & uniformName, glm::mat4 * matrices, unsigned count);
 
-        void setSubroutine(Type shader_type, const std::string & subroutine_name);
+        void setSubroutine(Type shaderType, const std::string & subroutineName);
 
     private:
         void addAllUniforms();
         void addAllSubroutines();
 
-        void addShader(std::string const & file_name, GLuint type) const;
-        bool getUniformLocation(const std::string & uniform_name);
+        void addShader(const std::filesystem::path & filepath, GLuint type) const;
+        bool getUniformLocation(const std::string & uniformName);
 
-        std::map<std::string, GLuint> m_subroutine_indices;
-        std::map<GLenum, GLuint> m_active_subroutine_uniform_locations;
+        std::unordered_map<std::string, GLuint> m_subroutineIndices;
+        std::unordered_map<GLenum, GLuint>      m_activeSubroutineUniformLocations;
 
-        std::map<std::string, GLint> m_uniforms_locations;
-        std::vector<std::string>     m_uniforms_names;
-        std::vector<std::string>     m_global_uniforms_names;
-        std::vector<GLint>           m_uniforms_types;
-        std::vector<GLint>           m_global_uniforms_types;
+        std::unordered_map<std::string, GLint> m_uniformsLocations;
+        std::vector<std::string>               m_uniformsNames;
+        std::vector<std::string>               m_globalUniformsNames;
+        std::vector<GLint>                     m_uniformsTypes;
+        std::vector<GLint>                     m_globalUniformsTypes;
 
-        GLuint m_program_id;
-        bool m_is_linked;
+        GLuint m_programID;
+        bool m_isLinked;
 
         friend class CoreAssetManager;
     };

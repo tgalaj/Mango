@@ -12,24 +12,24 @@ namespace mango
     public:
         friend class Renderer;
 
-        ParticleEffect(GLuint _max_particles);
+        ParticleEffect(GLuint maxParticles);
         ~ParticleEffect();
 
-        glm::vec4 m_color;
-        bool m_simulate;
+        glm::vec4 color;
+        bool      simulate;
 
         void reset();
 
     private:
-        GLfloat * m_init_positions;
-        GLfloat * m_init_velocities;
+        GLfloat * m_initPositions;
+        GLfloat * m_initVelocities;
 
         Shader * m_shader;
 
-        GLuint m_vbo_ids[2];
-        GLuint m_vao_id;
+        GLuint m_vbos[2];
+        GLuint m_vao;
 
-        GLuint m_max_particles;
+        GLuint m_maxParticles;
 
         enum { POSITIONS, VELOCITIES };
 

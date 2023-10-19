@@ -1,25 +1,25 @@
 ﻿#include "mgpch.h"
-#include <fstream>
+#include "Util.h"
 
-#include "Utilities/Util.h"
+#include <fstream>
 
 namespace mango
 {
-    std::string Util::loadFile(const std::string & filename)
+    std::string Util::loadFile(const std::filesystem::path & filepath)
     {
-        if (filename.empty())
+        if (filepath.empty())
         {
             return "";
         }
 
-        std::string filetext;
+        std::string fileText;
         std::string line;
 
-        std::ifstream inFile(filename);
+        std::ifstream inFile(filepath);
 
         if (!inFile)
         {
-            fprintf(stderr, "Could not open file %s", filename.c_str());
+            fprintf(stderr, "Could not open file %s", filepath.string().c_str());
             inFile.close();
 
             return "";
@@ -27,44 +27,44 @@ namespace mango
 
         while (getline(inFile, line))
         {
-            filetext.append(line + "\n");
+            fileText.append(line + "\n");
         }
 
         inFile.close();
 
-        return filetext;
+        return fileText;
     }
 
-    std::string Util::loadShaderIncludes(const std::string & shader_code)
+    std::string Util::loadShaderIncludes(const std::string & shaderCode)
     {
-        std::istringstream ss(shader_code);
+        std::istringstream ss(shaderCode);
 
-        std::string line, new_shader_code = "";
-        std::string include_phrase = "#include";
+        std::string line, newShaderCode;
+        std::string includePhrase = "#include";
 
         while(std::getline(ss, line))
         {
-            if(line.substr(0, include_phrase.size()) == include_phrase)
+            if(line.substr(0, includePhrase.size()) == includePhrase)
             {
-                std::string include_file_name = line.substr(include_phrase.size() + 2, line.size() - include_phrase .size() - 3);
+                std::string include_file_name = line.substr(includePhrase.size() + 2, line.size() - includePhrase .size() - 3);
                 line = loadFile("assets/shaders/" + include_file_name);
             }
 
-            new_shader_code.append(line + "\n");
+            newShaderCode.append(line + "\n");
         }
 
-        return new_shader_code;
+        return newShaderCode;
     }
 
 
-    unsigned char* Util::loadTexture(const std::string & filename, ImageData & image_data)
+    unsigned char* Util::loadTexture(const std::filesystem::path & filepath, ImageData & imageData)
     {
-        int width, height, nr_channels;
-        unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nr_channels, 0);
+        int width, height, channelsCount;
+        unsigned char* data = stbi_load(filepath.string().c_str(), &width, &height, &channelsCount, 0);
 
-        image_data.width    = width;
-        image_data.height   = height;
-        image_data.channels = nr_channels;
+        imageData.width    = width;
+        imageData.height   = height;
+        imageData.channels = channelsCount;
 
         return data;
     }

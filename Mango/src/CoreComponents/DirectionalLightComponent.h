@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BaseLightComponent.h"
-
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace mango

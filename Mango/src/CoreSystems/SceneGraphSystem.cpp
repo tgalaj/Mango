@@ -1,10 +1,9 @@
 ﻿#include "mgpch.h"
-
-#include "CoreSystems/SceneGraphSystem.h"
+#include "SceneGraphSystem.h"
 
 namespace mango
 {
-    TransformComponent SceneGraphSystem::M_ROOT_NODE;
+    TransformComponent SceneGraphSystem::ROOT_NODE;
 
     void SceneGraphSystem::configure(entityx::EntityManager& entities, entityx::EventManager& events)
     {
@@ -12,6 +11,6 @@ namespace mango
 
     void SceneGraphSystem::update(entityx::EntityManager& entities, entityx::EventManager& events, entityx::TimeDelta dt)
     {
-        M_ROOT_NODE.update(M_ROOT_NODE.world_matrix(), false);
+        ROOT_NODE.update(ROOT_NODE.getWorldMatrix(), false);
     }
 }

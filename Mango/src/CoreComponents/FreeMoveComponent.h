@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include "Window/Input.h"
 
 namespace mango
@@ -7,22 +8,22 @@ namespace mango
     {
     public:
         explicit FreeMoveComponent(float speed = 10.0f)
-            : m_move_speed(speed),
-              m_forward_key(KeyCode::W),
-              m_backward_key(KeyCode::S),
-              m_left_key(KeyCode::A),
-              m_right_key(KeyCode::D), 
-              m_up_key(KeyCode::E), 
-              m_down_key(KeyCode::Q)
+            : moveSpeed  (speed),
+              forwardKey (KeyCode::W),
+              backwardKey(KeyCode::S),
+              leftKey    (KeyCode::A),
+              rightKey   (KeyCode::D), 
+              upKey      (KeyCode::E), 
+              downKey    (KeyCode::Q)
         {
         }
 
-        float m_move_speed;
-        KeyCode m_forward_key;
-        KeyCode m_backward_key;
-        KeyCode m_left_key;
-        KeyCode m_right_key;
-        KeyCode m_up_key;
-        KeyCode m_down_key;
+        float   moveSpeed;
+        KeyCode forwardKey;
+        KeyCode backwardKey;
+        KeyCode leftKey;
+        KeyCode rightKey;
+        KeyCode upKey;
+        KeyCode downKey;
     };
 }

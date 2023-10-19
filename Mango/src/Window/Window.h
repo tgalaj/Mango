@@ -1,11 +1,11 @@
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <vector>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/vec2.hpp>
+#include <iostream>
+#include <string>
+#include <vector>
 
 namespace mango
 {
@@ -14,7 +14,7 @@ namespace mango
     {
         int32_t width;
         int32_t height;
-        int32_t refresh_rate;
+        int32_t refreshRate;
     };
 
     class Window final
@@ -23,7 +23,7 @@ namespace mango
         Window();
         ~Window();
 
-        static void createWindow(unsigned int width, unsigned int height, const std::string & title);
+        static void create(uint32_t width, uint32_t height, const std::string & title);
         static void endFrame();
 
         static int isCloseRequested();
@@ -44,12 +44,12 @@ namespace mango
         static void setFullscreen(bool fullscreen);
 
     private:
-        static GLFWwindow*  m_window;
-        static GLFWmonitor* m_monitor;
-        static std::string  m_title;
-        static glm::ivec2 m_window_pos;
-        static glm::ivec2 m_window_size;
-        static glm::ivec2 m_viewport_size;
+        static GLFWwindow  * m_window;
+        static GLFWmonitor * m_monitor;
+        static std::string   m_title;
+        static glm::ivec2    m_windowPos;
+        static glm::ivec2    m_windowSize;
+        static glm::ivec2    m_viewportSize;
 
         static void errorCallback(int error, const char* description)
         {

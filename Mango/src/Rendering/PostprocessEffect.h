@@ -10,13 +10,13 @@ namespace mango
         PostprocessEffect();
         virtual ~PostprocessEffect();
 
-        virtual void init(const std::string & filter_name, const std::string & fragment_shader_path);
+        virtual void init(const std::string & filterName, const std::filesystem::path & fragmentShaderFilepath);
         
         virtual void bind() const;
         virtual void render() const;
 
     protected:
         std::shared_ptr<Shader> m_postprocess;
-        GLuint m_dummy_vao_id;
+        GLuint m_dummyVao;
     };
 }

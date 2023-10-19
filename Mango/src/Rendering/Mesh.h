@@ -12,14 +12,14 @@ namespace mango
     {
         struct Vertex
         {
-            glm::vec3 m_position;
-            glm::vec3 m_normal;
-            glm::vec3 m_texcoord;
-            glm::vec3 m_tangent;
+            glm::vec3 position{};
+            glm::vec3 normal{};
+            glm::vec3 texcoord{};
+            glm::vec3 tangent{};
         };
 
-        std::vector<Vertex>  m_vertices;
-        std::vector<GLuint>  m_indices;
+        std::vector<Vertex> vertices{};
+        std::vector<GLuint> indices{};
     };
 
     struct MeshData
@@ -27,10 +27,10 @@ namespace mango
         MeshData();
         ~MeshData();
 
-        GLuint m_vao_id;
-        GLuint m_vbo_ids[2];
-        GLuint m_indices_count;
-        GLenum m_draw_mode;
+        GLuint vao;
+        GLuint vbos[2];
+        GLuint indicesCount;
+        GLenum drawMode;
     };
 
     class Mesh
@@ -40,17 +40,17 @@ namespace mango
         ~Mesh();
 
         void setBuffers(const VertexBuffers & buffers);
-        void setDrawMode(GLenum draw_mode) const { m_mesh_data->m_draw_mode = draw_mode; }
+        void setDrawMode(GLenum drawMode) const { m_meshData->drawMode = drawMode; }
 
-        GLenum getDrawMode()     const { return m_mesh_data->m_draw_mode; }
-        GLuint getIndicesCount() const { return m_mesh_data->m_indices_count; }
+        GLenum getDrawMode()     const { return m_meshData->drawMode; }
+        GLuint getIndicesCount() const { return m_meshData->indicesCount; }
 
         void render() const;
 
-        Material m_material;
+        Material material;
 
     private:
-        std::shared_ptr<MeshData> m_mesh_data;
+        std::shared_ptr<MeshData> m_meshData;
 
         enum { VERTEX_DATA, INDEX };
     };

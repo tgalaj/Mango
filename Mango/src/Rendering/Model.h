@@ -1,13 +1,12 @@
 #pragma once
 
-#include <memory>
-
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <entityx/Entity.h>
+#include <memory>
 
-#include "Mesh.h"
 #include "Material.h"
+#include "Mesh.h"
 #include "Shader.h"
 
 namespace mango
@@ -27,10 +26,10 @@ namespace mango
         void genTorus   (float innerRadius = 1.0f, float outerRadius = 2.0f, unsigned int slices = 10, unsigned int stacks = 10);
         void genQuad    (float width = 1.0f, float height = 1.0f);
 
-        void load(const std::string & filename);
+        void load(const std::filesystem::path & filepath);
         void render(Shader & shader);
 
-        void setDrawMode(GLenum draw_mode);
+        void setDrawMode(GLenum drawMode);
         GLenum getDrawMode() { return getMesh(0).getDrawMode(); }
 
         Mesh & getMesh(unsigned int index = 0)
@@ -47,12 +46,12 @@ namespace mango
 
     private:
         void calcTangentSpace(VertexBuffers & buffers) const;
-        void genPrimitive(VertexBuffers & buffers, bool calc_tangents = true);
+        void genPrimitive(VertexBuffers & buffers, bool calcTangents = true);
 
         void processNode(aiNode * node, const aiScene * scene, aiString & directory);
         Mesh processMesh(aiMesh * mesh, const aiScene * scene, aiString & directory) const;
 
-        void loadMaterialTextures(Mesh & mesh, aiMaterial * mat, aiTextureType type, Material::TextureType texture_type, aiString & directory) const;
+        void loadMaterialTextures(Mesh & mesh, aiMaterial * mat, aiTextureType type, Material::TextureType textureType, aiString & directory) const;
 
         std::vector<Mesh> m_meshes;
     };

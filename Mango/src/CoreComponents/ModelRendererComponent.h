@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include <memory>
 
+#include <memory>
 #include "Rendering/Model.h"
 
 namespace mango
@@ -11,19 +11,19 @@ namespace mango
         enum class RenderQueue { RQ_OPAQUE, RQ_ALPHA, RQ_ENVIRO_MAPPING_STATIC, RQ_ENVIRO_MAPPING_DYNAMIC };
 
         ModelRendererComponent()
-            : m_render_queue(RenderQueue::RQ_OPAQUE) 
+            : m_renderQueue(RenderQueue::RQ_OPAQUE) 
         {}
 
-        explicit ModelRendererComponent(const Model & model, RenderQueue render_queue = RenderQueue::RQ_OPAQUE)
-            : m_model(model),
-              m_render_queue(render_queue)
+        explicit ModelRendererComponent(const Model & model, RenderQueue renderQueue = RenderQueue::RQ_OPAQUE)
+            : model        (model),
+              m_renderQueue(renderQueue)
         {}
 
-        RenderQueue getRenderQueue() const { return m_render_queue; }
+        RenderQueue getRenderQueue() const { return m_renderQueue; }
 
-        Model m_model;
+        Model model;
 
     private:
-        RenderQueue m_render_queue;
+        RenderQueue m_renderQueue;
     };
 }

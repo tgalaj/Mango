@@ -13,7 +13,7 @@ namespace mango
         entity = CoreServices::getCore()->entities.create();
         addComponent<TransformComponent>();
 
-        SceneGraphSystem::M_ROOT_NODE.addChild(entity.component<TransformComponent>());
+        SceneGraphSystem::ROOT_NODE.addChild(entity.component<TransformComponent>());
     }
 
     void GameObject::setPosition(float x, float y, float z)
@@ -46,9 +46,9 @@ namespace mango
         entity.component<TransformComponent>()->setScale(x, y, z);
     }
 
-    void GameObject::setScale(float uniform_scale)
+    void GameObject::setScale(float uniformScale)
     {
-        entity.component<TransformComponent>()->setScale(uniform_scale);
+        entity.component<TransformComponent>()->setScale(uniformScale);
     }
 
     void GameObject::addChild(GameObject & child)

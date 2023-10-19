@@ -2,14 +2,14 @@
 #include <entityx/System.h>
 
 #include "CoreComponents/CameraComponent.h"
-#include "CoreComponents/TransformComponent.h"
 #include "CoreComponents/ModelRendererComponent.h"
-#include "Rendering/Shader.h"
+#include "CoreComponents/TransformComponent.h"
+#include "Rendering/BloomPS.h"
+#include "Rendering/DeferredRendering.h"
 #include "Rendering/PostprocessEffect.h"
 #include "Rendering/RenderTarget.h"
+#include "Rendering/Shader.h"
 #include "Rendering/Skybox.h"
-#include "Rendering/DeferredRendering.h"
-#include "Rendering/BloomPS.h"
 #include "Rendering/SSAO.h"
 
 namespace mango
@@ -21,87 +21,89 @@ namespace mango
         ~RenderingSystem();
 
         void configure(entityx::EntityManager& entities, entityx::EventManager& events) override;
-        void update(entityx::EntityManager& entities, entityx::EventManager& events, entityx::TimeDelta dt) override;
+        void update   (entityx::EntityManager& entities, entityx::EventManager& events, entityx::TimeDelta dt) override;
 
-        void receive(const entityx::ComponentAddedEvent<CameraComponent> & event);
-        void receive(const entityx::ComponentAddedEvent<ModelRendererComponent>& event);
-        void receive(const entityx::ComponentRemovedEvent<ModelRendererComponent>& event);
+        void receive(const entityx::ComponentAddedEvent<CameraComponent>          & event);
+        void receive(const entityx::ComponentAddedEvent<ModelRendererComponent>   & event);
+        void receive(const entityx::ComponentRemovedEvent<ModelRendererComponent> & event);
 
         void setSkybox(const std::shared_ptr<Skybox> & skybox);
         void resize(unsigned width, unsigned height);
 
         entityx::ComponentHandle<TransformComponent> getCameraTransform();
-        entityx::ComponentHandle<CameraComponent> getCamera();
+        entityx::ComponentHandle<CameraComponent>    getCamera();
 
-        glm::vec3 m_scene_ambient_color;
+    public:
+        glm::vec3 sceneAmbientColor{};
 
-        static bool M_DEBUG_RENDERING;
-        static unsigned int M_DEBUG_WINDOW_WIDTH;
+        static bool         DEBUG_RENDERING;
+        static unsigned int DEBUG_WINDOW_WIDTH;
 
     private:
         enum TextureMaps { SHADOW_MAP = 5 }; //TODO: move to Material class
 
-        std::vector<entityx::Entity> m_opaque_queue;
-        std::vector<entityx::Entity> m_alpha_queue;
-        std::vector<entityx::Entity> m_enviro_static_queue;
-        std::vector<entityx::Entity> m_enviro_dynamic_queue;
+        std::vector<entityx::Entity> m_opaqueQueue;
+        std::vector<entityx::Entity> m_alphaQueue;
+        std::vector<entityx::Entity> m_enviroStaticQueue;
+        std::vector<entityx::Entity> m_enviroDynamicQueue;
 
-        std::shared_ptr<Shader> m_forward_ambient;
-        std::shared_ptr<Shader> m_forward_directional;
-        std::shared_ptr<Shader> m_forward_point;
-        std::shared_ptr<Shader> m_forward_spot;
-        std::shared_ptr<Shader> m_shadow_map_generator;
-        std::shared_ptr<Shader> m_omni_shadow_map_generator;
-        std::shared_ptr<Shader> m_blending_shader;
-        std::shared_ptr<Shader> m_enviro_mapping_shader;
-        std::shared_ptr<Shader> m_debug_rendering;
+        std::shared_ptr<Shader> m_forwardAmbient;
+        std::shared_ptr<Shader> m_forwardDirectional;
+        std::shared_ptr<Shader> m_forwardPoint;
+        std::shared_ptr<Shader> m_forwardSpot;
+        std::shared_ptr<Shader> m_shadowMapGenerator;
+        std::shared_ptr<Shader> m_omniShadowMapGenerator;
+        std::shared_ptr<Shader> m_blendingShader;
+        std::shared_ptr<Shader> m_enviroMappingShader;
+        std::shared_ptr<Shader> m_debugRendering;
 
-        std::shared_ptr<Shader> m_gbuffer_shader;
-        std::shared_ptr<Shader> m_deferred_directional;
-        std::shared_ptr<Shader> m_deferred_point;
-        std::shared_ptr<Shader> m_deferred_spot;
+        std::shared_ptr<Shader> m_gbufferShader;
+        std::shared_ptr<Shader> m_deferredDirectional;
+        std::shared_ptr<Shader> m_deferredPoint;
+        std::shared_ptr<Shader> m_deferredSpot;
 
-        std::shared_ptr<Shader> m_boundingbox_shader;
-        std::shared_ptr<Shader> m_null_shader;
-        Model m_light_bsphere;
-        Model m_light_bcone;
+        std::shared_ptr<Shader> m_boundingboxShader;
+        std::shared_ptr<Shader> m_nullShader;
+        Model m_lightBoundingSphere;
+        Model m_lightBoundingCone;
 
-        std::shared_ptr<PostprocessEffect> m_hdr_filter;
-        std::shared_ptr<PostprocessEffect> m_fxaa_filter;
-        std::shared_ptr<DeferredRendering> m_deferred_rendering;
-        std::shared_ptr<BloomPS> m_bloom_filter;
-        std::shared_ptr<SSAO> m_ssao_rendering;
+        std::shared_ptr<PostprocessEffect> m_hdrFilter;
+        std::shared_ptr<PostprocessEffect> m_fxaaFilter;
+        std::shared_ptr<DeferredRendering> m_deferredRendering;
+        std::shared_ptr<BloomPS> m_bloomFilter;
+        std::shared_ptr<SSAO> m_ssao;
 
-        std::shared_ptr<RenderTarget> m_main_render_target;
-        std::shared_ptr<RenderTarget> m_helper_render_target;
-        std::shared_ptr<RenderTarget> m_dir_shadow_map;
-        std::shared_ptr<RenderTarget> m_spot_shadow_map;
-        std::shared_ptr<RenderTarget> m_omni_shadow_map;
+        std::shared_ptr<RenderTarget> m_mainRenderTarget;
+        std::shared_ptr<RenderTarget> m_helperRenderTarget;
+        std::shared_ptr<RenderTarget> m_dirShadowMap;
+        std::shared_ptr<RenderTarget> m_spotShadowMap;
+        std::shared_ptr<RenderTarget> m_omniShadowMap;
 
-        std::shared_ptr<Skybox> m_default_skybox;
+        std::shared_ptr<Skybox> m_skybox;
 
-        entityx::Entity m_main_camera;
+        entityx::Entity m_mainCamera;
 
+    private:
         static void initRenderingStates();
 
         static void beginForwardRendering();
-        static void endForwardRendering();
+        static void endForwardRendering  ();
 
         void bindMainRenderTarget();
 
         void applyPostprocess(std::shared_ptr<PostprocessEffect> & effect, std::shared_ptr<RenderTarget> * src, std::shared_ptr<RenderTarget> * dst);
 
-        void renderForward(entityx::EntityManager& entities);
-        void renderDeferred(entityx::EntityManager& entities);
-        void renderDebug();
+        void renderForward                 (entityx::EntityManager& entities);
+        void renderDeferred                (entityx::EntityManager& entities);
+        void renderDebug                   ();
         void renderDebugLightsBoundingBoxes(entityx::EntityManager& entities);
 
-        void renderOpaque(const std::shared_ptr<Shader> & shader);
-        void renderAlpha(const std::shared_ptr<Shader>& shader);
-        void renderEnviroMappingStatic(const std::shared_ptr<Shader>& shader);
-        void renderEnviroMappingDynamic(const std::shared_ptr<Shader>& shader);
-        void renderLightsForward(entityx::EntityManager& entities);
-        void renderLightsDeferred(entityx::EntityManager& entities);
+        void renderOpaque              (const std::shared_ptr<Shader> & shader);
+        void renderAlpha               (const std::shared_ptr<Shader>& shader);
+        void renderEnviroMappingStatic (const std::shared_ptr<Shader>& shader);
+        void renderDynamicEnviroMapping(const std::shared_ptr<Shader>& shader);
+        void renderLightsForward       (entityx::EntityManager& entities);
+        void renderLightsDeferred      (entityx::EntityManager& entities);
 
         void sortAlpha();
     };

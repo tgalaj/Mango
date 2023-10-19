@@ -4,88 +4,94 @@
 
 namespace mango
 {
-    std::vector<GameObject>      CoreAssetManager::m_game_objects;
-    std::map<std::string, Model> CoreAssetManager::m_loaded_models;
+    std::vector<GameObject>                CoreAssetManager::m_gameObjects;
+    std::unordered_map<std::string, Model> CoreAssetManager::m_loadedModels;
 
-    std::map<std::string, std::shared_ptr<Texture>> CoreAssetManager::m_loaded_textures;
-    std::map<std::string, std::shared_ptr<Shader>>  CoreAssetManager::m_loaded_shaders;
-    std::map<std::string, std::shared_ptr<Font>>    CoreAssetManager::m_loaded_fonts;
+    std::unordered_map<std::string, std::shared_ptr<Texture>> CoreAssetManager::m_loadedTextures;
+    std::unordered_map<std::string, std::shared_ptr<Shader>>  CoreAssetManager::m_loadedShaders;
+    std::unordered_map<std::string, std::shared_ptr<Font>>    CoreAssetManager::m_loadedFonts;
 
     GameObject CoreAssetManager::createGameObject()
     {
-        GameObject game_object;
-        m_game_objects.push_back(game_object);
+        GameObject gameObject;
+        m_gameObjects.push_back(gameObject);
 
-        return game_object;
+        return gameObject;
     }
 
-    std::shared_ptr<Font> CoreAssetManager::createFont(const std::string & font_name, const std::string& filepathname, GLuint font_height)
+    std::shared_ptr<Font> CoreAssetManager::createFont(const std::string & fontNname, const std::filesystem::path& filepath, GLuint fontHeight)
     {        
-        if(m_loaded_fonts.count(font_name))
+        if (m_loadedFonts.count(fontNname))
         {
-            return m_loaded_fonts[font_name];
+            return m_loadedFonts[fontNname];
         }
 
-        auto font = std::make_shared<Font>(filepathname, font_height);
-        m_loaded_fonts[font_name] = font;
+        auto font = std::make_shared<Font>(filepath, fontHeight);
+        m_loadedFonts[fontNname] = font;
 
         return font;
     }
 
-    std::shared_ptr<Texture> CoreAssetManager::createTexture2D(const std::string& filepathname, bool is_srgb, GLint num_mipmaps)
+    std::shared_ptr<Texture> CoreAssetManager::createTexture2D(const std::filesystem::path & filepath, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
     {
-        if(m_loaded_textures.count(filepathname))
+        std::string filepathString = filepath.string();
+
+        if (m_loadedTextures.count(filepathString))
         {
-            return m_loaded_textures[filepathname];
+            return m_loadedTextures[filepathString];
         }
 
-        auto texture2d = std::make_shared<Texture>();
-        texture2d->genTexture2D(filepathname, num_mipmaps, is_srgb);
-        m_loaded_textures[filepathname] = texture2d;
+        auto texture2D = std::make_shared<Texture>();
+        texture2D->genTexture2D(filepath, numMipmaps, isSrgb);
+        m_loadedTextures[filepathString] = texture2D;
 
-        return texture2d;
+        return texture2D;
     }
 
-    std::shared_ptr<Texture> CoreAssetManager::createTexture2D1x1(const std::string& texture_name, const glm::uvec4& color)
+    std::shared_ptr<Texture> CoreAssetManager::createTexture2D1x1(const std::string& textureName, const glm::uvec4& color)
     {
-        if(m_loaded_textures.count(texture_name))
+        if (m_loadedTextures.count(textureName))
         {
-            return m_loaded_textures[texture_name];
+            return m_loadedTextures[textureName];
         }
 
-        auto texture2d = std::make_shared<Texture>();
-        texture2d->genTexture2D1x1(color);
-        m_loaded_textures[texture_name] = texture2d;
+        auto texture2D = std::make_shared<Texture>();
+        texture2D->genTexture2D1x1(color);
+        m_loadedTextures[textureName] = texture2D;
 
-        return texture2d;
+        return texture2D;
     }
 
-    std::shared_ptr<Texture> CoreAssetManager::createCubeMapTexture(const std::string * filepathnames, bool is_srgb, GLint num_mipmaps)
+    std::shared_ptr<Texture> CoreAssetManager::createCubeMapTexture(const std::filesystem::path* filepaths, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
     {
-        if (m_loaded_textures.count(filepathnames[0]))
+        std::string filepathString = filepaths[0].parent_path().string();
+
+        if (m_loadedTextures.count(filepathString))
         {
-            return m_loaded_textures[filepathnames[0]];
+            return m_loadedTextures[filepathString];
         }
 
-        auto texture_cube = std::make_shared<Texture>();
-        texture_cube->genCubeMapTexture(filepathnames, num_mipmaps, is_srgb);
-        m_loaded_textures[filepathnames[0]] = texture_cube;
+        auto textureCube = std::make_shared<Texture>();
+        textureCube->genCubeMapTexture(filepaths, numMipmaps, isSrgb);
+        m_loadedTextures[filepathString] = textureCube;
 
-        return texture_cube;
+        return textureCube;
     }
 
-    Model CoreAssetManager::createModel(const std::string& filepathname)
+    Model CoreAssetManager::createModel(const std::filesystem::path & filepath)
     {
-        if(m_loaded_models.count(filepathname))
+        std::string filepathString = filepath.string();
+
+        if (m_loadedModels.count(filepathString))
         {
-            return m_loaded_models[filepathname];
+            return m_loadedModels[filepathString];
         }
 
         Model model;
-        model.load(filepathname);
-        m_loaded_models[filepathname] = model;
+        model.load(filepath);
+        m_loadedModels[filepathString] = model;
 
-        return m_loaded_models[filepathname];
+        return model;
     }
 
     Model CoreAssetManager::createModel()
@@ -94,119 +100,120 @@ namespace mango
         return model;
     }
 
-    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string& shader_name,
-                                                           const std::string& compute_shader_filepathname)
+    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string           & shaderName,
+                                                           const std::filesystem::path & computeShaderFilepath)
     {
-        if (m_loaded_shaders.count(shader_name))
+        if (m_loadedShaders.count(shaderName))
         {
-            return m_loaded_shaders[shader_name];
+            return m_loadedShaders[shaderName];
         }
 
-        auto shader = std::make_shared<Shader>(compute_shader_filepathname);
-        m_loaded_shaders[shader_name]  = shader;
+        auto shader = std::make_shared<Shader>(computeShaderFilepath);
+        m_loadedShaders[shaderName] = shader;
 
         return shader;
     }
 
-    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string& shader_name, 
-                                                           const std::string& vertex_shader_filepathname, 
-                                                           const std::string& fragment_shader_filepathname)
+    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string           & shaderName, 
+                                                           const std::filesystem::path & vertexShaderFilepath, 
+                                                           const std::filesystem::path & fragmentShaderFilepath)
     {
-        if(m_loaded_shaders.count(shader_name))
+        if (m_loadedShaders.count(shaderName))
         {
-            return m_loaded_shaders[shader_name];
+            return m_loadedShaders[shaderName];
         }
 
-        auto shader = std::make_shared<Shader>(vertex_shader_filepathname, fragment_shader_filepathname);
-        m_loaded_shaders[shader_name]  = shader;
+        auto shader = std::make_shared<Shader>(vertexShaderFilepath, fragmentShaderFilepath);
+        m_loadedShaders[shaderName] = shader;
 
         return shader;
     }
 
-    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string& shader_name, 
-                                                           const std::string& vertex_shader_filepathname, 
-                                                           const std::string& fragment_shader_filepathname,
-                                                           const std::string& geometry_shader_filepathname)
+    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string           & shaderName, 
+                                                           const std::filesystem::path & vertexShaderFilepath, 
+                                                           const std::filesystem::path & fragmentShaderFilepath,
+                                                           const std::filesystem::path & geometryShaderFilepath)
     {
-        if (m_loaded_shaders.count(shader_name))
+        if (m_loadedShaders.count(shaderName))
         {
-            return m_loaded_shaders[shader_name];
+            return m_loadedShaders[shaderName];
         }
 
-        auto shader = std::make_shared<Shader>(vertex_shader_filepathname, 
-                                               fragment_shader_filepathname, 
-                                               geometry_shader_filepathname);
-        m_loaded_shaders[shader_name]  = shader;
+        auto shader = std::make_shared<Shader>(vertexShaderFilepath, 
+                                               fragmentShaderFilepath, 
+                                               geometryShaderFilepath);
+        m_loadedShaders[shaderName] = shader;
 
         return shader;
     }
 
-    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string& shader_name,
-                                                           const std::string& vertex_shader_filepathname,
-                                                           const std::string& fragment_shader_filepathname, 
-                                                           const std::string& tessellation_control_shader_filepathname, 
-                                                           const std::string& tessellation_evaluation_shader_filepathname)
+    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string           & shaderName,
+                                                           const std::filesystem::path & vertexShaderFilepath,
+                                                           const std::filesystem::path & fragmentShaderFilepath, 
+                                                           const std::filesystem::path & tessellationControlShaderFilepath, 
+                                                           const std::filesystem::path & tessellationEvaluationShaderFilepath)
     {
-        if (m_loaded_shaders.count(shader_name))
+        if (m_loadedShaders.count(shaderName))
         {
-            return m_loaded_shaders[shader_name];
+            return m_loadedShaders[shaderName];
         }
 
-        auto shader = std::make_shared<Shader>(vertex_shader_filepathname,
-                                               fragment_shader_filepathname,
-                                               tessellation_control_shader_filepathname,
-                                               tessellation_evaluation_shader_filepathname);
-        m_loaded_shaders[shader_name]  = shader;
+        auto shader = std::make_shared<Shader>(vertexShaderFilepath,
+                                               fragmentShaderFilepath,
+                                               tessellationControlShaderFilepath,
+                                               tessellationEvaluationShaderFilepath);
+        m_loadedShaders[shaderName] = shader;
 
         return shader;
     }
 
-    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string& shader_name, 
-                                                           const std::string& vertex_shader_filepathname, 
-                                                           const std::string& fragment_shader_filepathname, 
-                                                           const std::string& geometry_shader_filepathname, 
-                                                           const std::string& tessellation_control_shader_filepathname, 
-                                                           const std::string& tessellation_evaluation_shader_filepathname)
+    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string           & shaderName, 
+                                                           const std::filesystem::path & vertexShaderFilepath, 
+                                                           const std::filesystem::path & fragmentShaderFilepath, 
+                                                           const std::filesystem::path & geometryShaderFilepath, 
+                                                           const std::filesystem::path & tessellationControlShaderFilepath, 
+                                                           const std::filesystem::path & tessellationEvaluationShaderFilepath)
     {
-        if (m_loaded_shaders.count(shader_name))
+        if (m_loadedShaders.count(shaderName))
         {
-            return m_loaded_shaders[shader_name];
+            return m_loadedShaders[shaderName];
         }
 
-        auto shader = std::make_shared<Shader>(vertex_shader_filepathname,
-                                               fragment_shader_filepathname,
-                                               geometry_shader_filepathname,
-                                               tessellation_control_shader_filepathname,
-                                               tessellation_evaluation_shader_filepathname);
-        m_loaded_shaders[shader_name]  = shader;
+        auto shader = std::make_shared<Shader>(vertexShaderFilepath,
+                                               fragmentShaderFilepath,
+                                               geometryShaderFilepath,
+                                               tessellationControlShaderFilepath,
+                                               tessellationEvaluationShaderFilepath);
+        m_loadedShaders[shaderName] = shader;
 
         return shader;
     }
 
-    std::shared_ptr<Font> CoreAssetManager::getFont(const std::string& font_name)
+    std::shared_ptr<Font> CoreAssetManager::getFont(const std::string& fontName)
     {
-        if(m_loaded_fonts.count(font_name))
+        if (m_loadedFonts.count(fontName))
         {
-            return m_loaded_fonts[font_name];
-        }
-
-        return nullptr;
-    }
-    std::shared_ptr<Texture> CoreAssetManager::getTexture2D(const std::string& texture_name)
-    {
-        if(m_loaded_textures.count(texture_name))
-        {
-            return m_loaded_textures[texture_name];
+            return m_loadedFonts[fontName];
         }
 
         return nullptr;
     }
 
-    std::shared_ptr<Shader> CoreAssetManager::getShader(const std::string& shader_name)
+    std::shared_ptr<Texture> CoreAssetManager::getTexture2D(const std::string& textureName)
     {
-        if(m_loaded_shaders.count(shader_name))
+        if (m_loadedTextures.count(textureName))
         {
-            return m_loaded_shaders[shader_name];
+            return m_loadedTextures[textureName];
+        }
+
+        return nullptr;
+    }
+
+    std::shared_ptr<Shader> CoreAssetManager::getShader(const std::string& shaderName)
+    {
+        if (m_loadedShaders.count(shaderName))
+        {
+            return m_loadedShaders[shaderName];
         }
 
         return nullptr;

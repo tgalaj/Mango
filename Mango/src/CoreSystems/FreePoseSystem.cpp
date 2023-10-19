@@ -1,8 +1,8 @@
 ﻿#include "mgpch.h"
 
-#include "CoreSystems/FreePoseSystem.h"
-#include "CoreComponents/FreeMoveComponent.h"
+#include "FreePoseSystem.h"
 #include "CoreComponents/FreeLookComponent.h"
+#include "CoreComponents/FreeMoveComponent.h"
 #include "Window/Window.h"
 
 namespace mango
@@ -14,70 +14,70 @@ namespace mango
     void FreePoseSystem::update(entityx::EntityManager & entities, entityx::EventManager & events, entityx::TimeDelta dt)
     {
         entities.each<FreeMoveComponent, TransformComponent>(
-        [this, dt](entityx::Entity entity, FreeMoveComponent & free_move, TransformComponent & transform)
+        [this, dt](entityx::Entity entity, FreeMoveComponent & freeMove, TransformComponent & transform)
         {
-            auto movement_amount = free_move.m_move_speed * dt;
+            auto movementAmount = freeMove.moveSpeed * dt;
 
-            if (Input::getKey(free_move.m_forward_key))
-                move(transform, glm::conjugate(transform.orientation()) * glm::vec3(0, 0, -1), movement_amount);
+            if (Input::getKey(freeMove.forwardKey))
+                move(transform, glm::conjugate(transform.getOrientation()) * glm::vec3(0, 0, -1), movementAmount);
 
-            if (Input::getKey(free_move.m_backward_key))
-                move(transform, glm::conjugate(transform.orientation()) * glm::vec3(0, 0, 1), movement_amount);
+            if (Input::getKey(freeMove.backwardKey))
+                move(transform, glm::conjugate(transform.getOrientation()) * glm::vec3(0, 0, 1), movementAmount);
 
-            if (Input::getKey(free_move.m_right_key))
-                move(transform, glm::conjugate(transform.orientation()) * glm::vec3(1, 0, 0), movement_amount);
+            if (Input::getKey(freeMove.rightKey))
+                move(transform, glm::conjugate(transform.getOrientation()) * glm::vec3(1, 0, 0), movementAmount);
 
-            if (Input::getKey(free_move.m_left_key))
-                move(transform, glm::conjugate(transform.orientation()) * glm::vec3(-1, 0, 0), movement_amount);
+            if (Input::getKey(freeMove.leftKey))
+                move(transform, glm::conjugate(transform.getOrientation()) * glm::vec3(-1, 0, 0), movementAmount);
 
-            if (Input::getKey(free_move.m_up_key))
-                move(transform, glm::vec3(0, 1, 0), movement_amount);
+            if (Input::getKey(freeMove.upKey))
+                move(transform, glm::vec3(0, 1, 0), movementAmount);
 
-            if (Input::getKey(free_move.m_down_key))
-                move(transform, glm::vec3(0, -1, 0), movement_amount);
+            if (Input::getKey(freeMove.downKey))
+                move(transform, glm::vec3(0, -1, 0), movementAmount);
         });
 
         entities.each<FreeLookComponent, TransformComponent>(
-        [this](entityx::Entity entity, FreeLookComponent & free_look, TransformComponent & transform)
+        [this](entityx::Entity entity, FreeLookComponent & freeLook, TransformComponent & transform)
         {
-            if(Input::getMouse(free_look.m_unlock_mouse_key))
+            if(Input::getMouse(freeLook.unlockMouseKey))
             {
-                if (!m_is_mouse_move)
+                if (!m_isMouseMove)
                 {
-                    m_mouse_pressed_position = Input::getMousePosition();
+                    m_mousePressedPosition = Input::getMousePosition();
                     Input::setMouseCursorVisibility(false);
                 }
 
-                m_is_mouse_move = true;
+                m_isMouseMove = true;
             }
             else
             {
-                m_is_mouse_move = false;
+                m_isMouseMove = false;
                 Input::setMouseCursorVisibility(true);
             }
 
-            if(m_is_mouse_move)
+            if(m_isMouseMove)
             {
-                auto delta_pos = Input::getMousePosition() - m_mouse_pressed_position;
+                auto deltaPos = Input::getMousePosition() - m_mousePressedPosition;
 
-                auto rot_y = delta_pos.x != 0.0f;
-                auto rot_x = delta_pos.y != 0.0f;
+                auto yRot = deltaPos.x != 0.0f;
+                auto xRot = deltaPos.y != 0.0f;
 
                 /* pitch */
-                if(rot_x)
+                if(xRot)
                 {
-                    transform.setOrientation(glm::angleAxis(glm::radians(delta_pos.y * free_look.m_sensitivity), glm::vec3(1, 0, 0)) * transform.orientation());
+                    transform.setOrientation(glm::angleAxis(glm::radians(deltaPos.y * freeLook.sensitivity), glm::vec3(1, 0, 0)) * transform.getOrientation());
                 }
 
                 /* yaw */
-                if (rot_y)
+                if (yRot)
                 {
-                    transform.setOrientation(transform.orientation() * glm::angleAxis(glm::radians(delta_pos.x * free_look.m_sensitivity), glm::vec3(0, 1, 0)));
+                    transform.setOrientation(transform.getOrientation() * glm::angleAxis(glm::radians(deltaPos.x * freeLook.sensitivity), glm::vec3(0, 1, 0)));
                 }
 
-                if(rot_x || rot_y)
+                if(xRot || yRot)
                 {
-                    m_mouse_pressed_position = Input::getMousePosition();
+                    m_mousePressedPosition = Input::getMousePosition();
                 }
             }
         });
@@ -85,6 +85,6 @@ namespace mango
 
     void FreePoseSystem::move(TransformComponent& transform, const glm::vec3& dir, float amount)
     {
-        transform.setPosition(transform.position() + (dir * amount));
+        transform.setPosition(transform.getPosition() + (dir * amount));
     }
 }

@@ -1,89 +1,89 @@
 #include "mgpch.h"
 
-#include "glm/gtc/type_ptr.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.h"
 #include "CoreEngine/CoreAssetManager.h"
-#include "Utilities/Util.h"
-#include "Utilities/ShaderGlobals.h"
 #include "CoreEngine/CoreServices.h"
+#include "Utilities/ShaderGlobals.h"
+#include "Utilities/Util.h"
 
 namespace mango
 {
     Shader::Shader()
-        : m_program_id(0),
-          m_is_linked(false)
+        : m_programID(0),
+          m_isLinked (false)
     {
-        m_program_id = glCreateProgram();
+        m_programID = glCreateProgram();
 
-        if (m_program_id == 0)
+        if (m_programID == 0)
         {
             fprintf(stderr, "Error while creating program object.\n");
         }
     }
 
-    Shader::Shader(const std::string & compute_shader_filename)
+    Shader::Shader(const std::filesystem::path & computeShaderFilepath)
         : Shader()
     {
-        addShader(compute_shader_filename, GL_COMPUTE_SHADER);
+        addShader(computeShaderFilepath, GL_COMPUTE_SHADER);
     }
 
-    Shader::Shader(const std::string & vertex_shader_filename,
-                   const std::string & fragment_shader_filename)
+    Shader::Shader(const std::filesystem::path & vertexShaderFilepath,
+                   const std::filesystem::path & fragmentShaderFilepath)
         : Shader()
     {
-        addShader(vertex_shader_filename, GL_VERTEX_SHADER);
-        addShader(fragment_shader_filename, GL_FRAGMENT_SHADER);
+        addShader(vertexShaderFilepath,   GL_VERTEX_SHADER);
+        addShader(fragmentShaderFilepath, GL_FRAGMENT_SHADER);
     }
 
-    Shader::Shader(const std::string & vertex_shader_filename,
-                   const std::string & fragment_shader_filename,
-                   const std::string & geometry_shader_filename)
-        : Shader(vertex_shader_filename, fragment_shader_filename)
+    Shader::Shader(const std::filesystem::path & vertexShaderFilepath,
+                   const std::filesystem::path & fragmentShaderFilepath,
+                   const std::filesystem::path & geometryShaderFilepath)
+        : Shader(vertexShaderFilepath, fragmentShaderFilepath)
     {
-        addShader(geometry_shader_filename, GL_GEOMETRY_SHADER);
+        addShader(geometryShaderFilepath, GL_GEOMETRY_SHADER);
     }
 
-    Shader::Shader(const std::string & vertex_shader_filename,
-                   const std::string & fragment_shader_filename,
-                   const std::string & tessellation_control_shader_filename,
-                   const std::string & tessellation_evaluation_shader_filename)
-        : Shader(vertex_shader_filename, fragment_shader_filename)
+    Shader::Shader(const std::filesystem::path & vertexShaderFilepath,
+                   const std::filesystem::path & fragmentShaderFilepath,
+                   const std::filesystem::path & tessellationControlShaderFilepath,
+                   const std::filesystem::path & tessellationEvaluationShaderFilepath)
+        : Shader(vertexShaderFilepath, fragmentShaderFilepath)
     {
-        addShader(tessellation_control_shader_filename, GL_TESS_CONTROL_SHADER);
-        addShader(tessellation_evaluation_shader_filename, GL_TESS_EVALUATION_SHADER);
+        addShader(tessellationControlShaderFilepath,    GL_TESS_CONTROL_SHADER);
+        addShader(tessellationEvaluationShaderFilepath, GL_TESS_EVALUATION_SHADER);
     }
 
-    Shader::Shader(const std::string & vertex_shader_filename,
-                   const std::string & fragment_shader_filename,
-                   const std::string & geometry_shader_filename,
-                   const std::string & tessellation_control_shader_filename,
-                   const std::string & tessellation_evaluation_shader_filename)
-        : Shader(vertex_shader_filename,
-                 fragment_shader_filename,
-                 tessellation_control_shader_filename,
-                 tessellation_evaluation_shader_filename)
+    Shader::Shader(const std::filesystem::path & vertexShaderFilepath,
+                   const std::filesystem::path & fragmentShaderFilepath,
+                   const std::filesystem::path & geometryShaderFilepath,
+                   const std::filesystem::path & tessellationControlShaderFilepath,
+                   const std::filesystem::path & tessellationEvaluationShaderFilepath)
+        : Shader(vertexShaderFilepath,
+                 fragmentShaderFilepath,
+                 tessellationControlShaderFilepath,
+                 tessellationEvaluationShaderFilepath)
     {
-        addShader(geometry_shader_filename, GL_GEOMETRY_SHADER);
+        addShader(geometryShaderFilepath, GL_GEOMETRY_SHADER);
     }
 
     Shader::~Shader()
     {
-        if (m_program_id != 0)
+        if (m_programID != 0)
         {
-            glDeleteProgram(m_program_id);
-            m_program_id = 0;
+            glDeleteProgram(m_programID);
+            m_programID = 0;
         }
     }
 
-    void Shader::addShader(std::string const & file_name, GLuint type) const
+    void Shader::addShader(const std::filesystem::path &filepath, GLuint type) const
     {
-        if (m_program_id == 0)
+        if (m_programID == 0)
         {
             return;
         }
 
-        if (file_name.empty())
+        if (filepath.empty())
         {
             fprintf(stderr, "Error: Shader's file name can't be empty.\n");
 
@@ -94,18 +94,18 @@ namespace mango
 
         if (shaderObject == 0)
         {
-            fprintf(stderr, "Error while creating %s.\n", file_name.c_str());
+            fprintf(stderr, "Error while creating %s.\n", filepath.string().c_str());
 
             return;
         }
 
 
-        std::string code = Util::loadFile("assets/shaders/" + file_name);
+        std::string code = Util::loadFile("assets/shaders" / filepath);
         code = Util::loadShaderIncludes(code);
 
-        const char * shader_code = code.c_str();
+        const char * shaderCode = code.c_str();
 
-        glShaderSource(shaderObject, 1, &shader_code, nullptr);
+        glShaderSource(shaderObject, 1, &shaderCode, nullptr);
         glCompileShader(shaderObject);
 
         GLint result;
@@ -113,7 +113,7 @@ namespace mango
 
         if (result == GL_FALSE)
         {
-            fprintf(stderr, "%s compilation failed!\n", file_name.c_str());
+            fprintf(stderr, "%s compilation failed!\n", filepath.string().c_str());
 
             GLint logLen;
             glGetShaderiv(shaderObject, GL_INFO_LOG_LENGTH, &logLen);
@@ -132,24 +132,24 @@ namespace mango
             return;
         }
 
-        glAttachShader(m_program_id, shaderObject);
+        glAttachShader(m_programID, shaderObject);
         glDeleteShader(shaderObject);
     }
 
     void Shader::addAllUniforms()
     {
         /* Get all active uniforms except uniforms in blocks */
-        GLenum program_interface = GL_UNIFORM;
-        GLint num_uniforms = 0;
-        glGetProgramInterfaceiv(m_program_id, program_interface, GL_ACTIVE_RESOURCES, &num_uniforms);
+        GLenum programInterface = GL_UNIFORM;
+        GLint numUniforms = 0;
+        glGetProgramInterfaceiv(m_programID, programInterface, GL_ACTIVE_RESOURCES, &numUniforms);
 
         const GLenum properties[] = { GL_BLOCK_INDEX, GL_TYPE, GL_NAME_LENGTH, GL_LOCATION };
-        const GLint properties_size = sizeof(properties) / sizeof(properties[0]);
+        const GLint propertiesSize = sizeof(properties) / sizeof(properties[0]);
 
-        for(GLint i = 0; i < num_uniforms; ++i)
+        for(GLint i = 0; i < numUniforms; ++i)
         {
-            GLint values[properties_size];
-            glGetProgramResourceiv(m_program_id, program_interface, i, properties_size, properties, properties_size, nullptr, values);
+            GLint values[propertiesSize];
+            glGetProgramResourceiv(m_programID, programInterface, i, propertiesSize, properties, propertiesSize, nullptr, values);
 
             /* Skip all uniforms in blocks */
             if(values[0] != -1)
@@ -157,88 +157,88 @@ namespace mango
                 continue;
             }
 
-            std::vector<char> name_data(values[2]);
-            glGetProgramResourceName(m_program_id, program_interface, i, name_data.size(), nullptr, &name_data[0]);
-            std::string uniform_name(name_data.begin(), name_data.end() - 1);
+            std::vector<char> nameData(values[2]);
+            glGetProgramResourceName(m_programID, programInterface, i, nameData.size(), nullptr, &nameData[0]);
+            std::string uniformName(nameData.begin(), nameData.end() - 1);
 
-            std::string prefix = uniform_name.substr(0, 2);
+            std::string prefix = uniformName.substr(0, 2);
             if(GLOBAL_UNIFORM_PREFIX == prefix)
             {
-                m_global_uniforms_types.push_back(values[1]);
-                m_global_uniforms_names.push_back(uniform_name);
-                m_uniforms_locations[uniform_name] = values[3];
+                m_globalUniformsTypes.push_back(values[1]);
+                m_globalUniformsNames.push_back(uniformName);
+                m_uniformsLocations[uniformName] = values[3];
             }
             else if(SKIP_UNIFORM_PREFIX == prefix)
             {
-                m_uniforms_locations[uniform_name] = values[3];
+                m_uniformsLocations[uniformName] = values[3];
             }
             else
             {
-                m_uniforms_types.push_back(values[1]);
-                m_uniforms_names.push_back(uniform_name);
-                m_uniforms_locations[uniform_name] = values[3];
+                m_uniformsTypes.push_back(values[1]);
+                m_uniformsNames.push_back(uniformName);
+                m_uniformsLocations[uniformName] = values[3];
             }
         }
     }
 
     void Shader::addAllSubroutines()
     {
-        GLenum interfaces[]    = { GL_VERTEX_SUBROUTINE, GL_FRAGMENT_SUBROUTINE };
-        GLenum shader_stages[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+        GLenum interfaces[]   = { GL_VERTEX_SUBROUTINE, GL_FRAGMENT_SUBROUTINE };
+        GLenum shaderStages[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 
-        GLint interfaces_count = sizeof(interfaces) / sizeof(interfaces[0]);
+        GLint interfacesCount = sizeof(interfaces) / sizeof(interfaces[0]);
 
-        for(GLint i = 0; i < interfaces_count; ++i)
+        for(GLint i = 0; i < interfacesCount; ++i)
         {
             /* Get all active subroutines */
-            GLenum program_interface = interfaces[i];
+            GLenum programInterface = interfaces[i];
 
-            GLint num_subroutines = 0;
-            glGetProgramInterfaceiv(m_program_id, program_interface, GL_ACTIVE_RESOURCES, &num_subroutines);
+            GLint numSubroutines = 0;
+            glGetProgramInterfaceiv(m_programID, programInterface, GL_ACTIVE_RESOURCES, &numSubroutines);
 
-            const GLenum properties[] = { GL_NAME_LENGTH };
-            const GLint properties_size = sizeof(properties) / sizeof(properties[0]);
+            const GLenum properties[]   = { GL_NAME_LENGTH };
+            const GLint  propertiesSize = sizeof(properties) / sizeof(properties[0]);
 
             GLint count_subroutine_locations = 0;
-            glGetProgramStageiv(m_program_id, shader_stages[i], GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &count_subroutine_locations);
-            m_active_subroutine_uniform_locations[shader_stages[i]] = count_subroutine_locations;
+            glGetProgramStageiv(m_programID, shaderStages[i], GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &count_subroutine_locations);
+            m_activeSubroutineUniformLocations[shaderStages[i]] = count_subroutine_locations;
 
-            for (GLint j = 0; j < num_subroutines; ++j)
+            for (GLint j = 0; j < numSubroutines; ++j)
             {
-                GLint values[properties_size];
+                GLint values[propertiesSize];
                 GLint length = 0;
-                glGetProgramResourceiv(m_program_id, program_interface, j, properties_size, properties, properties_size, &length, values);
+                glGetProgramResourceiv(m_programID, programInterface, j, propertiesSize, properties, propertiesSize, &length, values);
 
-                std::vector<char> name_data(values[0]);
-                glGetProgramResourceName(m_program_id, program_interface, j, name_data.size(), nullptr, &name_data[0]);
-                std::string subroutine_name(name_data.begin(), name_data.end() - 1);
+                std::vector<char> nameData(values[0]);
+                glGetProgramResourceName(m_programID, programInterface, j, nameData.size(), nullptr, &nameData[0]);
+                std::string subroutineName(nameData.begin(), nameData.end() - 1);
 
-                GLuint subroutine_index = glGetSubroutineIndex(m_program_id, shader_stages[i], subroutine_name.c_str());
+                GLuint subroutineIndex = glGetSubroutineIndex(m_programID, shaderStages[i], subroutineName.c_str());
 
-                m_subroutine_indices[subroutine_name] = subroutine_index;
+                m_subroutineIndices[subroutineName] = subroutineIndex;
             }
         }
     }
 
     bool Shader::link()
     {
-        glLinkProgram(m_program_id);
+        glLinkProgram(m_programID);
 
         GLint status;
-        glGetProgramiv(m_program_id, GL_LINK_STATUS, &status);
+        glGetProgramiv(m_programID, GL_LINK_STATUS, &status);
 
         if (status == GL_FALSE)
         {
             fprintf(stderr, "Failed to link shader program!\n");
 
             GLint logLen;
-            glGetProgramiv(m_program_id, GL_INFO_LOG_LENGTH, &logLen);
+            glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &logLen);
 
             if (logLen > 0)
             {
                 char* log = (char*)malloc(logLen);
                 GLsizei written;
-                glGetProgramInfoLog(m_program_id, logLen, &written, log);
+                glGetProgramInfoLog(m_programID, logLen, &written, log);
 
                 fprintf(stderr, "Program log: \n%s", log);
                 free(log);
@@ -246,63 +246,63 @@ namespace mango
         }
         else
         {
-            m_is_linked = true;
+            m_isLinked = true;
 
             addAllUniforms();
             addAllSubroutines();
         }
 
-        return m_is_linked;
+        return m_isLinked;
     }
 
     void Shader::bind() const
     {
-        if (m_program_id != 0 && m_is_linked)
+        if (m_programID != 0 && m_isLinked)
         {
-            glUseProgram(m_program_id);
+            glUseProgram(m_programID);
         }
     }
 
     void Shader::updateUniforms(Material & material)
     {
-        for(unsigned i = 0; i < m_uniforms_names.size(); ++i)
+        for(unsigned i = 0; i < m_uniformsNames.size(); ++i)
         {
-            auto uniform_name = m_uniforms_names[i];
-            auto uniform_type = m_uniforms_types[i];
+            auto uniformName = m_uniformsNames[i];
+            auto uniformType = m_uniformsTypes[i];
 
-            switch(uniform_type)
+            switch(uniformType)
             {
                 case GL_SAMPLER_2D:
-                    if(M_TEXTURE_DIFFUSE == uniform_name)
+                    if(M_TEXTURE_DIFFUSE == uniformName)
                     {
                         material.getTexture(Material::TextureType::DIFFUSE)->bind(GLuint(Material::TextureType::DIFFUSE));
                     }
                     else
-                    if(M_TEXTURE_SPECULAR == uniform_name)
+                    if(M_TEXTURE_SPECULAR == uniformName)
                     {
                         material.getTexture(Material::TextureType::SPECULAR)->bind(GLuint(Material::TextureType::SPECULAR));
                     }
                     else
-                    if(M_TEXTURE_NORMAL == uniform_name)
+                    if(M_TEXTURE_NORMAL == uniformName)
                     {
                         material.getTexture(Material::TextureType::NORMAL)->bind(GLuint(Material::TextureType::NORMAL));
                     }
                     else
-                    if (M_TEXTURE_EMISSION == uniform_name)
+                    if (M_TEXTURE_EMISSION == uniformName)
                     {
                         material.getTexture(Material::TextureType::EMISSION)->bind(GLuint(Material::TextureType::EMISSION));
                     }
                     else
-                    if (M_TEXTURE_DEPTH == uniform_name)
+                    if (M_TEXTURE_DEPTH == uniformName)
                     {
                         material.getTexture(Material::TextureType::DEPTH)->bind(GLuint(Material::TextureType::DEPTH));
                     }
                     break;
                 case GL_FLOAT_VEC3:
-                    setUniform(uniform_name, material.getVector3(uniform_name));
+                    setUniform(uniformName, material.getVector3(uniformName));
                     break;
                 case GL_FLOAT:
-                    setUniform(uniform_name, material.getFloat(uniform_name));
+                    setUniform(uniformName, material.getFloat(uniformName));
                     break;
             }
         }
@@ -310,247 +310,247 @@ namespace mango
 
     void Shader::updateGlobalUniforms(const TransformComponent & transform)
     {
-        for(unsigned i = 0; i < m_global_uniforms_names.size(); ++i)
+        for(unsigned i = 0; i < m_globalUniformsNames.size(); ++i)
         {
-            auto uniform_name = m_global_uniforms_names[i];
-            auto uniform_type = m_global_uniforms_types[i];
+            auto uniformName = m_globalUniformsNames[i];
+            auto uniformType = m_globalUniformsTypes[i];
 
-            switch(uniform_type)
+            switch(uniformType)
             {
                 case GL_FLOAT_MAT4:
                 {
-                    if (G_MVP == uniform_name)
+                    if (G_MVP == uniformName)
                     {
-                        auto view = CoreServices::getRenderer()->getCamera()->m_view;
-                        auto projection = CoreServices::getRenderer()->getCamera()->m_projection;
+                        auto view       = CoreServices::getRenderer()->getCamera()->view;
+                        auto projection = CoreServices::getRenderer()->getCamera()->projection;
 
-                        auto mvp = projection * view * transform.world_matrix();
+                        auto mvp = projection * view * transform.getWorldMatrix();
                         setUniform(G_MVP, mvp);
                     }
                     else
-                    if (G_MODEL_MATRIX == uniform_name)
+                    if (G_MODEL_MATRIX == uniformName)
                     {
-                        setUniform(G_MODEL_MATRIX, transform.world_matrix());
+                        setUniform(G_MODEL_MATRIX, transform.getWorldMatrix());
                     }
                     break;
                 }
                 case GL_FLOAT_MAT3:
                 {
-                    if (G_NORMAL_MATRIX == uniform_name)
+                    if (G_NORMAL_MATRIX == uniformName)
                     {
-                        setUniform(G_NORMAL_MATRIX, transform.normal_matrix());
+                        setUniform(G_NORMAL_MATRIX, transform.getNormalMatrix());
                     }
                     break;
                 }
                 case GL_FLOAT_VEC3:
                 {
-                    if (G_CAM_POS == uniform_name)
+                    if (G_CAM_POS == uniformName)
                     {
-                        setUniform(G_CAM_POS, CoreServices::getRenderer()->getCameraTransform()->position());
+                        setUniform(G_CAM_POS, CoreServices::getRenderer()->getCameraTransform()->getPosition());
                     }
                 }
             }
         }
     }
 
-    bool Shader::getUniformLocation(const std::string & uniform_name)
+    bool Shader::getUniformLocation(const std::string & uniformName)
     {
-        GLint uniform_location = glGetUniformLocation(m_program_id, uniform_name.c_str());
+        GLint uniformLocation = glGetUniformLocation(m_programID, uniformName.c_str());
 
-        if (uniform_location != -1)
+        if (uniformLocation != -1)
         {
-            m_uniforms_locations[uniform_name] = uniform_location;
+            m_uniformsLocations[uniformName] = uniformLocation;
             return true;
         }
         else
         {
-            fprintf(stderr, "Error! Can't find uniform %s\n", uniform_name.c_str());
+            fprintf(stderr, "Error! Can't find uniform %s\n", uniformName.c_str());
             return false;
         }
     }
 
     void Shader::setUniform(const std::string & uniformName, float value)
     {
-        if (m_uniforms_locations.count(uniformName))
+        if (m_uniformsLocations.count(uniformName))
         {
-            glProgramUniform1f(m_program_id, m_uniforms_locations[uniformName], value);
+            glProgramUniform1f(m_programID, m_uniformsLocations[uniformName], value);
         }
         else
         {
             if (getUniformLocation(uniformName))
             {
-                glProgramUniform1f(m_program_id, m_uniforms_locations[uniformName], value);
+                glProgramUniform1f(m_programID, m_uniformsLocations[uniformName], value);
             }
         }
     }
 
     void Shader::setUniform(const std::string & uniformName, int value)
     {
-        if (m_uniforms_locations.count(uniformName))
+        if (m_uniformsLocations.count(uniformName))
         {
-            glProgramUniform1i(m_program_id, m_uniforms_locations[uniformName], value);
+            glProgramUniform1i(m_programID, m_uniformsLocations[uniformName], value);
         }
         else
         {
             if (getUniformLocation(uniformName))
             {
-                glProgramUniform1i(m_program_id, m_uniforms_locations[uniformName], value);
+                glProgramUniform1i(m_programID, m_uniformsLocations[uniformName], value);
             }
         }
     }
 
     void Shader::setUniform(const std::string & uniformName, unsigned int value)
     {
-        if (m_uniforms_locations.count(uniformName))
+        if (m_uniformsLocations.count(uniformName))
         {
-            glProgramUniform1ui(m_program_id, m_uniforms_locations.at(uniformName), value);
+            glProgramUniform1ui(m_programID, m_uniformsLocations.at(uniformName), value);
         }
         else
         {
             if (getUniformLocation(uniformName))
             {
-                glProgramUniform1ui(m_program_id, m_uniforms_locations[uniformName], value);
+                glProgramUniform1ui(m_programID, m_uniformsLocations[uniformName], value);
             }
         }
     }
 
     void Shader::setUniform(const std::string & uniformName, GLsizei count, float * value)
     {
-        if (m_uniforms_locations.count(uniformName))
+        if (m_uniformsLocations.count(uniformName))
         {
-            glProgramUniform1fv(m_program_id, m_uniforms_locations[uniformName], count, value);
+            glProgramUniform1fv(m_programID, m_uniformsLocations[uniformName], count, value);
         }
         else
         {
             if (getUniformLocation(uniformName))
             {
-                glProgramUniform1fv(m_program_id, m_uniforms_locations[uniformName], count, value);
+                glProgramUniform1fv(m_programID, m_uniformsLocations[uniformName], count, value);
             }
         }
     }
 
     void Shader::setUniform(const std::string & uniformName, GLsizei count, int * value)
     {
-        if (m_uniforms_locations.count(uniformName))
+        if (m_uniformsLocations.count(uniformName))
         {
-            glProgramUniform1iv(m_program_id, m_uniforms_locations[uniformName], count, value);
+            glProgramUniform1iv(m_programID, m_uniformsLocations[uniformName], count, value);
         }
         else
         {
             if (getUniformLocation(uniformName))
             {
-                glProgramUniform1iv(m_program_id, m_uniforms_locations[uniformName], count, value);
+                glProgramUniform1iv(m_programID, m_uniformsLocations[uniformName], count, value);
             }
         }
     }
 
     void Shader::setUniform(const std::string & uniformName, GLsizei count, glm::vec3 * vectors)
     {
-        if (m_uniforms_locations.count(uniformName))
+        if (m_uniformsLocations.count(uniformName))
         {
-            glProgramUniform3fv(m_program_id, m_uniforms_locations[uniformName], count, glm::value_ptr(vectors[0]));
+            glProgramUniform3fv(m_programID, m_uniformsLocations[uniformName], count, glm::value_ptr(vectors[0]));
         }
         else
         {
             if (getUniformLocation(uniformName))
             {
-                glProgramUniform3fv(m_program_id, m_uniforms_locations[uniformName], count, glm::value_ptr(vectors[0]));
+                glProgramUniform3fv(m_programID, m_uniformsLocations[uniformName], count, glm::value_ptr(vectors[0]));
             }
         }
     }
 
     void Shader::setUniform(const std::string & uniformName, const glm::vec2 & vector)
     {
-        if (m_uniforms_locations.count(uniformName))
+        if (m_uniformsLocations.count(uniformName))
         {
-            glProgramUniform2fv(m_program_id, m_uniforms_locations[uniformName], 1, glm::value_ptr(vector));
+            glProgramUniform2fv(m_programID, m_uniformsLocations[uniformName], 1, glm::value_ptr(vector));
         }
         else
         {
             if (getUniformLocation(uniformName))
             {
-                glProgramUniform2fv(m_program_id, m_uniforms_locations[uniformName], 1, glm::value_ptr(vector));
+                glProgramUniform2fv(m_programID, m_uniformsLocations[uniformName], 1, glm::value_ptr(vector));
             }
         }
     }
 
     void Shader::setUniform(const std::string & uniformName, const glm::vec3 & vector)
     {
-        if (m_uniforms_locations.count(uniformName))
+        if (m_uniformsLocations.count(uniformName))
         {
-            glProgramUniform3fv(m_program_id, m_uniforms_locations[uniformName], 1, glm::value_ptr(vector));
+            glProgramUniform3fv(m_programID, m_uniformsLocations[uniformName], 1, glm::value_ptr(vector));
         }
         else
         {
             if (getUniformLocation(uniformName))
             {
-                glProgramUniform3fv(m_program_id, m_uniforms_locations[uniformName], 1, glm::value_ptr(vector));
+                glProgramUniform3fv(m_programID, m_uniformsLocations[uniformName], 1, glm::value_ptr(vector));
             }
         }
     }
 
     void Shader::setUniform(const std::string & uniformName, const glm::vec4 & vector)
     {
-        if (m_uniforms_locations.count(uniformName))
+        if (m_uniformsLocations.count(uniformName))
         {
-            glProgramUniform4fv(m_program_id, m_uniforms_locations[uniformName], 1, glm::value_ptr(vector));
+            glProgramUniform4fv(m_programID, m_uniformsLocations[uniformName], 1, glm::value_ptr(vector));
         }
         else
         {
             if (getUniformLocation(uniformName))
             {
-                glProgramUniform4fv(m_program_id, m_uniforms_locations[uniformName], 1, glm::value_ptr(vector));
+                glProgramUniform4fv(m_programID, m_uniformsLocations[uniformName], 1, glm::value_ptr(vector));
             }
         }
     }
 
     void Shader::setUniform(const std::string & uniformName, const glm::mat3 & matrix)
     {
-        if (m_uniforms_locations.count(uniformName))
+        if (m_uniformsLocations.count(uniformName))
         {
-            glProgramUniformMatrix3fv(m_program_id, m_uniforms_locations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
+            glProgramUniformMatrix3fv(m_programID, m_uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
         }
         else
         {
             if (getUniformLocation(uniformName))
             {
-                glProgramUniformMatrix3fv(m_program_id, m_uniforms_locations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
+                glProgramUniformMatrix3fv(m_programID, m_uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
             }
         }
     }
 
     void Shader::setUniform(const std::string & uniformName, const glm::mat4 & matrix)
     {
-        if (m_uniforms_locations.count(uniformName))
+        if (m_uniformsLocations.count(uniformName))
         {
-            glProgramUniformMatrix4fv(m_program_id, m_uniforms_locations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
+            glProgramUniformMatrix4fv(m_programID, m_uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
         }
         else
         {
             if (getUniformLocation(uniformName))
             {
-                glProgramUniformMatrix4fv(m_program_id, m_uniforms_locations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
+                glProgramUniformMatrix4fv(m_programID, m_uniformsLocations[uniformName], 1, GL_FALSE, glm::value_ptr(matrix));
             }
         }
     }
 
     void Shader::setUniform(const std::string & uniformName, glm::mat4 * matrices, unsigned count)
     {
-        if (m_uniforms_locations.count(uniformName))
+        if (m_uniformsLocations.count(uniformName))
         {
-            glProgramUniformMatrix4fv(m_program_id, m_uniforms_locations[uniformName], count, GL_FALSE, &matrices[0][0][0]);
+            glProgramUniformMatrix4fv(m_programID, m_uniformsLocations[uniformName], count, GL_FALSE, &matrices[0][0][0]);
         }
         else
         {
             if (getUniformLocation(uniformName))
             {
-                glProgramUniformMatrix4fv(m_program_id, m_uniforms_locations[uniformName], count, GL_FALSE, &matrices[0][0][0]);
+                glProgramUniformMatrix4fv(m_programID, m_uniformsLocations[uniformName], count, GL_FALSE, &matrices[0][0][0]);
             }
         }
     }
 
-    void Shader::setSubroutine(Type shader_type, const std::string & subroutine_name)
+    void Shader::setSubroutine(Type shaderType, const std::string & subroutineName)
     {
-        glUniformSubroutinesuiv(GLenum(shader_type), m_active_subroutine_uniform_locations[GLenum(shader_type)], &m_subroutine_indices[subroutine_name]);
+        glUniformSubroutinesuiv(GLenum(shaderType), m_activeSubroutineUniformLocations[GLenum(shaderType)], &m_subroutineIndices[subroutineName]);
     }
 }
