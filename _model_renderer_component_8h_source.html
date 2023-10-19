@@ -55,8 +55,8 @@ $(document).ready(function() { init_codefold(0); });
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;Rendering/Model.h&quot;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span>mango</div>
@@ -68,24 +68,24 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        <span class="keyword">enum class</span> RenderQueue { RQ_OPAQUE, RQ_ALPHA, RQ_ENVIRO_MAPPING_STATIC, RQ_ENVIRO_MAPPING_DYNAMIC };</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <a class="code hl_class" href="classmango_1_1_model_renderer_component.html">ModelRendererComponent</a>()</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>            : m_render_queue(RenderQueue::RQ_OPAQUE) </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>            : m_renderQueue(RenderQueue::RQ_OPAQUE) </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        {}</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keyword">explicit</span> <a class="code hl_class" href="classmango_1_1_model_renderer_component.html">ModelRendererComponent</a>(<span class="keyword">const</span> <a class="code hl_class" href="classmango_1_1_model.html">Model</a> &amp; model, RenderQueue render_queue = RenderQueue::RQ_OPAQUE)</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>            : m_model(model),</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>              m_render_queue(render_queue)</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keyword">explicit</span> <a class="code hl_class" href="classmango_1_1_model_renderer_component.html">ModelRendererComponent</a>(<span class="keyword">const</span> <a class="code hl_class" href="classmango_1_1_model.html">Model</a> &amp; model, RenderQueue renderQueue = RenderQueue::RQ_OPAQUE)</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>            : model        (model),</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>              m_renderQueue(renderQueue)</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        {}</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        RenderQueue getRenderQueue()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_render_queue; }</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        RenderQueue getRenderQueue()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_renderQueue; }</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <a class="code hl_class" href="classmango_1_1_model.html">Model</a> m_model;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <a class="code hl_class" href="classmango_1_1_model.html">Model</a> model;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        RenderQueue m_render_queue;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        RenderQueue m_renderQueue;</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    };</div>
 </div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>}</div>
-<div class="ttc" id="aclassmango_1_1_model_html"><div class="ttname"><a href="classmango_1_1_model.html">mango::Model</a></div><div class="ttdef"><b>Definition</b> Model.h:16</div></div>
+<div class="ttc" id="aclassmango_1_1_model_html"><div class="ttname"><a href="classmango_1_1_model.html">mango::Model</a></div><div class="ttdef"><b>Definition</b> Model.h:15</div></div>
 <div class="ttc" id="aclassmango_1_1_model_renderer_component_html"><div class="ttname"><a href="classmango_1_1_model_renderer_component.html">mango::ModelRendererComponent</a></div><div class="ttdef"><b>Definition</b> ModelRendererComponent.h:9</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

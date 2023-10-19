@@ -83,12 +83,12 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>unbindTextureU
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:ae4128a926ff8018aeb870a0deff6a9dd" id="r_ae4128a926ff8018aeb870a0deff6a9dd"><td class="memItemLeft" align="right" valign="top"><a id="ae4128a926ff8018aeb870a0deff6a9dd" name="ae4128a926ff8018aeb870a0deff6a9dd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>genCubeMapTexture</b> (const std::string *filenames, GLuint num_mipmaps, bool is_srgb=false)</td></tr>
-<tr class="separator:ae4128a926ff8018aeb870a0deff6a9dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48ca6af336a1968dbd9c218e330ca1f0" id="r_a48ca6af336a1968dbd9c218e330ca1f0"><td class="memItemLeft" align="right" valign="top"><a id="a48ca6af336a1968dbd9c218e330ca1f0" name="a48ca6af336a1968dbd9c218e330ca1f0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>genTexture2D</b> (const std::string &amp;filename, GLuint num_mipmaps, bool is_srgb=false)</td></tr>
-<tr class="separator:a48ca6af336a1968dbd9c218e330ca1f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af434b4261daff902da640bf6645096e3" id="r_af434b4261daff902da640bf6645096e3"><td class="memItemLeft" align="right" valign="top"><a id="af434b4261daff902da640bf6645096e3" name="af434b4261daff902da640bf6645096e3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>genCubeMapTexture</b> (const std::filesystem::path *filepaths, GLuint numMipmaps, bool isSrgb=false)</td></tr>
+<tr class="separator:af434b4261daff902da640bf6645096e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae383458fbb763324440a9caf094d1623" id="r_ae383458fbb763324440a9caf094d1623"><td class="memItemLeft" align="right" valign="top"><a id="ae383458fbb763324440a9caf094d1623" name="ae383458fbb763324440a9caf094d1623"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>genTexture2D</b> (const std::filesystem::path &amp;filepath, GLuint numMipmaps, bool isSrgb=false)</td></tr>
+<tr class="separator:ae383458fbb763324440a9caf094d1623"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8e89fcf8be07a6ec51b3c8d2a6b68e7" id="r_ae8e89fcf8be07a6ec51b3c8d2a6b68e7"><td class="memItemLeft" align="right" valign="top"><a id="ae8e89fcf8be07a6ec51b3c8d2a6b68e7" name="ae8e89fcf8be07a6ec51b3c8d2a6b68e7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>genTexture2D1x1</b> (const glm::uvec4 &amp;color)</td></tr>
 <tr class="separator:ae8e89fcf8be07a6ec51b3c8d2a6b68e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -98,21 +98,21 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:ac9785940494d3a44c2e5c731d2c4ba6c" id="r_ac9785940494d3a44c2e5c731d2c4ba6c"><td class="memItemLeft" align="right" valign="top"><a id="ac9785940494d3a44c2e5c731d2c4ba6c" name="ac9785940494d3a44c2e5c731d2c4ba6c"></a>
 GLenum&#160;</td><td class="memItemRight" valign="bottom"><b>m_format</b></td></tr>
 <tr class="separator:ac9785940494d3a44c2e5c731d2c4ba6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a027f5982f6efb876a37be7ba88164a40" id="r_a027f5982f6efb876a37be7ba88164a40"><td class="memItemLeft" align="right" valign="top"><a id="a027f5982f6efb876a37be7ba88164a40" name="a027f5982f6efb876a37be7ba88164a40"></a>
-GLint&#160;</td><td class="memItemRight" valign="bottom"><b>m_internal_format</b></td></tr>
-<tr class="separator:a027f5982f6efb876a37be7ba88164a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bc34eb7221a28aad2e233bef884d210" id="r_a4bc34eb7221a28aad2e233bef884d210"><td class="memItemLeft" align="right" valign="top"><a id="a4bc34eb7221a28aad2e233bef884d210" name="a4bc34eb7221a28aad2e233bef884d210"></a>
-GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>m_num_mipmaps</b></td></tr>
-<tr class="separator:a4bc34eb7221a28aad2e233bef884d210"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a739bfb05612d42b70315140435aad120" id="r_a739bfb05612d42b70315140435aad120"><td class="memItemLeft" align="right" valign="top"><a id="a739bfb05612d42b70315140435aad120" name="a739bfb05612d42b70315140435aad120"></a>
-<a class="el" href="structmango_1_1_image_data.html">ImageData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_tex_data</b></td></tr>
-<tr class="separator:a739bfb05612d42b70315140435aad120"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a924d2b4a165e958aa808c043e58cef56" id="r_a924d2b4a165e958aa808c043e58cef56"><td class="memItemLeft" align="right" valign="top"><a id="a924d2b4a165e958aa808c043e58cef56" name="a924d2b4a165e958aa808c043e58cef56"></a>
-GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>m_to_id</b></td></tr>
-<tr class="separator:a924d2b4a165e958aa808c043e58cef56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34967c96a095d36c9bf2b13071bdbe51" id="r_a34967c96a095d36c9bf2b13071bdbe51"><td class="memItemLeft" align="right" valign="top"><a id="a34967c96a095d36c9bf2b13071bdbe51" name="a34967c96a095d36c9bf2b13071bdbe51"></a>
-GLenum&#160;</td><td class="memItemRight" valign="bottom"><b>m_to_type</b></td></tr>
-<tr class="separator:a34967c96a095d36c9bf2b13071bdbe51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e93af1a19d4d1f2429019d97bd63c35" id="r_a4e93af1a19d4d1f2429019d97bd63c35"><td class="memItemLeft" align="right" valign="top"><a id="a4e93af1a19d4d1f2429019d97bd63c35" name="a4e93af1a19d4d1f2429019d97bd63c35"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>m_id</b></td></tr>
+<tr class="separator:a4e93af1a19d4d1f2429019d97bd63c35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84661cb14e7e3ba17fa81107a357e062" id="r_a84661cb14e7e3ba17fa81107a357e062"><td class="memItemLeft" align="right" valign="top"><a id="a84661cb14e7e3ba17fa81107a357e062" name="a84661cb14e7e3ba17fa81107a357e062"></a>
+GLint&#160;</td><td class="memItemRight" valign="bottom"><b>m_internalFormat</b></td></tr>
+<tr class="separator:a84661cb14e7e3ba17fa81107a357e062"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e52ddd2a5d5e89ec8f25df8d46667da" id="r_a0e52ddd2a5d5e89ec8f25df8d46667da"><td class="memItemLeft" align="right" valign="top"><a id="a0e52ddd2a5d5e89ec8f25df8d46667da" name="a0e52ddd2a5d5e89ec8f25df8d46667da"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>m_numMipmaps</b></td></tr>
+<tr class="separator:a0e52ddd2a5d5e89ec8f25df8d46667da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98241ea1454af85a6fa0ad258ae9c70d" id="r_a98241ea1454af85a6fa0ad258ae9c70d"><td class="memItemLeft" align="right" valign="top"><a id="a98241ea1454af85a6fa0ad258ae9c70d" name="a98241ea1454af85a6fa0ad258ae9c70d"></a>
+<a class="el" href="structmango_1_1_image_data.html">ImageData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_texData</b></td></tr>
+<tr class="separator:a98241ea1454af85a6fa0ad258ae9c70d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a633a0ef4f639065ab826bc877d1d0097" id="r_a633a0ef4f639065ab826bc877d1d0097"><td class="memItemLeft" align="right" valign="top"><a id="a633a0ef4f639065ab826bc877d1d0097" name="a633a0ef4f639065ab826bc877d1d0097"></a>
+GLenum&#160;</td><td class="memItemRight" valign="bottom"><b>m_type</b></td></tr>
+<tr class="separator:a633a0ef4f639065ab826bc877d1d0097"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>

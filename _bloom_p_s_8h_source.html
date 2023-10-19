@@ -73,14 +73,14 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="keywordtype">void</span> clear();</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <span class="keywordtype">void</span> bindBrightnessTexture(GLuint unit);</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keywordtype">void</span> bindBlurredTexture(GLuint unit);</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keywordtype">void</span> bindBlurredTexture   (GLuint unit);</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keywordtype">void</span> extractBrightness(<span class="keyword">const</span> std::shared_ptr&lt;RenderTarget&gt; &amp; hdr_rt, <span class="keywordtype">float</span> threshold = 1.0f);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keywordtype">void</span> blurGaussian(<span class="keywordtype">unsigned</span> iterations = 5);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keywordtype">void</span> extractBrightness(<span class="keyword">const</span> std::shared_ptr&lt;RenderTarget&gt; &amp; hdrRenderTarget, <span class="keywordtype">float</span> threshold = 1.0f);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keywordtype">void</span> blurGaussian(uint32_t iterations = 5);</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        std::shared_ptr&lt;RenderTarget&gt; m_brightness_buffer;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        std::shared_ptr&lt;RenderTarget&gt; m_blurred_buffer;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        std::shared_ptr&lt;RenderTarget&gt; m_brightnessBuffer;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        std::shared_ptr&lt;RenderTarget&gt; m_blurredBuffer;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    };</div>
 </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}</div>

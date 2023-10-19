@@ -63,9 +63,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a6fb3c14de672afcfc90e491ef944f188" id="r_a6fb3c14de672afcfc90e491ef944f188"><td class="memItemLeft" align="right" valign="top"><a id="a6fb3c14de672afcfc90e491ef944f188" name="a6fb3c14de672afcfc90e491ef944f188"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>bindDefaultFramebuffer</b> ()</td></tr>
 <tr class="separator:a6fb3c14de672afcfc90e491ef944f188"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26530d78e20d5a03cde36228439af516" id="r_a26530d78e20d5a03cde36228439af516"><td class="memItemLeft" align="right" valign="top"><a id="a26530d78e20d5a03cde36228439af516" name="a26530d78e20d5a03cde36228439af516"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>createWindow</b> (unsigned int width, unsigned int height, const std::string &amp;title)</td></tr>
-<tr class="separator:a26530d78e20d5a03cde36228439af516"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97cefd9614d9b7091badbc33ad0af264" id="r_a97cefd9614d9b7091badbc33ad0af264"><td class="memItemLeft" align="right" valign="top"><a id="a97cefd9614d9b7091badbc33ad0af264" name="a97cefd9614d9b7091badbc33ad0af264"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>create</b> (uint32_t width, uint32_t height, const std::string &amp;title)</td></tr>
+<tr class="separator:a97cefd9614d9b7091badbc33ad0af264"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf4435a2093cb960484723ec7d7356b4" id="r_aaf4435a2093cb960484723ec7d7356b4"><td class="memItemLeft" align="right" valign="top"><a id="aaf4435a2093cb960484723ec7d7356b4" name="aaf4435a2093cb960484723ec7d7356b4"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>endFrame</b> ()</td></tr>
 <tr class="separator:aaf4435a2093cb960484723ec7d7356b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,20 +118,20 @@ Static Private Attributes</h2></td></tr>
 static GLFWmonitor *&#160;</td><td class="memItemRight" valign="bottom"><b>m_monitor</b> = nullptr</td></tr>
 <tr class="separator:a24ecca6c6cf645d97731583dd1c7681b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab24d95fcebda43c1600bb97aacf0adc2" id="r_ab24d95fcebda43c1600bb97aacf0adc2"><td class="memItemLeft" align="right" valign="top"><a id="ab24d95fcebda43c1600bb97aacf0adc2" name="ab24d95fcebda43c1600bb97aacf0adc2"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_title</b> = &quot;&quot;</td></tr>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_title</b></td></tr>
 <tr class="separator:ab24d95fcebda43c1600bb97aacf0adc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa485a8d70c03f08d4f86dccd23cec905" id="r_aa485a8d70c03f08d4f86dccd23cec905"><td class="memItemLeft" align="right" valign="top"><a id="aa485a8d70c03f08d4f86dccd23cec905" name="aa485a8d70c03f08d4f86dccd23cec905"></a>
-static glm::ivec2&#160;</td><td class="memItemRight" valign="bottom"><b>m_viewport_size</b> = glm::ivec2(0)</td></tr>
-<tr class="separator:aa485a8d70c03f08d4f86dccd23cec905"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3df20ae1e05294535185baae7967701b" id="r_a3df20ae1e05294535185baae7967701b"><td class="memItemLeft" align="right" valign="top"><a id="a3df20ae1e05294535185baae7967701b" name="a3df20ae1e05294535185baae7967701b"></a>
+static glm::ivec2&#160;</td><td class="memItemRight" valign="bottom"><b>m_viewportSize</b> = glm::ivec2(0)</td></tr>
+<tr class="separator:a3df20ae1e05294535185baae7967701b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a881e1cf55608205230c566044e77c527" id="r_a881e1cf55608205230c566044e77c527"><td class="memItemLeft" align="right" valign="top"><a id="a881e1cf55608205230c566044e77c527" name="a881e1cf55608205230c566044e77c527"></a>
 static GLFWwindow *&#160;</td><td class="memItemRight" valign="bottom"><b>m_window</b> = nullptr</td></tr>
 <tr class="separator:a881e1cf55608205230c566044e77c527"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3be2ffd65340e925c1106c732230e2aa" id="r_a3be2ffd65340e925c1106c732230e2aa"><td class="memItemLeft" align="right" valign="top"><a id="a3be2ffd65340e925c1106c732230e2aa" name="a3be2ffd65340e925c1106c732230e2aa"></a>
-static glm::ivec2&#160;</td><td class="memItemRight" valign="bottom"><b>m_window_pos</b> = glm::ivec2(0)</td></tr>
-<tr class="separator:a3be2ffd65340e925c1106c732230e2aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92806bd778db641efc9b4f95c58e2d13" id="r_a92806bd778db641efc9b4f95c58e2d13"><td class="memItemLeft" align="right" valign="top"><a id="a92806bd778db641efc9b4f95c58e2d13" name="a92806bd778db641efc9b4f95c58e2d13"></a>
-static glm::ivec2&#160;</td><td class="memItemRight" valign="bottom"><b>m_window_size</b> = glm::ivec2(0)</td></tr>
-<tr class="separator:a92806bd778db641efc9b4f95c58e2d13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a932896d8b3acbfc13d22c76ef5efb8ad" id="r_a932896d8b3acbfc13d22c76ef5efb8ad"><td class="memItemLeft" align="right" valign="top"><a id="a932896d8b3acbfc13d22c76ef5efb8ad" name="a932896d8b3acbfc13d22c76ef5efb8ad"></a>
+static glm::ivec2&#160;</td><td class="memItemRight" valign="bottom"><b>m_windowPos</b> = glm::ivec2(0)</td></tr>
+<tr class="separator:a932896d8b3acbfc13d22c76ef5efb8ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae621d86415402073bf4b794f67554f64" id="r_ae621d86415402073bf4b794f67554f64"><td class="memItemLeft" align="right" valign="top"><a id="ae621d86415402073bf4b794f67554f64" name="ae621d86415402073bf4b794f67554f64"></a>
+static glm::ivec2&#160;</td><td class="memItemRight" valign="bottom"><b>m_windowSize</b> = glm::ivec2(0)</td></tr>
+<tr class="separator:ae621d86415402073bf4b794f67554f64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/Users/runner/work/Mango/Mango/Mango/src/Window/<a class="el" href="_window_8h_source.html">Window.h</a></li>

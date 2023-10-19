@@ -58,26 +58,28 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;Rendering/Texture.h&quot;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;stb_image.h&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span>mango</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>{</div>
-<div class="foldopen" id="foldopen00010" data-start="{" data-end="};">
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="classmango_1_1_util.html">   10</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classmango_1_1_util.html">Util</a></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    {</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keyword">static</span> std::string <a class="code hl_function" href="classmango_1_1_util.html#a760ff595ae6a5bc4c525eb1a8fac6adc">loadFile</a>(<span class="keyword">const</span> std::string &amp; filename);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keyword">static</span> std::string loadShaderIncludes(<span class="keyword">const</span> std::string &amp; shader_code);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keyword">static</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* <a class="code hl_function" href="classmango_1_1_util.html#aec518a7f63fa6c2a87e24a23fada9b15">loadTexture</a>(<span class="keyword">const</span> std::string &amp; filename, <a class="code hl_struct" href="structmango_1_1_image_data.html">ImageData</a> &amp; image_data);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    };</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span>mango</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>{</div>
+<div class="foldopen" id="foldopen00011" data-start="{" data-end="};">
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="classmango_1_1_util.html">   11</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classmango_1_1_util.html">Util</a></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keyword">static</span> std::string <a class="code hl_function" href="classmango_1_1_util.html#ae0fcb366dc0c7d4b2d14a5733ef2e4db">loadFile</a>(<span class="keyword">const</span> std::filesystem::path &amp; filepath);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keyword">static</span> std::string loadShaderIncludes(<span class="keyword">const</span> std::string &amp; shaderCode);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keyword">static</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* <a class="code hl_function" href="classmango_1_1_util.html#a8babd5fa9797034c1f48176e10ce621d">loadTexture</a>(<span class="keyword">const</span> std::filesystem::path &amp; filepath, <a class="code hl_struct" href="structmango_1_1_image_data.html">ImageData</a> &amp; imageData);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    };</div>
 </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>}</div>
-<div class="ttc" id="aclassmango_1_1_util_html"><div class="ttname"><a href="classmango_1_1_util.html">mango::Util</a></div><div class="ttdef"><b>Definition</b> Util.h:11</div></div>
-<div class="ttc" id="aclassmango_1_1_util_html_a760ff595ae6a5bc4c525eb1a8fac6adc"><div class="ttname"><a href="classmango_1_1_util.html#a760ff595ae6a5bc4c525eb1a8fac6adc">mango::Util::loadFile</a></div><div class="ttdeci">static std::string loadFile(const std::string &amp;filename)</div><div class="ttdoc">Loads a file in a text mode.</div><div class="ttdef"><b>Definition</b> Util.cpp:8</div></div>
-<div class="ttc" id="aclassmango_1_1_util_html_aec518a7f63fa6c2a87e24a23fada9b15"><div class="ttname"><a href="classmango_1_1_util.html#aec518a7f63fa6c2a87e24a23fada9b15">mango::Util::loadTexture</a></div><div class="ttdeci">static unsigned char * loadTexture(const std::string &amp;filename, ImageData &amp;image_data)</div><div class="ttdoc">Loads a file that contains an image data.</div><div class="ttdef"><b>Definition</b> Util.cpp:60</div></div>
-<div class="ttc" id="astructmango_1_1_image_data_html"><div class="ttname"><a href="structmango_1_1_image_data.html">mango::ImageData</a></div><div class="ttdef"><b>Definition</b> Texture.h:10</div></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}</div>
+<div class="ttc" id="aclassmango_1_1_util_html"><div class="ttname"><a href="classmango_1_1_util.html">mango::Util</a></div><div class="ttdef"><b>Definition</b> Util.h:12</div></div>
+<div class="ttc" id="aclassmango_1_1_util_html_a8babd5fa9797034c1f48176e10ce621d"><div class="ttname"><a href="classmango_1_1_util.html#a8babd5fa9797034c1f48176e10ce621d">mango::Util::loadTexture</a></div><div class="ttdeci">static unsigned char * loadTexture(const std::filesystem::path &amp;filepath, ImageData &amp;imageData)</div><div class="ttdoc">Loads a file that contains an image data.</div><div class="ttdef"><b>Definition</b> Util.cpp:60</div></div>
+<div class="ttc" id="aclassmango_1_1_util_html_ae0fcb366dc0c7d4b2d14a5733ef2e4db"><div class="ttname"><a href="classmango_1_1_util.html#ae0fcb366dc0c7d4b2d14a5733ef2e4db">mango::Util::loadFile</a></div><div class="ttdeci">static std::string loadFile(const std::filesystem::path &amp;filepath)</div><div class="ttdoc">Loads a file in a text mode.</div><div class="ttdef"><b>Definition</b> Util.cpp:8</div></div>
+<div class="ttc" id="astructmango_1_1_image_data_html"><div class="ttname"><a href="structmango_1_1_image_data.html">mango::ImageData</a></div><div class="ttdef"><b>Definition</b> Texture.h:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -53,7 +53,6 @@
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classmango_1_1_render_target-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">mango::RenderTarget Class Reference</div></div>
@@ -178,24 +177,24 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>bind</b> () const</td
 <tr class="memitem:aa95b59a8a6caadc4b53f516a6ebbb230" id="r_aa95b59a8a6caadc4b53f516a6ebbb230"><td class="memItemLeft" align="right" valign="top"><a id="aa95b59a8a6caadc4b53f516a6ebbb230" name="aa95b59a8a6caadc4b53f516a6ebbb230"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>bindReadOnly</b> () const</td></tr>
 <tr class="separator:aa95b59a8a6caadc4b53f516a6ebbb230"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6873e7eea546369743458bcb8a3019f" id="r_ae6873e7eea546369743458bcb8a3019f"><td class="memItemLeft" align="right" valign="top"><a id="ae6873e7eea546369743458bcb8a3019f" name="ae6873e7eea546369743458bcb8a3019f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>bindTexture</b> (GLuint texture_unit=0, GLuint render_target_id=0) const</td></tr>
-<tr class="separator:ae6873e7eea546369743458bcb8a3019f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a641c2bf27d82b75f1c8a76cda7798d86" id="r_a641c2bf27d82b75f1c8a76cda7798d86"><td class="memItemLeft" align="right" valign="top"><a id="a641c2bf27d82b75f1c8a76cda7798d86" name="a641c2bf27d82b75f1c8a76cda7798d86"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>bindTexture</b> (GLuint textureUnit=0, GLuint renderTargetID=0) const</td></tr>
+<tr class="separator:a641c2bf27d82b75f1c8a76cda7798d86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ec8e1f29517c4485e9a1b96c25cc378" id="r_a1ec8e1f29517c4485e9a1b96c25cc378"><td class="memItemLeft" align="right" valign="top"><a id="a1ec8e1f29517c4485e9a1b96c25cc378" name="a1ec8e1f29517c4485e9a1b96c25cc378"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>bindWriteOnly</b> () const</td></tr>
 <tr class="separator:a1ec8e1f29517c4485e9a1b96c25cc378"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e42cd832629b649830079436b1f170b" id="r_a3e42cd832629b649830079436b1f170b"><td class="memItemLeft" align="right" valign="top"><a id="a3e42cd832629b649830079436b1f170b" name="a3e42cd832629b649830079436b1f170b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
 <tr class="separator:a3e42cd832629b649830079436b1f170b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7bbe0775a497a856bd981efa5d28c5e1" id="r_a7bbe0775a497a856bd981efa5d28c5e1"><td class="memItemLeft" align="right" valign="top"><a id="a7bbe0775a497a856bd981efa5d28c5e1" name="a7bbe0775a497a856bd981efa5d28c5e1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>create</b> (unsigned width, unsigned height, ColorInternalFormat color, DepthInternalFormat depth, RenderTargetType rt_type=RenderTargetType::Tex2D, bool use_filtering=true)</td></tr>
-<tr class="separator:a7bbe0775a497a856bd981efa5d28c5e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b99c09e587cfa0fa824cf2175d1e5ab" id="r_a1b99c09e587cfa0fa824cf2175d1e5ab"><td class="memItemLeft" align="right" valign="top"><a id="a1b99c09e587cfa0fa824cf2175d1e5ab" name="a1b99c09e587cfa0fa824cf2175d1e5ab"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>create</b> (unsigned width, unsigned height, DepthInternalFormat depth, RenderTargetType rt_type=RenderTargetType::Tex2D, bool use_filtering=true)</td></tr>
-<tr class="separator:a1b99c09e587cfa0fa824cf2175d1e5ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9130d9265d7fe2d1afb987e34734a2b3" id="r_a9130d9265d7fe2d1afb987e34734a2b3"><td class="memItemLeft" align="right" valign="top"><a id="a9130d9265d7fe2d1afb987e34734a2b3" name="a9130d9265d7fe2d1afb987e34734a2b3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>createMRT</b> (const std::vector&lt; <a class="el" href="structmango_1_1_render_target_1_1_m_r_t_entry.html">MRTEntry</a> &gt; &amp;mrt_entries, unsigned width, unsigned height, RenderTargetType rt_type=RenderTargetType::Tex2D, bool use_filtering=false, DepthInternalFormat default_renderbuffer_format=DepthInternalFormat::DEPTH24)</td></tr>
-<tr class="separator:a9130d9265d7fe2d1afb987e34734a2b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a663733806304e636287b6bde14f4f23c" id="r_a663733806304e636287b6bde14f4f23c"><td class="memItemLeft" align="right" valign="top"><a id="a663733806304e636287b6bde14f4f23c" name="a663733806304e636287b6bde14f4f23c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>create</b> (unsigned width, unsigned height, ColorInternalFormat color, DepthInternalFormat depth, RenderTargetType rtType=RenderTargetType::Tex2D, bool useFiltering=true)</td></tr>
+<tr class="separator:a663733806304e636287b6bde14f4f23c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b049526c01557964ce9585d8ec5aa8e" id="r_a5b049526c01557964ce9585d8ec5aa8e"><td class="memItemLeft" align="right" valign="top"><a id="a5b049526c01557964ce9585d8ec5aa8e" name="a5b049526c01557964ce9585d8ec5aa8e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>create</b> (unsigned width, unsigned height, DepthInternalFormat depth, RenderTargetType rtType=RenderTargetType::Tex2D, bool useFiltering=true)</td></tr>
+<tr class="separator:a5b049526c01557964ce9585d8ec5aa8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf7c53cbf041443f262a2b503a88b9a7" id="r_adf7c53cbf041443f262a2b503a88b9a7"><td class="memItemLeft" align="right" valign="top"><a id="adf7c53cbf041443f262a2b503a88b9a7" name="adf7c53cbf041443f262a2b503a88b9a7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>createMRT</b> (const std::vector&lt; <a class="el" href="structmango_1_1_render_target_1_1_m_r_t_entry.html">MRTEntry</a> &gt; &amp;mrtEntries, unsigned width, unsigned height, RenderTargetType rtType=RenderTargetType::Tex2D, bool useFiltering=false, DepthInternalFormat defaultRenderbufferFormat=DepthInternalFormat::DEPTH24)</td></tr>
+<tr class="separator:adf7c53cbf041443f262a2b503a88b9a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b195d26faa6e9aea4318d8958713f0e" id="r_a6b195d26faa6e9aea4318d8958713f0e"><td class="memItemLeft" align="right" valign="top"><a id="a6b195d26faa6e9aea4318d8958713f0e" name="a6b195d26faa6e9aea4318d8958713f0e"></a>
 unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>getHeight</b> () const</td></tr>
 <tr class="separator:a6b195d26faa6e9aea4318d8958713f0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -209,32 +208,23 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>releaseTexture</b> ()
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>validate</b> () const</td></tr>
 <tr class="separator:a1d2263c9526dbf570575ce7fdd809cf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:a24a21c8a5b9ba521d6582031e1d39b12" id="r_a24a21c8a5b9ba521d6582031e1d39b12"><td class="memItemLeft" align="right" valign="top"><a id="a24a21c8a5b9ba521d6582031e1d39b12" name="a24a21c8a5b9ba521d6582031e1d39b12"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>initRenderTargets</b> (const std::vector&lt; <a class="el" href="structmango_1_1_render_target_1_1_m_r_t_entry.html">MRTEntry</a> &gt; &amp;mrt_entries)</td></tr>
-<tr class="separator:a24a21c8a5b9ba521d6582031e1d39b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad87ec49099b105d7201a37775ec93aee" id="r_ad87ec49099b105d7201a37775ec93aee"><td class="memItemLeft" align="right" valign="top"><a id="ad87ec49099b105d7201a37775ec93aee" name="ad87ec49099b105d7201a37775ec93aee"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>initTextures</b> (std::vector&lt; <a class="el" href="structmango_1_1_render_target_1_1_m_r_t_entry.html">MRTEntry</a> &gt; &amp;mrt_entries, bool use_filtering=true)</td></tr>
-<tr class="separator:ad87ec49099b105d7201a37775ec93aee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a6595a3e7e730ca7e77054b7b544a3fd2" id="r_a6595a3e7e730ca7e77054b7b544a3fd2"><td class="memItemLeft" align="right" valign="top"><a id="a6595a3e7e730ca7e77054b7b544a3fd2" name="a6595a3e7e730ca7e77054b7b544a3fd2"></a>
-GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>m_depth_rbo_id</b></td></tr>
-<tr class="separator:a6595a3e7e730ca7e77054b7b544a3fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7cabf7d3132d2959a3f209c1efad75c" id="r_ae7cabf7d3132d2959a3f209c1efad75c"><td class="memItemLeft" align="right" valign="top"><a id="ae7cabf7d3132d2959a3f209c1efad75c" name="ae7cabf7d3132d2959a3f209c1efad75c"></a>
-GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>m_fbo_id</b></td></tr>
-<tr class="separator:ae7cabf7d3132d2959a3f209c1efad75c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29b16673b86f962d545771f5b3eef848" id="r_a29b16673b86f962d545771f5b3eef848"><td class="memItemLeft" align="right" valign="top"><a id="a29b16673b86f962d545771f5b3eef848" name="a29b16673b86f962d545771f5b3eef848"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>m_depthRBO</b></td></tr>
+<tr class="separator:a29b16673b86f962d545771f5b3eef848"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab79d75508dc857925de5949e04a9a369" id="r_ab79d75508dc857925de5949e04a9a369"><td class="memItemLeft" align="right" valign="top"><a id="ab79d75508dc857925de5949e04a9a369" name="ab79d75508dc857925de5949e04a9a369"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>m_fbo</b></td></tr>
+<tr class="separator:ab79d75508dc857925de5949e04a9a369"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cba9e9ea4cc7d7ee8ddb9fa680b7385" id="r_a6cba9e9ea4cc7d7ee8ddb9fa680b7385"><td class="memItemLeft" align="right" valign="top"><a id="a6cba9e9ea4cc7d7ee8ddb9fa680b7385" name="a6cba9e9ea4cc7d7ee8ddb9fa680b7385"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>m_height</b></td></tr>
 <tr class="separator:a6cba9e9ea4cc7d7ee8ddb9fa680b7385"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a655895b74b570d00b40cf999377185a7" id="r_a655895b74b570d00b40cf999377185a7"><td class="memItemLeft" align="right" valign="top"><a id="a655895b74b570d00b40cf999377185a7" name="a655895b74b570d00b40cf999377185a7"></a>
-GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>m_num_textures</b></td></tr>
-<tr class="separator:a655895b74b570d00b40cf999377185a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6c2cfb992fa539fc5b9e88a77b182c7" id="r_af6c2cfb992fa539fc5b9e88a77b182c7"><td class="memItemLeft" align="right" valign="top"><a id="af6c2cfb992fa539fc5b9e88a77b182c7" name="af6c2cfb992fa539fc5b9e88a77b182c7"></a>
-GLuint *&#160;</td><td class="memItemRight" valign="bottom"><b>m_to_ids</b></td></tr>
-<tr class="separator:af6c2cfb992fa539fc5b9e88a77b182c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5debdde36dba0b32a970512d0eea1bc9" id="r_a5debdde36dba0b32a970512d0eea1bc9"><td class="memItemLeft" align="right" valign="top"><a id="a5debdde36dba0b32a970512d0eea1bc9" name="a5debdde36dba0b32a970512d0eea1bc9"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>m_numTextures</b></td></tr>
+<tr class="separator:a5debdde36dba0b32a970512d0eea1bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d96358340db1a23ed55470464490de9" id="r_a5d96358340db1a23ed55470464490de9"><td class="memItemLeft" align="right" valign="top"><a id="a5d96358340db1a23ed55470464490de9" name="a5d96358340db1a23ed55470464490de9"></a>
+GLuint *&#160;</td><td class="memItemRight" valign="bottom"><b>m_textureID</b></td></tr>
+<tr class="separator:a5d96358340db1a23ed55470464490de9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87bdcfe7c03f29e5289ddb877ab29784" id="r_a87bdcfe7c03f29e5289ddb877ab29784"><td class="memItemLeft" align="right" valign="top"><a id="a87bdcfe7c03f29e5289ddb877ab29784" name="a87bdcfe7c03f29e5289ddb877ab29784"></a>
 GLenum&#160;</td><td class="memItemRight" valign="bottom"><b>m_type</b></td></tr>
 <tr class="separator:a87bdcfe7c03f29e5289ddb877ab29784"><td class="memSeparator" colspan="2">&#160;</td></tr>
