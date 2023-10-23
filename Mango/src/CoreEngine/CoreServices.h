@@ -1,5 +1,5 @@
 #pragma once
-#include "Core.h"
+#include "Application.h"
 #include "CoreSystems/RenderingSystem.h"
 
 namespace mango
@@ -10,17 +10,19 @@ namespace mango
         CoreServices() = delete;
         ~CoreServices() = delete;
 
-        static Core * const getCore();
+        static Application     * const getApplication();
         static RenderingSystem * const getRenderer();
 
     private:
-        static void provide(Core * core);
+        static void provide(Application     * application);
         static void provide(RenderingSystem * renderer);
-
-        static Core      * m_coreEngine;
+    
+    private:
+        static Application     * m_application;
         static RenderingSystem * m_renderer;
-
-        friend class Core;
+    
+    private:
+        friend class Application;
     };
 }
 

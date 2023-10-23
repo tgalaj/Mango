@@ -1,11 +1,13 @@
 #include "mgpch.h"
 
 #include "Window.h"
-#include "CoreEngine/Core.h"
 #include "CoreEngine/CoreServices.h"
 #include "GUI/GUI.h"
 #include "Input.h"
 #include "Utilities/DebugOutputGL.h"
+
+#define MIN_GL_VERSION_MAJOR 4
+#define MIN_GL_VERSION_MINOR 6
 
 namespace mango
 {

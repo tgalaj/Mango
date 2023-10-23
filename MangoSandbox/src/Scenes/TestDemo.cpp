@@ -239,7 +239,7 @@ void TestDemo::input(float delta)
 
     if (mango::Input::getKeyUp(mango::KeyCode::Escape))
     {
-        mango::CoreServices::getCore()->stop();
+        mango::CoreServices::getApplication()->stop();
     }
 
     if (mango::Input::getKeyUp(mango::KeyCode::H))

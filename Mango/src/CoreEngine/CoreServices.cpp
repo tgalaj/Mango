@@ -3,22 +3,22 @@
 
 namespace mango
 {
-    Core            * CoreServices::m_coreEngine  = nullptr;
-    RenderingSystem * CoreServices::m_renderer    = nullptr;
+    mango::Application     * CoreServices::m_application = nullptr;
+    mango::RenderingSystem * CoreServices::m_renderer    = nullptr;
 
-    Core * const CoreServices::getCore()
+    mango::Application* const CoreServices::getApplication()
     {
-        return m_coreEngine;
+        return m_application;
     }
 
-    RenderingSystem * const CoreServices::getRenderer()
+    RenderingSystem* const CoreServices::getRenderer()
     {
         return m_renderer;
     }
 
-    void CoreServices::provide(Core * core)
+    void CoreServices::provide(Application* application)
     {
-        m_coreEngine = core;
+        m_application = application;
     }
 
     void CoreServices::provide(RenderingSystem * renderer)
