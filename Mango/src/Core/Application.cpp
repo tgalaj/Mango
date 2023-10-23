@@ -2,13 +2,13 @@
 
 #include "Application.h"
 #include "CoreServices.h"
+#include "GUI/GUI.h"
 #include "Systems/CameraSystem.h"
 #include "Systems/ConsoleSystem.h"
 #include "Systems/FreePoseSystem.h"
 #include "Systems/GUISystem.h"
 #include "Systems/RenderingSystem.h"
 #include "Systems/SceneGraphSystem.h"
-#include "EntryPoint.h"
 #include "Utilities/Timer.h"
 #include "Window/Input.h"
 #include "Window/Window.h"
@@ -22,6 +22,11 @@ mango::Application::Application(const ApplicationSettings& appSettings)
 {
     /* Init window */
     Window::create(appSettings.windowWidth, appSettings.windowHeight, appSettings.windowTitle);
+    
+    /* Init Log, Input and GUI systems */
+    Log::init();
+    Input::init(Window::getNativeWindow());
+    GUI::init(Window::getNativeWindow());
 
     /* Add core systems - do not forget to update them! */
     //systems.add<AudioSystem>();

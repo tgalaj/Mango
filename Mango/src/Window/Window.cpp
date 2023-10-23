@@ -35,7 +35,7 @@ namespace mango
 
         if (!glfwInit())
         {
-            std::cerr << "VE ERROR: Could not initialize GLFW." << std::endl;
+            MG_CORE_CRITICAL("Could not initialize GLFW.");
             exit(EXIT_FAILURE);
         }
 
@@ -55,7 +55,7 @@ namespace mango
 
         if (!m_window)
         {
-            std::cerr << "VE ERROR: Could not create window and OpenGL context." << std::endl;
+            MG_CORE_CRITICAL("Could not create window and OpenGL context.");
 
             glfwTerminate();
             exit(EXIT_FAILURE);
@@ -66,7 +66,7 @@ namespace mango
         /* Initialize GLAD */
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
-            std::cerr << "VE ERROR: Could not initialize GLAD." << std::endl;
+            MG_CORE_CRITICAL("Could not initialize GLAD.");
             exit(EXIT_FAILURE);
         }
 
@@ -97,10 +97,6 @@ namespace mango
 
         glfwGetWindowSize(m_window, &m_windowSize.x, &m_windowSize.y);
         glfwGetWindowPos(m_window, &m_windowPos.x, &m_windowPos.y);
-
-        /* Init Input & GUI */
-        Input::init(m_window);
-        GUI::init(m_window);
     }
 
     void Window::endFrame()
@@ -160,6 +156,11 @@ namespace mango
         return videoModes;
     }
 
+    GLFWwindow* Window::getNativeWindow()
+    {
+        return m_window;
+    }
+
     const std::string& Window::getTitle()
     {
         return m_title;
@@ -189,19 +190,19 @@ namespace mango
 
         if (fullscreen)
         {
-            // backup window position and window size
+            // Backup window position and window size.
             glfwGetWindowSize(m_window, &m_windowSize.x, &m_windowSize.y);
             glfwGetWindowPos(m_window, &m_windowPos.x, &m_windowPos.y);
 
-            // get resolution of the monitor
+            // Get resolution of the monitor.
             const GLFWvidmode* mode = glfwGetVideoMode(m_monitor);
 
-            // switch to fullscreen
+            // Switch to fullscreen.
             glfwSetWindowMonitor(m_window, m_monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
         }
         else
         {
-            // restore last window size and position
+            // Restore last window size and position.
             glfwSetWindowMonitor(m_window, nullptr, m_windowPos.x, m_windowPos.y, m_windowSize.x, m_windowSize.y, 0);
         }
     }

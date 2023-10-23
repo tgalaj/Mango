@@ -34,6 +34,7 @@ namespace mango
         static glm::vec2                     getDpiScale();
         static float                         getAspectRatio();
         static std::vector<MonitorVideoMode> getPrimaryMonitorVideoModes();
+        static GLFWwindow*                   getNativeWindow();
 
         static const std::string & getTitle();
 

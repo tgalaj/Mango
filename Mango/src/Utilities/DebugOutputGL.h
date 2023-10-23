@@ -1,7 +1,7 @@
 #pragma once
+#include "Core/Log.h"
+#include "Helpers/Assertions.h"
 
-#include <cassert>
-#include <cstdio>
 #include <string>
 #include <glad/glad.h>
 
@@ -29,18 +29,54 @@ namespace mango
         {
             if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
                 return;
-            printf(
-                "\n\n********** GL Debug Output **********\n"
-                " Source:     %s\n"
-                " Type:       %s\n"
-                " Severity:   %s\n"
-                " Debug call: %s\n"
-                "*************************************",
-                getStringForSource(source).c_str(),
-                getStringForType(type).c_str(),
-                getStringForSeverity(severity).c_str(),
-                msg
-            );
+
+            switch (severity)
+            {
+            case GL_DEBUG_SEVERITY_HIGH:
+                MG_CORE_ERROR("\n"
+                              "********** GL Debug Output **********"
+                              "\n"
+                              " Source:     {}\n"
+                              " Type:       {}\n"
+                              " Severity:   {}\n"
+                              " Debug call: {}\n"
+                              "*************************************\n",
+                              getStringForSource(source).c_str(),
+                              getStringForType(type).c_str(),
+                              getStringForSeverity(severity).c_str(),
+                              msg);
+                    break;
+
+            case GL_DEBUG_SEVERITY_MEDIUM:
+                MG_CORE_WARN("\n"
+                             "********** GL Debug Output **********"
+                             "\n"
+                             " Source:     {}\n"
+                             " Type:       {}\n"
+                             " Severity:   {}\n"
+                             " Debug call: {}\n"
+                             "*************************************\n",
+                             getStringForSource(source).c_str(),
+                             getStringForType(type).c_str(),
+                             getStringForSeverity(severity).c_str(),
+                             msg);
+                    break;
+
+            case GL_DEBUG_SEVERITY_LOW:
+                MG_CORE_TRACE("\n"
+                              "********** GL Debug Output **********"
+                              "\n"
+                              " Source:     {}\n"
+                              " Type:       {}\n"
+                              " Severity:   {}\n"
+                              " Debug call: {}\n"
+                              "*************************************\n",
+                              getStringForSource(source).c_str(),
+                              getStringForType(type).c_str(),
+                              getStringForSeverity(severity).c_str(),
+                              msg);
+                break;
+            }
         }
 
     private:
@@ -61,7 +97,7 @@ namespace mango
             case GL_DEBUG_SOURCE_OTHER:
                 return "Other";
             default:
-                assert(false);
+                MG_ASSERT(false);
                 return "";
             }
         }
@@ -85,7 +121,7 @@ namespace mango
             case GL_DEBUG_TYPE_OTHER:
                 return "Other";
             default:
-                assert(false);
+                MG_ASSERT(false);
                 return "";
             }
         }
@@ -103,7 +139,7 @@ namespace mango
             case GL_DEBUG_SEVERITY_NOTIFICATION:
                 return "Notification";
             default:
-                assert(false);
+                MG_ASSERT(false);
                 return("");
             }
         }
