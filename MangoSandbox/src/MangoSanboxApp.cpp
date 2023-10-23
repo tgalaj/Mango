@@ -8,9 +8,10 @@
 class TestApp : public mango::Application
 {
 public:
-    TestApp()
+    TestApp(const mango::ApplicationSettings& appSettings)
+        : Application(appSettings)
     {
-
+        addSystem<MoveSystem>();
     }
 
     ~TestApp()
@@ -19,7 +20,17 @@ public:
     }
 };
 
-mango::Application* mango::createApplication(int argc, char** argv)
+mango::Application* mango::createApplication(mango::ApplicationCommandLineArgs args)
 {
-    return new TestApp();
+    mango::ApplicationSettings appSettings{};
+                               appSettings.windowWidth     = 1600;
+                               appSettings.windowHeight    = 800;
+                               appSettings.windowTitle     = "Test App";
+                               appSettings.maxFramerate    = 999.0;
+                               appSettings.commandLineArgs = args;
+
+    auto testApp = new TestApp(appSettings);
+    testApp->setGame(std::make_shared<TestDemo>());
+
+    return testApp;
 }

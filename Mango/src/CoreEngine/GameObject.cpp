@@ -10,7 +10,7 @@ namespace mango
 {
     GameObject::GameObject()
     {
-        entity = CoreServices::getCore()->entities.create();
+        entity = CoreServices::getApplication()->entities.create();
         addComponent<TransformComponent>();
 
         SceneGraphSystem::ROOT_NODE.addChild(entity.component<TransformComponent>());

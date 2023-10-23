@@ -1,5 +1,7 @@
 ﻿#include "mgpch.h"
+
 #include "GUISystem.h"
+#include "CoreEngine/CoreServices.h"
 #include "GUI/GUI.h"
 
 namespace mango
@@ -12,13 +14,8 @@ namespace mango
     {
         GUI::prepare();
 
-        m_game->onGUI(dt);
+        CoreServices::getApplication()->getGame()->onGUI(dt);
 
         GUI::render();
-    }
-
-    void GUISystem::registerGame(const std::shared_ptr<BaseGame> & game)
-    {
-        m_game = game;
     }
 }
