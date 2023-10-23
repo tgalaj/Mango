@@ -1,6 +1,6 @@
 #pragma once
 #include "Application.h"
-#include "CoreSystems/RenderingSystem.h"
+#include "Systems/RenderingSystem.h"
 
 namespace mango
 {

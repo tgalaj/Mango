@@ -1,9 +1,9 @@
 #include "mgpch.h"
 
 #include "Window.h"
-#include "CoreEngine/CoreServices.h"
-#include "GUI/GUI.h"
 #include "Input.h"
+#include "Core/CoreServices.h"
+#include "GUI/GUI.h"
 #include "Utilities/DebugOutputGL.h"
 
 #define MIN_GL_VERSION_MAJOR 4

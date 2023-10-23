@@ -6,7 +6,7 @@
 #include "glm/vec3.hpp"
 
 #include "Cloth.h"
-#include "CoreEngine/CoreAssetManager.h"
+#include "Core/CoreAssetManager.h"
 
 namespace mango
 {

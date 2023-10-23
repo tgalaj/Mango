@@ -1,5 +1,5 @@
 #include "mgpch.h"
-#include "CoreEngine/CoreServices.h"
+#include "Core/CoreServices.h"
 
 namespace mango
 {

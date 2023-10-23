@@ -3,8 +3,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.h"
-#include "CoreEngine/CoreAssetManager.h"
-#include "CoreEngine/CoreServices.h"
+#include "Core/CoreAssetManager.h"
+#include "Core/CoreServices.h"
 #include "Utilities/ShaderGlobals.h"
 #include "Utilities/Util.h"
 

@@ -1,10 +1,9 @@
 #include "mgpch.h"
 
-#include "CoreEngine/GameObject.h"
-
-#include "CoreComponents/TransformComponent.h"
-#include "CoreSystems/SceneGraphSystem.h"
-#include "CoreEngine/CoreServices.h"
+#include "GameObject.h"
+#include "Components/TransformComponent.h"
+#include "CoreServices.h"
+#include "Systems/SceneGraphSystem.h"
 
 namespace mango
 {

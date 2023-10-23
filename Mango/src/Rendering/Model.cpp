@@ -4,8 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Model.h"
-#include "CoreEngine/CoreAssetManager.h"
-#include "CoreEngine/CoreServices.h"
+#include "Core/CoreAssetManager.h"
+#include "Core/CoreServices.h"
 #include "Utilities/GeomPrimitive.h"
 
 namespace mango

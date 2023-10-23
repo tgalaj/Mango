@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "entityx/Entity.h"
-#include "CoreComponents/TransformComponent.h"
+#include "Components/TransformComponent.h"
 
 namespace mango
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "CoreEngine/Application.h"
+#include "Core/Application.h"
 
 extern mango::Application* mango::createApplication(ApplicationCommandLineArgs args);
 

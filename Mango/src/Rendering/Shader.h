@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "CoreComponents/TransformComponent.h"
+#include "Components/TransformComponent.h"
 #include "Material.h"
 
 namespace mango

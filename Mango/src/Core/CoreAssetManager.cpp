@@ -1,6 +1,6 @@
 #include "mgpch.h"
 
-#include "CoreEngine/CoreAssetManager.h"
+#include "Core/CoreAssetManager.h"
 
 namespace mango
 {

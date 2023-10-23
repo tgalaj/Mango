@@ -1,8 +1,8 @@
 ﻿#include "mgpch.h"
 
 #include "CameraSystem.h"
-#include "CoreComponents/CameraComponent.h"
-#include "CoreComponents/TransformComponent.h"
+#include "Components/CameraComponent.h"
+#include "Components/TransformComponent.h"
 
 namespace mango
 {

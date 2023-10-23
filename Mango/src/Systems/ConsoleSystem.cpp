@@ -1,7 +1,7 @@
 ﻿#include "mgpch.h"
 
 #include "entityx/entityx.h"
-#include "CoreSystems/ConsoleSystem.h"
+#include "Systems/ConsoleSystem.h"
 
 namespace mango
 {

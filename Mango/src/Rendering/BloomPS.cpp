@@ -1,7 +1,7 @@
 #include "mgpch.h"
 
 #include "BloomPS.h"
-#include "CoreEngine/CoreAssetManager.h"
+#include "Core/CoreAssetManager.h"
 #include "Window/Window.h"
 
 namespace mango

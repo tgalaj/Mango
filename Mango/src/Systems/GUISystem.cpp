@@ -1,7 +1,7 @@
 ﻿#include "mgpch.h"
 
 #include "GUISystem.h"
-#include "CoreEngine/CoreServices.h"
+#include "Core/CoreServices.h"
 #include "GUI/GUI.h"
 
 namespace mango

@@ -1,8 +1,8 @@
 ﻿#include "mgpch.h"
 
 #include "FreePoseSystem.h"
-#include "CoreComponents/FreeLookComponent.h"
-#include "CoreComponents/FreeMoveComponent.h"
+#include "Components/FreeLookComponent.h"
+#include "Components/FreeMoveComponent.h"
 #include "Window/Window.h"
 
 namespace mango

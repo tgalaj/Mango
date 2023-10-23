@@ -1,9 +1,9 @@
 ﻿#pragma once
 #include <entityx/System.h>
 
-#include "CoreComponents/CameraComponent.h"
-#include "CoreComponents/ModelRendererComponent.h"
-#include "CoreComponents/TransformComponent.h"
+#include "Components/CameraComponent.h"
+#include "Components/ModelRendererComponent.h"
+#include "Components/TransformComponent.h"
 #include "Rendering/BloomPS.h"
 #include "Rendering/DeferredRendering.h"
 #include "Rendering/PostprocessEffect.h"

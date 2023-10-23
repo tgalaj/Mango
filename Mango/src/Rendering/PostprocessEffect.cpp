@@ -1,7 +1,7 @@
 #include "mgpch.h"
 
 #include "PostprocessEffect.h"
-#include "CoreEngine/CoreAssetManager.h"
+#include "Core/CoreAssetManager.h"
 
 namespace mango
 {

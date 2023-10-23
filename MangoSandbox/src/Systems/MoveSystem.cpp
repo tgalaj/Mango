@@ -1,7 +1,7 @@
 ﻿#include "MoveSystem.h"
-#include "CoreComponents/TransformComponent.h"
-#include "CoreComponents/PointLightComponent.h"
-#include "CoreComponents/SpotLightComponent.h"
+#include "Components/TransformComponent.h"
+#include "Components/PointLightComponent.h"
+#include "Components/SpotLightComponent.h"
 
 MoveSystem::~MoveSystem()
 {

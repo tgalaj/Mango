@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <entityx/System.h>
 
-#include "CoreComponents/TransformComponent.h"
+#include "Components/TransformComponent.h"
 
 namespace mango
 {

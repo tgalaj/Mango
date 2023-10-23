@@ -1,11 +1,11 @@
 ﻿#include "mgpch.h"
 
 #include "RenderingSystem.h"
-#include "CoreComponents/DirectionalLightComponent.h"
-#include "CoreComponents/PointLightComponent.h"
-#include "CoreComponents/SpotLightComponent.h"
-#include "CoreEngine/CoreAssetManager.h"
-#include "CoreEngine/CoreServices.h"
+#include "Components/DirectionalLightComponent.h"
+#include "Components/PointLightComponent.h"
+#include "Components/SpotLightComponent.h"
+#include "Core/CoreAssetManager.h"
+#include "Core/CoreServices.h"
 #include "Utilities/ShaderGlobals.h"
 #include "Window/Window.h"
 

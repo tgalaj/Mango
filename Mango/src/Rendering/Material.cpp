@@ -1,7 +1,7 @@
 #include "mgpch.h"
 
 #include "Material.h"
-#include "CoreEngine/CoreAssetManager.h"
+#include "Core/CoreAssetManager.h"
 #include "Helpers/Assertions.h"
 
 namespace mango
