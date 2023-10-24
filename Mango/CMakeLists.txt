@@ -46,6 +46,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES}
                                                     glfw
                                                     imgui
                                                     spdlog
+													cxxopts
                                                     glm::glm
                                                     tinyddsloader)
 

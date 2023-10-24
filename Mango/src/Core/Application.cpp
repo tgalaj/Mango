@@ -13,6 +13,8 @@
 #include "Window/Input.h"
 #include "Window/Window.h"
 
+#include <cxxopts.hpp>
+
 mango::Application::Application(const ApplicationSettings& appSettings)
     : m_usersSystems(entities, events),
       m_frameTime   (1.0 / appSettings.maxFramerate),
@@ -20,9 +22,34 @@ mango::Application::Application(const ApplicationSettings& appSettings)
       m_fpsToReturn (0),
       m_isRunning   (false)
 {
+    /* Parse command line args. */
+    cxxopts::Options options(appSettings.windowTitle, "");
+
+    options.add_options()
+        ("w,width", "Window width", cxxopts::value<uint32_t>())
+        ("h,height", "Window height", cxxopts::value<uint32_t>())
+        ("fullscreen", "Set fullscreen window", cxxopts::value<bool>()->default_value("false")->implicit_value("true"));
+
+    auto optResult = options.parse(appSettings.commandLineArgs.argsCount, appSettings.commandLineArgs.argsValues);
+
+    if (optResult.count("width"))
+    {
+        const_cast<ApplicationSettings&>(appSettings).windowWidth = optResult["width"].as<uint32_t>();
+    }
+
+    if (optResult.count("height"))
+    {
+        const_cast<ApplicationSettings&>(appSettings).windowHeight = optResult["height"].as<uint32_t>();
+    }
+
     /* Init window */
     Window::create(appSettings.windowWidth, appSettings.windowHeight, appSettings.windowTitle);
     
+    if (optResult["fullscreen"].as<bool>())
+    {
+        Window::setFullscreen(true);
+    }
+
     /* Init Log, Input and GUI systems */
     Log::init();
     Input::init(Window::getNativeWindow());

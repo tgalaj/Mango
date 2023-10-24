@@ -213,6 +213,10 @@ namespace mango
         glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
 
         GUI::updateWindowSize(float(width), float(height));
-        CoreServices::getRenderer()->resize(width, height);
+        
+        if (CoreServices::getRenderer())
+        {
+            CoreServices::getRenderer()->resize(width, height);
+        }
     }
 }

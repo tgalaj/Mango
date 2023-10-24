@@ -25,6 +25,7 @@ CPMAddPackage("gh:glfw/glfw#3.3.8")
 CPMAddPackage("gh:g-truc/glm#0.9.9.8")
 CPMAddPackage("gh:ocornut/imgui@1.88")
 CPMAddPackage("gh:gabime/spdlog@1.10.0")
+CPMAddPackage("gh:jarro2783/cxxopts@3.1.1")
 
 CPMAddPackage(
         GITHUB_REPOSITORY benikabocha/tinyddsloader
