@@ -1,6 +1,6 @@
 #pragma once
+#include "Core/Assertions.h"
 #include "Core/Log.h"
-#include "Helpers/Assertions.h"
 
 #include <string>
 #include <glad/glad.h>
@@ -97,7 +97,7 @@ namespace mango
             case GL_DEBUG_SOURCE_OTHER:
                 return "Other";
             default:
-                MG_ASSERT(false);
+                MG_CORE_ASSERT_FAIL("Unexpected enum");
                 return "";
             }
         }
@@ -121,7 +121,7 @@ namespace mango
             case GL_DEBUG_TYPE_OTHER:
                 return "Other";
             default:
-                MG_ASSERT(false);
+                MG_CORE_ASSERT_FAIL("Unexpected enum");
                 return "";
             }
         }
@@ -139,7 +139,7 @@ namespace mango
             case GL_DEBUG_SEVERITY_NOTIFICATION:
                 return "Notification";
             default:
-                MG_ASSERT(false);
+                MG_CORE_ASSERT_FAIL("Unexpected enum");
                 return("");
             }
         }

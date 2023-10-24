@@ -1,7 +1,7 @@
 #include "mgpch.h"
 
 #include "RenderTarget.h"
-#include "Helpers/Assertions.h"
+#include "Core/Assertions.h"
 
 namespace mango
 {
@@ -33,7 +33,7 @@ namespace mango
 
     void RenderTarget::create(unsigned width, unsigned height, DepthInternalFormat depth, RenderTargetType rtType, bool useFiltering)
     {
-        MG_ASSERT(depth != DepthInternalFormat::NoDepth);
+        MG_CORE_ASSERT(depth != DepthInternalFormat::NoDepth);
 
         glGenFramebuffers(1, &m_fbo);
         glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);

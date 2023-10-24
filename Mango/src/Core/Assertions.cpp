@@ -27,31 +27,33 @@
 
 #include "mgpch.h"
 
-#include "Assertions.h"
-
-#include <cstdio>
-#include <cstdarg>
-
 namespace mango
 {
     namespace
     {
 
-        asserts::FailBehavior defaultHandler(const char* condition,
-                                             const char* msg,
-                                             const char* file,
-                                             const int   line)
+        asserts::FailBehavior defaultHandler(asserts::Type type,
+                                             const char*   condition,
+                                             const char*   msg,
+                                             const char*   file,
+                                             const int     line)
         {
-            std::printf("%s(%d): Assert Failure: ", file, line);
-
-            if (condition != nullptr)
-                std::printf("'%s' ", condition);
-
-            if (msg != nullptr)
-                std::printf("%s", msg);
-
-            std::printf("\n");
-
+            if(type == asserts::Type::Core)
+            {
+                MG_CORE_ERROR("{}({}): Assert Failure: '{}' {}", 
+                              file, 
+                              line, 
+                              (condition != nullptr) ? condition : "",
+                              (msg != nullptr) ? msg : "");
+            }
+            else if (type == asserts::Type::Application)
+            {
+                MG_ERROR("{}({}): Assert Failure: '{}' {}", 
+                         file, 
+                         line, 
+                         (condition != nullptr) ? condition : "",
+                         (msg != nullptr) ? msg : "");
+            }
             return asserts::Halt;
         }
 
@@ -73,7 +75,8 @@ namespace mango
         getAssertHandlerInstance() = newHandler;
     }
 
-    asserts::FailBehavior asserts::reportFailure(const char* condition,
+    asserts::FailBehavior asserts::reportFailure(Type        type,
+                                                 const char* condition,
                                                  const char* file,
                                                  const int   line,
                                                  const char* msg, 
@@ -93,7 +96,7 @@ namespace mango
             message = messageBuffer;
         }
 
-        return getAssertHandlerInstance()(condition, message, file, line);
+        return getAssertHandlerInstance()(type, condition, message, file, line);
     }
 
 }

@@ -1,8 +1,8 @@
 #include "mgpch.h"
 
 #include "Material.h"
+#include "Core/Assertions.h"
 #include "Core/CoreAssetManager.h"
-#include "Helpers/Assertions.h"
 
 namespace mango
 {
@@ -58,8 +58,7 @@ namespace mango
             return m_textureMap[textureType];
         }
 
-        MG_ASSERT_MSG(false, "Couldn't find texture with the specified texture type!");
-
+        MG_CORE_ASSERT_FAIL("Couldn't find texture with the specified texture type!");
         return nullptr;
     }
 
