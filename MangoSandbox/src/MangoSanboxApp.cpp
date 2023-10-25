@@ -1,5 +1,5 @@
 #include <Mango.h>
-#include <Core/EntryPoint.h>
+#include <Mango/Core/EntryPoint.h>
 
 #include "Scenes/TestDemo.h"
 #include "Systems/MoveSystem.h"

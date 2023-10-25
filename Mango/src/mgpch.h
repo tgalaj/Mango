@@ -1,7 +1,5 @@
 #pragma once
 
-#define GLFW_INCLUDE_NONE 
-
 #include <algorithm>
 #include <cmath>
 #include <cstring>
@@ -17,5 +15,5 @@
 #include <utility>
 #include <vector>
 
-#include "Core/Assertions.h"
-#include "Core/Log.h"
+#include "Mango/Core/Assertions.h"
+#include "Mango/Core/Log.h"

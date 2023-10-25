@@ -1,22 +1,21 @@
 #define GLFW_INCLUDE_NONE 
 
 #include "TestDemo.h"
-#include "Components/CameraComponent.h"
-#include "Components/DirectionalLightComponent.h"
-#include "Components/FreeLookComponent.h"
-#include "Components/FreeMoveComponent.h"
-#include "Components/ModelRendererComponent.h"
-#include "Components/PointLightComponent.h"
-#include "Components/SpotLightComponent.h"
-#include "Components/TransformComponent.h"
-#include "Core/CoreAssetManager.h"
-#include "Core/CoreServices.h"
-#include "Core/GameObject.h"
-#include "GUI/GUI.h"
 #include "imgui.h"
 #include "Systems/MoveSystem.h"
-#include "Window/Input.h"
-#include "Window/Window.h"
+
+#include <Mango/Components/CameraComponent.h>
+#include <Mango/Components/DirectionalLightComponent.h>
+#include <Mango/Components/FreeLookComponent.h>
+#include <Mango/Components/FreeMoveComponent.h>
+#include <Mango/Components/ModelRendererComponent.h>
+#include <Mango/Components/PointLightComponent.h>
+#include <Mango/Components/SpotLightComponent.h>
+#include <Mango/Components/TransformComponent.h>
+#include <Mango/Core/CoreAssetManager.h>
+#include <Mango/Core/CoreServices.h>
+#include <Mango/Core/GameObject.h>
+#include <Mango/GUI/GUI.h>
 
 TestDemo::TestDemo()
 {
@@ -253,6 +252,16 @@ void TestDemo::input(float delta)
     {
         fullscreen = !fullscreen;
         mango::Window::setFullscreen(fullscreen);
+    }
+
+    if (mango::Input::getKeyDown(mango::KeyCode::O))
+    {
+        mango::CoreServices::getApplication()->getEventBus()->emit(mango::CollisionEvent(1, 2));
+    }
+
+    if (mango::Input::getKeyDown(mango::KeyCode::P))
+    {
+        mango::CoreServices::getApplication()->getEventBus()->emit(mango::Event());
     }
 }
 

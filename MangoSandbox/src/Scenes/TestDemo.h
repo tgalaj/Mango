@@ -1,5 +1,5 @@
 #pragma once
-#include "GameLogic/BaseGame.h"
+#include "Mango/GameLogic/BaseGame.h"
 
 class TestDemo : public mango::BaseGame
 {

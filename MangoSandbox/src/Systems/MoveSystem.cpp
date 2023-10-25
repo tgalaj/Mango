@@ -1,7 +1,7 @@
 ﻿#include "MoveSystem.h"
-#include "Components/TransformComponent.h"
-#include "Components/PointLightComponent.h"
-#include "Components/SpotLightComponent.h"
+#include <Mango/Components/TransformComponent.h>
+#include <Mango/Components/PointLightComponent.h>
+#include <Mango/Components/SpotLightComponent.h>
 
 MoveSystem::~MoveSystem()
 {
