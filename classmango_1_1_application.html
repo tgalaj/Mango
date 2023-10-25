@@ -71,12 +71,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9319e257f96f42ee34cf80b6e149b138" id="r_a9319e257f96f42ee34cf80b6e149b138"><td class="memItemLeft" align="right" valign="top"><a id="a9319e257f96f42ee34cf80b6e149b138" name="a9319e257f96f42ee34cf80b6e149b138"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Application</b> (const <a class="el" href="structmango_1_1_application_settings.html">ApplicationSettings</a> &amp;appSettings)</td></tr>
 <tr class="separator:a9319e257f96f42ee34cf80b6e149b138"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bf47d3ae2a657bed5dfce03e291daa2" id="r_a9bf47d3ae2a657bed5dfce03e291daa2"><td class="memItemLeft" align="right" valign="top"><a id="a9bf47d3ae2a657bed5dfce03e291daa2" name="a9bf47d3ae2a657bed5dfce03e291daa2"></a>
+std::shared_ptr&lt; <a class="el" href="classmango_1_1_event_bus.html">EventBus</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getEventBus</b> ()</td></tr>
+<tr class="separator:a9bf47d3ae2a657bed5dfce03e291daa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9741b016f7c943affbd6ec24028de60a" id="r_a9741b016f7c943affbd6ec24028de60a"><td class="memItemLeft" align="right" valign="top"><a id="a9741b016f7c943affbd6ec24028de60a" name="a9741b016f7c943affbd6ec24028de60a"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getFPS</b> () const</td></tr>
 <tr class="separator:a9741b016f7c943affbd6ec24028de60a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b9d5d9400b659768511ade62f5cd75a" id="r_a1b9d5d9400b659768511ade62f5cd75a"><td class="memItemLeft" align="right" valign="top"><a id="a1b9d5d9400b659768511ade62f5cd75a" name="a1b9d5d9400b659768511ade62f5cd75a"></a>
 const std::shared_ptr&lt; <a class="el" href="classmango_1_1_base_game.html">BaseGame</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getGame</b> ()</td></tr>
 <tr class="separator:a1b9d5d9400b659768511ade62f5cd75a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8514f9881a5813a98d2c267a2f5412f" id="r_aa8514f9881a5813a98d2c267a2f5412f"><td class="memItemLeft" align="right" valign="top"><a id="aa8514f9881a5813a98d2c267a2f5412f" name="aa8514f9881a5813a98d2c267a2f5412f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>onCollisionEvent</b> (const <a class="el" href="structmango_1_1_collision_event.html">CollisionEvent</a> &amp;collision)</td></tr>
+<tr class="separator:aa8514f9881a5813a98d2c267a2f5412f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fe79a3fd1360aebb0d82915d9b66adb" id="r_a0fe79a3fd1360aebb0d82915d9b66adb"><td class="memItemLeft" align="right" valign="top"><a id="a0fe79a3fd1360aebb0d82915d9b66adb" name="a0fe79a3fd1360aebb0d82915d9b66adb"></a>
 <a class="el" href="classmango_1_1_application.html">Application</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classmango_1_1_application.html">Application</a> &amp;)=delete</td></tr>
 <tr class="separator:a0fe79a3fd1360aebb0d82915d9b66adb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -103,6 +109,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>updateRenderingSystem
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
+<tr class="memitem:a6a6f5e98b4aac4d241cdbb6896078ef2" id="r_a6a6f5e98b4aac4d241cdbb6896078ef2"><td class="memItemLeft" align="right" valign="top"><a id="a6a6f5e98b4aac4d241cdbb6896078ef2" name="a6a6f5e98b4aac4d241cdbb6896078ef2"></a>
+std::shared_ptr&lt; <a class="el" href="classmango_1_1_event_bus.html">EventBus</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_eventBus</b></td></tr>
+<tr class="separator:a6a6f5e98b4aac4d241cdbb6896078ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d4f1404a854a29e1d5836dd114bd8ec" id="r_a9d4f1404a854a29e1d5836dd114bd8ec"><td class="memItemLeft" align="right" valign="top"><a id="a9d4f1404a854a29e1d5836dd114bd8ec" name="a9d4f1404a854a29e1d5836dd114bd8ec"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_fps</b></td></tr>
 <tr class="separator:a9d4f1404a854a29e1d5836dd114bd8ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -180,8 +189,8 @@ template&lt;typename S , typename ... Args&gt; </div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/Users/runner/work/Mango/Mango/Mango/src/Core/<a class="el" href="_application_8h_source.html">Application.h</a></li>
-<li>/Users/runner/work/Mango/Mango/Mango/src/Core/<b>Application.cpp</b></li>
+<li>/Users/runner/work/Mango/Mango/Mango/src/Mango/Core/<a class="el" href="_application_8h_source.html">Application.h</a></li>
+<li>/Users/runner/work/Mango/Mango/Mango/src/Mango/Core/<b>Application.cpp</b></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
