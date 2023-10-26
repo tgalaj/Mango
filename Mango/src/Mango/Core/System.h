@@ -5,7 +5,7 @@
 
 namespace mango
 {
-    enum class SystemPriority { High, Medium, Low };
+    enum SystemPriority { High, Medium, Low };
 
     class System
     {
