@@ -71,12 +71,6 @@ mango::Application::Application(const ApplicationSettings& appSettings)
     /* Set up Core Services */
     CoreServices::provide(this);
     CoreServices::provide(systems.system<RenderingSystem>().get());
-
-    m_eventBus = std::make_shared<EventBus>();
-    m_eventBus->subscribe<CollisionEvent>(MG_BIND_EVENT(Application::onCollisionEvent));
-    
-    EventHandle handle = m_eventBus->subscribe<Event>([=](const Event& e) { MG_CORE_INFO("test event"); });
-    m_eventBus->subscribe<Event>([=](const Event& e) { MG_CORE_INFO("hijacking event"); m_eventBus->unsubscribe<Event>(handle); });
 }
 
 mango::Application::~Application()

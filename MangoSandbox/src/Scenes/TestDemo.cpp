@@ -253,16 +253,6 @@ void TestDemo::input(float delta)
         fullscreen = !fullscreen;
         mango::Window::setFullscreen(fullscreen);
     }
-
-    if (mango::Input::getKeyDown(mango::KeyCode::O))
-    {
-        mango::CoreServices::getApplication()->getEventBus()->emit(mango::CollisionEvent(1, 2));
-    }
-
-    if (mango::Input::getKeyDown(mango::KeyCode::P))
-    {
-        mango::CoreServices::getApplication()->getEventBus()->emit(mango::Event());
-    }
 }
 
 void TestDemo::onGUI(float delta)

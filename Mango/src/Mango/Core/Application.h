@@ -22,13 +22,6 @@ namespace mango
         ApplicationCommandLineArgs commandLineArgs;
     };
 
-    struct CollisionEvent : Event 
-    {
-        CollisionEvent(int a, int b) : entityA{ a }, entityB{ b } {}
-        int entityA;
-        int entityB;
-    };
-
     class Application : public entityx::EntityX
     {
     public:
@@ -37,11 +30,6 @@ namespace mango
 
         Application(const Application&)            = delete;
         Application& operator=(const Application&) = delete;
-
-        void onCollisionEvent(const CollisionEvent& collision) 
-        {
-            MG_CORE_INFO("Two items collided: {} and {}.", collision.entityA, collision.entityB);
-        }
 
         /**
          * All systems must be added before calling init().
