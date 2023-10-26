@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Log.h"
 #include "Assertions.h"
+#include "Log.h"
 
 namespace mango
 {

@@ -48,7 +48,8 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES}
                                                     spdlog
 													cxxopts
                                                     glm::glm
-                                                    tinyddsloader)
+                                                    tinyddsloader
+													entt)
 
 if(MinGW)
     target_link_libraries(${CMAKE_PROJECT_NAME} bz2)

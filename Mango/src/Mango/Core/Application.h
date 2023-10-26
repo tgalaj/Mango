@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Mango/GameLogic/BaseGame.h"
-#include "Mango/Events/Event.h"
 #include "Log.h"
+#include "Mango/Events/Event.h"
+#include "Mango/GameLogic/BaseGame.h"
 #include <entityx/entityx.h>
 
 namespace mango
