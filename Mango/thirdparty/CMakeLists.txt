@@ -102,7 +102,10 @@ set_target_properties(glad
                       imgui 
                       spdlog PROPERTIES FOLDER "thirdparty")
 set_target_properties(update_mappings PROPERTIES FOLDER "thirdparty/GLFW3")
-set_target_properties(UpdateAssimpLibsDebugSymbolsAndDLLs uninstall PROPERTIES FOLDER "thirdparty/assimps")
+
+if(MSVC)
+	set_target_properties(UpdateAssimpLibsDebugSymbolsAndDLLs uninstall PROPERTIES FOLDER "thirdparty/assimps")
+endif()
 
 if (TARGET zlibstatic)
     set_target_properties(zlibstatic PROPERTIES FOLDER "thirdparty")

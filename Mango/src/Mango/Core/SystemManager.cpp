@@ -25,9 +25,13 @@ namespace mango
     {
         MG_CORE_ASSERT(system != nullptr);
 
-        auto systemPriority = system->m_priority;
+        auto systemPriority = system->m_priority; 
 
-        auto it = std::find(m_systems.begin(), m_systems.end(), std::pair(system->m_priority, system));
+        auto it = std::find_if(m_systems.begin(), m_systems.end(), 
+                               [system, systemPriority](const std::pair<SystemPriority, System*>& p)
+                               {
+                                   return p.second == system && p.first == systemPriority;
+                               });
 
         if (it != m_systems.end())
         {

@@ -34,4 +34,4 @@
 .vs/
 CMakeSettings.json
 
-[Bb]uild/
+[Bb]uild*/
