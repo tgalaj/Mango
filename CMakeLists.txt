@@ -28,3 +28,28 @@ if(BUILD_MANGO_EDITOR)
 	message(STATUS "Creating Mango Editor Project")
 	add_subdirectory(MangoEditor)
 endif()
+
+# ---- MangoTestAssets ----
+find_package(Git QUIET)
+if(GIT_FOUND)
+	option(MANGO_DOWNLOAD_TEST_ASSETS "Download MangoTestAssets repo." OFF)
+	if(MANGO_DOWNLOAD_TEST_ASSETS)
+		if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/MangoTestAssets/.git)
+			message(STATUS "Fetching updates from MangoTestAssets...")
+			execute_process(COMMAND ${GIT_EXECUTABLE} pull origin main
+			                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/MangoTestAssets/
+							RESULT_VARIABLE GIT_SUBMOD_RESULT)
+			if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+				message(FATAL_ERROR "git pull failed with ${GIT_SUBMOD_RESULT}")
+			endif()
+		else()
+			message(STATUS "Cloning MangoTestAssets...")
+			execute_process(COMMAND ${GIT_EXECUTABLE} clone https://github.com/tgalaj/MangoTestAssets.git
+			                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+							RESULT_VARIABLE GIT_SUBMOD_RESULT)
+			if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+				message(FATAL_ERROR "git clone failed with ${GIT_SUBMOD_RESULT}")
+			endif()
+		endif()
+	endif()
+endif()
