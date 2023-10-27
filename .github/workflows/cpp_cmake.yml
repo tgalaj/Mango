@@ -27,8 +27,8 @@ jobs:
         submodules: recursive
         
     - name: Get number of CPU cores
-        uses: SimenB/github-actions-cpu-cores@v1
-        id: cpu-cores
+      uses: SimenB/github-actions-cpu-cores@v2
+      id: cpu-cores
         
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
