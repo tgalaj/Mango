@@ -3,7 +3,7 @@
 #include <glm/mat4x4.hpp>
 
 #include "Texture.h"
-#include "Mango/Core/CoreAssetManager.h"
+#include "Mango/Core/AssetManager.h"
 
 namespace mango
 {

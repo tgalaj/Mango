@@ -1,8 +1,8 @@
 #include <Mango.h>
 #include <Mango/Core/EntryPoint.h>
 
-#include "Scenes/TestDemo.h"
-#include "Systems/MoveSystem.h"
+#include "TestDemo.h"
+#include "MoveSystem.h"
 
 #include <memory>
 
@@ -12,7 +12,7 @@ public:
     TestApp(const mango::ApplicationSettings& appSettings)
         : Application(appSettings)
     {
-        addSystem<MoveSystem>();
+        addSystem(new TestDemo()); // TODO: change name to add() or addLayer() ???
     }
 
     ~TestApp()
@@ -31,7 +31,6 @@ mango::Application* mango::createApplication(mango::ApplicationCommandLineArgs a
                                appSettings.commandLineArgs = args;
 
     auto testApp = new TestApp(appSettings);
-    testApp->setGame(std::make_shared<TestDemo>());
 
     return testApp;
 }

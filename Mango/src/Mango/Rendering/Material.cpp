@@ -1,7 +1,7 @@
 #include "mgpch.h"
 
 #include "Material.h"
-#include "Mango/Core/CoreAssetManager.h"
+#include "Mango/Core/AssetManager.h"
 
 namespace mango
 {
@@ -23,11 +23,11 @@ namespace mango
 
         m_blendMode = BlendMode::NONE;
 
-        m_textureMap[TextureType::DIFFUSE]  = CoreAssetManager::getTexture2D("default_white");
-        m_textureMap[TextureType::SPECULAR] = CoreAssetManager::getTexture2D("default_black");
-        m_textureMap[TextureType::NORMAL]   = CoreAssetManager::getTexture2D("default_normal");
-        m_textureMap[TextureType::EMISSION] = CoreAssetManager::getTexture2D("default_black");
-        m_textureMap[TextureType::DEPTH]    = CoreAssetManager::getTexture2D("default_black");
+        m_textureMap[TextureType::DIFFUSE]  = AssetManager::getTexture2D("default_white");
+        m_textureMap[TextureType::SPECULAR] = AssetManager::getTexture2D("default_black");
+        m_textureMap[TextureType::NORMAL]   = AssetManager::getTexture2D("default_normal");
+        m_textureMap[TextureType::EMISSION] = AssetManager::getTexture2D("default_black");
+        m_textureMap[TextureType::DEPTH]    = AssetManager::getTexture2D("default_black");
     }
 
 

@@ -42,7 +42,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES}
                                                     glad
                                                     stb_image
                                                     assimp
-                                                    entityx
                                                     glfw
                                                     imgui
                                                     spdlog

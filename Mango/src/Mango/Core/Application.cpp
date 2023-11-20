@@ -1,190 +1,200 @@
 #include "mgpch.h"
 
 #include "Application.h"
-#include "CoreServices.h"
+#include "Services.h"
+#include "Timer.h"
 #include "Mango/GUI/GUI.h"
+#include "Mango/Scene/SceneManager.h"
 #include "Mango/Systems/CameraSystem.h"
-#include "Mango/Systems/ConsoleSystem.h"
 #include "Mango/Systems/FreePoseSystem.h"
-#include "Mango/Systems/GUISystem.h"
 #include "Mango/Systems/RenderingSystem.h"
 #include "Mango/Systems/SceneGraphSystem.h"
-#include "Mango/Utilities/Timer.h"
 #include "Mango/Window/Input.h"
 #include "Mango/Window/Window.h"
 
 #include <cxxopts.hpp>
 
-mango::Application::Application(const ApplicationSettings& appSettings)
-    : m_usersSystems(entities, events),
-      m_frameTime   (1.0 / appSettings.maxFramerate),
-      m_fps         (0),
-      m_fpsToReturn (0),
-      m_isRunning   (false)
+namespace mango
 {
-    /* Parse command line args. */
-    cxxopts::Options options(appSettings.windowTitle, "");
-
-    options.add_options()
-        ("w,width", "Window width", cxxopts::value<uint32_t>())
-        ("h,height", "Window height", cxxopts::value<uint32_t>())
-        ("fullscreen", "Set fullscreen window", cxxopts::value<bool>()->default_value("false")->implicit_value("true"));
-
-    auto optResult = options.parse(appSettings.commandLineArgs.argsCount, appSettings.commandLineArgs.argsValues);
-
-    if (optResult.count("width"))
+    Application::Application(const ApplicationSettings& appSettings)
+        : m_frameTime   (1.0 / appSettings.maxFramerate),
+          m_fps         (0),
+          m_fpsToReturn (0),
+          m_isRunning   (false)
     {
-        const_cast<ApplicationSettings&>(appSettings).windowWidth = optResult["width"].as<uint32_t>();
-    }
+        // Parse command line args.
+        cxxopts::Options options(appSettings.windowTitle, "");
 
-    if (optResult.count("height"))
-    {
-        const_cast<ApplicationSettings&>(appSettings).windowHeight = optResult["height"].as<uint32_t>();
-    }
+        options.add_options()
+            ("w,width", "Window width", cxxopts::value<uint32_t>())
+            ("h,height", "Window height", cxxopts::value<uint32_t>())
+            ("fullscreen", "Set fullscreen window", cxxopts::value<bool>()->default_value("false")->implicit_value("true"));
 
-    /* Init window */
-    Window::create(appSettings.windowWidth, appSettings.windowHeight, appSettings.windowTitle);
-    
-    if (optResult["fullscreen"].as<bool>())
-    {
-        Window::setFullscreen(true);
-    }
+        auto optResult = options.parse(appSettings.commandLineArgs.argsCount, appSettings.commandLineArgs.argsValues);
 
-    /* Init Log, Input and GUI systems */
-    Log::init();
-    Input::init(Window::getNativeWindow());
-    GUI::init(Window::getNativeWindow());
-
-    /* Add core systems - do not forget to update them! */
-    //systems.add<AudioSystem>();
-    systems.add<SceneGraphSystem>();
-    systems.add<ConsoleSystem>();
-    systems.add<CameraSystem>();
-    systems.add<GUISystem>();
-    systems.add<RenderingSystem>();
-    systems.add<FreePoseSystem>();
-    systems.configure();
-
-    /* Configure user's systems */
-    m_usersSystems.configure();
-
-    /* Set up Core Services */
-    CoreServices::provide(this);
-    CoreServices::provide(systems.system<RenderingSystem>().get());
-}
-
-mango::Application::~Application()
-{
-
-}
-
-void mango::Application::setGame(const std::shared_ptr<BaseGame>& game)
-{
-    m_game = game;
-    m_game->init();
-}
-
-unsigned int mango::Application::getFPS() const
-{
-    return m_fpsToReturn;
-}
-
-void mango::Application::start()
-{
-    if (m_isRunning)
-    {
-        return;
-    }
-
-    run();
-}
-
-void mango::Application::stop()
-{
-    if (!m_isRunning)
-    {
-        return;
-    }
-
-    m_isRunning = false;
-}
-
-void mango::Application::updateSystems(entityx::TimeDelta dt)
-{
-    /**
-     * Update core engine systems in specific order
-     */
-    //systems.update<AudioSystem>();
-    systems.update<ConsoleSystem>(dt);
-    systems.update<FreePoseSystem>(dt);
-    systems.update<CameraSystem>(dt);
-    systems.update<SceneGraphSystem>(dt);
-
-    m_usersSystems.update_all(dt);
-}
-
-void mango::Application::updateRenderingSystems(entityx::TimeDelta dt)
-{
-    systems.update<RenderingSystem>(dt);
-    systems.update<GUISystem>(dt);
-}
-
-void mango::Application::run()
-{
-    m_isRunning = true;
-
-    int    frames       = 0;
-    double frameCounter = 0.0;
-
-    double lastTime        = Timer::getTime();
-    double unprocessedTime = 0.0;
-
-    double startTime  = 0.0;
-    double passedTime = 0.0;
-
-    bool shouldRender = false;
-
-    while (m_isRunning)
-    {
-        shouldRender = false;
-
-        startTime  = Timer::getTime();
-        passedTime = startTime - lastTime;
-
-        lastTime = startTime;
-
-        unprocessedTime += passedTime;
-        frameCounter    += passedTime;
-
-        while (unprocessedTime > m_frameTime)
+        if (optResult.count("width"))
         {
-            shouldRender = true;
-
-            unprocessedTime -= m_frameTime;
-
-            if (Window::isCloseRequested())
-            {
-                stop();
-            }
-
-            m_game->input(float(m_frameTime));
-            updateSystems(m_frameTime);
-            Input::update();
-
-            if (frameCounter >= 1.0)
-            {
-                frames       = 0;
-                frameCounter = 0;
-            }
+            const_cast<ApplicationSettings&>(appSettings).windowWidth = optResult["width"].as<uint32_t>();
         }
 
-        if (shouldRender)
+        if (optResult.count("height"))
         {
-            /* Update Rendering and GUI systems */
-            updateRenderingSystems(m_frameTime);
+            const_cast<ApplicationSettings&>(appSettings).windowHeight = optResult["height"].as<uint32_t>();
+        }
 
-            Window::endFrame();
-            frames++;
+        // Init window
+        m_window = std::make_shared<Window>(appSettings.windowWidth, appSettings.windowHeight, appSettings.windowTitle);
+    
+        if (optResult["fullscreen"].as<bool>())
+        {
+            m_window->setFullscreen(true);
+        }
+
+        // Init Log, Input and GUI systems
+        Log::init();
+        Input::init(m_window->getNativeWindow());
+        GUI::init(m_window);
+
+        // Init core services
+        m_eventBus     = new EventBus();
+        m_sceneManager = new SceneManager();
+
+        Services::provide(this);
+        Services::provide(m_sceneManager);
+        Services::provide(m_eventBus);
+
+        // Add core systems - do not forget to update them!
+        //systems.add<AudioSystem>();
+
+        // TODO: 
+        // [x] figure out how to pass Scene* with registry to the systems
+        //    so systems could have access to entities
+        // [x] System::onUpdate(scene, dt)
+        // [x] update systems code
+        // [x] renderer system - add EVENTS !!
+        // [x] event bus add to services
+        // [x] move events to a separate classes (component added etc.)
+        // [x] add rendering system include to services.h
+        // [x] dtor of Window is not called !!!!
+        // [] dtor of GUI is not called !!!! -> GUI as a system
+        // [] Entity: Set position etc. (like in the previous Game Object class)
+        // [] remove system priorities (not needed)
+        // [] camera movement!!
+
+        m_systems.add(new SceneGraphSystem(), SystemPriority::High);
+        m_systems.configure();
+
+        // Create Rendering system
+        // renderingSystem will be deleted by m_renderingSystems
+        RenderingSystem* renderingSystem = new RenderingSystem();
+
+        m_renderingSystems.add(renderingSystem, SystemPriority::Low);
+        m_renderingSystems.configure();
+
+        Services::provide(renderingSystem);
+    }
+
+    Application::~Application()
+    {
+        delete m_sceneManager;
+        delete m_eventBus;
+    }
+
+    void Application::addSystem(System* system)
+    {
+        m_systems.add(system);
+        system->onInit();
+    }
+
+    unsigned int Application::getFPS() const
+    {
+        return m_fpsToReturn;
+    }
+
+    void Application::start()
+    {
+        if (m_isRunning)
+        {
+            return;
+        }
+
+        run();
+    }
+
+    void Application::stop()
+    {
+        if (!m_isRunning)
+        {
+            return;
+        }
+
+        m_isRunning = false;
+    }
+
+    void Application::run()
+    {
+        m_isRunning = true;
+
+        int    frames       = 0;
+        double frameCounter = 0.0;
+
+        double lastTime        = Timer::getTime();
+        double unprocessedTime = 0.0;
+
+        double startTime  = 0.0;
+        double passedTime = 0.0;
+
+        bool shouldRender = false;
+
+        while (m_isRunning)
+        {
+            shouldRender = false;
+
+            startTime  = Timer::getTime();
+            passedTime = startTime - lastTime;
+
+            lastTime = startTime;
+
+            unprocessedTime += passedTime;
+            frameCounter    += passedTime;
+
+            while (unprocessedTime > m_frameTime)
+            {
+                shouldRender = true;
+
+                unprocessedTime -= m_frameTime;
+
+                if (m_window->isCloseRequested())
+                {
+                    stop();
+                }
+
+                m_systems.updateAll(m_frameTime);
+                Input::update();
+
+                if (frameCounter >= 1.0)
+                {
+                    frames       = 0;
+                    frameCounter = 0;
+                }
+            }
+
+            if (shouldRender)
+            {
+                m_renderingSystems.updateAll(m_frameTime);
+
+                GUI::being();
+                {
+                    for (auto& system : m_systems)
+                    {
+                        system.second->onGui();
+                    }
+                }
+                GUI::end();
+
+                m_window->endFrame();
+                frames++;
+            }
         }
     }
 }

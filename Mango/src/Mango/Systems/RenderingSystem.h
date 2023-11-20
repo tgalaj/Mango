@@ -1,37 +1,45 @@
 ﻿#pragma once
-#include <entityx/System.h>
-
-#include "Mango/Components/CameraComponent.h"
-#include "Mango/Components/ModelRendererComponent.h"
-#include "Mango/Components/TransformComponent.h"
-#include "Mango/Rendering/BloomPS.h"
-#include "Mango/Rendering/DeferredRendering.h"
-#include "Mango/Rendering/PostprocessEffect.h"
-#include "Mango/Rendering/RenderTarget.h"
-#include "Mango/Rendering/Shader.h"
+#include "Mango/Core/System.h"
+#include "Mango/Events/EntityEvents.h"
+#include "Mango/Events/SceneEvents.h"
+#include "Mango/Rendering/Model.h"
 #include "Mango/Rendering/Skybox.h"
-#include "Mango/Rendering/SSAO.h"
+#include "Mango/Scene/Entity.h"
 
 namespace mango
 {
-    class RenderingSystem : public entityx::System<RenderingSystem>, public entityx::Receiver<RenderingSystem>
+    class Skybox;
+    class PostprocessEffect;
+    class RenderTarget;
+    class Shader;
+    class BloomPS;
+    class SSAO;
+    class DeferredRendering;
+    class ModelRendererComponent;
+    class TransformComponent;
+    class CameraComponent;
+    class Window;
+
+    class RenderingSystem : public System
     {
     public:
-        RenderingSystem();
-        ~RenderingSystem();
+        RenderingSystem() = default;
+        ~RenderingSystem() = default;
 
-        void configure(entityx::EntityManager& entities, entityx::EventManager& events) override;
-        void update   (entityx::EntityManager& entities, entityx::EventManager& events, entityx::TimeDelta dt) override;
+        void onInit();
+        void onUpdate(float dt);
+        void onDestroy();
 
-        void receive(const entityx::ComponentAddedEvent<CameraComponent>          & event);
-        void receive(const entityx::ComponentAddedEvent<ModelRendererComponent>   & event);
-        void receive(const entityx::ComponentRemovedEvent<ModelRendererComponent> & event);
+        void receive(const ComponentAddedEvent<CameraComponent>          & event);
+        void receive(const ComponentAddedEvent<ModelRendererComponent>   & event);
+        void receive(const ComponentRemovedEvent<ModelRendererComponent> & event);
+        void receive(const ActiveSceneChangedEvent                       & event);
 
         void setSkybox(const std::shared_ptr<Skybox> & skybox);
         void resize(unsigned width, unsigned height);
 
-        entityx::ComponentHandle<TransformComponent> getCameraTransform();
-        entityx::ComponentHandle<CameraComponent>    getCamera();
+        TransformComponent & getCameraTransform();
+        CameraComponent    & getCamera();
 
     public:
         glm::vec3 sceneAmbientColor{};
@@ -40,12 +48,36 @@ namespace mango
         static unsigned int DEBUG_WINDOW_WIDTH;
 
     private:
+        static void initRenderingStates();
+
+        static void beginForwardRendering();
+        static void endForwardRendering();
+
+        void bindMainRenderTarget();
+
+        void applyPostprocess(std::shared_ptr<PostprocessEffect>& effect, std::shared_ptr<RenderTarget>* src, std::shared_ptr<RenderTarget>* dst);
+
+        void renderForward(Scene* scene);
+        void renderDeferred(Scene* scene);
+        void renderDebug();
+        void renderDebugLightsBoundingBoxes(Scene* scene);
+
+        void renderOpaque(const std::shared_ptr<Shader>& shader);
+        void renderAlpha(const std::shared_ptr<Shader>& shader);
+        void renderEnviroMappingStatic(const std::shared_ptr<Shader>& shader);
+        void renderDynamicEnviroMapping(const std::shared_ptr<Shader>& shader);
+        void renderLightsForward(Scene* scene);
+        void renderLightsDeferred(Scene* scene);
+
+        void sortAlpha();
+
+    private:
         enum TextureMaps { SHADOW_MAP = 5 }; //TODO: move to Material class
 
-        std::vector<entityx::Entity> m_opaqueQueue;
-        std::vector<entityx::Entity> m_alphaQueue;
-        std::vector<entityx::Entity> m_enviroStaticQueue;
-        std::vector<entityx::Entity> m_enviroDynamicQueue;
+        std::vector<Entity> m_opaqueQueue;
+        std::vector<Entity> m_alphaQueue;
+        std::vector<Entity> m_enviroStaticQueue;
+        std::vector<Entity> m_enviroDynamicQueue;
 
         std::shared_ptr<Shader> m_forwardAmbient;
         std::shared_ptr<Shader> m_forwardDirectional;
@@ -81,30 +113,8 @@ namespace mango
 
         std::shared_ptr<Skybox> m_skybox;
 
-        entityx::Entity m_mainCamera;
-
-    private:
-        static void initRenderingStates();
-
-        static void beginForwardRendering();
-        static void endForwardRendering  ();
-
-        void bindMainRenderTarget();
-
-        void applyPostprocess(std::shared_ptr<PostprocessEffect> & effect, std::shared_ptr<RenderTarget> * src, std::shared_ptr<RenderTarget> * dst);
-
-        void renderForward                 (entityx::EntityManager& entities);
-        void renderDeferred                (entityx::EntityManager& entities);
-        void renderDebug                   ();
-        void renderDebugLightsBoundingBoxes(entityx::EntityManager& entities);
-
-        void renderOpaque              (const std::shared_ptr<Shader> & shader);
-        void renderAlpha               (const std::shared_ptr<Shader>& shader);
-        void renderEnviroMappingStatic (const std::shared_ptr<Shader>& shader);
-        void renderDynamicEnviroMapping(const std::shared_ptr<Shader>& shader);
-        void renderLightsForward       (entityx::EntityManager& entities);
-        void renderLightsDeferred      (entityx::EntityManager& entities);
-
-        void sortAlpha();
+        Entity m_mainCamera;
+        Scene* m_activeScene = nullptr;
+        std::shared_ptr<Window> m_mainWindow;
     };
 }

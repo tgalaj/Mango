@@ -1,16 +1,17 @@
 #pragma once
 
-#include <entityx/Entity.h>
 #include <filesystem>
-#include <glad/glad.h>
 #include <unordered_map>
 #include <vector>
 
-#include "Mango/Components/TransformComponent.h"
+#include "glad/glad.h"
+
 #include "Material.h"
 
 namespace mango
 {
+    class TransformComponent;
+
     class Shader final
     {
     public:
@@ -74,6 +75,10 @@ namespace mango
         void addShader(const std::filesystem::path & filepath, GLuint type) const;
         bool getUniformLocation(const std::string & uniformName);
 
+        std::string loadFile(const std::filesystem::path& filepath) const;
+        std::string loadShaderIncludes(const std::string& shaderCode) const;
+
+    private:
         std::unordered_map<std::string, GLuint> m_subroutineIndices;
         std::unordered_map<GLenum, GLuint>      m_activeSubroutineUniformLocations;
 
@@ -86,6 +91,6 @@ namespace mango
         GLuint m_programID;
         bool m_isLinked;
 
-        friend class CoreAssetManager;
+        friend class AssetManager;
     };
 }

@@ -19,7 +19,7 @@ namespace mango
         void configure();
         void updateAll(float dt);
 
-        System * const getSystem(const std::string& name) const;
+        System* const getSystem(const std::string& name) const;
 
         std::multimap<SystemPriority, System*>::iterator         begin()  { return m_systems.begin(); }
         std::multimap<SystemPriority, System*>::iterator         end()    { return m_systems.end(); }

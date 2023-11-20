@@ -5,22 +5,23 @@
 #include <glm/vec4.hpp>
 #include <memory>
 
-#include "Font.h"
 #include "imgui_impl_glfw.h"
-#include "Mango/Rendering/Texture.h"
-#include "Mango/Window/Window.h"
 
 namespace mango
 {
+    class Font;
+    class Texture;
+    class Window;
+
     class GUI
     {
     public:
         using Style = void(*)(ImGuiStyle &);
 
-        ~GUI();
-        static void init(GLFWwindow * window);
-        static void prepare();
-        static void render();
+        ~GUI(); // TODO: this should be a "core" system, so destructor could be called!!
+        static void init(const std::shared_ptr<Window>& window);
+        static void being();
+        static void end();
         static void updateWindowSize(float width, float height);
 
         /* HUD rendering */

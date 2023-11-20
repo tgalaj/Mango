@@ -43,15 +43,6 @@ CPMAddPackage(
 )
 
 CPMAddPackage(
-    NAME entityx
-	GITHUB_REPOSITORY alecthomas/entityx
-    GIT_TAG 1.3.0
-	OPTIONS
-	    "ENTITYX_BUILD_SHARED FALSE"
-	    "ENTITYX_BUILD_TESTING FALSE"
-)
-
-CPMAddPackage(
     NAME glfw
 	GITHUB_REPOSITORY glfw/glfw
     GIT_TAG 3.3.8
@@ -95,8 +86,7 @@ target_include_directories(imgui INTERFACE ${imgui_SOURCE_DIR})
 						 
 set_target_properties(glad
                       stb_image 
-                      assimp 
-					  entityx
+                      assimp
                       glfw 
                       glm 
                       imgui 

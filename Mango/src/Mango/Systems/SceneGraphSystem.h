@@ -1,15 +1,18 @@
 ﻿#pragma once
-#include <entityx/System.h>
-#include "Mango/Components/TransformComponent.h"
+#include "Mango/Core/System.h"
+#include "Mango/Scene/Components.h"
 
 namespace mango
 {
-    class SceneGraphSystem : public entityx::System<SceneGraphSystem>
+    class SceneGraphSystem : public System
     {
     public:
-        void configure(entityx::EntityManager& entities, entityx::EventManager& events)                        override;
-        void update   (entityx::EntityManager& entities, entityx::EventManager& events, entityx::TimeDelta dt) override;
+        void onUpdate(float dt) override;
 
+    private:
         static TransformComponent ROOT_NODE;
+
+    private:
+        friend class Scene;
     };
 }

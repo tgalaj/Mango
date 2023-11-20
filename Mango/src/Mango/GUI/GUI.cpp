@@ -1,5 +1,10 @@
 ﻿#include "mgpch.h"
 
+#include "Font.h"
+#include "Mango/Core/Services.h"
+#include "Mango/Rendering/Texture.h"
+#include "Mango/Window/Window.h"
+
 #include "glm/vec2.hpp"
 #include "glm/common.hpp"
 #include "imgui_internal.h"
@@ -18,27 +23,28 @@ namespace mango
         ImGui::DestroyContext();
     }
 
-    void GUI::init(GLFWwindow * window)
+    void GUI::init(const std::shared_ptr<Window> & window)
     {
+        MG_ASSERT_MSG(window != nullptr, "window can't be nullptr!");
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
 
-        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        ImGui_ImplGlfw_InitForOpenGL(window->getNativeWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 460");
 
-        m_windowSize = glm::vec2(Window::getWidth(), Window::getHeight());
+        m_windowSize = glm::vec2(window->getWidth(), window->getHeight());
 
         ImGui::GetIO().Fonts->AddFontDefault();
     }
 
-    void GUI::prepare()
+    void GUI::being()
     {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
     }
 
-    void GUI::render()
+    void GUI::end()
     {
         glViewport(0, 0, GLsizei(m_windowSize.x), GLsizei(m_windowSize.y));
         ImGui::Render();

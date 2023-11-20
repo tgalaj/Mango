@@ -2,7 +2,7 @@
 
 #include "Skybox.h"
 #include "Mesh.h"
-#include "Mango/Utilities/GeomPrimitive.h"
+#include "Mango/Rendering/GeomPrimitive.h"
 
 namespace mango
 {
@@ -23,10 +23,10 @@ namespace mango
             skyboxDirectory + "/" + frontFace,
             skyboxDirectory + "/" + backFace
         };
-        m_cubeMapTexture = CoreAssetManager::createCubeMapTexture(filenames, true);
+        m_cubeMapTexture = AssetManager::createCubeMapTexture(filenames, true);
 
         /* Create skybox shader object */
-        m_skyboxShader = CoreAssetManager::createShader("Skybox", "Skybox.vert", "Skybox.frag");
+        m_skyboxShader = AssetManager::createShader("Skybox", "Skybox.vert", "Skybox.frag");
         m_skyboxShader->link();
 
         /* Create buffer objects */

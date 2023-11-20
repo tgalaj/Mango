@@ -1,10 +1,11 @@
 #pragma once
-#include "DeferredRendering.h"
 #include "PostprocessEffect.h"
-#include "RenderTarget.h"
 
 namespace mango
 {
+    class DeferredRendering;
+    class RenderTarget;
+
     class SSAO : public PostprocessEffect
     {
     public:

@@ -1,10 +1,10 @@
 #include "mgpch.h"
 
-#include <glm/common.hpp>
-#include <glm/exponential.hpp>
+#include "glm/common.hpp"
+#include "glm/exponential.hpp"
+#include "stb_image.h"
 
 #include "Texture.h"
-#include "Mango/Utilities/Util.h"
 
 namespace mango
 {
@@ -26,10 +26,22 @@ namespace mango
         }
     }
 
-    void Texture::genTexture2D(const std::filesystem::path & filepath, GLuint numMipmaps, bool isSrgb /*= false*/)
+    unsigned char* Texture::loadTexture(const std::filesystem::path& filepath, ImageData& imageData)
+    {
+        int width, height, channelsCount;
+        unsigned char* data = stbi_load(filepath.string().c_str(), &width, &height, &channelsCount, 0);
+
+        imageData.width    = width;
+        imageData.height   = height;
+        imageData.channels = channelsCount;
+
+        return data;
+    }
+
+    void Texture::genTexture2D(const std::filesystem::path& filepath, GLuint numMipmaps, bool isSrgb /*= false*/)
     {
         /* Pointer to the image */
-        unsigned char* data = Util::loadTexture(filepath, m_texData);
+        unsigned char* data = loadTexture(filepath, m_texData);
 
         if(!data)
         {
@@ -121,7 +133,7 @@ namespace mango
 
         for (int i = 0; i < numCubeFaces; ++i)
         {
-            imgsData[i] = Util::loadTexture(filepaths[i], m_texData);
+            imgsData[i] = loadTexture(filepaths[i], m_texData);
         }
 
         m_type         = GL_TEXTURE_CUBE_MAP;

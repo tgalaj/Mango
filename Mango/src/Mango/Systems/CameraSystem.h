@@ -1,12 +1,12 @@
 ﻿#pragma once
-#include <entityx/System.h>
+#include "Mango/Core/System.h"
 
 namespace mango
 {
-    class CameraSystem : public entityx::System<CameraSystem>
+    class CameraSystem : public System
     {
     public:
-        void configure(entityx::EntityManager& entities, entityx::EventManager& events) override;
-        void update(entityx::EntityManager& entities, entityx::EventManager& events, entityx::TimeDelta dt) override;
+        void onUpdate(float dt) override;
+
     };
 }

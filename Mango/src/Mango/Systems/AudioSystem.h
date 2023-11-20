@@ -1,8 +1,10 @@
 ﻿#pragma once
 
+#include "Mango/Core/System.h"
+
 namespace mango
 {
-    class AudioSystem
+    class AudioSystem : System
     {
     public:
 

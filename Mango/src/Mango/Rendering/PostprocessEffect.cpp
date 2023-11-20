@@ -1,7 +1,7 @@
 #include "mgpch.h"
 
 #include "PostprocessEffect.h"
-#include "Mango/Core/CoreAssetManager.h"
+#include "Mango/Core/AssetManager.h"
 
 namespace mango
 {
@@ -21,7 +21,7 @@ namespace mango
 
     void PostprocessEffect::init(const std::string & filterName, const std::filesystem::path & fragmentShaderFilepath)
     {
-        m_postprocess = CoreAssetManager::createShader(filterName, "FSQ.vert", fragmentShaderFilepath);
+        m_postprocess = AssetManager::createShader(filterName, "FSQ.vert", fragmentShaderFilepath);
         m_postprocess->link();
     }
 

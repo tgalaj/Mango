@@ -1,12 +1,14 @@
 #pragma once
 
-#include "Log.h"
-#include "Mango/Events/Event.h"
-#include "Mango/GameLogic/BaseGame.h"
-#include <entityx/entityx.h>
+#include "SystemManager.h"
 
 namespace mango
 {
+    class EventBus;
+    class Scene;
+    class SceneManager;
+    class Window;
+
     struct ApplicationCommandLineArgs
     {
         int    argsCount;
@@ -22,7 +24,7 @@ namespace mango
         ApplicationCommandLineArgs commandLineArgs;
     };
 
-    class Application : public entityx::EntityX
+    class Application
     {
     public:
         Application(const ApplicationSettings& appSettings);
@@ -31,19 +33,10 @@ namespace mango
         Application(const Application&)            = delete;
         Application& operator=(const Application&) = delete;
 
-        /**
-         * All systems must be added before calling init().
-        */
-        template <typename S, typename ... Args>
-        void addSystem(Args && ... args)
-        {
-            m_usersSystems.add<S>(std::forward<Args>(args) ...);
-        }
+        void addSystem(System* system);
 
-        void setGame(const std::shared_ptr<BaseGame>& game);
-        const std::shared_ptr<BaseGame>& getGame() { return m_game; }
-
-        std::shared_ptr<EventBus>& getEventBus() { return m_eventBus; }
+        const std::shared_ptr<Window> getWindow() const { return m_window; }
+        EventBus* const getEventBus() const { return m_eventBus; }
 
         unsigned int getFPS() const;
 
@@ -51,20 +44,20 @@ namespace mango
         void stop();
 
     private:
-        void updateSystems(entityx::TimeDelta dt);
-        void updateRenderingSystems(entityx::TimeDelta dt);
         void run();
 
     private:
-        entityx::SystemManager m_usersSystems;
-        std::shared_ptr<BaseGame> m_game;
+        std::shared_ptr<Window> m_window;
+        SystemManager  m_systems;
+        SystemManager  m_renderingSystems;
+        
+        SceneManager * m_sceneManager;
+        EventBus     * m_eventBus;
 
         double       m_frameTime;
         unsigned int m_fps;
         unsigned int m_fpsToReturn;
         bool         m_isRunning;
-
-        std::shared_ptr<EventBus> m_eventBus;
     };
 
     // Client must define this function

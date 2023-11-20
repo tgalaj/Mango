@@ -2,24 +2,24 @@
 
 #include "Window.h"
 #include "Input.h"
-#include "Mango/Core/CoreServices.h"
+#include "Mango/Core/Services.h"
 #include "Mango/GUI/GUI.h"
-#include "Mango/Utilities/DebugOutputGL.h"
+#include "Mango/Rendering/DebugOutputGL.h"
+#include "Mango/Systems/RenderingSystem.h"
 
 #define MIN_GL_VERSION_MAJOR 4
 #define MIN_GL_VERSION_MINOR 6
 
 namespace mango
 {
-    GLFWwindow*  Window::m_window       = nullptr;
-    GLFWmonitor* Window::m_monitor      = nullptr;
-    glm::ivec2   Window::m_windowPos    = glm::ivec2(0);
-    glm::ivec2   Window::m_windowSize   = glm::ivec2(0);
-    glm::ivec2   Window::m_viewportSize = glm::ivec2(0);
-    std::string  Window::m_title;
-
-    Window::Window()
+    Window::Window(uint32_t width, uint32_t height, const std::string& title)
+        : m_window      (nullptr),
+          m_monitor     (nullptr),
+          m_windowPos   (glm::ivec2(0)),
+          m_windowSize  (glm::ivec2(0)),
+          m_viewportSize(glm::ivec2(0))
     {
+        create(width, height, title);
     }
 
     Window::~Window()
@@ -38,8 +38,6 @@ namespace mango
             MG_CORE_CRITICAL("Could not initialize GLFW.");
             exit(EXIT_FAILURE);
         }
-
-        glfwSetErrorCallback(errorCallback);
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MIN_GL_VERSION_MAJOR);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MIN_GL_VERSION_MINOR);
@@ -90,13 +88,36 @@ namespace mango
         glfwGetFramebufferSize(m_window, &m_viewportSize.x, &m_viewportSize.y);
         glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
         
-        setVSync(false);
-        glfwSetWindowSizeCallback(m_window, framebufferSizeCallback);
+        glfwSetWindowUserPointer(m_window, this);
+
+        glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
+        {
+            Window& data = *(Window*)glfwGetWindowUserPointer(window);
+
+            data.m_windowSize.x = width;
+            data.m_windowSize.y = height;
+
+            glfwGetFramebufferSize(window, &data.m_viewportSize.x, &data.m_viewportSize.y);
+            glViewport(0, 0, data.m_viewportSize.x, data.m_viewportSize.y);
+
+            GUI::updateWindowSize(float(width), float(height));
+
+            if (Services::renderer())
+            {
+                Services::renderer()->resize(width, height);
+            }
+        });
+
+        glfwSetErrorCallback([](int error, const char* description)
+        {
+            MG_CORE_ERROR("GLFW error: {}", description);
+        });
 
         m_monitor = glfwGetPrimaryMonitor();
 
         glfwGetWindowSize(m_window, &m_windowSize.x, &m_windowSize.y);
         glfwGetWindowPos(m_window, &m_windowPos.x, &m_windowPos.y);
+        setVSync(false);
     }
 
     void Window::endFrame()
@@ -168,7 +189,7 @@ namespace mango
 
     void Window::setVSync(bool enabled)
     {
-        auto value = enabled ? true : false;
+        int value = enabled ? 1 : 0;
 
         glfwSwapInterval(value);
     }
@@ -204,19 +225,6 @@ namespace mango
         {
             // Restore last window size and position.
             glfwSetWindowMonitor(m_window, nullptr, m_windowPos.x, m_windowPos.y, m_windowSize.x, m_windowSize.y, 0);
-        }
-    }
-
-    void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
-    {
-        glfwGetFramebufferSize(window, &m_viewportSize.x, &m_viewportSize.y);
-        glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
-
-        GUI::updateWindowSize(float(width), float(height));
-        
-        if (CoreServices::getRenderer())
-        {
-            CoreServices::getRenderer()->resize(width, height);
         }
     }
 }

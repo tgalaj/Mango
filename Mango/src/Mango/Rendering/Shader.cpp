@@ -1,12 +1,14 @@
 #include "mgpch.h"
 
-#include <glm/gtc/type_ptr.hpp>
+#include <fstream>
+#include "glm/gtc/type_ptr.hpp"
 
 #include "Shader.h"
-#include "Mango/Core/CoreAssetManager.h"
-#include "Mango/Core/CoreServices.h"
-#include "Mango/Utilities/ShaderGlobals.h"
-#include "Mango/Utilities/Util.h"
+#include "ShaderGlobals.h"
+#include "Mango/Core/AssetManager.h"
+#include "Mango/Core/Services.h"
+#include "Mango/Scene/Components.h"
+#include "Mango/Systems/RenderingSystem.h"
 
 namespace mango
 {
@@ -100,8 +102,8 @@ namespace mango
         }
 
 
-        std::string code = Util::loadFile("assets/shaders" / filepath);
-        code = Util::loadShaderIncludes(code);
+        std::string code = loadFile("assets/shaders" / filepath);
+                    code = loadShaderIncludes(code);
 
         const char * shaderCode = code.c_str();
 
@@ -321,8 +323,8 @@ namespace mango
                 {
                     if (G_MVP == uniformName)
                     {
-                        auto view       = CoreServices::getRenderer()->getCamera()->view;
-                        auto projection = CoreServices::getRenderer()->getCamera()->projection;
+                        auto view       = Services::renderer()->getCamera().view;
+                        auto projection = Services::renderer()->getCamera().projection;
 
                         auto mvp = projection * view * transform.getWorldMatrix();
                         setUniform(G_MVP, mvp);
@@ -346,7 +348,7 @@ namespace mango
                 {
                     if (G_CAM_POS == uniformName)
                     {
-                        setUniform(G_CAM_POS, CoreServices::getRenderer()->getCameraTransform()->getPosition());
+                        setUniform(G_CAM_POS, Services::renderer()->getCameraTransform().getPosition());
                     }
                 }
             }
@@ -369,7 +371,56 @@ namespace mango
         }
     }
 
-    void Shader::setUniform(const std::string & uniformName, float value)
+    std::string Shader::loadFile(const std::filesystem::path& filepath) const
+    {
+        std::string output;
+        std::ifstream file(filepath, std::ios::in | std::ios::binary | std::ios::ate);
+
+        if (file)
+        {
+            size_t size = file.tellg();
+
+            if (size != -1)
+            {
+                output.resize(size);
+                file.seekg(0, std::ios::beg);
+                file.read(&output[0], size);
+            }
+            else
+            {
+                MG_CORE_ERROR("Could not read from the file '{}'", filepath);
+            }
+        }
+        else
+        {
+            MG_CORE_ERROR("Could not open file '{}'", filepath);
+        }
+
+        return output;
+    }
+
+    std::string Shader::loadShaderIncludes(const std::string& shaderCode) const
+    {
+        std::istringstream ss(shaderCode);
+
+        std::string line, newShaderCode;
+        std::string includePhrase = "#include";
+        
+        while (std::getline(ss, line))
+        {
+            if (line.substr(0, includePhrase.size()) == includePhrase)
+            {
+                std::string include_file_name = line.substr(includePhrase.size() + 2, line.size() - includePhrase.size() - 4);
+                line = loadFile("assets/shaders/" + include_file_name);
+            }
+        
+            newShaderCode.append(line + "\n");
+        }
+        
+        return newShaderCode;
+    }
+
+    void Shader::setUniform(const std::string& uniformName, float value)
     {
         if (m_uniformsLocations.count(uniformName))
         {

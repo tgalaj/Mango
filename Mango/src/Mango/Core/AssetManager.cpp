@@ -1,25 +1,14 @@
 #include "mgpch.h"
-
-#include "CoreAssetManager.h"
+#include "AssetManager.h"
 
 namespace mango
 {
-    std::vector<GameObject>                CoreAssetManager::m_gameObjects;
-    std::unordered_map<std::string, Model> CoreAssetManager::m_loadedModels;
+    std::unordered_map<std::string, Model>                    AssetManager::m_loadedModels;
+    std::unordered_map<std::string, std::shared_ptr<Texture>> AssetManager::m_loadedTextures;
+    std::unordered_map<std::string, std::shared_ptr<Shader>>  AssetManager::m_loadedShaders;
+    std::unordered_map<std::string, std::shared_ptr<Font>>    AssetManager::m_loadedFonts;
 
-    std::unordered_map<std::string, std::shared_ptr<Texture>> CoreAssetManager::m_loadedTextures;
-    std::unordered_map<std::string, std::shared_ptr<Shader>>  CoreAssetManager::m_loadedShaders;
-    std::unordered_map<std::string, std::shared_ptr<Font>>    CoreAssetManager::m_loadedFonts;
-
-    GameObject CoreAssetManager::createGameObject()
-    {
-        GameObject gameObject;
-        m_gameObjects.push_back(gameObject);
-
-        return gameObject;
-    }
-
-    std::shared_ptr<Font> CoreAssetManager::createFont(const std::string & fontNname, const std::filesystem::path& filepath, GLuint fontHeight)
+    std::shared_ptr<Font> AssetManager::createFont(const std::string & fontNname, const std::filesystem::path& filepath, GLuint fontHeight)
     {        
         if (m_loadedFonts.count(fontNname))
         {
@@ -32,7 +21,7 @@ namespace mango
         return font;
     }
 
-    std::shared_ptr<Texture> CoreAssetManager::createTexture2D(const std::filesystem::path & filepath, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
+    std::shared_ptr<Texture> AssetManager::createTexture2D(const std::filesystem::path & filepath, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
     {
         std::string filepathString = filepath.string();
 
@@ -48,7 +37,7 @@ namespace mango
         return texture2D;
     }
 
-    std::shared_ptr<Texture> CoreAssetManager::createTexture2D1x1(const std::string& textureName, const glm::uvec4& color)
+    std::shared_ptr<Texture> AssetManager::createTexture2D1x1(const std::string& textureName, const glm::uvec4& color)
     {
         if (m_loadedTextures.count(textureName))
         {
@@ -62,7 +51,7 @@ namespace mango
         return texture2D;
     }
 
-    std::shared_ptr<Texture> CoreAssetManager::createCubeMapTexture(const std::filesystem::path* filepaths, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
+    std::shared_ptr<Texture> AssetManager::createCubeMapTexture(const std::filesystem::path* filepaths, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
     {
         std::string filepathString = filepaths[0].parent_path().string();
 
@@ -78,7 +67,7 @@ namespace mango
         return textureCube;
     }
 
-    Model CoreAssetManager::createModel(const std::filesystem::path & filepath)
+    Model AssetManager::createModel(const std::filesystem::path & filepath)
     {
         std::string filepathString = filepath.string();
 
@@ -94,13 +83,13 @@ namespace mango
         return model;
     }
 
-    Model CoreAssetManager::createModel()
+    Model AssetManager::createModel()
     {
         Model model;
         return model;
     }
 
-    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string           & shaderName,
+    std::shared_ptr<Shader> AssetManager::createShader(const std::string           & shaderName,
                                                            const std::filesystem::path & computeShaderFilepath)
     {
         if (m_loadedShaders.count(shaderName))
@@ -114,7 +103,7 @@ namespace mango
         return shader;
     }
 
-    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string           & shaderName, 
+    std::shared_ptr<Shader> AssetManager::createShader(const std::string           & shaderName, 
                                                            const std::filesystem::path & vertexShaderFilepath, 
                                                            const std::filesystem::path & fragmentShaderFilepath)
     {
@@ -129,7 +118,7 @@ namespace mango
         return shader;
     }
 
-    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string           & shaderName, 
+    std::shared_ptr<Shader> AssetManager::createShader(const std::string           & shaderName, 
                                                            const std::filesystem::path & vertexShaderFilepath, 
                                                            const std::filesystem::path & fragmentShaderFilepath,
                                                            const std::filesystem::path & geometryShaderFilepath)
@@ -147,7 +136,7 @@ namespace mango
         return shader;
     }
 
-    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string           & shaderName,
+    std::shared_ptr<Shader> AssetManager::createShader(const std::string           & shaderName,
                                                            const std::filesystem::path & vertexShaderFilepath,
                                                            const std::filesystem::path & fragmentShaderFilepath, 
                                                            const std::filesystem::path & tessellationControlShaderFilepath, 
@@ -167,7 +156,7 @@ namespace mango
         return shader;
     }
 
-    std::shared_ptr<Shader> CoreAssetManager::createShader(const std::string           & shaderName, 
+    std::shared_ptr<Shader> AssetManager::createShader(const std::string           & shaderName, 
                                                            const std::filesystem::path & vertexShaderFilepath, 
                                                            const std::filesystem::path & fragmentShaderFilepath, 
                                                            const std::filesystem::path & geometryShaderFilepath, 
@@ -189,7 +178,7 @@ namespace mango
         return shader;
     }
 
-    std::shared_ptr<Font> CoreAssetManager::getFont(const std::string& fontName)
+    std::shared_ptr<Font> AssetManager::getFont(const std::string& fontName)
     {
         if (m_loadedFonts.count(fontName))
         {
@@ -199,7 +188,7 @@ namespace mango
         return nullptr;
     }
 
-    std::shared_ptr<Texture> CoreAssetManager::getTexture2D(const std::string& textureName)
+    std::shared_ptr<Texture> AssetManager::getTexture2D(const std::string& textureName)
     {
         if (m_loadedTextures.count(textureName))
         {
@@ -209,7 +198,7 @@ namespace mango
         return nullptr;
     }
 
-    std::shared_ptr<Shader> CoreAssetManager::getShader(const std::string& shaderName)
+    std::shared_ptr<Shader> AssetManager::getShader(const std::string& shaderName)
     {
         if (m_loadedShaders.count(shaderName))
         {

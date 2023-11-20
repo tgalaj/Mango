@@ -20,43 +20,37 @@ namespace mango
     class Window final
     {
     public:
-        Window();
+        Window(uint32_t width, uint32_t height, const std::string& title);
         ~Window();
 
-        static void create(uint32_t width, uint32_t height, const std::string & title);
-        static void endFrame();
+        int  isCloseRequested();
+        void endFrame();
 
-        static int isCloseRequested();
+        int                           getWidth();
+        int                           getHeight();
+        glm::vec2                     getCenter();
+        glm::vec2                     getDpiScale();
+        float                         getAspectRatio();
+        std::vector<MonitorVideoMode> getPrimaryMonitorVideoModes();
+        GLFWwindow*                   getNativeWindow();
 
-        static int                           getWidth();
-        static int                           getHeight();
-        static glm::vec2                     getCenter();
-        static glm::vec2                     getDpiScale();
-        static float                         getAspectRatio();
-        static std::vector<MonitorVideoMode> getPrimaryMonitorVideoModes();
-        static GLFWwindow*                   getNativeWindow();
+        const std::string & getTitle();
 
-        static const std::string & getTitle();
+        void setVSync(bool enabled);
+        void bindDefaultFramebuffer();
 
-        static void setVSync(bool enabled);
-        static void bindDefaultFramebuffer();
-
-        static bool isFullscreen();
-        static void setFullscreen(bool fullscreen);
+        bool isFullscreen();
+        void setFullscreen(bool fullscreen);
 
     private:
-        static GLFWwindow  * m_window;
-        static GLFWmonitor * m_monitor;
-        static std::string   m_title;
-        static glm::ivec2    m_windowPos;
-        static glm::ivec2    m_windowSize;
-        static glm::ivec2    m_viewportSize;
+        void create(uint32_t width, uint32_t height, const std::string & title);
 
-        static void errorCallback(int error, const char* description)
-        {
-            std::cerr << description << std::endl;
-        }
-
-        static void framebufferSizeCallback(GLFWwindow * window, int width, int height);
+    private:
+        GLFWwindow  * m_window;
+        GLFWmonitor * m_monitor;
+        std::string   m_title;
+        glm::ivec2    m_windowPos;
+        glm::ivec2    m_windowSize;
+        glm::ivec2    m_viewportSize;
     };
 }

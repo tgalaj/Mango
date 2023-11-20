@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 
 #include "Shader.h"
-#include "Mango/Components/CameraComponent.h"
+#include "Mango/Scene/Components.h"
 
 namespace mango
 {

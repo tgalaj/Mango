@@ -1,12 +1,12 @@
 #include "mgpch.h"
 
 #include <assimp/postprocess.h>
-#include <glm/gtc/matrix_transform.hpp>
+#include "glm/gtc/matrix_transform.hpp"
 
 #include "Model.h"
-#include "Mango/Core/CoreAssetManager.h"
-#include "Mango/Core/CoreServices.h"
-#include "Mango/Utilities/GeomPrimitive.h"
+#include "GeomPrimitive.h"
+#include "Mango/Core/AssetManager.h"
+#include "Mango/Core/Services.h"
 
 namespace mango
 {
@@ -124,7 +124,7 @@ namespace mango
                 fullPath.Append("/");
                 fullPath.Append(str.C_Str());
 
-                auto texture = CoreAssetManager::createTexture2D(fullPath.C_Str(), type == aiTextureType_DIFFUSE);
+                auto texture = AssetManager::createTexture2D(fullPath.C_Str(), type == aiTextureType_DIFFUSE);
                 mesh.material.addTexture(textureType, texture);
             }
         }

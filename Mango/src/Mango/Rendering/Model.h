@@ -2,7 +2,6 @@
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
-#include <entityx/Entity.h>
 #include <memory>
 
 #include "Material.h"

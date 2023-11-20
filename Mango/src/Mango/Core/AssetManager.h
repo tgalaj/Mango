@@ -2,18 +2,15 @@
 #include <filesystem>
 #include <unordered_map>
 
-#include "GameObject.h"
 #include "Mango/GUI/Font.h"
 #include "Mango/Rendering/Model.h"
 #include "Mango/Rendering/Texture.h"
 
 namespace mango
 {
-    class CoreAssetManager final
+    class AssetManager final
     {
     public:
-        static GameObject createGameObject();
-
         static std::shared_ptr<Font>    createFont          (const std::string  & fontName, const std::filesystem::path& filepath, GLuint fontHeight);
         static std::shared_ptr<Texture> createTexture2D     (const std::filesystem::path & filepath, bool isSrgb = false, GLint numMipmaps = 1);
         static std::shared_ptr<Texture> createTexture2D1x1  (const std::string & textureName,  const glm::uvec4 & color);
@@ -52,12 +49,10 @@ namespace mango
         static std::shared_ptr<Shader>  getShader   (const std::string & shaderName);
 
     private:
-        CoreAssetManager() {}
-        ~CoreAssetManager() {}
+        AssetManager() {}
+        ~AssetManager() {}
 
-        static std::vector<GameObject>                m_gameObjects;
-        static std::unordered_map<std::string, Model> m_loadedModels;
-
+        static std::unordered_map<std::string, Model>                    m_loadedModels;
         static std::unordered_map<std::string, std::shared_ptr<Texture>> m_loadedTextures;
         static std::unordered_map<std::string, std::shared_ptr<Shader>>  m_loadedShaders;
         static std::unordered_map<std::string, std::shared_ptr<Font>>    m_loadedFonts;

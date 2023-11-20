@@ -38,7 +38,7 @@ namespace mango
                                              const char*   file,
                                              const int     line)
         {
-            if(type == asserts::Type::Core)
+            if (type == asserts::Type::Core)
             {
                 MG_CORE_ERROR("{}({}): Assert Failure: '{}' {}", 
                               file, 

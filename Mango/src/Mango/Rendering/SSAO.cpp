@@ -1,7 +1,10 @@
 #include "mgpch.h"
 
+#include "DeferredRendering.h"
+#include "RenderTarget.h"
 #include "SSAO.h"
-#include "Mango/Core/CoreAssetManager.h"
+#include "Mango/Core/AssetManager.h"
+#include "Mango/Core/Services.h"
 #include "Mango/Window/Window.h"
 
 namespace mango
@@ -30,8 +33,9 @@ namespace mango
 
     void SSAO::create()
     {
-        int width = Window::getWidth();
-        int height = Window::getHeight();
+        auto window = Services::application()->getWindow();
+        int  width  = window->getWidth();
+        int  height = window->getHeight();
 
         m_ssaoBuffer = std::make_shared<RenderTarget>();
         m_ssaoBuffer->create(width, height, RenderTarget::ColorInternalFormat::R8, RenderTarget::DepthInternalFormat::NoDepth, RenderTarget::RenderTargetType::Tex2D, false);
@@ -120,7 +124,7 @@ namespace mango
             sample = sample * random_floats(generator);
 
             float scale = float(i) / float(m_kernelSize);
-            scale = glm::lerp(0.1f, 1.0f, scale * scale);
+            scale = glm::mix(0.1f, 1.0f, scale * scale);
 
             m_kernel.push_back(sample * scale);
         }
