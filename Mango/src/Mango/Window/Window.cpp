@@ -3,8 +3,8 @@
 #include "Window.h"
 #include "Input.h"
 #include "Mango/Core/Services.h"
-#include "Mango/GUI/GUI.h"
 #include "Mango/Rendering/DebugOutputGL.h"
+#include "Mango/Systems/ImGuiSystem.h"
 #include "Mango/Systems/RenderingSystem.h"
 
 #define MIN_GL_VERSION_MAJOR 4
@@ -100,7 +100,9 @@ namespace mango
             glfwGetFramebufferSize(window, &data.m_viewportSize.x, &data.m_viewportSize.y);
             glViewport(0, 0, data.m_viewportSize.x, data.m_viewportSize.y);
 
-            GUI::updateWindowSize(float(width), float(height));
+            MG_CORE_ASSERT(Services::application()                   != nullptr, "applicaiton can't be nullptr!");
+            MG_CORE_ASSERT(Services::application()->getImGuiSystem() != nullptr, "imGuiSystem can't be nullptr!");
+            Services::application()->getImGuiSystem()->updateWindowSize(float(width), float(height));
 
             if (Services::renderer())
             {

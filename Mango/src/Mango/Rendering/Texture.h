@@ -52,6 +52,6 @@ namespace mango
 
     private:
         friend class AssetManager;
-        friend class GUI;
+        friend class ImGuiSystem;
     };
 }

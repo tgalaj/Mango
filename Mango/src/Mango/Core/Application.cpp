@@ -3,10 +3,10 @@
 #include "Application.h"
 #include "Services.h"
 #include "Timer.h"
-#include "Mango/GUI/GUI.h"
 #include "Mango/Scene/SceneManager.h"
 #include "Mango/Systems/CameraSystem.h"
 #include "Mango/Systems/FreePoseSystem.h"
+#include "Mango/Systems/ImGuiSystem.h"
 #include "Mango/Systems/RenderingSystem.h"
 #include "Mango/Systems/SceneGraphSystem.h"
 #include "Mango/Window/Input.h"
@@ -53,7 +53,6 @@ namespace mango
         // Init Log, Input and GUI systems
         Log::init();
         Input::init(m_window->getNativeWindow());
-        GUI::init(m_window);
 
         // Init core services
         m_eventBus     = new EventBus();
@@ -64,7 +63,8 @@ namespace mango
         Services::provide(m_eventBus);
 
         // Add core systems - do not forget to update them!
-        //systems.add<AudioSystem>();
+        m_systems.add(new SceneGraphSystem(), SystemPriority::High);
+        m_systems.configure();
 
         // TODO: 
         // [x] figure out how to pass Scene* with registry to the systems
@@ -76,19 +76,18 @@ namespace mango
         // [x] move events to a separate classes (component added etc.)
         // [x] add rendering system include to services.h
         // [x] dtor of Window is not called !!!!
-        // [] dtor of GUI is not called !!!! -> GUI as a system
+        // [x] dtor of GUI is not called !!!! -> GUI as a system
         // [] Entity: Set position etc. (like in the previous Game Object class)
         // [] remove system priorities (not needed)
         // [] camera movement!!
 
-        m_systems.add(new SceneGraphSystem(), SystemPriority::High);
-        m_systems.configure();
-
         // Create Rendering system
-        // renderingSystem will be deleted by m_renderingSystems
+        // renderingSystem and m_imGuiSystem will be deleted by m_renderingSystems
         RenderingSystem* renderingSystem = new RenderingSystem();
+        m_imGuiSystem = new ImGuiSystem();
 
         m_renderingSystems.add(renderingSystem, SystemPriority::Low);
+        m_renderingSystems.add(m_imGuiSystem,   SystemPriority::Low);
         m_renderingSystems.configure();
 
         Services::provide(renderingSystem);
@@ -183,14 +182,14 @@ namespace mango
             {
                 m_renderingSystems.updateAll(m_frameTime);
 
-                GUI::being();
+                m_imGuiSystem->being();
                 {
                     for (auto& system : m_systems)
                     {
                         system.second->onGui();
                     }
                 }
-                GUI::end();
+                m_imGuiSystem->end();
 
                 m_window->endFrame();
                 frames++;

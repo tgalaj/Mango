@@ -271,13 +271,13 @@ void TestDemo::onGui()
     ImGui::End();
     /* Overlay end */
 
-    GUI::beginHUD();
+    ImGuiSystem::beginHUD();
 
 //    GUI::circleFilled({ Window::getWidth() / 2.0f, Window::getHeight() / 2.0f}, 2.0f, glm::vec4(0.0, 1.0, 0.0, 1.0));
 //    auto pos = GUI::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo!", { Window::getWidth() / 2.0f, Window::getHeight() / 2.0f + 100.0f}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, true);
 //    GUI::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo2!", { Window::getWidth() / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
     auto window = Services::application()->getWindow();
-    GUI::image(AssetManager::getTexture2D("assets/textures/opengl.png"), { window->getWidth() - 200, 0 }, { window->getWidth(), 100 }, { 1.0f, 1.0f, 1.0f, 0.5f });
+    ImGuiSystem::image(AssetManager::getTexture2D("assets/textures/opengl.png"), { window->getWidth() - 200, 0 }, { window->getWidth(), 100 }, { 1.0f, 1.0f, 1.0f, 0.5f });
 
-    GUI::endHUD();
+    ImGuiSystem::endHUD();
 }

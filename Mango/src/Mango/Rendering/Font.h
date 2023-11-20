@@ -15,6 +15,6 @@ namespace mango
     private:
         ImFont * m_font;
 
-        friend class GUI;
+        friend class ImGuiSystem;
     };
 }

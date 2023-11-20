@@ -10,12 +10,11 @@
 #include "Mango/Events/EntityEvents.h"
 #include "Mango/Events/SceneEvents.h"
 
-#include "Mango/GUI/GUI.h"
-
 #include "Mango/Scene/Components.h"
 #include "Mango/Scene/SceneManager.h"
 
+#include "Mango/Systems/ImGuiSystem.h"
+#include "Mango/Systems/RenderingSystem.h"
+
 #include "Mango/Window/Input.h"
 #include "Mango/Window/Window.h"
-
-#include "Mango/Systems/RenderingSystem.h"

@@ -5,6 +5,7 @@
 namespace mango
 {
     class EventBus;
+    class ImGuiSystem;
     class Scene;
     class SceneManager;
     class Window;
@@ -36,7 +37,9 @@ namespace mango
         void addSystem(System* system);
 
         const std::shared_ptr<Window> getWindow() const { return m_window; }
-        EventBus* const getEventBus() const { return m_eventBus; }
+
+        EventBus    * const getEventBus()    const { return m_eventBus; }
+        ImGuiSystem * const getImGuiSystem() const { return m_imGuiSystem; }
 
         unsigned int getFPS() const;
 
@@ -53,6 +56,7 @@ namespace mango
         
         SceneManager * m_sceneManager;
         EventBus     * m_eventBus;
+        ImGuiSystem  * m_imGuiSystem;
 
         double       m_frameTime;
         unsigned int m_fps;

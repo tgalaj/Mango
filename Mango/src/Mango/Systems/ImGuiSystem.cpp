@@ -1,31 +1,35 @@
 ﻿#include "mgpch.h"
 
-#include "Font.h"
+#include "ImGuiSystem.h"
 #include "Mango/Core/Services.h"
+#include "Mango/Rendering/Font.h"
 #include "Mango/Rendering/Texture.h"
 #include "Mango/Window/Window.h"
 
 #include "glm/vec2.hpp"
 #include "glm/common.hpp"
 #include "imgui_internal.h"
-
-#include "GUI.h"
-#include "imgui_impl_opengl3.h"
+#include "Mango/ImGui/imgui_impl_glfw.h"
+#include "Mango/ImGui/imgui_impl_opengl3.h"
 
 namespace mango
 {
-    glm::vec2 GUI::m_windowSize = glm::vec2(0.0f);
+    glm::vec2 ImGuiSystem::m_windowSize = glm::vec2(0.0f);
 
-    GUI::~GUI()
+    ImGuiSystem::ImGuiSystem()
+        : System("ImGuiSystem")
     {
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
+
     }
 
-    void GUI::init(const std::shared_ptr<Window> & window)
+    void ImGuiSystem::onInit()
     {
-        MG_ASSERT_MSG(window != nullptr, "window can't be nullptr!");
+        auto app = Services::application();
+        MG_CORE_ASSERT_MSG(app != nullptr, "app can't be nullptr!");
+
+        auto window = app->getWindow();
+        MG_CORE_ASSERT_MSG(window != nullptr, "window can't be nullptr!");
+
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
 
@@ -37,26 +41,33 @@ namespace mango
         ImGui::GetIO().Fonts->AddFontDefault();
     }
 
-    void GUI::being()
+    void ImGuiSystem::onDestroy()
+    {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    }
+
+    void ImGuiSystem::being()
     {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
     }
 
-    void GUI::end()
+    void ImGuiSystem::end()
     {
         glViewport(0, 0, GLsizei(m_windowSize.x), GLsizei(m_windowSize.y));
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
-    void GUI::updateWindowSize(float width, float height)
+    void ImGuiSystem::updateWindowSize(float width, float height)
     {
         m_windowSize = glm::vec2(width, height);
     }
 
-    void GUI::beginHUD()
+    void ImGuiSystem::beginHUD()
     {
         ImGuiIO& io = ImGui::GetIO();
 
@@ -69,7 +80,7 @@ namespace mango
         ImGui::SetWindowSize(ImVec2(io.DisplaySize.x, io.DisplaySize.y), ImGuiCond_Always);
     }
 
-    void GUI::endHUD()
+    void ImGuiSystem::endHUD()
     {
         ImGuiWindow* window = ImGui::GetCurrentWindow();
         window->DrawList->PushClipRectFullScreen();
@@ -79,7 +90,7 @@ namespace mango
         ImGui::PopStyleVar(2);
     }
 
-    float GUI::text(const std::shared_ptr<Font> & font, const std::string& text, const glm::vec2 & position, float size, const glm::vec4 & color /*= glm::vec4(1.0f)*/, bool center /*= false*/, bool textShadow /*= false*/)
+    float ImGuiSystem::text(const std::shared_ptr<Font> & font, const std::string& text, const glm::vec2 & position, float size, const glm::vec4 & color /*= glm::vec4(1.0f)*/, bool center /*= false*/, bool textShadow /*= false*/)
     {
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
@@ -127,7 +138,7 @@ namespace mango
         return y;
     }
 
-    void GUI::line(const glm::vec2& from, const glm::vec2& to, const glm::vec4& color, float thickness)
+    void ImGuiSystem::line(const glm::vec2& from, const glm::vec2& to, const glm::vec4& color, float thickness)
     {
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
@@ -136,7 +147,7 @@ namespace mango
         window->DrawList->AddLine({ from.x, from.y }, { to.x, to.y }, ImGui::GetColorU32({ lineColor.r, lineColor.g, lineColor.b, lineColor.a }), thickness);
     }
 
-    void GUI::circle(const glm::vec2& position, float radius, const glm::vec4& color, float thickness, uint32_t segments)
+    void ImGuiSystem::circle(const glm::vec2& position, float radius, const glm::vec4& color, float thickness, uint32_t segments)
     {
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
@@ -145,7 +156,7 @@ namespace mango
         window->DrawList->AddCircle({ position.x, position.y }, radius, ImGui::GetColorU32({ circleColor.r, circleColor.g, circleColor.b, circleColor.a }), segments, thickness);
     }
 
-    void GUI::circleFilled(const glm::vec2& position, float radius,  const glm::vec4& color, uint32_t segments)
+    void ImGuiSystem::circleFilled(const glm::vec2& position, float radius,  const glm::vec4& color, uint32_t segments)
     {
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
@@ -154,7 +165,7 @@ namespace mango
         window->DrawList->AddCircleFilled({ position.x, position.y }, radius, ImGui::GetColorU32({ circleColor.r, circleColor.g, circleColor.b, circleColor.a }), segments);
     }
 
-    void GUI::rect(const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color, float rounding, uint32_t roundingCornersFlags, float thickness)
+    void ImGuiSystem::rect(const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color, float rounding, uint32_t roundingCornersFlags, float thickness)
     {
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
@@ -163,7 +174,7 @@ namespace mango
         window->DrawList->AddRect({ from.x, from.y }, { to.x, to.y }, ImGui::GetColorU32({ rectColor.r, rectColor.g, rectColor.b, rectColor.a }), rounding, roundingCornersFlags, thickness);
     }
 
-    void GUI::rectFilled(const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color, float rounding, uint32_t roundingCornersFlags)
+    void ImGuiSystem::rectFilled(const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color, float rounding, uint32_t roundingCornersFlags)
     {
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
@@ -172,7 +183,7 @@ namespace mango
         window->DrawList->AddRectFilled({ from.x, from.y }, { to.x, to.y }, ImGui::GetColorU32({ rectColor.r, rectColor.g, rectColor.b, rectColor.a }), rounding, roundingCornersFlags);
     }
 
-    void GUI::image(std::shared_ptr<Texture> pTexture, const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color)
+    void ImGuiSystem::image(std::shared_ptr<Texture> pTexture, const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color)
     {
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
@@ -181,7 +192,7 @@ namespace mango
         window->DrawList->AddImage(reinterpret_cast<void*>(pTexture->m_id), { from.x, from.y }, { to.x, to.y }, { 0.0f, 0.0f }, { 1.0f, 1.0f }, ImGui::GetColorU32({ tintColor.r, tintColor.g, tintColor.b, tintColor.a }));
     }
     
-    void GUI::imageRounded(std::shared_ptr<Texture> pTexture, const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color, float rounding, uint32_t roundingCornersFlags)
+    void ImGuiSystem::imageRounded(std::shared_ptr<Texture> pTexture, const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color, float rounding, uint32_t roundingCornersFlags)
     {
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 

@@ -1,11 +1,14 @@
 ﻿#pragma once
 
-#include <imgui.h>
-#include <glm/vec2.hpp>
-#include <glm/vec4.hpp>
+#include "Mango/Core/System.h"
+
+#include "glm/vec2.hpp"
+#include "glm/vec4.hpp"
+#include "imgui.h"
+
 #include <memory>
 
-#include "imgui_impl_glfw.h"
+
 
 namespace mango
 {
@@ -13,16 +16,20 @@ namespace mango
     class Texture;
     class Window;
 
-    class GUI
+    class ImGuiSystem : public System
     {
     public:
         using Style = void(*)(ImGuiStyle &);
 
-        ~GUI(); // TODO: this should be a "core" system, so destructor could be called!!
-        static void init(const std::shared_ptr<Window>& window);
-        static void being();
-        static void end();
-        static void updateWindowSize(float width, float height);
+        ImGuiSystem();
+        ~ImGuiSystem() = default;
+
+        void onInit() override;
+        void onDestroy() override;
+
+        void being();
+        void end();
+        void updateWindowSize(float width, float height);
 
         /* HUD rendering */
         static void beginHUD();

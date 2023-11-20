@@ -16,9 +16,9 @@ namespace mango
     
     void RenderingSystem::onInit()
     {
-        MG_ASSERT_MSG(Services::application()              != nullptr, "application can't be nullptr!");
-        MG_ASSERT_MSG(Services::application()->getWindow() != nullptr, "window can't be nullptr!");
-        MG_ASSERT_MSG(Services::eventBus()                 != nullptr, "eventBus can't be nullptr!");
+        MG_CORE_ASSERT_MSG(Services::application()              != nullptr, "application can't be nullptr!");
+        MG_CORE_ASSERT_MSG(Services::application()->getWindow() != nullptr, "window can't be nullptr!");
+        MG_CORE_ASSERT_MSG(Services::eventBus()                 != nullptr, "eventBus can't be nullptr!");
 
         m_mainWindow = Services::application()->getWindow();
 

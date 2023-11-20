@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <unordered_map>
 
-#include "Mango/GUI/Font.h"
+#include "Mango/Rendering/Font.h"
 #include "Mango/Rendering/Model.h"
 #include "Mango/Rendering/Texture.h"
 
