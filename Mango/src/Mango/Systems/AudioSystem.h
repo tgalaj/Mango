@@ -4,9 +4,10 @@
 
 namespace mango
 {
-    class AudioSystem : System
+    class AudioSystem : public System
     {
     public:
-
+        AudioSystem();
+        virtual ~AudioSystem() = default;
     };
 }

@@ -8,8 +8,6 @@
 
 #include <memory>
 
-
-
 namespace mango
 {
     class Font;

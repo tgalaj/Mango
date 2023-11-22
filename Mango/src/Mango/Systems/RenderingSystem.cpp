@@ -14,6 +14,12 @@ namespace mango
     bool         RenderingSystem::DEBUG_RENDERING    = false;
     unsigned int RenderingSystem::DEBUG_WINDOW_WIDTH = 0;
     
+    RenderingSystem::RenderingSystem()
+        : System("RenderingSystem")
+    {
+
+    }
+
     void RenderingSystem::onInit()
     {
         MG_CORE_ASSERT_MSG(Services::application()              != nullptr, "application can't be nullptr!");

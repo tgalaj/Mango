@@ -26,11 +26,15 @@ namespace mango
             return elapsed() * 1000.0f;
         }
 
+        /**
+         * @brief Returns current time in seconds.
+         * @return Time in seconds.
+         */
         static double getTime()
         {
             auto now = std::chrono::high_resolution_clock::now();
 
-            return std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count() * 0.001f * 0.001f * 0.001f;
+            return std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count() * 0.001 * 0.001 * 0.001;
         }
 
     private:

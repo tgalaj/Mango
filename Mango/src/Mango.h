@@ -10,6 +10,8 @@
 #include "Mango/Events/EntityEvents.h"
 #include "Mango/Events/SceneEvents.h"
 
+#include "Mango/Rendering/Camera/FreeCameraController.h"
+
 #include "Mango/Scene/Components.h"
 #include "Mango/Scene/SceneManager.h"
 

@@ -14,4 +14,5 @@ public:
 
 private:
     std::shared_ptr<mango::Scene> m_mainScene;
+    std::shared_ptr<mango::FreeCameraController> m_freeCameraController;
 };

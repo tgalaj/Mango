@@ -23,7 +23,7 @@ namespace mango
     class RenderingSystem : public System
     {
     public:
-        RenderingSystem() = default;
+        RenderingSystem();
         ~RenderingSystem() = default;
 
         void onInit();

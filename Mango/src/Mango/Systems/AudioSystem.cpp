@@ -4,4 +4,9 @@
 
 namespace mango
 {
+    AudioSystem::AudioSystem()
+        : System("AudioSystem")
+    {
+
+    }
 }

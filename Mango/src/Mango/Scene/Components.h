@@ -2,7 +2,6 @@
 
 #include "Mango/Rendering/Attenuation.h"
 #include "Mango/Rendering/Model.h"
-#include "Mango/Window/Input.h"
 
 #ifndef GLM_ENABLE_EXPERIMENTAL
     #define GLM_ENABLE_EXPERIMENTAL
@@ -192,40 +191,6 @@ namespace mango
         glm::mat4  view{};
         glm::mat4  projection{};
         const bool isOrtho;
-    };
-
-    class FreeLookComponent
-    {
-    public:
-        explicit FreeLookComponent(float sensitivity = 0.2f)
-            : sensitivity(sensitivity),
-              unlockMouseKey(KeyCode::MouseRight) {}
-
-        float   sensitivity;
-        KeyCode unlockMouseKey;
-    };
-
-    class FreeMoveComponent
-    {
-    public:
-        explicit FreeMoveComponent(float speed = 10.0f)
-            : moveSpeed  (speed),
-              forwardKey (KeyCode::W),
-              backwardKey(KeyCode::S),
-              leftKey    (KeyCode::A),
-              rightKey   (KeyCode::D), 
-              upKey      (KeyCode::E), 
-              downKey    (KeyCode::Q)
-        {
-        }
-
-        float   moveSpeed;
-        KeyCode forwardKey;
-        KeyCode backwardKey;
-        KeyCode leftKey;
-        KeyCode rightKey;
-        KeyCode upKey;
-        KeyCode downKey;
     };
 
     class ModelRendererComponent

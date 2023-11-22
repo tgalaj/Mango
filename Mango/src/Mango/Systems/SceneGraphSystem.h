@@ -4,9 +4,12 @@
 
 namespace mango
 {
-    class SceneGraphSystem : public System
+    class SceneGraphSystem final : public System
     {
     public:
+        SceneGraphSystem();
+        ~SceneGraphSystem() = default;
+
         void onUpdate(float dt) override;
 
     private:

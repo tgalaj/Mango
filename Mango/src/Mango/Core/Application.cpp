@@ -4,8 +4,7 @@
 #include "Services.h"
 #include "Timer.h"
 #include "Mango/Scene/SceneManager.h"
-#include "Mango/Systems/CameraSystem.h"
-#include "Mango/Systems/FreePoseSystem.h"
+#include "Mango/Systems/AudioSystem.h"
 #include "Mango/Systems/ImGuiSystem.h"
 #include "Mango/Systems/RenderingSystem.h"
 #include "Mango/Systems/SceneGraphSystem.h"
@@ -62,26 +61,12 @@ namespace mango
         Services::provide(m_sceneManager);
         Services::provide(m_eventBus);
 
-        // Add core systems - do not forget to update them!
+        // Add core systems - do not forget to configure them!
         m_systems.add(new SceneGraphSystem());
+        m_systems.add(new AudioSystem());
         m_systems.configure();
 
-        // TODO: 
-        // [x] figure out how to pass Scene* with registry to the systems
-        //    so systems could have access to entities
-        // [x] System::onUpdate(scene, dt)
-        // [x] update systems code
-        // [x] renderer system - add EVENTS !!
-        // [x] event bus add to services
-        // [x] move events to a separate classes (component added etc.)
-        // [x] add rendering system include to services.h
-        // [x] dtor of Window is not called !!!!
-        // [x] dtor of GUI is not called !!!! -> GUI as a system
-        // [x] remove system priorities (not needed)
-        // [x] Entity: Set position etc. (like in the previous Game Object class)
-        // [] camera movement!!
-
-        // Create Rendering system
+        // Create Rendering and ImGui systems
         // renderingSystem and m_imGuiSystem will be deleted by m_renderingSystems
         RenderingSystem* renderingSystem = new RenderingSystem();
         m_imGuiSystem = new ImGuiSystem();

@@ -18,10 +18,9 @@ void TestDemo::onInit()
 
     auto camera = m_mainScene->createEntity("MainCamera");
     camera.addComponent<CameraComponent>(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 500.0f);
-    camera.addComponent<FreeLookComponent>();
-    camera.addComponent<FreeMoveComponent>();
-
     camera.setPosition(0, 4, 30);
+
+    m_freeCameraController = std::make_shared<FreeCameraController>(camera);
 
     auto font = AssetManager::createFont("Droid48", "assets/fonts/Roboto-Regular.ttf", 48.0f);
 
@@ -244,6 +243,8 @@ void TestDemo::onUpdate(float dt)
         fullscreen = !fullscreen;
         Services::application()->getWindow()->setFullscreen(fullscreen);
     }
+
+    m_freeCameraController->onUpdate(dt);
 }
 
 void TestDemo::onGui()
