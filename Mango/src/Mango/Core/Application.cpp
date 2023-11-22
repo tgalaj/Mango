@@ -78,7 +78,7 @@ namespace mango
         // [x] dtor of Window is not called !!!!
         // [x] dtor of GUI is not called !!!! -> GUI as a system
         // [x] remove system priorities (not needed)
-        // [] Entity: Set position etc. (like in the previous Game Object class)
+        // [x] Entity: Set position etc. (like in the previous Game Object class)
         // [] camera movement!!
 
         // Create Rendering system

@@ -21,7 +21,7 @@ void TestDemo::onInit()
     camera.addComponent<FreeLookComponent>();
     camera.addComponent<FreeMoveComponent>();
 
-    camera.getComponent<TransformComponent>().setPosition(0, 4, 30);
+    camera.setPosition(0, 4, 30);
 
     auto font = AssetManager::createFont("Droid48", "assets/fonts/Roboto-Regular.ttf", 48.0f);
 
@@ -64,91 +64,91 @@ void TestDemo::onInit()
 
     auto cyborg = m_mainScene->createEntity();
     cyborg.addComponent<ModelRendererComponent>(cyborgModel);
-    cyborg.getComponent<TransformComponent>().setPosition(0.0f, 0.0f, 0.0f);
-    cyborg.getComponent<TransformComponent>().setScale(1.0f);
+    cyborg.setPosition(0.0f, 0.0f, 0.0f);
+    cyborg.setScale(1.0f);
 
     auto zen3c = m_mainScene->createEntity();
     zen3c.addComponent<ModelRendererComponent>(zen3cModel);
-    zen3c.getComponent<TransformComponent>().setPosition(-3.0f, -2.3f, 0.0f);
-    zen3c.getComponent<TransformComponent>().setScale(0.018f);
+    zen3c.setPosition(-3.0f, -2.3f, 0.0f);
+    zen3c.setScale(0.018f);
 
     auto damagedHelmet = m_mainScene->createEntity();
     damagedHelmet.addComponent<ModelRendererComponent>(damagedHelmetModel);
-    damagedHelmet.getComponent<TransformComponent>().setPosition(3.0f, 2.5f, 0.0f);
-    damagedHelmet.getComponent<TransformComponent>().setScale(1.0f);
+    damagedHelmet.setPosition(3.0f, 2.5f, 0.0f);
+    damagedHelmet.setScale(1.0f);
 
     auto sponza = m_mainScene->createEntity();
     sponza.addComponent<ModelRendererComponent>(sponzaModel);
-    sponza.getComponent<TransformComponent>().setPosition(-1.5f, 0.0f, 10.0f);
-    sponza.getComponent<TransformComponent>().setOrientation(0.0f, -90.0f, 0.0f);
-    sponza.getComponent<TransformComponent>().setScale(6.0f);
+    sponza.setPosition(-1.5f, 0.0f, 10.0f);
+    sponza.setOrientation(0.0f, -90.0f, 0.0f);
+    sponza.setScale(6.0f);
 
     auto wall = m_mainScene->createEntity();
     wall.addComponent<ModelRendererComponent>(wallModel);
     wall.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, brickwallTex);
     wall.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::NORMAL, brickwallNormalTex);
     //wall.getComponent<ModelRendererComponent>()->model.getMesh().material.addTexture(Material::TextureType::DEPTH, bricks2Depth);
-    wall.getComponent<TransformComponent>().setOrientation(90.0f, 0.0f, 0.0f);
-    wall.getComponent<TransformComponent>().setPosition(0, 2.0, -9);
+    wall.setOrientation(90.0f, 0.0f, 0.0f);
+    wall.setPosition(0, 2.0, -9);
 
     auto wall2 = m_mainScene->createEntity();
     wall2.addComponent<ModelRendererComponent>(wallModel);
     wall2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
     wall2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::NORMAL, bricks2Normal);
     wall2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DEPTH, bricks2Depth);
-    wall2.getComponent<TransformComponent>().setOrientation(90.0f, 0.0f, 0.0f);
-    wall2.getComponent<TransformComponent>().setPosition(-5, 2.0, -9);
+    wall2.setOrientation(90.0f, 0.0f, 0.0f);
+    wall2.setPosition(-5, 2.0, -9);
 
     auto grass = m_mainScene->createEntity();
     grass.addComponent<ModelRendererComponent>(wallModel);
     grass.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, grassTex);
     grass.getComponent<ModelRendererComponent>().model.getMesh().material.addFloat("alpha_cutoff", 0.1f);
-    grass.getComponent<TransformComponent>().setOrientation(90.0f, 0.0f, 0.0f);
-    grass.getComponent<TransformComponent>().setPosition(-5, 1.2, 9);
-    grass.getComponent<TransformComponent>().setScale(0.5);
+    grass.setOrientation(90.0f, 0.0f, 0.0f);
+    grass.setPosition(-5, 1.2, 9);
+    grass.setScale(0.5);
 
     auto window1 = m_mainScene->createEntity();
     window1.addComponent<ModelRendererComponent>(wallModel, ModelRendererComponent::RenderQueue::RQ_ALPHA);
     window1.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, windowTex);
-    window1.getComponent<TransformComponent>().setOrientation(90.0f, 0.0f, 0.0f);
-    window1.getComponent<TransformComponent>().setPosition(0, 1.2, 9);
-    window1.getComponent<TransformComponent>().setScale(0.51);
+    window1.setOrientation(90.0f, 0.0f, 0.0f);
+    window1.setPosition(0, 1.2, 9);
+    window1.setScale(0.51);
 
     auto window3 = m_mainScene->createEntity();
     window3.addComponent<ModelRendererComponent>(wallModel, ModelRendererComponent::RenderQueue::RQ_ALPHA);
     window3.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, windowTex);
-    window3.getComponent<TransformComponent>().setOrientation(90.0f, 0.0f, 0.0f);
-    window3.getComponent<TransformComponent>().setPosition(3, 1.2, 13);
-    window3.getComponent<TransformComponent>().setScale(0.5);
+    window3.setOrientation(90.0f, 0.0f, 0.0f);
+    window3.setPosition(3, 1.2, 13);
+    window3.setScale(0.5);
 
     auto window2 = m_mainScene->createEntity();
     window2.addComponent<ModelRendererComponent>(wallModel, ModelRendererComponent::RenderQueue::RQ_ALPHA);
     window2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, windowTex);
-    window2.getComponent<TransformComponent>().setOrientation(90.0f, 0.0f, 0.0f);
-    window2.getComponent<TransformComponent>().setPosition(5, 1.2, 9);
-    window2.getComponent<TransformComponent>().setScale(0.5);
+    window2.setOrientation(90.0f, 0.0f, 0.0f);
+    window2.setPosition(5, 1.2, 9);
+    window2.setScale(0.5);
 
     auto plane1 = m_mainScene->createEntity();
     plane1.addComponent<ModelRendererComponent>(wallModel);
     plane1.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
-    plane1.getComponent<TransformComponent>().setOrientation(90.0f, 0.0f, 0.0f);
-    plane1.getComponent<TransformComponent>().setPosition(5, 3.0, -14);
+    plane1.setOrientation(90.0f, 0.0f, 0.0f);
+    plane1.setPosition(5, 3.0, -14);
 
     auto plane2 = m_mainScene->createEntity();
     plane2.addComponent<ModelRendererComponent>(wallModel);
     plane2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
-    plane2.getComponent<TransformComponent>().setOrientation(0.0f, 0.0f, 0.0f);
-    plane2.getComponent<TransformComponent>().setPosition(5, 0.5, -11.5);
+    plane2.setOrientation(0.0f, 0.0f, 0.0f);
+    plane2.setPosition(5, 0.5, -11.5);
 
     auto sphere1 = m_mainScene->createEntity();
     sphere1.addComponent<ModelRendererComponent>(sphereModel, ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC);
-    sphere1.getComponent<TransformComponent>().setPosition(5, 2, -11.5);
-    sphere1.getComponent<TransformComponent>().setScale(0.5f);
+    sphere1.setPosition(5, 2, -11.5);
+    sphere1.setScale(0.5f);
 
     auto sphere2 = m_mainScene->createEntity();
     sphere2.addComponent<ModelRendererComponent>(sphereModel);
-    sphere2.getComponent<TransformComponent>().setPosition(5, 3, -12.5);
-    sphere2.getComponent<TransformComponent>().setScale(0.5f);
+    sphere2.setPosition(5, 3, -12.5);
+    sphere2.setScale(0.5f);
 
     float offset = 15.0f / 10.0f;
     float numObjects = 10;
@@ -161,14 +161,14 @@ void TestDemo::onInit()
         {
             auto object = m_mainScene->createEntity();
             object.addComponent<ModelRendererComponent>(sphereModel);
-            object.getComponent<TransformComponent>().setScale(0.75f);
+            object.setScale(0.75f);
             
             float zPos = 15.0f / -2.0f + (j * offset);
-            object.getComponent<TransformComponent>().setPosition(xPos + 0.5f * offset, 0.5f, zPos + 0.5f * offset);
+            object.setPosition(xPos + 0.5f * offset, 0.5f, zPos + 0.5f * offset);
 
             if (i == 2 && j == 2)
             {
-                cyborg.getComponent<TransformComponent>().addChild(object.getComponent<TransformComponent>());
+                cyborg.addChild(object);
                 //object.setScale(4.0f);
             }
         }
@@ -177,7 +177,7 @@ void TestDemo::onInit()
     /* Lights */
     auto dirLight = m_mainScene->createEntity();
     dirLight.addComponent<DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f);
-    dirLight.getComponent<TransformComponent>().setOrientation(-45.0f, 180.0f, 0.0f);
+    dirLight.setOrientation(-45.0f, 180.0f, 0.0f);
 
     float d = 8;
     glm::vec3 positions[4]
@@ -203,7 +203,7 @@ void TestDemo::onInit()
         pointLight.getComponent<PointLightComponent>().setAttenuation(3.0f, 4.0f, 10.0f);
         pointLight.getComponent<PointLightComponent>().color = colors[i];
         pointLight.getComponent<PointLightComponent>().intensity = 200.0f;
-        pointLight.getComponent<TransformComponent>().setPosition(positions[i].x, positions[i].y, positions[i].z);
+        pointLight.setPosition(positions[i].x, positions[i].y, positions[i].z);
 
         //if (i == 0)
         //    pointLight.getComponent<TransformComponent>()->addChild(nanobot.getComponent<TransformComponent>());
@@ -214,8 +214,8 @@ void TestDemo::onInit()
     spotLight.getComponent<SpotLightComponent>().color = glm::vec3(255, 206, 250) / 255.0f;
     spotLight.getComponent<SpotLightComponent>().intensity = 1000;
     spotLight.getComponent<SpotLightComponent>().setCutOffAngle(30.0f);
-    spotLight.getComponent<TransformComponent>().setPosition(1.5, 5, 1.5);
-    spotLight.getComponent<TransformComponent>().setOrientation(-135, -45, 0);
+    spotLight.setPosition(1.5, 5, 1.5);
+    spotLight.setOrientation(-135, -45, 0);
     spotLight.getComponent<SpotLightComponent>().setCastsShadows(true);
 }
 
