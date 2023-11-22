@@ -7,31 +7,24 @@ namespace mango
     {
         for (auto& system : m_systems)
         {
-            system.second->onDestroy();
-            delete system.second;
+            system->onDestroy();
+            delete system;
         }
         m_systems.clear();
     }
 
-    void SystemManager::add(System* system, SystemPriority priority /*= SystemPriority::Medium*/)
+    void SystemManager::add(System* system)
     {
         MG_CORE_ASSERT(system != nullptr);
-        system->m_priority = priority;
 
-        m_systems.insert({ priority, system });
+        m_systems.emplace_back(system);
     }
 
     void SystemManager::remove(System* system)
     {
         MG_CORE_ASSERT(system != nullptr);
 
-        auto systemPriority = system->m_priority; 
-
-        auto it = std::find_if(m_systems.begin(), m_systems.end(), 
-                               [system, systemPriority](const std::pair<SystemPriority, System*>& p)
-                               {
-                                   return p.second == system && p.first == systemPriority;
-                               });
+        auto it = std::find(m_systems.begin(), m_systems.end(), system);
 
         if (it != m_systems.end())
         {
@@ -45,18 +38,18 @@ namespace mango
     void SystemManager::remove(const std::string& name)
     {
         auto it = std::find_if(m_systems.begin(), m_systems.end(),
-                               [&name](const std::pair<SystemPriority, System*>& p)
+                               [&name](const System* s)
                                {
-                                   return name == p.second->m_name;
+                                   return name == s->m_name;
                                });
 
         MG_CORE_ASSERT(it != m_systems.end());
 
         if (it != m_systems.end())
         {
-            it->second->onDestroy();
+            (*it)->onDestroy();
 
-            delete it->second;
+            delete (*it);
             m_systems.erase(it);
         }
     }
@@ -65,7 +58,7 @@ namespace mango
     {
         for (auto& system : m_systems)
         {
-            system.second->onInit();
+            system->onInit();
         }
     }
 
@@ -73,20 +66,20 @@ namespace mango
     {
         for (auto& system : m_systems)
         {
-            system.second->onUpdate(dt);
+            system->onUpdate(dt);
         }
     }
 
     mango::System * const SystemManager::getSystem(const std::string& name) const
     {
         auto it = std::find_if(m_systems.begin(), m_systems.end(),
-                               [&name](const std::pair<SystemPriority, System*>& p)
+                               [&name](const System* s)
                                {
-                                   return name == p.second->m_name;
+                                   return name == s->m_name;
                                });
 
         MG_CORE_ASSERT(it != m_systems.end());
 
-        return it == m_systems.end() ? nullptr : it->second;
+        return it == m_systems.end() ? nullptr : (*it);
     }
 }

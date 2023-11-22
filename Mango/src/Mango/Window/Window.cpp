@@ -100,8 +100,8 @@ namespace mango
             glfwGetFramebufferSize(window, &data.m_viewportSize.x, &data.m_viewportSize.y);
             glViewport(0, 0, data.m_viewportSize.x, data.m_viewportSize.y);
 
-            MG_CORE_ASSERT(Services::application()                   != nullptr, "applicaiton can't be nullptr!");
-            MG_CORE_ASSERT(Services::application()->getImGuiSystem() != nullptr, "imGuiSystem can't be nullptr!");
+            MG_CORE_ASSERT_MSG(Services::application()                   != nullptr, "applicaiton can't be nullptr!");
+            MG_CORE_ASSERT_MSG(Services::application()->getImGuiSystem() != nullptr, "imGuiSystem can't be nullptr!");
             Services::application()->getImGuiSystem()->updateWindowSize(float(width), float(height));
 
             if (Services::renderer())

@@ -8,8 +8,6 @@
 
 namespace mango
 {
-    class Scene;
-
     class Entity final
     {
     public:
@@ -18,20 +16,20 @@ namespace mango
         ~Entity() = default;
 
         template <typename T, typename... Args>
+        T& addOrReplaceComponent(Args&&... args)
+        {
+            T& component = m_scene->m_registry.emplace_or_replace<T>(m_entityHandle, std::forward<Args>(args)...);
+
+            return component;
+        }
+
+        template <typename T, typename... Args>
         T& addComponent(Args&&... args)
         {
             MG_CORE_ASSERT_MSG(!hasComponent<T>(), "Entity already has this component!");
             T& component = m_scene->m_registry.emplace<T>(m_entityHandle, std::forward<Args>(args)...);
 
             Services::eventBus()->emit(ComponentAddedEvent<T>(component, *this));
-
-            return component;
-        }
-
-        template <typename T, typename... Args>
-        T& addOrReplaceComponent(Args&&... args)
-        {
-            T& component = m_scene->m_registry.emplace_or_replace<T>(m_entityHandle, std::forward<Args>(args)...);
 
             return component;
         }

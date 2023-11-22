@@ -63,7 +63,7 @@ namespace mango
         Services::provide(m_eventBus);
 
         // Add core systems - do not forget to update them!
-        m_systems.add(new SceneGraphSystem(), SystemPriority::High);
+        m_systems.add(new SceneGraphSystem());
         m_systems.configure();
 
         // TODO: 
@@ -77,8 +77,8 @@ namespace mango
         // [x] add rendering system include to services.h
         // [x] dtor of Window is not called !!!!
         // [x] dtor of GUI is not called !!!! -> GUI as a system
+        // [x] remove system priorities (not needed)
         // [] Entity: Set position etc. (like in the previous Game Object class)
-        // [] remove system priorities (not needed)
         // [] camera movement!!
 
         // Create Rendering system
@@ -86,8 +86,8 @@ namespace mango
         RenderingSystem* renderingSystem = new RenderingSystem();
         m_imGuiSystem = new ImGuiSystem();
 
-        m_renderingSystems.add(renderingSystem, SystemPriority::Low);
-        m_renderingSystems.add(m_imGuiSystem,   SystemPriority::Low);
+        m_renderingSystems.add(renderingSystem);
+        m_renderingSystems.add(m_imGuiSystem);
         m_renderingSystems.configure();
 
         Services::provide(renderingSystem);
@@ -186,7 +186,7 @@ namespace mango
                 {
                     for (auto& system : m_systems)
                     {
-                        system.second->onGui();
+                        system->onGui();
                     }
                 }
                 m_imGuiSystem->end();

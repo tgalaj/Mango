@@ -128,5 +128,4 @@ namespace mango
 #define MG_VERIFY(cond)               MG_VERIFY_INTERNAL_IMPL(mango::asserts::Application, cond)
 #define MG_VERIFY_MSG(cond, msg, ...) MG_VERIFY_MSG_INTERNAL_IMPL(mango::asserts::Application, cond, msg, ##__VA_ARGS__)
 
-#define MG_STATIC_ASSERT(x) \
-    typedef char mangoStaticAssert[(x) ? 1 : -1];
+#define MG_STATIC_ASSERT(x) typedef char mangoStaticAssert[(x) ? 1 : -1];

@@ -9,22 +9,22 @@ namespace mango
     template<typename T>
     struct ComponentAddedEvent : Event
     {
-        ComponentAddedEvent(T comp, Entity e)
+        ComponentAddedEvent(const T& comp, Entity& e)
             : component(comp),
-              entity(e) {}
+              entity   (e) {}
 
         T component;
-        Entity entity;
+        std::reference_wrapper<Entity> entity;
     };
 
     template<typename T>
     struct ComponentRemovedEvent : Event
     {
-        ComponentRemovedEvent(T comp, Entity e)
+        ComponentRemovedEvent(const T& comp, Entity& e)
             : component(comp),
-              entity(e) {}
+              entity   (e) {}
 
         T component;
-        Entity entity;
+        std::reference_wrapper<Entity> entity;
     };
 }

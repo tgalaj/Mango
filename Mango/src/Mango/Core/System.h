@@ -5,8 +5,6 @@
 
 namespace mango
 {
-    enum SystemPriority { High, Medium, Low };
-
     class System
     {
     public:
@@ -23,7 +21,6 @@ namespace mango
 
     protected:
         std::string m_name;
-        SystemPriority m_priority = SystemPriority::Medium;
 
     private:
         friend class SystemManager;
