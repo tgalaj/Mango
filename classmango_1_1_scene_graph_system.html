@@ -51,29 +51,84 @@
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classmango_1_1_scene_graph_system-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">mango::SceneGraphSystem Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Inherits entityx::System&lt; SceneGraphSystem &gt;.</p>
+<p>Inherits <a class="el" href="classmango_1_1_system.html">mango::System</a>.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a522a4f42d62890015ab06d4588cc9713" id="r_a522a4f42d62890015ab06d4588cc9713"><td class="memItemLeft" align="right" valign="top"><a id="a522a4f42d62890015ab06d4588cc9713" name="a522a4f42d62890015ab06d4588cc9713"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>configure</b> (entityx::EntityManager &amp;entities, entityx::EventManager &amp;events) override</td></tr>
-<tr class="separator:a522a4f42d62890015ab06d4588cc9713"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a947ad24b938b36418e5fe451e5f95e" id="r_a9a947ad24b938b36418e5fe451e5f95e"><td class="memItemLeft" align="right" valign="top"><a id="a9a947ad24b938b36418e5fe451e5f95e" name="a9a947ad24b938b36418e5fe451e5f95e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> (entityx::EntityManager &amp;entities, entityx::EventManager &amp;events, entityx::TimeDelta dt) override</td></tr>
-<tr class="separator:a9a947ad24b938b36418e5fe451e5f95e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af30900cac35cb6390061fa40691906ab" id="r_af30900cac35cb6390061fa40691906ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmango_1_1_scene_graph_system.html#af30900cac35cb6390061fa40691906ab">onUpdate</a> (float dt) override</td></tr>
+<tr class="separator:af30900cac35cb6390061fa40691906ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classmango_1_1_system"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classmango_1_1_system')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classmango_1_1_system.html">mango::System</a></td></tr>
+<tr class="memitem:af8ac070fea1261aafff1b784c076f49e inherit pub_methods_classmango_1_1_system" id="r_af8ac070fea1261aafff1b784c076f49e"><td class="memItemLeft" align="right" valign="top">
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> () const</td></tr>
+<tr class="separator:af8ac070fea1261aafff1b784c076f49e inherit pub_methods_classmango_1_1_system"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4edfb0ebb6b6cd42029c807c7595971c inherit pub_methods_classmango_1_1_system" id="r_a4edfb0ebb6b6cd42029c807c7595971c"><td class="memItemLeft" align="right" valign="top">
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onDestroy</b> ()</td></tr>
+<tr class="separator:a4edfb0ebb6b6cd42029c807c7595971c inherit pub_methods_classmango_1_1_system"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afef9c6236791e72e79ad0c50dd874931 inherit pub_methods_classmango_1_1_system" id="r_afef9c6236791e72e79ad0c50dd874931"><td class="memItemLeft" align="right" valign="top">
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onGui</b> ()</td></tr>
+<tr class="separator:afef9c6236791e72e79ad0c50dd874931 inherit pub_methods_classmango_1_1_system"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81c52c4171a07cb5cb0484666da2b4ab inherit pub_methods_classmango_1_1_system" id="r_a81c52c4171a07cb5cb0484666da2b4ab"><td class="memItemLeft" align="right" valign="top">
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onInit</b> ()</td></tr>
+<tr class="separator:a81c52c4171a07cb5cb0484666da2b4ab inherit pub_methods_classmango_1_1_system"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a442b45d3bba465d12d0e6c75bd0b3584 inherit pub_methods_classmango_1_1_system" id="r_a442b45d3bba465d12d0e6c75bd0b3584"><td class="memItemLeft" align="right" valign="top">
+&#160;</td><td class="memItemRight" valign="bottom"><b>System</b> (const std::string &amp;name=&quot;System&quot;)</td></tr>
+<tr class="separator:a442b45d3bba465d12d0e6c75bd0b3584 inherit pub_methods_classmango_1_1_system"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
 <tr class="memitem:a48de705eed31a07c4dff34ed5b84c6dd" id="r_a48de705eed31a07c4dff34ed5b84c6dd"><td class="memItemLeft" align="right" valign="top"><a id="a48de705eed31a07c4dff34ed5b84c6dd" name="a48de705eed31a07c4dff34ed5b84c6dd"></a>
 static <a class="el" href="classmango_1_1_transform_component.html">TransformComponent</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ROOT_NODE</b></td></tr>
 <tr class="separator:a48de705eed31a07c4dff34ed5b84c6dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a032858ae1fe02d2d1170981c2af2d67c" id="r_a032858ae1fe02d2d1170981c2af2d67c"><td class="memItemLeft" align="right" valign="top"><a id="a032858ae1fe02d2d1170981c2af2d67c" name="a032858ae1fe02d2d1170981c2af2d67c"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Scene</b></td></tr>
+<tr class="separator:a032858ae1fe02d2d1170981c2af2d67c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_attribs_classmango_1_1_system"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classmango_1_1_system')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classmango_1_1_system.html">mango::System</a></td></tr>
+<tr class="memitem:a1da00989b02c5743099f4a1e1a230b92 inherit pro_attribs_classmango_1_1_system" id="r_a1da00989b02c5743099f4a1e1a230b92"><td class="memItemLeft" align="right" valign="top">
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_name</b></td></tr>
+<tr class="separator:a1da00989b02c5743099f4a1e1a230b92 inherit pro_attribs_classmango_1_1_system"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="af30900cac35cb6390061fa40691906ab" name="af30900cac35cb6390061fa40691906ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af30900cac35cb6390061fa40691906ab">&#9670;&#160;</a></span>onUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mango::SceneGraphSystem::onUpdate </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>dt</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classmango_1_1_system.html">mango::System</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/Users/runner/work/Mango/Mango/Mango/src/Mango/Systems/<a class="el" href="_scene_graph_system_8h_source.html">SceneGraphSystem.h</a></li>
 <li>/Users/runner/work/Mango/Mango/Mango/src/Mango/Systems/<b>SceneGraphSystem.cpp</b></li>

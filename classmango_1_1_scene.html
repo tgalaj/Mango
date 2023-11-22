@@ -50,43 +50,53 @@
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classmango_1_1_scene-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">mango::Scene Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
+  <div class="headertitle"><div class="title">mango::Scene Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a9ce18d3756e2317db24a54c02746ef7c" id="r_a9ce18d3756e2317db24a54c02746ef7c"><td class="memItemLeft" align="right" valign="top"><a id="a9ce18d3756e2317db24a54c02746ef7c" name="a9ce18d3756e2317db24a54c02746ef7c"></a>
-static std::shared_ptr&lt; <a class="el" href="classmango_1_1_game_object.html">GameObject</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>createEmpty</b> ()</td></tr>
-<tr class="separator:a9ce18d3756e2317db24a54c02746ef7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafbc651fadd0df8d23d201f5e8a534c6" id="r_aafbc651fadd0df8d23d201f5e8a534c6"><td class="memItemLeft" align="right" valign="top"><a id="aafbc651fadd0df8d23d201f5e8a534c6" name="aafbc651fadd0df8d23d201f5e8a534c6"></a>
-static std::shared_ptr&lt; <a class="el" href="classmango_1_1_game_object.html">GameObject</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>createPrefab</b> (const std::string &amp;object)</td></tr>
-<tr class="separator:aafbc651fadd0df8d23d201f5e8a534c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f0e4b27696972713925ae15eef145ae" id="r_a3f0e4b27696972713925ae15eef145ae"><td class="memTemplParams" colspan="2"><a id="a3f0e4b27696972713925ae15eef145ae" name="a3f0e4b27696972713925ae15eef145ae"></a>
-template&lt;typename P , typename ... Args&gt; </td></tr>
-<tr class="memitem:a3f0e4b27696972713925ae15eef145ae"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>registerPrefab</b> (const std::string &amp;object, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a3f0e4b27696972713925ae15eef145ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ae0b2108fac6d1a1137b73adbcf6de182" id="r_ae0b2108fac6d1a1137b73adbcf6de182"><td class="memItemLeft" align="right" valign="top"><a id="ae0b2108fac6d1a1137b73adbcf6de182" name="ae0b2108fac6d1a1137b73adbcf6de182"></a>
+<a class="el" href="classmango_1_1_entity.html">Entity</a>&#160;</td><td class="memItemRight" valign="bottom"><b>createEntity</b> (const std::string &amp;name=&quot;&quot;)</td></tr>
+<tr class="separator:ae0b2108fac6d1a1137b73adbcf6de182"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0adf961811ee959843c670d01a9278f" id="r_ae0adf961811ee959843c670d01a9278f"><td class="memItemLeft" align="right" valign="top"><a id="ae0adf961811ee959843c670d01a9278f" name="ae0adf961811ee959843c670d01a9278f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyEntity</b> (<a class="el" href="classmango_1_1_entity.html">Entity</a> entity)</td></tr>
+<tr class="separator:ae0adf961811ee959843c670d01a9278f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a1e7e92e95db13042896cd2d791efaa" id="r_a4a1e7e92e95db13042896cd2d791efaa"><td class="memTemplParams" colspan="2"><a id="a4a1e7e92e95db13042896cd2d791efaa" name="a4a1e7e92e95db13042896cd2d791efaa"></a>
+template&lt;typename... Components&gt; </td></tr>
+<tr class="memitem:a4a1e7e92e95db13042896cd2d791efaa"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>getEntitiesWithComponent</b> ()</td></tr>
+<tr class="separator:a4a1e7e92e95db13042896cd2d791efaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a904f369418b2d4e1af7eb3387e29840d" id="r_a904f369418b2d4e1af7eb3387e29840d"><td class="memItemLeft" align="right" valign="top"><a id="a904f369418b2d4e1af7eb3387e29840d" name="a904f369418b2d4e1af7eb3387e29840d"></a>
+std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> ()</td></tr>
+<tr class="separator:a904f369418b2d4e1af7eb3387e29840d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a521ccfccf2a6826cc83b53a445c5755f" id="r_a521ccfccf2a6826cc83b53a445c5755f"><td class="memItemLeft" align="right" valign="top"><a id="a521ccfccf2a6826cc83b53a445c5755f" name="a521ccfccf2a6826cc83b53a445c5755f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classmango_1_1_scene.html">Scene</a> &amp;other)</td></tr>
+<tr class="separator:a521ccfccf2a6826cc83b53a445c5755f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c7c43759c93a1db10abaf79b75fa242" id="r_a7c7c43759c93a1db10abaf79b75fa242"><td class="memItemLeft" align="right" valign="top"><a id="a7c7c43759c93a1db10abaf79b75fa242" name="a7c7c43759c93a1db10abaf79b75fa242"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Scene</b> (const std::string &amp;name)</td></tr>
+<tr class="separator:a7c7c43759c93a1db10abaf79b75fa242"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
+<tr class="memitem:a53a84963526cc16f711ee131752d44a3" id="r_a53a84963526cc16f711ee131752d44a3"><td class="memItemLeft" align="right" valign="top"><a id="a53a84963526cc16f711ee131752d44a3" name="a53a84963526cc16f711ee131752d44a3"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_name</b></td></tr>
+<tr class="separator:a53a84963526cc16f711ee131752d44a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a147df261493fc43c17f0eac57a9cb146" id="r_a147df261493fc43c17f0eac57a9cb146"><td class="memItemLeft" align="right" valign="top"><a id="a147df261493fc43c17f0eac57a9cb146" name="a147df261493fc43c17f0eac57a9cb146"></a>
 entt::registry&#160;</td><td class="memItemRight" valign="bottom"><b>m_registry</b></td></tr>
 <tr class="separator:a147df261493fc43c17f0eac57a9cb146"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
-Static Private Attributes</h2></td></tr>
-<tr class="memitem:a1270dfe2ba3d9e18731fe9bc4d270cb9" id="r_a1270dfe2ba3d9e18731fe9bc4d270cb9"><td class="memItemLeft" align="right" valign="top"><a id="a1270dfe2ba3d9e18731fe9bc4d270cb9" name="a1270dfe2ba3d9e18731fe9bc4d270cb9"></a>
-static std::map&lt; std::string, std::shared_ptr&lt; <a class="el" href="classmango_1_1_prefab.html">Prefab</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_prefabs</b></td></tr>
-<tr class="separator:a1270dfe2ba3d9e18731fe9bc4d270cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a614439ccac0344926adc4c0165d64060" id="r_a614439ccac0344926adc4c0165d64060"><td class="memItemLeft" align="right" valign="top"><a id="a614439ccac0344926adc4c0165d64060" name="a614439ccac0344926adc4c0165d64060"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Entity</b></td></tr>
+<tr class="separator:a614439ccac0344926adc4c0165d64060"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/Users/runner/work/Mango/Mango/Mango/src/Mango/Core/<a class="el" href="_core_2_scene_8h_source.html">Scene.h</a></li>
-<li>/Users/runner/work/Mango/Mango/Mango/src/Mango/Scene/<a class="el" href="_scene_2_scene_8h_source.html">Scene.h</a></li>
-<li>/Users/runner/work/Mango/Mango/Mango/src/Mango/Core/<b>Scene.cpp</b></li>
+<li>/Users/runner/work/Mango/Mango/Mango/src/Mango/Scene/<a class="el" href="_scene_8h_source.html">Scene.h</a></li>
 <li>/Users/runner/work/Mango/Mango/Mango/src/Mango/Scene/<b>Scene.cpp</b></li>
 </ul>
 </div><!-- contents -->
