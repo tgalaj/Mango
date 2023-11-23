@@ -1,13 +1,7 @@
 name: Docs
 
-on:
-  #push:
-  #  branches-ignore:
-  #    - '**'  
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+# Run GH actions manually: https://docs.github.com/en/actions/using-workflows/manually-running-a-workflow
+on: workflow_dispatch
   
 jobs:
   build:
