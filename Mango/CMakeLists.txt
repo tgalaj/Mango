@@ -45,10 +45,11 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES}
                                                     glfw
                                                     imgui
                                                     spdlog
-													cxxopts
+                                                    cxxopts
                                                     glm::glm
                                                     tinyddsloader
-													entt)
+                                                    entt
+                                                    Tracy::TracyClient)
 
 if(MinGW)
     target_link_libraries(${CMAKE_PROJECT_NAME} bz2)
