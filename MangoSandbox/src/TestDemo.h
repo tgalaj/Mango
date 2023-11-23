@@ -13,6 +13,9 @@ public:
     void onGui() override;
 
 private:
+    void moveLights(float dt);
+
+private:
     std::shared_ptr<mango::Scene> m_mainScene;
     std::shared_ptr<mango::FreeCameraController> m_freeCameraController;
 };

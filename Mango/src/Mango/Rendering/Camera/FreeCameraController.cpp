@@ -26,6 +26,9 @@ namespace mango
         // Free Move
         auto movementAmount = moveSpeed * dt;
 
+        if (Input::getKey(KeyCode::LeftShift))
+            movementAmount *= 4.0f;
+
         if (Input::getKey(forwardKey))
             move(transform, glm::conjugate(transform.getOrientation()) * glm::vec3(0, 0, -1), movementAmount);
 

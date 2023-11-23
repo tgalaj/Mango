@@ -1,8 +1,7 @@
-#include <Mango.h>
-#include <Mango/Core/EntryPoint.h>
+#include "Mango.h"
+#include "Mango/Core/EntryPoint.h"
 
 #include "TestDemo.h"
-#include "MoveSystem.h"
 
 #include <memory>
 
@@ -12,7 +11,7 @@ public:
     TestApp(const mango::ApplicationSettings& appSettings)
         : Application(appSettings)
     {
-        addSystem(new TestDemo()); // TODO: change name to add() or addLayer() ???
+        addSystem(new TestDemo());
     }
 
     ~TestApp()

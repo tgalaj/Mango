@@ -214,7 +214,7 @@ void TestDemo::onInit()
     spotLight.getComponent<SpotLightComponent>().intensity = 1000;
     spotLight.getComponent<SpotLightComponent>().setCutOffAngle(30.0f);
     spotLight.setPosition(1.5, 5, 1.5);
-    spotLight.setOrientation(-135, -45, 0);
+    spotLight.setOrientation(-45, 45, 45);
     spotLight.getComponent<SpotLightComponent>().setCastsShadows(true);
 }
 
@@ -245,6 +245,17 @@ void TestDemo::onUpdate(float dt)
     }
 
     m_freeCameraController->onUpdate(dt);
+
+    static bool shouldMoveLights = false;
+    if (Input::getKeyUp(KeyCode::Space))
+    {
+        shouldMoveLights = !shouldMoveLights;
+    }
+
+    if (shouldMoveLights)
+    {
+        moveLights(dt);
+    }
 }
 
 void TestDemo::onGui()
@@ -281,4 +292,43 @@ void TestDemo::onGui()
     ImGuiSystem::image(AssetManager::getTexture2D("assets/textures/opengl.png"), { window->getWidth() - 200, 0 }, { window->getWidth(), 100 }, { 1.0f, 1.0f, 1.0f, 0.5f });
 
     ImGuiSystem::endHUD();
+}
+
+void TestDemo::moveLights(float dt)
+{    
+    static float acc = 0.0f;
+    acc += dt / 6.0f;
+    
+    {
+        auto view = m_mainScene->getEntitiesWithComponent<TransformComponent, PointLightComponent>();
+        for (auto entity : view)
+        {
+            auto [transform, pointLight] = view.get(entity);
+
+            glm::vec3 delta = transform.getPosition() - glm::vec3(0.0f);
+
+            float r = 8.0f * glm::abs(glm::sin(acc));
+            float currentAngle = atan2(delta.z, delta.x);
+
+            auto position = transform.getPosition();
+            position.x = r * glm::cos(currentAngle + dt);
+            position.y = r * (glm::cos(2.0f * (currentAngle + dt)) * 0.5f + 0.5f) * 0.5f;
+            position.z = r * glm::sin(currentAngle + dt);
+
+            transform.setPosition(position);
+        }
+    }
+    
+    {
+        auto view = m_mainScene->getEntitiesWithComponent<TransformComponent, SpotLightComponent>();
+        for (auto entity : view)
+        {
+            auto [transform, spotLight] = view.get(entity);
+
+            glm::quat previousOrientation = transform.getOrientation();
+
+            transform.setOrientation(0.0f, 16.667f * dt, 0.0f);
+            transform.setOrientation(previousOrientation * transform.getOrientation());
+        }
+    }
 }
