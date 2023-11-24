@@ -131,6 +131,8 @@ namespace mango
 
     void RenderingSystem::onUpdate(float dt)
     {
+        MG_PROFILE_ZONE_SCOPED_N("RenderingSystem::Render");
+
         MG_CORE_ASSERT_MSG(m_activeScene != nullptr, "Active scene can't be nullptr!");
         MG_CORE_ASSERT_MSG(m_mainCamera, "Main camera can't be nullptr!");
 

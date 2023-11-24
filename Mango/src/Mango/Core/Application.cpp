@@ -179,6 +179,8 @@ namespace mango
                 m_window->endFrame();
                 frames++;
             }
+
+            MG_PROFILE_FRAME_MARK;
         }
     }
 }

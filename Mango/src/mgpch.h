@@ -18,3 +18,4 @@
 #include "Mango/Core/Assertions.h"
 #include "Mango/Core/Log.h"
 #include "Mango/Events/Event.h"
+#include "Mango/Profiling/Instrumentation.h"
