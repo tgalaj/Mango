@@ -54,16 +54,6 @@ CPMAddPackage(
 )
 
 CPMAddPackage(
-    NAME tracy
-    GITHUB_REPOSITORY wolfpld/tracy
-    VERSION 0.10
-    GIT_SHALLOW TRUE
-    OPTIONS
-        "TRACY_ENABLE OFF"
-        "TRACY_ON_DEMAND OFF"
-)
-
-CPMAddPackage(
     GITHUB_REPOSITORY benikabocha/tinyddsloader
     GIT_TAG master
     GIT_SHALLOW TRUE
@@ -85,6 +75,26 @@ CPMAddPackage(
 if(entt_ADDED)
   add_library(entt INTERFACE)
   target_include_directories(entt INTERFACE ${entt_SOURCE_DIR}/single_include/entt)
+endif()
+
+set(tracy_VERSION 0.10)
+CPMAddPackage(
+    NAME tracy
+    GITHUB_REPOSITORY wolfpld/tracy
+    VERSION ${tracy_VERSION}
+    GIT_SHALLOW TRUE
+    OPTIONS
+        "TRACY_ENABLE OFF"
+        "TRACY_ON_DEMAND OFF"
+		"TRACY_ONLY_LOCALHOST ON"
+)
+
+SET(TRACY_SERVER_ARCHIVE_PATH "${CMAKE_BINARY_DIR}/TracyServer/Tracy-${tracy_VERSION}.7z")
+if(NOT EXISTS "${TRACY_SERVER_ARCHIVE_PATH}")
+	file(DOWNLOAD "https://github.com/wolfpld/tracy/releases/download/v${tracy_VERSION}/Tracy-${tracy_VERSION}.7z"  
+	     "${TRACY_SERVER_ARCHIVE_PATH}" 
+		 SHOW_PROGRESS)
+	file(ARCHIVE_EXTRACT INPUT ${TRACY_SERVER_ARCHIVE_PATH} DESTINATION "${CMAKE_BINARY_DIR}/TracyServer/Tracy-${tracy_VERSION}")
 endif()
 
 add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
