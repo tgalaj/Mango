@@ -9,12 +9,18 @@ namespace mango
 {
     void DeferredRendering::init()
 {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("DeferredRendering::init");
+
         m_postprocess = AssetManager::createShader("GBuffer", "GBuffer.vert", "GBuffer.frag");
         m_postprocess->link();
     }
 
     void DeferredRendering::createGBuffer()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("DeferredRendering::createGBuffer");
+
         std::vector<RenderTarget::MRTEntry> mrtEntries(4);
         mrtEntries[GLuint(GBufferPropertyName::POSITION)]        = RenderTarget::MRTEntry(RenderTarget::AttachmentType::Color, RenderTarget::ColorInternalFormat::RGB32F); 
         mrtEntries[GLuint(GBufferPropertyName::NORMAL)]          = RenderTarget::MRTEntry(RenderTarget::AttachmentType::Color, RenderTarget::ColorInternalFormat::RGB32F); 
@@ -29,26 +35,41 @@ namespace mango
 
     void DeferredRendering::clearGBuffer()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("DeferredRendering::clearGBuffer");
+
         m_gbuffer->clear();
     }
 
     void DeferredRendering::bindGBuffer()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("DeferredRendering::bindGBuffer");
+
         m_gbuffer->bind(); 
     }
 
     void DeferredRendering::bindGBufferReadOnly()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("DeferredRendering::bindGBufferReadOnly");
+
         m_gbuffer->bindReadOnly();
     }
 
     void DeferredRendering::bindGBufferTexture(GLuint unit, GLuint gbufferPropertyID)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("DeferredRendering::bindGBufferTexture");
+
         m_gbuffer->bindTexture(unit, gbufferPropertyID);
     }
 
     void DeferredRendering::bindGBufferTextures()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("DeferredRendering::bindGBufferTextures");
+
         m_gbuffer->bindTexture(0, GLuint(GBufferPropertyName::POSITION));
         m_gbuffer->bindTexture(1, GLuint(GBufferPropertyName::NORMAL));
         m_gbuffer->bindTexture(2, GLuint(GBufferPropertyName::ALBEDO_SPECULAR));

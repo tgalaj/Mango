@@ -20,6 +20,8 @@ namespace mango
 
     void Model::load(const std::filesystem::path & filepath)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         Assimp::Importer importer;
 
         unsigned int flags = aiProcess_Triangulate              | 
@@ -45,6 +47,8 @@ namespace mango
 
     void Model::processNode(aiNode * node, const aiScene * scene, aiString & directory)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        
         for (GLuint i = 0; i < node->mNumMeshes; ++i)
         {
             aiMesh * mesh = scene->mMeshes[node->mMeshes[i]];
@@ -59,6 +63,8 @@ namespace mango
 
     Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene, aiString & directory) const
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         VertexBuffers buffers;
         Mesh veMesh;
 
@@ -112,6 +118,8 @@ namespace mango
 
     void Model::loadMaterialTextures(Mesh & mesh, aiMaterial * mat, aiTextureType type, Material::TextureType textureType, aiString & directory) const
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         GLuint texturesCount = mat->GetTextureCount(type);
 
         if (texturesCount > 0)
@@ -132,6 +140,8 @@ namespace mango
 
     void Model::calcTangentSpace(VertexBuffers & buffers) const
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         for (unsigned i = 0; i < buffers.vertices.size(); ++i)
         {
             buffers.vertices[i].tangent = glm::vec3(0.0f);
@@ -172,6 +182,8 @@ namespace mango
 
     void Model::genPrimitive(VertexBuffers & buffers, bool calcTangents /*= true*/)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         Mesh mesh;
 
         if (calcTangents) calcTangentSpace(buffers);
@@ -187,6 +199,8 @@ namespace mango
 
     void Model::genCone(float height, float radius, unsigned int slices, unsigned int stacks)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         VertexBuffers buffers;
         GeomPrimitive::genCone(buffers, height, radius, slices, stacks);
 
@@ -195,6 +209,8 @@ namespace mango
 
     void Model::genCube(float radius)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         VertexBuffers buffers;
         GeomPrimitive::genCube(buffers, radius);
 
@@ -203,6 +219,8 @@ namespace mango
 
     void Model::genCylinder(float height, float r, unsigned int slices)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         VertexBuffers buffers;
         GeomPrimitive::genCylinder(buffers, height, r, slices);
 
@@ -211,6 +229,8 @@ namespace mango
 
     void Model::genPlane(float width, float height, unsigned int slices, unsigned int stacks)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         VertexBuffers buffers;
         GeomPrimitive::genPlane(buffers, width, height, slices, stacks);
 
@@ -219,6 +239,8 @@ namespace mango
 
     void Model::genSphere(float radius, unsigned int slices)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         VertexBuffers buffers;
         GeomPrimitive::genSphere(buffers, radius, slices);
 
@@ -227,6 +249,8 @@ namespace mango
 
     void Model::genTorus(float innerRadius, float outerRadius, unsigned int slices, unsigned int stacks)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         VertexBuffers buffers;
         GeomPrimitive::genTorus(buffers, innerRadius, outerRadius, slices, stacks);
 
@@ -235,6 +259,8 @@ namespace mango
 
     void Model::genQuad(float width, float height)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         VertexBuffers buffers;
         GeomPrimitive::genQuad(buffers, width, height);
 
@@ -245,6 +271,9 @@ namespace mango
 
     void Model::render(Shader & shader)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Model::render");
+
         for(unsigned i = 0; i < m_meshes.size(); ++i)
         {
             shader.updateUniforms(m_meshes[i].material);
@@ -254,6 +283,8 @@ namespace mango
 
     void Model::setDrawMode(GLenum drawMode)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         for(unsigned i = 0; i < m_meshes.size(); ++i)
         {
             m_meshes[i].setDrawMode(drawMode);

@@ -24,12 +24,15 @@ namespace mango
 
     Window::~Window()
     {
+        MG_PROFILE_ZONE_SCOPED;
         glfwDestroyWindow(m_window);
         glfwTerminate();
     }
 
     void Window::create(uint32_t width, uint32_t height, const std::string & title)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         m_title       = title;
         m_windowSize = glm::vec2(width, height);
 
@@ -41,12 +44,12 @@ namespace mango
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MIN_GL_VERSION_MAJOR);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MIN_GL_VERSION_MINOR);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_PROFILE,        GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        glfwWindowHint(GLFW_SAMPLES, 4);
+        glfwWindowHint(GLFW_SAMPLES,               4);
 
         #ifdef _DEBUG
-        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT,  GL_TRUE);
         #endif
 
         m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -67,6 +70,8 @@ namespace mango
             MG_CORE_CRITICAL("Could not initialize GLAD.");
             exit(EXIT_FAILURE);
         }
+        
+        MG_PROFILE_GL_CONTEXT;
 
         #ifdef _DEBUG
         GLint flags;
@@ -126,6 +131,7 @@ namespace mango
     {
         glfwPollEvents();
         glfwSwapBuffers(m_window);
+        MG_PROFILE_GL_COLLECT;
     }
 
     int Window::isCloseRequested()
@@ -135,21 +141,25 @@ namespace mango
 
     int Window::getWidth()
     {
+        MG_PROFILE_ZONE_SCOPED;
         return m_viewportSize.x;
     }
 
     int Window::getHeight()
     {
+        MG_PROFILE_ZONE_SCOPED;
         return  m_viewportSize.y;
     }
 
     glm::vec2 Window::getCenter()
     {
+        MG_PROFILE_ZONE_SCOPED;
         return glm::vec2(m_viewportSize) / 2.0f;
     }
 
     glm::vec2 Window::getDpiScale()
     {
+        MG_PROFILE_ZONE_SCOPED;
         glm::vec2 dpiScale{};
 
         glfwGetWindowContentScale(m_window, &dpiScale.x, &dpiScale.y);
@@ -159,11 +169,13 @@ namespace mango
 
     float Window::getAspectRatio()
     {
+        MG_PROFILE_ZONE_SCOPED;
         return float(m_viewportSize.x) / float(m_viewportSize.y);
     }
 
     std::vector<MonitorVideoMode> Window::getPrimaryMonitorVideoModes()
     {
+        MG_PROFILE_ZONE_SCOPED;
         if (m_monitor == nullptr) return {};
 
         int modesCount;
@@ -198,6 +210,7 @@ namespace mango
 
     void Window::bindDefaultFramebuffer()
     {
+        MG_PROFILE_GL_ZONE("Window::bindDefaultFramebuffer");
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
     }

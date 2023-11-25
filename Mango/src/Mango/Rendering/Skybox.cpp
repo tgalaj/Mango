@@ -14,6 +14,9 @@ namespace mango
                    const std::string & frontFace,
                    const std::string & backFace) : m_world(glm::mat4(1.0f))
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Skybox::Skybox");
+
         /* Create cubemap texture object */
         std::filesystem::path filenames[6] = {
             skyboxDirectory + "/" + leftFace,
@@ -93,6 +96,9 @@ namespace mango
 
     Skybox::~Skybox()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Skybox::~Skybox");
+
         if (m_vao != 0)
         {
             glDeleteVertexArrays(1, &m_vao);
@@ -106,6 +112,9 @@ namespace mango
 
     void Skybox::render(const glm::mat4 & projection, const glm::mat4 & view)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Skybox::render");
+
         m_skyboxShader->bind();
         m_skyboxShader->setUniform("view_projection", projection * glm::mat4(glm::mat3(view)));
 
@@ -119,6 +128,9 @@ namespace mango
 
     void Skybox::bindSkyboxTexture(GLuint unit)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Skybox::bindSkyboxTexture");
+
         m_cubeMapTexture->bind(unit);
     }
 }

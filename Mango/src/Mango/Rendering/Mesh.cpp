@@ -34,6 +34,9 @@ namespace mango
 
     void Mesh::setBuffers(const VertexBuffers & buffers)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Mesh::setBuffers");
+
         m_meshData = std::make_shared<MeshData>();
         m_meshData->indicesCount = buffers.indices.size();
 
@@ -65,6 +68,9 @@ namespace mango
 
     void Mesh::render() const
     {        
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Mesh::render");
+
         glBindVertexArray(m_meshData->vao);
         glDrawElements(m_meshData->drawMode, m_meshData->indicesCount, GL_UNSIGNED_INT, nullptr);
     }

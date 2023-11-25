@@ -1,9 +1,6 @@
 #include "mgpch.h"
 #include "FreeCameraController.h"
 
-#include "Mango/Core/Assertions.h"
-#include "Mango/Scene/Components.h"
-
 namespace mango
 {
     FreeCameraController::FreeCameraController(Entity& entity)
@@ -14,6 +11,8 @@ namespace mango
 
     void FreeCameraController::onUpdate(float dt)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         // Update the camera's view matrix
         auto& transform = m_cameraEntity.getComponent<TransformComponent>();
         auto& camera    = m_cameraEntity.getComponent<CameraComponent>();

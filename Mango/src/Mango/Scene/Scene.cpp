@@ -18,6 +18,7 @@ namespace mango
 
     Entity Scene::createEntity(const std::string& name)
     {
+        MG_PROFILE_ZONE_SCOPED;
         Entity entity = { m_registry.create(), this };
         entity.addComponent<TransformComponent>();
 
@@ -28,6 +29,7 @@ namespace mango
 
     void Scene::destroyEntity(Entity entity)
     {
+        MG_PROFILE_ZONE_SCOPED;
         m_registry.destroy(entity);
     }
 

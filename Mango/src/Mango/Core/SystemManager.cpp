@@ -5,6 +5,7 @@ namespace mango
 {
     SystemManager::~SystemManager()
     {
+        MG_PROFILE_ZONE_SCOPED;
         for (auto& system : m_systems)
         {
             system->onDestroy();
@@ -15,6 +16,7 @@ namespace mango
 
     void SystemManager::add(System* system)
     {
+        MG_PROFILE_ZONE_SCOPED;
         MG_CORE_ASSERT(system != nullptr);
 
         m_systems.emplace_back(system);
@@ -22,6 +24,7 @@ namespace mango
 
     void SystemManager::remove(System* system)
     {
+        MG_PROFILE_ZONE_SCOPED;
         MG_CORE_ASSERT(system != nullptr);
 
         auto it = std::find(m_systems.begin(), m_systems.end(), system);
@@ -37,6 +40,7 @@ namespace mango
 
     void SystemManager::remove(const std::string& name)
     {
+        MG_PROFILE_ZONE_SCOPED;
         auto it = std::find_if(m_systems.begin(), m_systems.end(),
                                [&name](const System* s)
                                {
@@ -56,6 +60,7 @@ namespace mango
 
     void SystemManager::configure()
     {
+        MG_PROFILE_ZONE_SCOPED;
         for (auto& system : m_systems)
         {
             system->onInit();
@@ -64,6 +69,7 @@ namespace mango
 
     void SystemManager::updateAll(float dt)
     {
+        MG_PROFILE_ZONE_SCOPED;
         for (auto& system : m_systems)
         {
             system->onUpdate(dt);
@@ -72,6 +78,7 @@ namespace mango
 
     mango::System * const SystemManager::getSystem(const std::string& name) const
     {
+        MG_PROFILE_ZONE_SCOPED;
         auto it = std::find_if(m_systems.begin(), m_systems.end(),
                                [&name](const System* s)
                                {

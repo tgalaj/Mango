@@ -23,6 +23,9 @@ namespace mango
           shouldSelfCollide(1),
           PRIM_RESTART     (0xffffff)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Cloth::Cloth");
+
         for (auto & pin : m_pins)
         {
             pin = true;
@@ -170,6 +173,9 @@ namespace mango
 
     Cloth::~Cloth()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Cloth::~Cloth");
+
         delete[] m_initPositions;
         delete[] m_initVelocities;
 
@@ -191,6 +197,9 @@ namespace mango
 
     void Cloth::reset()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Cloth::reset");
+
         m_readBuf = 0;
 
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_vbos[POSITIONS_0]);
@@ -240,6 +249,8 @@ namespace mango
 
     void Cloth::setPin(int idx, bool isActive)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         if (idx < 0)
         {
             idx = 0;
@@ -255,6 +266,9 @@ namespace mango
 
     void Cloth::compute()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Cloth::compute");
+
         if (simulate)
         {
             m_computeClothShader->bind();
@@ -294,6 +308,9 @@ namespace mango
 
     void Cloth::render(Shader * shader)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Cloth::render");
+
         //shader->setUniformMatrix3fv("normalMatrix", m_normal_matrix);
        // shader->setUniformMatrix4fv("world", m_world_transform);
 

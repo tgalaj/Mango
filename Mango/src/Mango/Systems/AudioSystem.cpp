@@ -7,6 +7,6 @@ namespace mango
     AudioSystem::AudioSystem()
         : System("AudioSystem")
     {
-
+        MG_PROFILE_ZONE_SCOPED;
     }
 }

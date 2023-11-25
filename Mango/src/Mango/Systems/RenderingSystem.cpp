@@ -22,6 +22,9 @@ namespace mango
 
     void RenderingSystem::onInit()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::onInit");
+
         MG_CORE_ASSERT_MSG(Services::application()              != nullptr, "application can't be nullptr!");
         MG_CORE_ASSERT_MSG(Services::application()->getWindow() != nullptr, "window can't be nullptr!");
         MG_CORE_ASSERT_MSG(Services::eventBus()                 != nullptr, "eventBus can't be nullptr!");
@@ -131,7 +134,8 @@ namespace mango
 
     void RenderingSystem::onUpdate(float dt)
     {
-        MG_PROFILE_ZONE_SCOPED_N("RenderingSystem::Render");
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::onUpdate");
 
         MG_CORE_ASSERT_MSG(m_activeScene != nullptr, "Active scene can't be nullptr!");
         MG_CORE_ASSERT_MSG(m_mainCamera, "Main camera can't be nullptr!");
@@ -148,6 +152,8 @@ namespace mango
 
     void RenderingSystem::onDestroy()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         m_opaqueQueue.clear();
         m_alphaQueue.clear();
         m_enviroStaticQueue.clear();
@@ -156,6 +162,8 @@ namespace mango
 
     void RenderingSystem::receive(const ComponentAddedEvent<CameraComponent>& event)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         if (!m_mainCamera)
         {
             m_mainCamera = event.entity;
@@ -164,6 +172,8 @@ namespace mango
 
     void RenderingSystem::receive(const ComponentAddedEvent<ModelRendererComponent>& event)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         switch (event.component.getRenderQueue())
         {
         case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
@@ -183,6 +193,8 @@ namespace mango
 
     void RenderingSystem::receive(const ComponentRemovedEvent<ModelRendererComponent>& event)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         std::vector<Entity>::iterator entityIterator;
 
         switch (event.component.getRenderQueue())
@@ -220,6 +232,8 @@ namespace mango
 
     void RenderingSystem::receive(const ActiveSceneChangedEvent& event)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         if (!m_activeScene)
         {
             m_activeScene = event.scene;
@@ -233,6 +247,9 @@ namespace mango
 
     void RenderingSystem::resize(unsigned width, unsigned height)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::resize");
+
         m_mainRenderTarget->clear();
         m_helperRenderTarget->clear();
         m_deferredRendering->clearGBuffer();
@@ -258,6 +275,9 @@ namespace mango
 
     void RenderingSystem::initRenderingStates()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::initRenderingStates");
+
         glFrontFace(GL_CCW);
         glCullFace(GL_BACK);
 
@@ -270,6 +290,9 @@ namespace mango
 
     void RenderingSystem::beginForwardRendering()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::beginForwardRendering");
+
         glBlendFunc(GL_ONE, GL_ONE);
         glDepthMask(GL_FALSE);
         glDepthFunc(GL_EQUAL);
@@ -277,12 +300,16 @@ namespace mango
 
     void RenderingSystem::endForwardRendering()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::endForwardRendering");
+
         glDepthMask(GL_TRUE);
         glDepthFunc(GL_LESS);
     }
 
     void RenderingSystem::bindMainRenderTarget()
     {
+        MG_PROFILE_ZONE_SCOPED;
         m_mainRenderTarget->bind();
     }
 
@@ -290,6 +317,9 @@ namespace mango
                                            std::shared_ptr<RenderTarget>      * src, 
                                            std::shared_ptr<RenderTarget>      * dst)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::applyPostprocess");
+
         if(dst == nullptr)
         {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -309,6 +339,9 @@ namespace mango
 
     void RenderingSystem::renderForward(Scene* scene)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::renderForward");
+
         /* Render everything to offscreen FBO */
         m_mainRenderTarget->bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -357,6 +390,9 @@ namespace mango
 
     void RenderingSystem::renderDeferred(Scene* scene)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::renderDeferred");
+
         /* Geometry Pass - Render data to GBuffer */
         glDisable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
@@ -436,6 +472,9 @@ namespace mango
 
     void RenderingSystem::renderDebug()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::renderDebug");
+
         glDisable(GL_BLEND);
         glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -464,6 +503,9 @@ namespace mango
 
     void RenderingSystem::renderDebugLightsBoundingBoxes(Scene* scene)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::renderDebugLightsBoundingBoxes");
+
         glDisable(GL_BLEND);
 
         /* Point Lights */
@@ -518,6 +560,9 @@ namespace mango
 
     void RenderingSystem::renderOpaque(const std::shared_ptr<Shader> & shader)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::renderOpaque");
+
         for (auto& entity : m_opaqueQueue)
         {
             auto& modelRenderer = entity.getComponent<ModelRendererComponent>();
@@ -530,6 +575,9 @@ namespace mango
 
     void RenderingSystem::renderAlpha(const std::shared_ptr<Shader>& shader)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::renderAlpha");
+
         for (auto& entity : m_alphaQueue)
         {
             auto& modelRenderer = entity.getComponent<ModelRendererComponent>();
@@ -542,6 +590,9 @@ namespace mango
 
     void RenderingSystem::renderEnviroMappingStatic(const std::shared_ptr<Shader>& shader)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::renderEnviroMappingStatic");
+
         for (auto& entity : m_enviroStaticQueue)
         {
             auto& modelRenderer = entity.getComponent<ModelRendererComponent>();
@@ -559,6 +610,9 @@ namespace mango
 
     void RenderingSystem::renderLightsForward(Scene* scene)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::renderLightsForward");
+
         /*
          * TODO:
          * Transform shadow info into light component;
@@ -568,6 +622,8 @@ namespace mango
 
         /* Directional Lights */
         {
+            MG_PROFILE_ZONE_NAMED_N(dirLightsZone, "Forward Directional Lights", true);
+
             auto view = scene->getEntitiesWithComponent<DirectionalLightComponent, TransformComponent>();
             for(auto entity : view)
             {
@@ -609,6 +665,8 @@ namespace mango
 
         /* Point Lights */
         {
+            MG_PROFILE_ZONE_NAMED_N(dirLightsZone, "Forward Point Lights", true);
+
             auto view = scene->getEntitiesWithComponent<PointLightComponent, TransformComponent>();
             for (auto entity : view)
             {
@@ -662,6 +720,8 @@ namespace mango
         }
         /* Spot Lights */
         {
+            MG_PROFILE_ZONE_NAMED_N(dirLightsZone, "Forward Spot Lights", true);
+
             auto view = scene->getEntitiesWithComponent<SpotLightComponent, TransformComponent>();
             for (auto entity : view)
             {
@@ -711,8 +771,14 @@ namespace mango
 
     void RenderingSystem::renderLightsDeferred(Scene* scene)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::renderLightsDeferred");
+
         /* Directional Lights */
         {
+            MG_PROFILE_ZONE_NAMED_N(dirLightsZone, "Deferred Directional Lights", true);
+            MG_PROFILE_GL_ZONE("Deferred Directional Lights");
+
             auto view = scene->getEntitiesWithComponent<DirectionalLightComponent, TransformComponent>();
             for (auto entity : view)
             {
@@ -761,6 +827,9 @@ namespace mango
         /* Point Lights */
         glEnable(GL_STENCIL_TEST);
         {   
+            MG_PROFILE_ZONE_NAMED_N(dirLightsZone, "Deferred Point Lights", true);
+            MG_PROFILE_GL_ZONE("Deferred Point Lights");
+
             auto view = scene->getEntitiesWithComponent<PointLightComponent, TransformComponent>();
             for (auto entity : view)
             {
@@ -859,6 +928,9 @@ namespace mango
 
         /* Spot Lights */
         {
+            MG_PROFILE_ZONE_NAMED_N(dirLightsZone, "Deferred Spot Lights", true);
+            MG_PROFILE_GL_ZONE("Deferred Spot Lights");
+
             auto view = scene->getEntitiesWithComponent<SpotLightComponent, TransformComponent>();
             for (auto entity : view)
             {
@@ -957,6 +1029,8 @@ namespace mango
 
     void RenderingSystem::sortAlpha()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         auto camPos = getCameraTransform().getPosition();
 
         std::sort(m_alphaQueue.begin(), m_alphaQueue.end(), 

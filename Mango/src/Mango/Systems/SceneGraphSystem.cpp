@@ -13,6 +13,7 @@ namespace mango
 
     void SceneGraphSystem::onUpdate(float dt)
     {
+        MG_PROFILE_ZONE_SCOPED;
         ROOT_NODE.update(ROOT_NODE.getWorldMatrix(), false);
     }
 }

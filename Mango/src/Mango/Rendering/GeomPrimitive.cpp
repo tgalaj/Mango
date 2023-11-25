@@ -7,6 +7,8 @@ namespace mango
 {
     void GeomPrimitive::genCube(VertexBuffers & buffers, float radius)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         float r2 = radius * 0.5f;
 
         std::vector<glm::vec3> positions = 
@@ -132,6 +134,8 @@ namespace mango
 
     void GeomPrimitive::genCubeMap(VertexBuffers & buffers, float radius)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         float r2 = radius * 0.5f;
 
         std::vector<glm::vec3> positions = 
@@ -192,6 +196,8 @@ namespace mango
 
     void GeomPrimitive::genTorus(VertexBuffers & buffers, float innerRadius, float outerRadius, unsigned int slices, unsigned int stacks)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         float phi   = 0.0f;
         float theta = 0.0f;
 
@@ -259,6 +265,8 @@ namespace mango
 
     void GeomPrimitive::genCylinder(VertexBuffers & buffers, float height, float r, unsigned int slices)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         float     halfHeight = height * 0.5f;
         glm::vec3 p1         = glm::vec3(0.0f, halfHeight, 0.0f);
         glm::vec3 p2         = -p1;
@@ -371,6 +379,8 @@ namespace mango
 
     void GeomPrimitive::genCone(VertexBuffers & buffers, float height, float r, unsigned int slices, unsigned int stacks)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         float thetaInc = glm::two_pi<float>() / float(slices);
         float theta = 0.0f;
 
@@ -458,6 +468,8 @@ namespace mango
 
     void GeomPrimitive::genQuad(VertexBuffers & buffers, float width, float height)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         float halfWidth = width * 0.5f;
         float halfHeight = height * 0.5f;
 
@@ -510,6 +522,8 @@ namespace mango
 
     void GeomPrimitive::genPlane(VertexBuffers & buffers, float width, float height, unsigned int slices, unsigned int stacks)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         float widthInc  = width  / float(slices);
         float heightInc = height / float(stacks);
 
@@ -556,6 +570,8 @@ namespace mango
 
     void GeomPrimitive::genSphere(VertexBuffers & buffers, float r, unsigned int slices)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         float deltaPhi = glm::two_pi<float>() / static_cast<float>(slices);
 
         auto parallels = static_cast<unsigned int>(slices * 0.5f);

@@ -9,6 +9,9 @@ namespace mango
 {
     void BloomPS::create()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("BloomPS::create");
+
         auto window = Services::application()->getWindow();
         int  width  = window->getWidth();
         int  height = window->getHeight();
@@ -22,22 +25,34 @@ namespace mango
 
     void BloomPS::clear()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("BloomPS::clear");
+
         m_brightnessBuffer->clear();
         m_blurredBuffer->clear();
     }
 
     void BloomPS::bindBrightnessTexture(GLuint unit)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("BloomPS::bindBrightnessTexture");
+
         m_brightnessBuffer->bindTexture(unit, 0);
     }
 
     void BloomPS::bindBlurredTexture(GLuint unit)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("BloomPS::bindBlurredTexture");
+
         m_blurredBuffer->bindTexture(unit, 0);
     }
 
     void BloomPS::extractBrightness(const std::shared_ptr<RenderTarget> & hdrRenderTarget, float threshold /*= 1.0f*/)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("BloomPS::extractBrightness");
+
         m_postprocess->bind();
         m_postprocess->setSubroutine(Shader::Type::FRAGMENT, "extractBrightness");
         m_postprocess->setUniform("threshold", threshold);
@@ -52,6 +67,9 @@ namespace mango
 
     void BloomPS::blurGaussian(uint32_t iterations)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("BloomPS::blurGaussian");
+
         m_postprocess->bind();
 
         for(unsigned i = 0; i < iterations; ++i)

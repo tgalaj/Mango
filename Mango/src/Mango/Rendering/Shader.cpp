@@ -80,6 +80,9 @@ namespace mango
 
     void Shader::addShader(const std::filesystem::path &filepath, GLuint type) const
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Shader::addShader");
+
         if (m_programID == 0)
         {
             return;
@@ -140,6 +143,9 @@ namespace mango
 
     void Shader::addAllUniforms()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Shader::addAllUniforms");
+
         /* Get all active uniforms except uniforms in blocks */
         GLenum programInterface = GL_UNIFORM;
         GLint numUniforms = 0;
@@ -185,6 +191,9 @@ namespace mango
 
     void Shader::addAllSubroutines()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Shader::addAllSubroutines");
+
         GLenum interfaces[]   = { GL_VERTEX_SUBROUTINE, GL_FRAGMENT_SUBROUTINE };
         GLenum shaderStages[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 
@@ -224,6 +233,9 @@ namespace mango
 
     bool Shader::link()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Shader::link");
+
         glLinkProgram(m_programID);
 
         GLint status;
@@ -259,6 +271,9 @@ namespace mango
 
     void Shader::bind() const
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Shader::bind");
+
         if (m_programID != 0 && m_isLinked)
         {
             glUseProgram(m_programID);
@@ -267,25 +282,28 @@ namespace mango
 
     void Shader::updateUniforms(Material & material)
     {
-        for(unsigned i = 0; i < m_uniformsNames.size(); ++i)
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Shader::updateUniforms");
+
+        for (unsigned i = 0; i < m_uniformsNames.size(); ++i)
         {
             auto uniformName = m_uniformsNames[i];
             auto uniformType = m_uniformsTypes[i];
 
-            switch(uniformType)
+            switch (uniformType)
             {
                 case GL_SAMPLER_2D:
-                    if(M_TEXTURE_DIFFUSE == uniformName)
+                    if (M_TEXTURE_DIFFUSE == uniformName)
                     {
                         material.getTexture(Material::TextureType::DIFFUSE)->bind(GLuint(Material::TextureType::DIFFUSE));
                     }
                     else
-                    if(M_TEXTURE_SPECULAR == uniformName)
+                    if (M_TEXTURE_SPECULAR == uniformName)
                     {
                         material.getTexture(Material::TextureType::SPECULAR)->bind(GLuint(Material::TextureType::SPECULAR));
                     }
                     else
-                    if(M_TEXTURE_NORMAL == uniformName)
+                    if (M_TEXTURE_NORMAL == uniformName)
                     {
                         material.getTexture(Material::TextureType::NORMAL)->bind(GLuint(Material::TextureType::NORMAL));
                     }
@@ -312,12 +330,15 @@ namespace mango
 
     void Shader::updateGlobalUniforms(const TransformComponent & transform)
     {
-        for(unsigned i = 0; i < m_globalUniformsNames.size(); ++i)
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Shader::updateGlobalUniforms");
+
+        for (unsigned i = 0; i < m_globalUniformsNames.size(); ++i)
         {
             auto uniformName = m_globalUniformsNames[i];
             auto uniformType = m_globalUniformsTypes[i];
 
-            switch(uniformType)
+            switch (uniformType)
             {
                 case GL_FLOAT_MAT4:
                 {
@@ -357,6 +378,9 @@ namespace mango
 
     bool Shader::getUniformLocation(const std::string & uniformName)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Shader::getUniformLocation");
+
         GLint uniformLocation = glGetUniformLocation(m_programID, uniformName.c_str());
 
         if (uniformLocation != -1)
@@ -373,6 +397,8 @@ namespace mango
 
     std::string Shader::loadFile(const std::filesystem::path& filepath) const
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         std::string output;
         std::ifstream file(filepath, std::ios::in | std::ios::binary | std::ios::ate);
 
@@ -401,6 +427,8 @@ namespace mango
 
     std::string Shader::loadShaderIncludes(const std::string& shaderCode) const
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         std::istringstream ss(shaderCode);
 
         std::string line, newShaderCode;

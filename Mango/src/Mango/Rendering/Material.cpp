@@ -37,21 +37,29 @@ namespace mango
 
     void Material::addTexture(TextureType textureType, const std::shared_ptr<Texture> & texture)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         m_textureMap[textureType] = texture;
     }
 
     void Material::addVector3(const std::string & uniformName, const glm::vec3 & vec)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         m_vec3Map[uniformName] = vec;
     }
 
     void Material::addFloat(const std::string & uniformName, float value)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         m_floatMap[uniformName] = value;
     }
 
     std::shared_ptr<Texture> Material::getTexture(TextureType textureType)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         if (m_textureMap.count(textureType))
         {
             return m_textureMap[textureType];
@@ -63,6 +71,8 @@ namespace mango
 
     glm::vec3 Material::getVector3(const std::string & uniformName)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         if (m_vec3Map.count(uniformName))
         {
             return m_vec3Map[uniformName];
@@ -73,6 +83,8 @@ namespace mango
 
     float Material::getFloat(const std::string & uniformName)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         if (m_floatMap.count(uniformName))
         {
             return m_floatMap[uniformName];

@@ -28,6 +28,8 @@ namespace mango
 
     unsigned char* Texture::loadTexture(const std::filesystem::path& filepath, ImageData& imageData)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         int width, height, channelsCount;
         unsigned char* data = stbi_load(filepath.string().c_str(), &width, &height, &channelsCount, 0);
 
@@ -40,6 +42,9 @@ namespace mango
 
     void Texture::genTexture2D(const std::filesystem::path& filepath, GLuint numMipmaps, bool isSrgb /*= false*/)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Texture::genTexture2D");
+
         /* Pointer to the image */
         unsigned char* data = loadTexture(filepath, m_texData);
 
@@ -87,6 +92,9 @@ namespace mango
 
     void Texture::genTexture2D1x1(const glm::uvec4 & color)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Texture::genTexture2D1x1");
+
         m_texData.width    = 1;
         m_texData.height   = 1;
         m_texData.channels = 4;
@@ -126,6 +134,9 @@ namespace mango
 
     void Texture::genCubeMapTexture(const std::filesystem::path * filepaths, GLuint numMipmaps, bool isSrgb /*= false*/)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Texture::genCubeMapTexture");
+
         const int numCubeFaces = 6;
 
         /* Pointer to the image data */
@@ -184,11 +195,17 @@ namespace mango
 
     void Texture::bind(GLuint unit) const
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Texture::bind");
+
         glBindTextureUnit(unit, m_id);
     }
 
     void Texture::unbindTextureUnit(GLuint unit)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Texture::unbindTextureUnit");
+
         glBindTextureUnit(unit, 0);
     }
 }

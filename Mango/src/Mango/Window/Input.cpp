@@ -125,6 +125,7 @@ namespace mango
 
     void Input::update()
     {
+        MG_PROFILE_ZONE_SCOPED;
         for (auto & kv : m_lastKeysStates)
         {
             kv.second = getKey(kv.first);
@@ -168,6 +169,7 @@ namespace mango
 
     glm::vec2 Input::getMousePosition()
     {
+        MG_PROFILE_ZONE_SCOPED;
         double x, y;
         glfwGetCursorPos(m_window, &x, &y);
 
@@ -176,6 +178,7 @@ namespace mango
 
     void Input::setMouseCursorVisibility(bool isVisible)
     {
+        MG_PROFILE_ZONE_SCOPED;
         if (isVisible)
         {
             glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -188,6 +191,7 @@ namespace mango
 
     void Input::setMouseCursorPosition(const glm::vec2 & cursorPosition)
     {
+        MG_PROFILE_ZONE_SCOPED;
         glfwSetCursorPos(m_window, cursorPosition.x, cursorPosition.y);
     }
 }

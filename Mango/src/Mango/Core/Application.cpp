@@ -21,6 +21,8 @@ namespace mango
           m_fpsToReturn (0),
           m_isRunning   (false)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         // Parse command line args.
         cxxopts::Options options(appSettings.windowTitle, "");
 
@@ -80,12 +82,14 @@ namespace mango
 
     Application::~Application()
     {
+        MG_PROFILE_ZONE_SCOPED;
         delete m_sceneManager;
         delete m_eventBus;
     }
 
     void Application::addSystem(System* system)
     {
+        MG_PROFILE_ZONE_SCOPED;
         m_systems.add(system);
         system->onInit();
     }
@@ -144,6 +148,7 @@ namespace mango
 
             while (unprocessedTime > m_frameTime)
             {
+                MG_PROFILE_ZONE_NAMED_N(zone1, "Game Loop Update", true);
                 shouldRender = true;
 
                 unprocessedTime -= m_frameTime;
@@ -165,6 +170,7 @@ namespace mango
 
             if (shouldRender)
             {
+                MG_PROFILE_ZONE_NAMED_N(zone2, "Game Loop Render", true);
                 m_renderingSystems.updateAll(m_frameTime);
 
                 m_imGuiSystem->being();

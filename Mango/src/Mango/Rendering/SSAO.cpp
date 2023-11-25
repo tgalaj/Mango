@@ -25,6 +25,8 @@ namespace mango
 
     void SSAO::init(const std::string & filterName, const std::filesystem::path & fragmentShaderFilepath)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         PostprocessEffect::init(filterName, fragmentShaderFilepath);
 
         genKernel();
@@ -33,6 +35,8 @@ namespace mango
 
     void SSAO::create()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         auto window = Services::application()->getWindow();
         int  width  = window->getWidth();
         int  height = window->getHeight();
@@ -46,22 +50,31 @@ namespace mango
 
     void SSAO::clear()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         m_ssaoBuffer->clear();
         m_blurredBuffer->clear();
     }
 
     void SSAO::bindSSAOTexture(GLuint unit)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         m_ssaoBuffer->bindTexture(unit, 0);
     }
 
     void SSAO::bindBlurredSSAOTexture(GLuint unit)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        
         m_blurredBuffer->bindTexture(unit, 0);
     }
 
     void SSAO::computeSSAO(const std::shared_ptr<mango::DeferredRendering> & gbuffer, const glm::mat4 & view, const glm::mat4 & projection)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("SSAO::computeSSAO");
+
         m_postprocess->bind();
         m_postprocess->setSubroutine(Shader::Type::FRAGMENT, "calcSSAO");
 
@@ -85,6 +98,9 @@ namespace mango
 
     void SSAO::blurSSAO()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("SSAO::blurSSAO");
+
         m_postprocess->bind();
         m_postprocess->setSubroutine(Shader::Type::FRAGMENT, "blurSSAO");
 
@@ -97,6 +113,9 @@ namespace mango
 
     void SSAO::cleanGLdata()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("SSAO::cleanGLdata");
+
         if (m_noiseTextureID != 0)
         {
             glDeleteTextures(1, &m_noiseTextureID);
@@ -106,6 +125,8 @@ namespace mango
 
     void SSAO::genKernel()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         std::uniform_real_distribution<float> random_floats(0.0, 1.0); // random floats between 0.0 - 1.0
         std::default_random_engine generator;
 
@@ -132,6 +153,9 @@ namespace mango
 
     void SSAO::genRandomRotationVectors(unsigned noiseTexWidth, unsigned noiseTexHeight)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("SSAO::genRandomRotationVectors");
+
         cleanGLdata();
 
         std::uniform_real_distribution<float> randomFloats(0.0, 1.0); // random floats between 0.0 - 1.0

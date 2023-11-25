@@ -7,6 +7,7 @@ namespace mango
 {
     std::shared_ptr<Scene>& SceneManager::createScene(const std::string& name)
     {
+        MG_PROFILE_ZONE_SCOPED;
         m_scenes.emplace_back(std::make_shared<Scene>(name));
 
         // return the last created scene
@@ -15,12 +16,14 @@ namespace mango
 
     std::shared_ptr<Scene> SceneManager::loadScene(const std::filesystem::path& filepath)
     {
+        MG_PROFILE_ZONE_SCOPED;
         // TODO: implement parsing scene from file
         return nullptr;
     }
 
     void SceneManager::setActiveScene(const std::shared_ptr<Scene>& scene)
     {
+        MG_PROFILE_ZONE_SCOPED;
         m_activeScene = scene;
 
         Services::eventBus()->emit(ActiveSceneChangedEvent(m_activeScene.get()));
@@ -28,6 +31,7 @@ namespace mango
 
     void SceneManager::setActiveScene(const std::string& name)
     {
+        MG_PROFILE_ZONE_SCOPED;
         auto it = std::find_if(m_scenes.begin(), m_scenes.end(), 
                                [name](const std::shared_ptr<Scene>& scene)
                                {

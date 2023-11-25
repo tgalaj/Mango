@@ -11,6 +11,9 @@ namespace mango
         : color(glm::vec4(0.85f, 0.325f, 0.0f, 0.2f)),
           simulate(true)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("ParticleEffect::ParticleEffect");
+
         if (maxParticles > 18000000)
         {
             maxParticles = 18000000;
@@ -82,6 +85,9 @@ namespace mango
 
     ParticleEffect::~ParticleEffect()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("ParticleEffect::~ParticleEffect");
+
         delete[] m_initPositions;
         delete[] m_initVelocities;
 
@@ -103,6 +109,9 @@ namespace mango
 
     void ParticleEffect::reset()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("ParticleEffect::reset");
+
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_vbos[POSITIONS]);
         glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 4 * m_maxParticles, m_initPositions);
 
@@ -114,6 +123,9 @@ namespace mango
 
     void ParticleEffect::render(CameraComponent * cam)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("ParticleEffect::render");
+
         if (simulate)
         {
             //m_shader = ShaderManager::getShader("ve_compute_particles");

@@ -24,6 +24,8 @@ namespace mango
 
     void ImGuiSystem::onInit()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         auto app = Services::application();
         MG_CORE_ASSERT_MSG(app != nullptr, "app can't be nullptr!");
 
@@ -43,6 +45,9 @@ namespace mango
 
     void ImGuiSystem::onDestroy()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("ImGuiSystem::onDestroy");
+
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
@@ -50,6 +55,9 @@ namespace mango
 
     void ImGuiSystem::being()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("ImGuiSystem::begin");
+
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -57,6 +65,9 @@ namespace mango
 
     void ImGuiSystem::end()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("ImGuiSystem::end");
+
         glViewport(0, 0, GLsizei(m_windowSize.x), GLsizei(m_windowSize.y));
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -69,6 +80,8 @@ namespace mango
 
     void ImGuiSystem::beginHUD()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         ImGuiIO& io = ImGui::GetIO();
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -82,6 +95,8 @@ namespace mango
 
     void ImGuiSystem::endHUD()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         ImGuiWindow* window = ImGui::GetCurrentWindow();
         window->DrawList->PushClipRectFullScreen();
 
@@ -92,6 +107,7 @@ namespace mango
 
     float ImGuiSystem::text(const std::shared_ptr<Font> & font, const std::string& text, const glm::vec2 & position, float size, const glm::vec4 & color /*= glm::vec4(1.0f)*/, bool center /*= false*/, bool textShadow /*= false*/)
     {
+        MG_PROFILE_ZONE_SCOPED;
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
         std::stringstream stream(text);
@@ -140,6 +156,7 @@ namespace mango
 
     void ImGuiSystem::line(const glm::vec2& from, const glm::vec2& to, const glm::vec4& color, float thickness)
     {
+        MG_PROFILE_ZONE_SCOPED;
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
         const auto lineColor = glm::clamp(color, 0.0f, 1.0f);
@@ -149,6 +166,7 @@ namespace mango
 
     void ImGuiSystem::circle(const glm::vec2& position, float radius, const glm::vec4& color, float thickness, uint32_t segments)
     {
+        MG_PROFILE_ZONE_SCOPED;
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
         const auto circleColor = glm::clamp(color, 0.0f, 1.0f);
@@ -158,6 +176,7 @@ namespace mango
 
     void ImGuiSystem::circleFilled(const glm::vec2& position, float radius,  const glm::vec4& color, uint32_t segments)
     {
+        MG_PROFILE_ZONE_SCOPED;
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
         const auto circleColor = glm::clamp(color, 0.0f, 1.0f);
@@ -167,6 +186,7 @@ namespace mango
 
     void ImGuiSystem::rect(const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color, float rounding, uint32_t roundingCornersFlags, float thickness)
     {
+        MG_PROFILE_ZONE_SCOPED;
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
         const auto rectColor = glm::clamp(color, 0.0f, 1.0f);
@@ -176,6 +196,7 @@ namespace mango
 
     void ImGuiSystem::rectFilled(const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color, float rounding, uint32_t roundingCornersFlags)
     {
+        MG_PROFILE_ZONE_SCOPED;
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
         const auto rectColor = glm::clamp(color, 0.0f, 1.0f);
@@ -185,6 +206,7 @@ namespace mango
 
     void ImGuiSystem::image(std::shared_ptr<Texture> pTexture, const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color)
     {
+        MG_PROFILE_ZONE_SCOPED;
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
         const auto tintColor = glm::clamp(color, 0.0f, 1.0f);
@@ -194,6 +216,7 @@ namespace mango
     
     void ImGuiSystem::imageRounded(std::shared_ptr<Texture> pTexture, const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color, float rounding, uint32_t roundingCornersFlags)
     {
+        MG_PROFILE_ZONE_SCOPED;
         ImGuiWindow* window = ImGui::GetCurrentWindow();
 
         const auto tintColor = glm::clamp(color, 0.0f, 1.0f);

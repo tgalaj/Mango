@@ -22,6 +22,8 @@ namespace mango
 
     void RenderTarget::create(unsigned width, unsigned height, ColorInternalFormat color, DepthInternalFormat depth, RenderTargetType rtType, bool useFiltering)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         std::vector<MRTEntry> mrtEntries(1);
         mrtEntries[0] = { AttachmentType::Color, color };
 
@@ -32,6 +34,9 @@ namespace mango
 
     void RenderTarget::create(unsigned width, unsigned height, DepthInternalFormat depth, RenderTargetType rtType, bool useFiltering)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderTarget::create");
+
         MG_CORE_ASSERT(depth != DepthInternalFormat::NoDepth);
 
         glGenFramebuffers(1, &m_fbo);
@@ -82,6 +87,9 @@ namespace mango
 
     void RenderTarget::createMRT(const std::vector<MRTEntry>& mrtEntries, unsigned width, unsigned height, RenderTargetType rtType, bool useFiltering, DepthInternalFormat defaultRenderbufferFormat)
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderTarget::createMRT");
+
         m_width  = width;
         m_height = height;
         m_type   = GLenum(rtType);
@@ -217,6 +225,9 @@ namespace mango
 
     void RenderTarget::clear()
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderTarget::clear");
+
         if (m_textureID != nullptr)
         {
             glDeleteTextures(m_numTextures, m_textureID);
@@ -240,28 +251,43 @@ namespace mango
 
     void RenderTarget::bind() const
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderTarget::bind");
+
         glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
         glViewport(0, 0, m_width, m_height);
     }
 
     void RenderTarget::bindReadOnly() const
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderTarget::bindReadOnly");
+
         glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);
     }
 
     void RenderTarget::bindWriteOnly() const
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderTarget::bindWriteOnly");
+
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
     }
 
     void RenderTarget::bindTexture(GLuint textureUnit /*= 0*/, GLuint renderTargetID /*= 0*/) const
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderTarget::bindTexture");
+
         glActiveTexture(GL_TEXTURE0 + textureUnit);
         glBindTexture  (m_type, m_textureID[renderTargetID]);
     }
 
     bool RenderTarget::validate() const
     {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderTarget::validate");
+
         return glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
     }
 }
