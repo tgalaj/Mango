@@ -65,11 +65,11 @@
     #define MG_PROGILE_FRAME_MARK_END(name)
     
     //// For single zone in one scope
-    #define MG_PROFILE_ZONE_SCOPED
+#define MG_PROFILE_ZONE_SCOPED
     #define MG_PROFILE_ZONE_SCOPED_C(color)
     #define MG_PROFILE_ZONE_SCOPED_N(name)
     #define MG_PROFILE_ZONE_SCOPED_NC(name, color)
-    
+
     // Specify additional text string
     #define MG_PROFILE_ZONE_SCOPED_TEXT(text, size)
 
@@ -90,7 +90,7 @@
 
     //// Other
     // For string literals
-    #define MG_PROFILE_LOGL(text)
+    #define MG_PROFILE_LOG_L(text)
 
     #define MG_PROFILE_LOG(text, size)
     #define MG_PROGILE_PLOT_VALUE(name, value)
@@ -104,7 +104,7 @@
     // OpenGL specific
     #define MG_PROFILE_GL_CONTEXT
     #define MG_PROFILE_GL_ZONE(name)
-    #define MG_PROFILE_GL_ZONE(name, color)
+    #define MG_PROFILE_GL_ZONE_C(name, color)
     
     // Call after swap buffers function call
     #define MG_PROFILE_GL_COLLECT
