@@ -1,5 +1,7 @@
 # Copyright (C) 2023 Tomasz Gałaj
 
+option(MG_PROFILE_ENABLE "Enable profiling with Tracy profiler" OFF)
+
 # Configure thirdparty libraries
 add_subdirectory(thirdparty)
 
@@ -31,30 +33,34 @@ set_target_properties(Mango PROPERTIES
                       VERSION ${Mango_VERSION}
                       SOVERSION ${Mango_VERSION_MAJOR})
 
-target_precompile_headers(${CMAKE_PROJECT_NAME} PRIVATE "src/mgpch.h")
+target_precompile_headers(Mango PRIVATE "src/mgpch.h")
 
-target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
-target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE LIBRARY_SUFFIX="")
+if(MG_PROFILE_ENABLE MATCHES ON)
+	target_compile_definitions(Mango PRIVATE MG_PROFILE_ENABLE)
+endif()
 
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>")
+target_compile_definitions(Mango PRIVATE GLFW_INCLUDE_NONE)
+target_compile_definitions(Mango PRIVATE LIBRARY_SUFFIX="")
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} 
-                                                    glad
-                                                    stb_image
-                                                    assimp
-                                                    glfw
-                                                    imgui
-                                                    spdlog
-                                                    cxxopts
-                                                    glm::glm
-                                                    tinyddsloader
-                                                    entt
-                                                    Tracy::TracyClient)
+target_include_directories(Mango PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>")
+
+target_link_libraries(Mango PUBLIC ${OPENGL_LIBRARIES} 
+                                   glad
+                                   stb_image
+                                   assimp
+                                   glfw
+                                   imgui
+                                   spdlog
+                                   cxxopts
+                                   glm::glm
+                                   tinyddsloader
+                                   entt
+                                   Tracy::TracyClient)
 
 if(MinGW)
-    target_link_libraries(${CMAKE_PROJECT_NAME} bz2)
+    target_link_libraries(Mango bz2)
 endif()
 
 if(MSVC)
-    target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC NOMINMAX)
+    target_compile_definitions(Mango PUBLIC NOMINMAX)
 endif()
