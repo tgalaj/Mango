@@ -48,9 +48,10 @@ namespace mango
         /* Pointer to the image */
         unsigned char* data = loadTexture(filepath, m_texData);
 
-        if(!data)
+        if (!data)
         {
-            std::cout << "Could not load texture " << filepath << std::endl;
+            MG_CORE_ERROR("Could not load texture {}", filepath);
+            return;
         }
 
         m_type           = GL_TEXTURE_2D;

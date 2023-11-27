@@ -18,10 +18,7 @@ namespace mango
     {
         m_programID = glCreateProgram();
 
-        if (m_programID == 0)
-        {
-            fprintf(stderr, "Error while creating program object.\n");
-        }
+        MG_ASSERT_MSG(m_programID != 0, "Error while creating GL Program Object.");
     }
 
     Shader::Shader(const std::filesystem::path & computeShaderFilepath)
@@ -85,25 +82,19 @@ namespace mango
 
         if (m_programID == 0)
         {
+            MG_CORE_WARN("Program Object is NULL for shader {}", filepath.string());
             return;
         }
 
         if (filepath.empty())
         {
-            fprintf(stderr, "Error: Shader's file name can't be empty.\n");
-
+            MG_CORE_ERROR("Error (Shader::addShader): Shader's filepath can't be empty.");
             return;
         }
 
         GLuint shaderObject = glCreateShader(type);
 
-        if (shaderObject == 0)
-        {
-            fprintf(stderr, "Error while creating %s.\n", filepath.string().c_str());
-
-            return;
-        }
-
+        MG_ASSERT_MSG(shaderObject != 0, "Error while creating GL Shader Object");
 
         std::string code = loadFile("assets/shaders" / filepath);
                     code = loadShaderIncludes(code);
@@ -118,7 +109,7 @@ namespace mango
 
         if (result == GL_FALSE)
         {
-            fprintf(stderr, "%s compilation failed!\n", filepath.string().c_str());
+            MG_CORE_ERROR("Shader {} compilation failed!", filepath.string());
 
             GLint logLen;
             glGetShaderiv(shaderObject, GL_INFO_LOG_LENGTH, &logLen);
@@ -130,7 +121,7 @@ namespace mango
                 GLsizei written;
                 glGetShaderInfoLog(shaderObject, logLen, &written, log);
 
-                fprintf(stderr, "Shader log: \n%s", log);
+                MG_CORE_ERROR("Shader log: \n{}", log);
                 free(log);
             }
             getchar();
@@ -243,7 +234,7 @@ namespace mango
 
         if (status == GL_FALSE)
         {
-            fprintf(stderr, "Failed to link shader program!\n");
+            MG_CORE_ERROR("Failed to link shader program with ID {}!", m_programID);
 
             GLint logLen;
             glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &logLen);
@@ -254,7 +245,7 @@ namespace mango
                 GLsizei written;
                 glGetProgramInfoLog(m_programID, logLen, &written, log);
 
-                fprintf(stderr, "Program log: \n%s", log);
+                MG_CORE_ERROR("Program log: \n{}", log);
                 free(log);
             }
         }
@@ -390,7 +381,7 @@ namespace mango
         }
         else
         {
-            fprintf(stderr, "Error! Can't find uniform %s\n", uniformName.c_str());
+            MG_CORE_WARN("Can't find uniform {}", uniformName);
             return false;
         }
     }

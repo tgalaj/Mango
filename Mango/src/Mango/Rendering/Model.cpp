@@ -36,7 +36,7 @@ namespace mango
 
         if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
-            fprintf(stderr, "Assimp error while loading mesh %s\n Error: %s\n", filepath.string().c_str(), importer.GetErrorString());
+            MG_CORE_ERROR("Assimp error while loading mesh.\n\tError: {}\n", importer.GetErrorString());
             return;
         }
 
