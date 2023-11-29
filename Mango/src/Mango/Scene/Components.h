@@ -156,7 +156,7 @@ namespace mango
     {
     public:
         CameraComponent()
-            : isOrtho(false)
+            : m_isOrtho(false)
         {
         }
 
@@ -166,12 +166,7 @@ namespace mango
         CameraComponent(float fov, 
                         float aspectRatio, 
                         float zNear, 
-                        float zFar)
-            : view      (glm::mat4(1.0f)),
-              projection(glm::perspective(glm::radians(fov), aspectRatio, zNear, zFar)), 
-              isOrtho   (false)
-        {
-        }
+                        float zFar);
 
         /*
          * Ortho camera
@@ -181,16 +176,26 @@ namespace mango
                         float bottom, 
                         float top,
                         float zNear, 
-                        float zFar)
-            : view      (glm::mat4(1.0f)),
-              projection(glm::ortho(left, right, bottom, top, zNear, zFar)),
-              isOrtho   (true)
-        {
-        }
+                        float zFar);
 
-        glm::mat4  view{};
-        glm::mat4  projection{};
-        const bool isOrtho;
+        bool isPrimary() const { return m_isPrimary; }
+        void setPrimary();
+
+        const glm::mat4& view()       const { return m_view; }
+        const glm::mat4& projection() const { return m_projection; }
+
+        void setView      (const glm::mat4& view)      { m_view       = view; }
+        void setProjection(const glm::mat4 projection) { m_projection = projection; };
+
+     private:
+        glm::mat4 m_view{};
+        glm::mat4 m_projection{};
+
+        bool m_isOrtho;
+        bool m_isPrimary = true;
+    
+    private:
+        friend class Scene;
     };
 
     class ModelRendererComponent

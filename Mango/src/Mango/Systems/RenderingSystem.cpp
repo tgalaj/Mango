@@ -31,7 +31,6 @@ namespace mango
 
         m_mainWindow = Services::application()->getWindow();
 
-        Services::eventBus()->subscribe<ComponentAddedEvent<CameraComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ComponentAddedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ComponentRemovedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ActiveSceneChangedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
@@ -137,8 +136,10 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderingSystem::onUpdate");
 
+        m_primaryCamera = m_activeScene->getPrimaryCamera();
+
         MG_CORE_ASSERT_MSG(m_activeScene != nullptr, "Active scene can't be nullptr!");
-        MG_CORE_ASSERT_MSG(m_mainCamera, "Main camera can't be nullptr!");
+        MG_CORE_ASSERT_MSG(m_primaryCamera, "primaryCamera can't be nullptr!");
 
         //renderForward(m_activeScene);
         renderDeferred(m_activeScene);
@@ -158,16 +159,6 @@ namespace mango
         m_alphaQueue.clear();
         m_enviroStaticQueue.clear();
         m_enviroDynamicQueue.clear();
-    }
-
-    void RenderingSystem::receive(const ComponentAddedEvent<CameraComponent>& event)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-
-        if (!m_mainCamera)
-        {
-            m_mainCamera = event.entity;
-        }
     }
 
     void RenderingSystem::receive(const ComponentAddedEvent<ModelRendererComponent>& event)
@@ -265,12 +256,12 @@ namespace mango
 
     TransformComponent& RenderingSystem::getCameraTransform()
     {
-        return m_mainCamera.getComponent<TransformComponent>();
+        return m_primaryCamera.getComponent<TransformComponent>();
     }
 
     CameraComponent& RenderingSystem::getCamera()
     {
-        return m_mainCamera.getComponent<CameraComponent>();
+        return m_primaryCamera.getComponent<CameraComponent>();
     }
 
     void RenderingSystem::initRenderingStates()
@@ -370,7 +361,7 @@ namespace mango
         /* Render skybox */
         if (m_skybox != nullptr)
         {
-            m_skybox->render(getCamera().projection, getCamera().view);
+            m_skybox->render(getCamera().projection(), getCamera().view());
 
             m_enviroMappingShader->bind();
             m_enviroMappingShader->setSubroutine(Shader::Type::FRAGMENT, "reflection"); // TODO: control this using Material class
@@ -405,7 +396,7 @@ namespace mango
         renderOpaque(m_gbufferShader);
 
         /* Compute SSAO */
-        m_ssao->computeSSAO(m_deferredRendering, getCamera().view, getCamera().projection);
+        m_ssao->computeSSAO(m_deferredRendering, getCamera().view(), getCamera().projection());
         m_ssao->blurSSAO();
 
         /* Light Pass - compute lighting */
@@ -451,7 +442,7 @@ namespace mango
         /* Render skybox */
         if (m_skybox != nullptr)
         {
-            m_skybox->render(getCamera().projection, getCamera().view);
+            m_skybox->render(getCamera().projection(), getCamera().view());
 
             m_enviroMappingShader->bind();
             //m_enviro_mapping_shader->setSubroutine(Shader::Type::FRAGMENT, "refraction"); // TODO: control this using Material class
@@ -518,8 +509,8 @@ namespace mango
 
                 auto model       = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
                                    glm::scale(glm::mat4(1.0f), glm::vec3(pointLight.range));
-                auto view        = getCamera().view;
-                auto projection  = getCamera().projection;
+                auto view        = getCamera().view();
+                auto projection  = getCamera().projection();
 
                 m_boundingboxShader->bind();
                 m_boundingboxShader->setUniform("g_mvp", projection * view * model);
@@ -544,8 +535,8 @@ namespace mango
                 auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
                                   glm::mat4_cast(glm::inverse(transform.getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
                                   glm::scale(glm::mat4(1.0f), glm::vec3(radiusScale, heightScale, radiusScale));
-                auto view       = getCamera().view;
-                auto projection = getCamera().projection;
+                auto view       = getCamera().view();
+                auto projection = getCamera().projection();
 
                 m_boundingboxShader->bind();
                 m_boundingboxShader->setUniform("g_mvp", projection * view * model);
@@ -874,8 +865,8 @@ namespace mango
                 auto model = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
                              glm::scale    (glm::mat4(1.0f), glm::vec3(pointLight.range));
 
-                auto view       = getCamera().view;
-                auto projection = getCamera().projection;
+                auto view       = getCamera().view();
+                auto projection = getCamera().projection();
                 auto mvp        = projection * view * model;
 
                 /* Stencil pass */
@@ -971,8 +962,8 @@ namespace mango
                              glm::mat4_cast(glm::inverse(transform.getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
                              glm::scale    (glm::mat4(1.0f), glm::vec3(radiusScale, heightScale, radiusScale));
 
-                auto view       = getCamera().view;
-                auto projection = getCamera().projection;
+                auto view       = getCamera().view();
+                auto projection = getCamera().projection();
                 auto mvp        = projection * view * model;
 
                 /* Stencil pass */

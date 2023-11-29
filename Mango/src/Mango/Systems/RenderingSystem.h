@@ -30,7 +30,6 @@ namespace mango
         void onUpdate(float dt);
         void onDestroy();
 
-        void receive(const ComponentAddedEvent<CameraComponent>          & event);
         void receive(const ComponentAddedEvent<ModelRendererComponent>   & event);
         void receive(const ComponentRemovedEvent<ModelRendererComponent> & event);
         void receive(const ActiveSceneChangedEvent                       & event);
@@ -113,7 +112,7 @@ namespace mango
 
         std::shared_ptr<Skybox> m_skybox;
 
-        Entity m_mainCamera;
+        Entity m_primaryCamera;
         Scene* m_activeScene = nullptr;
         std::shared_ptr<Window> m_mainWindow;
     };

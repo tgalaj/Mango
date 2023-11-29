@@ -16,11 +16,16 @@ void TestDemo::onInit()
 
     Services::application()->getWindow()->setVSync(false);
 
-    auto camera = m_mainScene->createEntity("MainCamera");
-    camera.addComponent<CameraComponent>(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 500.0f);
-    camera.setPosition(0, 4, 30);
+    m_camera1 = m_mainScene->createEntity("MainCamera");
+    m_camera1.addComponent<CameraComponent>(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 500.0f);
+    m_camera1.setPosition(0, 4, 30);
 
-    m_freeCameraController = std::make_shared<FreeCameraController>(camera);
+    m_camera2 = m_mainScene->createEntity("MainCamera2");
+    m_camera2.addComponent<CameraComponent>(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 500.0f);
+    m_camera2.setPosition(0, 4, -30);
+    m_camera2.setOrientation({0, 1, 0}, 180.0f);
+
+    m_freeCameraController = std::make_shared<FreeCameraController>(m_camera1);
 
     auto font = AssetManager::createFont("Droid48", "assets/fonts/Roboto-Regular.ttf", 48.0f);
 
@@ -255,6 +260,23 @@ void TestDemo::onUpdate(float dt)
     if (shouldMoveLights)
     {
         moveLights(dt);
+    }
+
+    static bool isCamera1Primary = true;
+    if (Input::getKeyUp(KeyCode::P))
+    {
+        isCamera1Primary = !isCamera1Primary;
+        
+        if (isCamera1Primary)
+        {
+            m_camera1.getComponent<CameraComponent>().setPrimary();
+            m_freeCameraController->setCameraEntity(m_camera1);
+        }
+        else
+        {
+            m_camera2.getComponent<CameraComponent>().setPrimary();
+            m_freeCameraController->setCameraEntity(m_camera2);
+        }
     }
 }
 

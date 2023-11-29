@@ -27,4 +27,9 @@ namespace mango
         T component;
         std::reference_wrapper<Entity> entity;
     };
+
+    struct ChangedPrimaryCameraEvent : Event
+    {
+        ChangedPrimaryCameraEvent() {}
+    };
 }

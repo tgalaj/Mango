@@ -20,7 +20,7 @@ namespace mango
         glm::mat4 R = glm::mat4_cast(transform.getOrientation());
         glm::mat4 T = glm::translate(glm::mat4(1.0f), -transform.getPosition());
 
-        camera.view = R * T;
+        camera.setView(R * T);
 
         // Free Move
         auto movementAmount = moveSpeed * dt;
@@ -47,7 +47,7 @@ namespace mango
             move(transform, glm::vec3(0, -1, 0), movementAmount);
 
         // Free Look
-        if(Input::getMouse(unlockMouseKey))
+        if (Input::getMouse(unlockMouseKey))
         {
             if (!m_isMouseMove)
             {
@@ -63,7 +63,7 @@ namespace mango
             Input::setMouseCursorVisibility(true);
         }
 
-        if(m_isMouseMove)
+        if (m_isMouseMove)
         {
             auto deltaPos = Input::getMousePosition() - m_mousePressedPosition;
 
@@ -71,7 +71,7 @@ namespace mango
             auto xRot = deltaPos.y != 0.0f;
 
             // pitch
-            if(xRot)
+            if (xRot)
             {
                 transform.setOrientation(glm::angleAxis(glm::radians(deltaPos.y * mouseSensitivity), glm::vec3(1, 0, 0)) * transform.getOrientation());
             }
@@ -92,6 +92,14 @@ namespace mango
     CameraComponent& FreeCameraController::getCameraComponent()
     {
         return m_cameraEntity.getComponent<CameraComponent>();
+    }
+
+    void FreeCameraController::setCameraEntity(Entity entity)
+    {
+        if (entity.hasComponent<CameraComponent>())
+        {
+            m_cameraEntity = entity;
+        }
     }
 
     void FreeCameraController::move(TransformComponent& transform, const glm::vec3& dir, float amount)

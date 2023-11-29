@@ -17,6 +17,7 @@ namespace mango
             void onUpdate(float dt);
 
             CameraComponent& getCameraComponent();
+            void setCameraEntity(Entity entity);
 
             float   mouseSensitivity = 0.2f;
             KeyCode unlockMouseKey   = KeyCode::MouseRight;

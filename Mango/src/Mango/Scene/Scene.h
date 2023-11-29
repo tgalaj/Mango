@@ -6,6 +6,7 @@
 namespace mango
 {
     class Entity;
+    struct ChangedPrimaryCameraEvent;
 
     class Scene
     {
@@ -13,10 +14,12 @@ namespace mango
         Scene(const std::string& name);
         virtual ~Scene();
 
+        std::string& getName() { return m_name; };
+        
         Entity createEntity(const std::string& name = "");
         void destroyEntity(Entity entity);
 
-        std::string& getName() { return m_name; };
+        Entity getPrimaryCamera();
 
         template<typename... Components>
         auto getEntitiesWithComponent()
@@ -30,8 +33,13 @@ namespace mango
         }
 
     private:
+        void setPrimaryCamera(const ChangedPrimaryCameraEvent & event);
+
+    private:
         entt::registry m_registry;
         std::string m_name;
+
+        entt::entity m_primaryCameraEntityHandle = entt::null;
 
     private:
         friend class Entity;
