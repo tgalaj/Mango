@@ -18,5 +18,6 @@
 #include "Mango/Core/Assertions.h"
 #include "Mango/Core/Log.h"
 #include "Mango/Events/Event.h"
+#include "Mango/Math/Math.h"
 #include "Mango/Scene/Components.h"
 #include "Mango/Profiling/Instrumentation.h"
