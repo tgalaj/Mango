@@ -11,7 +11,7 @@
 #include "Mango/Window/Input.h"
 #include "Mango/Window/Window.h"
 
-#include <cxxopts.hpp>
+#include "cxxopts.hpp"
 
 namespace mango
 {
@@ -52,8 +52,9 @@ namespace mango
         }
 
         // Init Log, Input and GUI systems
-        Log::init();
         Input::init(m_window->getNativeWindow());
+        Log::init();
+        VFI::init(appSettings.commandLineArgs.argsValues[0]);
 
         // Init core services
         m_eventBus     = new EventBus();
@@ -85,6 +86,8 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         delete m_sceneManager;
         delete m_eventBus;
+
+        VFI::deinit();
     }
 
     void Application::addSystem(System* system)

@@ -1,7 +1,5 @@
 # Copyright (C) 2023 Tomasz Gałaj
 
-option(MG_PROFILE_ENABLE "Enable profiling with Tracy profiler" OFF)
-
 # Configure thirdparty libraries
 add_subdirectory(thirdparty)
 
@@ -35,13 +33,18 @@ set_target_properties(Mango PROPERTIES
 
 target_precompile_headers(Mango PRIVATE "src/mgpch.h")
 
+# Options
+option(MG_PROFILE_ENABLE "Enable profiling with Tracy profiler" OFF)
+
 if(MG_PROFILE_ENABLE MATCHES ON)
-	target_compile_definitions(Mango PRIVATE MG_PROFILE_ENABLE)
+    target_compile_definitions(Mango PRIVATE MG_PROFILE_ENABLE)
 endif()
 
+# Definitions
 target_compile_definitions(Mango PRIVATE GLFW_INCLUDE_NONE)
 target_compile_definitions(Mango PRIVATE LIBRARY_SUFFIX="")
 
+# Includes and libs
 target_include_directories(Mango PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>")
 
 target_link_libraries(Mango PUBLIC ${OPENGL_LIBRARIES} 
@@ -55,7 +58,8 @@ target_link_libraries(Mango PUBLIC ${OPENGL_LIBRARIES}
                                    glm::glm
                                    tinyddsloader
                                    entt
-                                   Tracy::TracyClient)
+                                   Tracy::TracyClient
+                                   physfs-static)
 
 if(MinGW)
     target_link_libraries(Mango bz2)
@@ -64,3 +68,15 @@ endif()
 if(MSVC)
     target_compile_definitions(Mango PUBLIC NOMINMAX)
 endif()
+
+macro(message_option option)
+    if(${option})
+        message(STATUS "  ${option}: ON")
+    else()
+        message(STATUS "  ${option}: OFF")
+    endif()
+endmacro()
+
+message(STATUS "Mango will be built with the following options:")
+message_option(MG_PROFILE_ENABLE)
+message_option(MG_BUILD_MANGO_SANDBOX)

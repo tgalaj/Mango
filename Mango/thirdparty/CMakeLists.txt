@@ -86,16 +86,38 @@ CPMAddPackage(
     OPTIONS
         "TRACY_ENABLE ON"
         "TRACY_ON_DEMAND OFF"
-		"TRACY_ONLY_LOCALHOST ON"
+        "TRACY_ONLY_LOCALHOST ON"
 )
 
-SET(TRACY_SERVER_ARCHIVE_PATH "${CMAKE_BINARY_DIR}/TracyServer/Tracy-${tracy_VERSION}.7z")
+set(TRACY_SERVER_ARCHIVE_PATH "${CMAKE_BINARY_DIR}/TracyServer/Tracy-${tracy_VERSION}.7z")
 if(NOT EXISTS "${TRACY_SERVER_ARCHIVE_PATH}")
-	file(DOWNLOAD "https://github.com/wolfpld/tracy/releases/download/v${tracy_VERSION}/Tracy-${tracy_VERSION}.7z"  
-	     "${TRACY_SERVER_ARCHIVE_PATH}" 
-		 SHOW_PROGRESS)
-	file(ARCHIVE_EXTRACT INPUT ${TRACY_SERVER_ARCHIVE_PATH} DESTINATION "${CMAKE_BINARY_DIR}/TracyServer/Tracy-${tracy_VERSION}")
+    file(DOWNLOAD "https://github.com/wolfpld/tracy/releases/download/v${tracy_VERSION}/Tracy-${tracy_VERSION}.7z"  
+         "${TRACY_SERVER_ARCHIVE_PATH}" 
+         SHOW_PROGRESS)
+    file(ARCHIVE_EXTRACT INPUT ${TRACY_SERVER_ARCHIVE_PATH} DESTINATION "${CMAKE_BINARY_DIR}/TracyServer/Tracy-${tracy_VERSION}")
 endif()
+
+CPMAddPackage(
+    NAME physfs
+    GITHUB_REPOSITORY icculus/physfs
+    GIT_TAG main
+    GIT_SHALLOW TRUE
+    OPTIONS
+        "PHYSFS_ARCHIVE_GRP OFF"
+        "PHYSFS_ARCHIVE_WAD OFF"
+        "PHYSFS_ARCHIVE_CSM OFF"
+        "PHYSFS_ARCHIVE_HOG OFF"
+        "PHYSFS_ARCHIVE_MVL OFF"
+        "PHYSFS_ARCHIVE_QPAK OFF"
+        "PHYSFS_ARCHIVE_SLB OFF"
+        "PHYSFS_ARCHIVE_ISO9660 OFF"
+        "PHYSFS_ARCHIVE_VDF OFF"
+        "PHYSFS_BUILD_STATIC ON"
+        "PHYSFS_BUILD_SHARED OFF"
+        "PHYSFS_BUILD_TEST OFF"
+        "PHYSFS_DISABLE_INSTALL ON"
+        "PHYSFS_BUILD_DOCS OFF"
+)
 
 add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
                          ${imgui_SOURCE_DIR}/imgui_demo.cpp
@@ -111,7 +133,8 @@ set_target_properties(glad
                       glm 
                       imgui 
                       spdlog
-                      TracyClient PROPERTIES FOLDER "thirdparty")
+                      TracyClient
+                      physfs-static PROPERTIES FOLDER "thirdparty")
 set_target_properties(update_mappings PROPERTIES FOLDER "thirdparty/GLFW3")
 
 if(MSVC)
