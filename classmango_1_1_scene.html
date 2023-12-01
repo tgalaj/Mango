@@ -51,6 +51,7 @@
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classmango_1_1_scene-members.html">List of all members</a>  </div>
@@ -73,6 +74,9 @@ template&lt;typename... Components&gt; </td></tr>
 <tr class="memitem:a904f369418b2d4e1af7eb3387e29840d" id="r_a904f369418b2d4e1af7eb3387e29840d"><td class="memItemLeft" align="right" valign="top"><a id="a904f369418b2d4e1af7eb3387e29840d" name="a904f369418b2d4e1af7eb3387e29840d"></a>
 std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> ()</td></tr>
 <tr class="separator:a904f369418b2d4e1af7eb3387e29840d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4393f3d51053b424ad7b9f49af9a3f71" id="r_a4393f3d51053b424ad7b9f49af9a3f71"><td class="memItemLeft" align="right" valign="top"><a id="a4393f3d51053b424ad7b9f49af9a3f71" name="a4393f3d51053b424ad7b9f49af9a3f71"></a>
+<a class="el" href="classmango_1_1_entity.html">Entity</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getPrimaryCamera</b> ()</td></tr>
+<tr class="separator:a4393f3d51053b424ad7b9f49af9a3f71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a521ccfccf2a6826cc83b53a445c5755f" id="r_a521ccfccf2a6826cc83b53a445c5755f"><td class="memItemLeft" align="right" valign="top"><a id="a521ccfccf2a6826cc83b53a445c5755f" name="a521ccfccf2a6826cc83b53a445c5755f"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classmango_1_1_scene.html">Scene</a> &amp;other)</td></tr>
 <tr class="separator:a521ccfccf2a6826cc83b53a445c5755f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -80,11 +84,20 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 &#160;</td><td class="memItemRight" valign="bottom"><b>Scene</b> (const std::string &amp;name)</td></tr>
 <tr class="separator:a7c7c43759c93a1db10abaf79b75fa242"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ab27d0a7878052ffbda05d4c604862067" id="r_ab27d0a7878052ffbda05d4c604862067"><td class="memItemLeft" align="right" valign="top"><a id="ab27d0a7878052ffbda05d4c604862067" name="ab27d0a7878052ffbda05d4c604862067"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setPrimaryCamera</b> (const <a class="el" href="structmango_1_1_changed_primary_camera_event.html">ChangedPrimaryCameraEvent</a> &amp;event)</td></tr>
+<tr class="separator:ab27d0a7878052ffbda05d4c604862067"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a53a84963526cc16f711ee131752d44a3" id="r_a53a84963526cc16f711ee131752d44a3"><td class="memItemLeft" align="right" valign="top"><a id="a53a84963526cc16f711ee131752d44a3" name="a53a84963526cc16f711ee131752d44a3"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_name</b></td></tr>
 <tr class="separator:a53a84963526cc16f711ee131752d44a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99327cbb2442059d4644cecbb47da370" id="r_a99327cbb2442059d4644cecbb47da370"><td class="memItemLeft" align="right" valign="top"><a id="a99327cbb2442059d4644cecbb47da370" name="a99327cbb2442059d4644cecbb47da370"></a>
+entt::entity&#160;</td><td class="memItemRight" valign="bottom"><b>m_primaryCameraEntityHandle</b> = entt::null</td></tr>
+<tr class="separator:a99327cbb2442059d4644cecbb47da370"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a147df261493fc43c17f0eac57a9cb146" id="r_a147df261493fc43c17f0eac57a9cb146"><td class="memItemLeft" align="right" valign="top"><a id="a147df261493fc43c17f0eac57a9cb146" name="a147df261493fc43c17f0eac57a9cb146"></a>
 entt::registry&#160;</td><td class="memItemRight" valign="bottom"><b>m_registry</b></td></tr>
 <tr class="separator:a147df261493fc43c17f0eac57a9cb146"><td class="memSeparator" colspan="2">&#160;</td></tr>

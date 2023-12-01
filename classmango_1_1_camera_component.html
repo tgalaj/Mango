@@ -51,7 +51,8 @@
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classmango_1_1_camera_component-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">mango::CameraComponent Class Reference</div></div>
 </div><!--header-->
@@ -65,21 +66,49 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a87cd7a1db3aa101deb80213e31c02c37" id="r_a87cd7a1db3aa101deb80213e31c02c37"><td class="memItemLeft" align="right" valign="top"><a id="a87cd7a1db3aa101deb80213e31c02c37" name="a87cd7a1db3aa101deb80213e31c02c37"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>CameraComponent</b> (float left, float right, float bottom, float top, float zNear, float zFar)</td></tr>
 <tr class="separator:a87cd7a1db3aa101deb80213e31c02c37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b07398ef7180374a8c1471c98601b45" id="r_a1b07398ef7180374a8c1471c98601b45"><td class="memItemLeft" align="right" valign="top"><a id="a1b07398ef7180374a8c1471c98601b45" name="a1b07398ef7180374a8c1471c98601b45"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPrimary</b> () const</td></tr>
+<tr class="separator:a1b07398ef7180374a8c1471c98601b45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18a4ad29574f38c0f1b79418d31f2150" id="r_a18a4ad29574f38c0f1b79418d31f2150"><td class="memItemLeft" align="right" valign="top"><a id="a18a4ad29574f38c0f1b79418d31f2150" name="a18a4ad29574f38c0f1b79418d31f2150"></a>
+const glm::mat4 &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>projection</b> () const</td></tr>
+<tr class="separator:a18a4ad29574f38c0f1b79418d31f2150"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a28cb4a81cf48fdd0fba813367fd103" id="r_a7a28cb4a81cf48fdd0fba813367fd103"><td class="memItemLeft" align="right" valign="top"><a id="a7a28cb4a81cf48fdd0fba813367fd103" name="a7a28cb4a81cf48fdd0fba813367fd103"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setPrimary</b> ()</td></tr>
+<tr class="separator:a7a28cb4a81cf48fdd0fba813367fd103"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7c2dc7a23dcf28ee98ec416a0bf402e" id="r_ac7c2dc7a23dcf28ee98ec416a0bf402e"><td class="memItemLeft" align="right" valign="top"><a id="ac7c2dc7a23dcf28ee98ec416a0bf402e" name="ac7c2dc7a23dcf28ee98ec416a0bf402e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setProjection</b> (const glm::mat4 projection)</td></tr>
+<tr class="separator:ac7c2dc7a23dcf28ee98ec416a0bf402e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbe5060ff4b15d7598db805b822e7bb6" id="r_abbe5060ff4b15d7598db805b822e7bb6"><td class="memItemLeft" align="right" valign="top"><a id="abbe5060ff4b15d7598db805b822e7bb6" name="abbe5060ff4b15d7598db805b822e7bb6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setView</b> (const glm::mat4 &amp;view)</td></tr>
+<tr class="separator:abbe5060ff4b15d7598db805b822e7bb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a601847bb80c570d99f0838b713b5eacd" id="r_a601847bb80c570d99f0838b713b5eacd"><td class="memItemLeft" align="right" valign="top"><a id="a601847bb80c570d99f0838b713b5eacd" name="a601847bb80c570d99f0838b713b5eacd"></a>
+const glm::mat4 &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>view</b> () const</td></tr>
+<tr class="separator:a601847bb80c570d99f0838b713b5eacd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a753c7c9c1982b4ca9ec5f38a3a1d02f0" id="r_a753c7c9c1982b4ca9ec5f38a3a1d02f0"><td class="memItemLeft" align="right" valign="top"><a id="a753c7c9c1982b4ca9ec5f38a3a1d02f0" name="a753c7c9c1982b4ca9ec5f38a3a1d02f0"></a>
-const bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOrtho</b></td></tr>
-<tr class="separator:a753c7c9c1982b4ca9ec5f38a3a1d02f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3b454b8b78bea3056ec230f8fbd8008" id="r_ae3b454b8b78bea3056ec230f8fbd8008"><td class="memItemLeft" align="right" valign="top"><a id="ae3b454b8b78bea3056ec230f8fbd8008" name="ae3b454b8b78bea3056ec230f8fbd8008"></a>
-glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>projection</b> {}</td></tr>
-<tr class="separator:ae3b454b8b78bea3056ec230f8fbd8008"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6166a33250ae407045bc04799bc66278" id="r_a6166a33250ae407045bc04799bc66278"><td class="memItemLeft" align="right" valign="top"><a id="a6166a33250ae407045bc04799bc66278" name="a6166a33250ae407045bc04799bc66278"></a>
-glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>view</b> {}</td></tr>
-<tr class="separator:a6166a33250ae407045bc04799bc66278"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a5b06e13d199c49e910d179a229a62bcf" id="r_a5b06e13d199c49e910d179a229a62bcf"><td class="memItemLeft" align="right" valign="top"><a id="a5b06e13d199c49e910d179a229a62bcf" name="a5b06e13d199c49e910d179a229a62bcf"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_isOrtho</b></td></tr>
+<tr class="separator:a5b06e13d199c49e910d179a229a62bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ff54dd5ef48ce174a323e24ea531b2d" id="r_a3ff54dd5ef48ce174a323e24ea531b2d"><td class="memItemLeft" align="right" valign="top"><a id="a3ff54dd5ef48ce174a323e24ea531b2d" name="a3ff54dd5ef48ce174a323e24ea531b2d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_isPrimary</b> = true</td></tr>
+<tr class="separator:a3ff54dd5ef48ce174a323e24ea531b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae58e3f180e5ea364c3968781e04dc1c0" id="r_ae58e3f180e5ea364c3968781e04dc1c0"><td class="memItemLeft" align="right" valign="top"><a id="ae58e3f180e5ea364c3968781e04dc1c0" name="ae58e3f180e5ea364c3968781e04dc1c0"></a>
+glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>m_projection</b> {}</td></tr>
+<tr class="separator:ae58e3f180e5ea364c3968781e04dc1c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abba2af8921e61bee1c662243e629f542" id="r_abba2af8921e61bee1c662243e629f542"><td class="memItemLeft" align="right" valign="top"><a id="abba2af8921e61bee1c662243e629f542" name="abba2af8921e61bee1c662243e629f542"></a>
+glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>m_view</b> {}</td></tr>
+<tr class="separator:abba2af8921e61bee1c662243e629f542"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a032858ae1fe02d2d1170981c2af2d67c" id="r_a032858ae1fe02d2d1170981c2af2d67c"><td class="memItemLeft" align="right" valign="top"><a id="a032858ae1fe02d2d1170981c2af2d67c" name="a032858ae1fe02d2d1170981c2af2d67c"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Scene</b></td></tr>
+<tr class="separator:a032858ae1fe02d2d1170981c2af2d67c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>/Users/runner/work/Mango/Mango/Mango/src/Mango/Scene/<a class="el" href="_components_8h_source.html">Components.h</a></li>
+<li>/Users/runner/work/Mango/Mango/Mango/src/Mango/Scene/<b>Components.cpp</b></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
