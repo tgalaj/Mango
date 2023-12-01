@@ -17,6 +17,7 @@
 
 #include "Mango/Core/Assertions.h"
 #include "Mango/Core/Log.h"
+#include "Mango/Core/RootDir.h"
 #include "Mango/Core/VFI.h"
 #include "Mango/Events/Event.h"
 #include "Mango/Math/Math.h"

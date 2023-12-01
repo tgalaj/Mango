@@ -1,0 +1,2 @@
+#pragma once
+#define MG_ROOT_DIR "${CMAKE_SOURCE_DIR}/"

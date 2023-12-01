@@ -3,6 +3,9 @@
 # Configure thirdparty libraries
 add_subdirectory(thirdparty)
 
+# Configure the RootDirectory file
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/Mango/Core/RootDir.h.in ${CMAKE_CURRENT_SOURCE_DIR}/src/Mango/Core/RootDir.h)
+
 # Add source files
 file(GLOB_RECURSE SOURCE_FILES 
      ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
