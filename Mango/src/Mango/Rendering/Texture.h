@@ -1,6 +1,4 @@
 #pragma once
-
-#include <filesystem>
 #include <string>
 
 #include "glad/glad.h"
@@ -35,12 +33,12 @@ namespace mango
         GLuint getID()     const { return m_id; }
 
     private:
-        unsigned char* loadTexture(const std::filesystem::path& filepath, ImageData& imageData);
+        unsigned char* loadTexture(const std::string& filename, ImageData& imageData);
         
-        void genTexture2D     (const std::filesystem::path & filepath,  GLuint numMipmaps, bool isSrgb = false);
+        void genTexture2D     (const std::string & filename,  GLuint numMipmaps, bool isSrgb = false);
         void genTexture2D1x1  (const glm::uvec4 & color);
 
-        void genCubeMapTexture(const std::filesystem::path * filepaths, GLuint numMipmaps, bool isSrgb = false);
+        void genCubeMapTexture(const std::string * filenames, GLuint numMipmaps, bool isSrgb = false);
 
     private:
         ImageData m_texData;

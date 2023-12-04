@@ -23,11 +23,11 @@ namespace mango
         cleanGLdata();
     }
 
-    void SSAO::init(const std::string & filterName, const std::filesystem::path & fragmentShaderFilepath)
+    void SSAO::init(const std::string & filterName, const std::string & fragmentShaderFilename)
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        PostprocessEffect::init(filterName, fragmentShaderFilepath);
+        PostprocessEffect::init(filterName, fragmentShaderFilename);
 
         genKernel();
         genRandomRotationVectors(4, 4); // Generates 4x4 texture with random rotation vectors

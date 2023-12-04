@@ -56,6 +56,13 @@ namespace mango
         Log::init();
         VFI::init(appSettings.commandLineArgs.argsValues[0]);
 
+        // Add Mango Engine shaders directory to the search path
+        // It shouldn't be compiled in the distribution build,
+        // however, it'll work without any issues.
+        // Figure out a better way to do this ???
+        auto rootDir = std::filesystem::path(MG_ROOT_DIR);
+        mango::VFI::addToSearchPath(rootDir / "Mango/assets/shaders");
+
         // Init core services
         m_eventBus     = new EventBus();
         m_sceneManager = new SceneManager();

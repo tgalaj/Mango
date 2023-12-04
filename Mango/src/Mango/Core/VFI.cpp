@@ -60,6 +60,26 @@ namespace mango
 
     bool VFI::setWriteDir(const std::filesystem::path& dir)
     {
+        auto writeDir = getWriteDir();
+
+        if (writeDir == dir)
+        {
+            return true;
+        }
+
+        if (!writeDir.empty())
+        {
+            // Check if writeDir is already in the search path
+            auto searchPath = getSearchPath();
+            auto it = std::find(searchPath.begin(), searchPath.end(), writeDir);
+
+            // If exists, remove it from the search path
+            if (it != searchPath.end())
+            {
+                PHYSFS_removeFromSearchPath(writeDir.string().c_str());
+            }
+        }
+
         return PHYSFS_setWriteDir(dir.string().c_str());
     }
 

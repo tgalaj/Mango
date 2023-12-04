@@ -26,9 +26,11 @@ namespace mango
         }
     }
 
-    unsigned char* Texture::loadTexture(const std::filesystem::path& filepath, ImageData& imageData)
+    unsigned char* Texture::loadTexture(const std::string& filename, ImageData& imageData)
     {
         MG_PROFILE_ZONE_SCOPED;
+
+        auto filepath = VFI::getFilepath(filename);
 
         int width, height, channelsCount;
         unsigned char* data = stbi_load(filepath.string().c_str(), &width, &height, &channelsCount, 0);
@@ -40,17 +42,17 @@ namespace mango
         return data;
     }
 
-    void Texture::genTexture2D(const std::filesystem::path& filepath, GLuint numMipmaps, bool isSrgb /*= false*/)
+    void Texture::genTexture2D(const std::string& filename, GLuint numMipmaps, bool isSrgb /*= false*/)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::genTexture2D");
 
         /* Pointer to the image */
-        unsigned char* data = loadTexture(filepath, m_texData);
+        unsigned char* data = loadTexture(filename, m_texData);
 
         if (!data)
         {
-            MG_CORE_ERROR("Could not load texture {}", filepath);
+            MG_CORE_ERROR("Could not load texture {}", filename);
             return;
         }
 
@@ -133,7 +135,7 @@ namespace mango
         glTextureParameteri(m_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     }
 
-    void Texture::genCubeMapTexture(const std::filesystem::path * filepaths, GLuint numMipmaps, bool isSrgb /*= false*/)
+    void Texture::genCubeMapTexture(const std::string * filenames, GLuint numMipmaps, bool isSrgb /*= false*/)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::genCubeMapTexture");
@@ -145,7 +147,7 @@ namespace mango
 
         for (int i = 0; i < numCubeFaces; ++i)
         {
-            imgsData[i] = loadTexture(filepaths[i], m_texData);
+            imgsData[i] = loadTexture(filenames[i], m_texData);
         }
 
         m_type         = GL_TEXTURE_CUBE_MAP;

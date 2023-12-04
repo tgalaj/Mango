@@ -4,8 +4,10 @@
 #include "Mango/Core/Assertions.h"
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Core/Log.h"
+#include "Mango/Core/RootDir.h"
 #include "Mango/Core/Services.h"
 #include "Mango/Core/System.h"
+#include "Mango/Core/VFI.h"
 
 #include "Mango/Events/EntityEvents.h"
 #include "Mango/Events/SceneEvents.h"

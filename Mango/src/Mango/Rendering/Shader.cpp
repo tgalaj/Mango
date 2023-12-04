@@ -21,49 +21,49 @@ namespace mango
         MG_ASSERT_MSG(m_programID != 0, "Error while creating GL Program Object.");
     }
 
-    Shader::Shader(const std::filesystem::path & computeShaderFilepath)
+    Shader::Shader(const std::string & computeShaderFilename)
         : Shader()
     {
-        addShader(computeShaderFilepath, GL_COMPUTE_SHADER);
+        addShader(computeShaderFilename, GL_COMPUTE_SHADER);
     }
 
-    Shader::Shader(const std::filesystem::path & vertexShaderFilepath,
-                   const std::filesystem::path & fragmentShaderFilepath)
+    Shader::Shader(const std::string & vertexShaderFilename,
+                   const std::string & fragmentShaderFilename)
         : Shader()
     {
-        addShader(vertexShaderFilepath,   GL_VERTEX_SHADER);
-        addShader(fragmentShaderFilepath, GL_FRAGMENT_SHADER);
+        addShader(vertexShaderFilename,   GL_VERTEX_SHADER);
+        addShader(fragmentShaderFilename, GL_FRAGMENT_SHADER);
     }
 
-    Shader::Shader(const std::filesystem::path & vertexShaderFilepath,
-                   const std::filesystem::path & fragmentShaderFilepath,
-                   const std::filesystem::path & geometryShaderFilepath)
-        : Shader(vertexShaderFilepath, fragmentShaderFilepath)
+    Shader::Shader(const std::string & vertexShaderFilename,
+                   const std::string & fragmentShaderFilename,
+                   const std::string & geometryShaderFilename)
+        : Shader(vertexShaderFilename, fragmentShaderFilename)
     {
-        addShader(geometryShaderFilepath, GL_GEOMETRY_SHADER);
+        addShader(geometryShaderFilename, GL_GEOMETRY_SHADER);
     }
 
-    Shader::Shader(const std::filesystem::path & vertexShaderFilepath,
-                   const std::filesystem::path & fragmentShaderFilepath,
-                   const std::filesystem::path & tessellationControlShaderFilepath,
-                   const std::filesystem::path & tessellationEvaluationShaderFilepath)
-        : Shader(vertexShaderFilepath, fragmentShaderFilepath)
+    Shader::Shader(const std::string & vertexShaderFilename,
+                   const std::string & fragmentShaderFilename,
+                   const std::string & tessellationControlShaderFilename,
+                   const std::string & tessellationEvaluationShaderFilename)
+        : Shader(vertexShaderFilename, fragmentShaderFilename)
     {
-        addShader(tessellationControlShaderFilepath,    GL_TESS_CONTROL_SHADER);
-        addShader(tessellationEvaluationShaderFilepath, GL_TESS_EVALUATION_SHADER);
+        addShader(tessellationControlShaderFilename,    GL_TESS_CONTROL_SHADER);
+        addShader(tessellationEvaluationShaderFilename, GL_TESS_EVALUATION_SHADER);
     }
 
-    Shader::Shader(const std::filesystem::path & vertexShaderFilepath,
-                   const std::filesystem::path & fragmentShaderFilepath,
-                   const std::filesystem::path & geometryShaderFilepath,
-                   const std::filesystem::path & tessellationControlShaderFilepath,
-                   const std::filesystem::path & tessellationEvaluationShaderFilepath)
-        : Shader(vertexShaderFilepath,
-                 fragmentShaderFilepath,
-                 tessellationControlShaderFilepath,
-                 tessellationEvaluationShaderFilepath)
+    Shader::Shader(const std::string & vertexShaderFilename,
+                   const std::string & fragmentShaderFilename,
+                   const std::string & geometryShaderFilename,
+                   const std::string & tessellationControlShaderFilename,
+                   const std::string & tessellationEvaluationShaderFilename)
+        : Shader(vertexShaderFilename,
+                 fragmentShaderFilename,
+                 tessellationControlShaderFilename,
+                 tessellationEvaluationShaderFilename)
     {
-        addShader(geometryShaderFilepath, GL_GEOMETRY_SHADER);
+        addShader(geometryShaderFilename, GL_GEOMETRY_SHADER);
     }
 
     Shader::~Shader()
@@ -75,20 +75,20 @@ namespace mango
         }
     }
 
-    void Shader::addShader(const std::filesystem::path &filepath, GLuint type) const
+    void Shader::addShader(const std::string & filename, GLuint type) const
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Shader::addShader");
 
         if (m_programID == 0)
         {
-            MG_CORE_WARN("Program Object is NULL for shader {}", filepath.string());
+            MG_CORE_WARN("Program Object is NULL for shader {}", filename);
             return;
         }
 
-        if (filepath.empty())
+        if (filename.empty())
         {
-            MG_CORE_ERROR("Error (Shader::addShader): Shader's filepath can't be empty.");
+            MG_CORE_ERROR("Error (Shader::addShader): Shader's filename can't be empty.");
             return;
         }
 
@@ -96,8 +96,9 @@ namespace mango
 
         MG_ASSERT_MSG(shaderObject != 0, "Error while creating GL Shader Object");
 
-        std::string code = loadFile("assets/shaders" / filepath);
-                    code = loadShaderIncludes(code);
+        auto        filepath = VFI::getFilepath(filename);
+        std::string code     = loadFile(filepath);
+                    code     = loadShaderIncludes(code);
 
         const char * shaderCode = code.c_str();
 
@@ -124,7 +125,6 @@ namespace mango
                 MG_CORE_ERROR("Shader log: \n{}", log);
                 free(log);
             }
-            getchar();
             return;
         }
 
@@ -430,7 +430,7 @@ namespace mango
             if (line.substr(0, includePhrase.size()) == includePhrase)
             {
                 std::string include_file_name = line.substr(includePhrase.size() + 2, line.size() - includePhrase.size() - 4);
-                line = loadFile("assets/shaders/" + include_file_name);
+                line = loadFile(VFI::getFilepath(include_file_name));
             }
         
             newShaderCode.append(line + "\n");

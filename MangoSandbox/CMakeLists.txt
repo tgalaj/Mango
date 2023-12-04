@@ -28,14 +28,3 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
 
 # Define the link libraries
 target_link_libraries(${PROJECT_NAME} Mango::Mango)
-
-# TODO: Better use config file with macro to res directory than copying it after building
-add_custom_command(TARGET  ${PROJECT_NAME} POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy_directory
-                           ${CMAKE_CURRENT_SOURCE_DIR}/assets
-                           ${CMAKE_CURRENT_BINARY_DIR}/assets)
-
-add_custom_command(TARGET  ${PROJECT_NAME} POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy_directory
-                           ${CMAKE_SOURCE_DIR}/Mango/assets
-                           ${CMAKE_CURRENT_BINARY_DIR}/assets)

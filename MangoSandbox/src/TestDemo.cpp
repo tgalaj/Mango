@@ -27,16 +27,16 @@ void TestDemo::onInit()
 
     m_freeCameraController = std::make_shared<FreeCameraController>(m_camera1);
 
-    auto font = AssetManager::createFont("Droid48", "assets/fonts/Roboto-Regular.ttf", 48.0f);
+    auto font = AssetManager::createFont("Droid48", "fonts/Roboto-Regular.ttf", 48.0f);
 
-    /*auto skybox = std::make_shared<Skybox>("assets/skyboxes/stormydays/",
+    /*auto skybox = std::make_shared<Skybox>("skyboxes/stormydays/",
                                                    "stormydays_lf.tga",
                                                    "stormydays_rt.tga",
                                                    "stormydays_up.tga", 
                                                    "stormydays_dn.tga", 
                                                    "stormydays_ft.tga", 
                                                    "stormydays_bk.tga" );*/
-    auto skybox = std::make_shared<Skybox>("assets/skyboxes/cold/",
+    auto skybox = std::make_shared<Skybox>("skyboxes/cold/",
                                                    "right.jpg",
                                                    "left.jpg",
                                                    "top.jpg", 
@@ -48,23 +48,23 @@ void TestDemo::onInit()
     auto sphereModel = AssetManager::createModel();
     sphereModel.genSphere(0.5f, 24);
 
-    auto cyborgModel        = AssetManager::createModel("assets/models/cyborg/cyborg.obj");
-    auto zen3cModel         = AssetManager::createModel("assets/models/Zen3C/Zen3C.X");
-    auto damagedHelmetModel = AssetManager::createModel("assets/models/damaged_helmet/DamagedHelmet.gltf");
-    auto sponzaModel        = AssetManager::createModel("assets/models/sponza/Sponza.gltf");
+    auto cyborgModel        = AssetManager::createModel("models/cyborg/cyborg.obj");
+    auto zen3cModel         = AssetManager::createModel("models/Zen3C/Zen3C.X");
+    auto damagedHelmetModel = AssetManager::createModel("models/damaged_helmet/DamagedHelmet.gltf");
+    auto sponzaModel        = AssetManager::createModel("models/sponza/Sponza.gltf");
 
     auto wallModel = AssetManager::createModel();
     wallModel.genQuad(5, 5);
 
-    auto groundTex           = AssetManager::createTexture2D("assets/textures/trak_tile_g.jpg", true);
-    auto brickwallTex        = AssetManager::createTexture2D("assets/textures/brickwall.jpg", true);
-    auto brickwallNormalTex  = AssetManager::createTexture2D("assets/textures/brickwall_normal.jpg");
-    auto bricks2             = AssetManager::createTexture2D("assets/textures/bricks2.jpg", true);
-    auto bricks2Depth        = AssetManager::createTexture2D("assets/textures/bricks2_disp.jpg");
-    auto bricks2Normal       = AssetManager::createTexture2D("assets/textures/bricks2_normal.jpg");
-    auto windowTex           = AssetManager::createTexture2D("assets/textures/window.png");
-    auto grassTex            = AssetManager::createTexture2D("assets/textures/grass.png");
-    auto openglLogo          = AssetManager::createTexture2D("assets/textures/opengl.png");
+    auto groundTex           = AssetManager::createTexture2D("textures/trak_tile_g.jpg", true);
+    auto brickwallTex        = AssetManager::createTexture2D("textures/brickwall.jpg", true);
+    auto brickwallNormalTex  = AssetManager::createTexture2D("textures/brickwall_normal.jpg");
+    auto bricks2             = AssetManager::createTexture2D("textures/bricks2.jpg", true);
+    auto bricks2Depth        = AssetManager::createTexture2D("textures/bricks2_disp.jpg");
+    auto bricks2Normal       = AssetManager::createTexture2D("textures/bricks2_normal.jpg");
+    auto windowTex           = AssetManager::createTexture2D("textures/window.png");
+    auto grassTex            = AssetManager::createTexture2D("textures/grass.png");
+    auto openglLogo          = AssetManager::createTexture2D("textures/opengl.png");
 
     auto cyborg = m_mainScene->createEntity();
     cyborg.addComponent<ModelRendererComponent>(cyborgModel);
@@ -311,7 +311,7 @@ void TestDemo::onGui()
 //    auto pos = GUI::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo!", { Window::getWidth() / 2.0f, Window::getHeight() / 2.0f + 100.0f}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, true);
 //    GUI::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo2!", { Window::getWidth() / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
     auto window = Services::application()->getWindow();
-    ImGuiSystem::image(AssetManager::getTexture2D("assets/textures/opengl.png"), { window->getWidth() - 200, 0 }, { window->getWidth(), 100 }, { 1.0f, 1.0f, 1.0f, 0.5f });
+    ImGuiSystem::image(AssetManager::getTexture2D("textures/opengl.png"), { window->getWidth() - 200, 0 }, { window->getWidth(), 100 }, { 1.0f, 1.0f, 1.0f, 0.5f });
 
     ImGuiSystem::endHUD();
 }

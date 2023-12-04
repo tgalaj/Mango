@@ -18,7 +18,7 @@ namespace mango
         MG_PROFILE_GL_ZONE("Skybox::Skybox");
 
         /* Create cubemap texture object */
-        std::filesystem::path filenames[6] = {
+        std::string filenames[6] = {
             skyboxDirectory + "/" + leftFace,
             skyboxDirectory + "/" + rightFace,
             skyboxDirectory + "/" + upFace,

@@ -25,7 +25,7 @@ namespace mango
         void genTorus   (float innerRadius = 1.0f, float outerRadius = 2.0f, unsigned int slices = 10, unsigned int stacks = 10);
         void genQuad    (float width = 1.0f, float height = 1.0f);
 
-        void load(const std::filesystem::path & filepath);
+        void load(const std::string & filename);
         void render(Shader & shader);
 
         void setDrawMode(GLenum drawMode);

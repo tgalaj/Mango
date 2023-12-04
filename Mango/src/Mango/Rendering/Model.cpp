@@ -18,7 +18,7 @@ namespace mango
     {
     }
 
-    void Model::load(const std::filesystem::path & filepath)
+    void Model::load(const std::string & filename)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -32,6 +32,8 @@ namespace mango
                              aiProcess_RemoveRedundantMaterials | 
                              aiProcess_ImproveCacheLocality     | 
                              aiProcess_JoinIdenticalVertices;
+        
+        auto filepath = VFI::getFilepath(filename);
         const aiScene * scene = importer.ReadFile(filepath.string(), flags);
 
         if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -40,7 +42,8 @@ namespace mango
             return;
         }
 
-        aiString directory = aiString(filepath.parent_path().string());
+        auto     parentDirectory = std::filesystem::path(filename).parent_path();
+        aiString directory       = aiString(parentDirectory.string());
 
         processNode(scene->mRootNode, scene, directory);
     }

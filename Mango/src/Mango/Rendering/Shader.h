@@ -26,25 +26,25 @@ namespace mango
         };
 
         Shader();
-        explicit Shader(const std::filesystem::path & computeShaderFilepath);
+        explicit Shader(const std::string & computeShaderFilename);
 
-        Shader(const std::filesystem::path & vertexShaderFilepath,
-               const std::filesystem::path & fragmentShaderFilepath);
+        Shader(const std::string & vertexShaderFilename,
+               const std::string & fragmentShaderFilename);
 
-        Shader(const std::filesystem::path & vertexShaderFilepath,
-               const std::filesystem::path & fragmentShaderFilepath,
-               const std::filesystem::path & geometryShaderFilepath);
+        Shader(const std::string & vertexShaderFilename,
+               const std::string & fragmentShaderFilename,
+               const std::string & geometryShaderFilename);
 
-        Shader(const std::filesystem::path & vertexShaderFilepath,
-               const std::filesystem::path & fragmentShaderFilepath,
-               const std::filesystem::path & tessellationControlShaderFilepath,
-               const std::filesystem::path & tessellationEvaluationShaderFilepath);
+        Shader(const std::string & vertexShaderFilename,
+               const std::string & fragmentShaderFilename,
+               const std::string & tessellationControlShaderFilename,
+               const std::string & tessellationEvaluationShaderFilename);
 
-        Shader(const std::filesystem::path & vertexShaderFilepath,
-               const std::filesystem::path & fragmentShaderFilepath,
-               const std::filesystem::path & geometryShaderFilepath,
-               const std::filesystem::path & tessellationControlShaderFilepath,
-               const std::filesystem::path & tessellationEvaluationShaderFilepath);
+        Shader(const std::string & vertexShaderFilename,
+               const std::string & fragmentShaderFilename,
+               const std::string & geometryShaderFilename,
+               const std::string & tessellationControlShaderFilename,
+               const std::string & tessellationEvaluationShaderFilename);
 
         ~Shader();
 
@@ -72,7 +72,7 @@ namespace mango
         void addAllUniforms();
         void addAllSubroutines();
 
-        void addShader(const std::filesystem::path & filepath, GLuint type) const;
+        void addShader(const std::string & filename, GLuint type) const;
         bool getUniformLocation(const std::string & uniformName);
 
         std::string loadFile(const std::filesystem::path& filepath) const;

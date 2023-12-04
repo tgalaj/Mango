@@ -19,11 +19,11 @@ namespace mango
         }
     }
 
-    void PostprocessEffect::init(const std::string & filterName, const std::filesystem::path & fragmentShaderFilepath)
+    void PostprocessEffect::init(const std::string & filterName, const std::string & fragmentShaderFilename)
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        m_postprocess = AssetManager::createShader(filterName, "FSQ.vert", fragmentShaderFilepath);
+        m_postprocess = AssetManager::createShader(filterName, "FSQ.vert", fragmentShaderFilename);
         m_postprocess->link();
     }
 

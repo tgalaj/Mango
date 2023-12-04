@@ -8,9 +8,11 @@ mango::Font::Font()
     m_font = ImGui::GetIO().Fonts->AddFontDefault();
 }
 
-mango::Font::Font(const std::filesystem::path& filepath, unsigned sizeInPixels)
+mango::Font::Font(const std::string& filename, unsigned sizeInPixels)
 {
     MG_PROFILE_ZONE_SCOPED;
+
+    auto filepath = VFI::getFilepath(filename);
 
     m_font = ImGui::GetIO().Fonts->AddFontFromFileTTF(filepath.string().c_str(), sizeInPixels);
 }

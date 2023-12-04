@@ -15,7 +15,7 @@ namespace mango
         SSAO();
         ~SSAO();
 
-        void init(const std::string & filterName, const std::filesystem::path & fragmentShaderFilepath) override;
+        void init(const std::string & filterName, const std::string & fragmentShaderFilename) override;
 
         void create();
         void clear();

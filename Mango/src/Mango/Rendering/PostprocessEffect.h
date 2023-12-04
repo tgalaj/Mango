@@ -10,7 +10,7 @@ namespace mango
         PostprocessEffect();
         virtual ~PostprocessEffect();
 
-        virtual void init(const std::string & filterName, const std::filesystem::path & fragmentShaderFilepath);
+        virtual void init(const std::string & filterName, const std::string & fragmentShaderFilename);
         
         virtual void bind() const;
         virtual void render() const;
