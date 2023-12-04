@@ -119,6 +119,16 @@ CPMAddPackage(
         "PHYSFS_BUILD_DOCS OFF"
 )
 
+CPMAddPackage(
+    NAME taskflow
+    GITHUB_REPOSITORY taskflow/taskflow
+    VERSION 3.6.0
+    GIT_SHALLOW TRUE
+    OPTIONS
+        "TF_BUILD_TESTS OFF"
+        "TF_BUILD_EXAMPLES OFF"
+)
+
 add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
                          ${imgui_SOURCE_DIR}/imgui_demo.cpp
                          ${imgui_SOURCE_DIR}/imgui_draw.cpp
@@ -134,7 +144,8 @@ set_target_properties(glad
                       imgui 
                       spdlog
                       TracyClient
-                      physfs-static PROPERTIES FOLDER "thirdparty")
+                      physfs-static
+                      Taskflow PROPERTIES FOLDER "thirdparty")
 set_target_properties(update_mappings PROPERTIES FOLDER "thirdparty/GLFW3")
 
 if(MSVC)

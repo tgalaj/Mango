@@ -62,7 +62,8 @@ target_link_libraries(Mango PUBLIC ${OPENGL_LIBRARIES}
                                    tinyddsloader
                                    entt
                                    Tracy::TracyClient
-                                   physfs-static)
+                                   physfs-static
+                                   Taskflow)
 
 if(MinGW)
     target_link_libraries(Mango bz2)
