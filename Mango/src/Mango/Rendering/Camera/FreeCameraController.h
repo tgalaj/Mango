@@ -30,6 +30,9 @@ namespace mango
             KeyCode upKey       = KeyCode::E;
             KeyCode downKey     = KeyCode::Q;
 
+            float gamePadDeadZone = 0.3f;
+            float gamePadRotationSensitivity = 0.1f;
+
         private:
             void move(TransformComponent& transform, const glm::vec3& dir, float amount);
 

@@ -120,6 +120,8 @@ namespace mango
             MG_CORE_ERROR("GLFW error: {}", description);
         });
 
+        glfwSetJoystickUserPointer(GLFW_JOYSTICK_16, this);
+
         m_monitor = glfwGetPrimaryMonitor();
 
         glfwGetWindowSize(m_window, &m_windowSize.x, &m_windowSize.y);

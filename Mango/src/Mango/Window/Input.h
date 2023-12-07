@@ -125,6 +125,66 @@ namespace mango
         MouseRight     = GLFW_MOUSE_BUTTON_RIGHT
     };
 
+    enum class GamepadID
+    {
+        PAD_1     = GLFW_JOYSTICK_1,
+        PAD_2     = GLFW_JOYSTICK_2,
+        PAD_3     = GLFW_JOYSTICK_3,
+        PAD_4     = GLFW_JOYSTICK_4,
+        PAD_5     = GLFW_JOYSTICK_5,
+        PAD_6     = GLFW_JOYSTICK_6,
+        PAD_7     = GLFW_JOYSTICK_7,
+        PAD_8     = GLFW_JOYSTICK_8,
+        PAD_9     = GLFW_JOYSTICK_9,
+        PAD_10    = GLFW_JOYSTICK_10,
+        PAD_11    = GLFW_JOYSTICK_11,
+        PAD_12    = GLFW_JOYSTICK_12,
+        PAD_13    = GLFW_JOYSTICK_13,
+        PAD_14    = GLFW_JOYSTICK_14,
+        PAD_15    = GLFW_JOYSTICK_15,
+        PAD_16    = GLFW_JOYSTICK_16,
+        COUNT
+    };
+
+    enum class GamepadButton
+    {
+        A            = GLFW_GAMEPAD_BUTTON_A,
+        B            = GLFW_GAMEPAD_BUTTON_B,
+        X            = GLFW_GAMEPAD_BUTTON_X,
+        Y            = GLFW_GAMEPAD_BUTTON_Y,
+        LEFT_BUMPER  = GLFW_GAMEPAD_BUTTON_LEFT_BUMPER,
+        RIGHT_BUMPER = GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER,
+        BACK         = GLFW_GAMEPAD_BUTTON_BACK,
+        START        = GLFW_GAMEPAD_BUTTON_START,
+        GUIDE        = GLFW_GAMEPAD_BUTTON_GUIDE,
+        LEFT_THUMB   = GLFW_GAMEPAD_BUTTON_LEFT_THUMB,
+        RIGHT_THUMB  = GLFW_GAMEPAD_BUTTON_RIGHT_THUMB,
+        DPAD_UP      = GLFW_GAMEPAD_BUTTON_DPAD_UP,
+        DPAD_RIGHT   = GLFW_GAMEPAD_BUTTON_DPAD_RIGHT,
+        DPAD_DOWN    = GLFW_GAMEPAD_BUTTON_DPAD_DOWN,
+        DPAD_LEFT    = GLFW_GAMEPAD_BUTTON_DPAD_LEFT,
+        COUNT,
+
+        // PlayStation Pad
+        CROSS        = A,
+        CIRCLE       = B,
+        SQUARE       = X,
+        TRIANGLE     = Y
+    };
+
+    enum class GamepadAxis
+    {
+        LEFT_X        = GLFW_GAMEPAD_AXIS_LEFT_X,
+        LEFT_Y        = GLFW_GAMEPAD_AXIS_LEFT_Y,
+        RIGHT_X       = GLFW_GAMEPAD_AXIS_RIGHT_X,
+        RIGHT_Y       = GLFW_GAMEPAD_AXIS_RIGHT_Y,
+        LEFT_TRIGGER  = GLFW_GAMEPAD_AXIS_LEFT_TRIGGER,
+        RIGHT_TRIGGER = GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER,
+        COUNT
+    };
+
+    using GamepadState = GLFWgamepadstate;
+
     class Input final
     {
     public:
@@ -187,17 +247,75 @@ namespace mango
          */
         static void setMouseCursorVisibility(bool isVisible);
 
+        /**
+         * @breif Set mouse cursor position to the desired location in screen space.
+         * @param glm::vec2 cursorPosition: new position of the cursor.
+         */
         static void setMouseCursorPosition(const glm::vec2 & cursorPosition);
+
+        /**
+         * @brief Set number of active game pads that the application will use.
+         *        By default, the count is set to 1. That means that only one game pad
+         *        will be polled for input.
+         * @param uint8_t count: number of game pads that the application wants to use.
+         */
+        static void setActiveGamepadsCount(uint8_t count);
+
+        /**
+         * @brief Check whether the specific game pad is connected.
+         * @param GamepadID gid: ID of the game pad.
+         */
+        static bool isGamepadPresent(GamepadID gid);
+
+        /**
+         * @brief Get the name of the game pad.
+         * @param GamepadID gid: ID of the game pad.
+         */
+        static std::string getGamepadName(GamepadID gid);
+
+        /**
+         * @brief Check if the game pad button is pressed.
+         * @param GamepadID gid: ID of the game pad.
+         * @param GamepadButton button
+         */
+        static bool getGamepadButton(GamepadID gid, GamepadButton button);
+
+        /**
+         * @brief Check if the game pad button was pressed.
+         * @param GamepadID gid: ID of the game pad.
+         * @param GamepadButton button
+         */
+        static bool getGamepadButtonDown(GamepadID gid, GamepadButton button);
+
+        /**
+         * @brief Check if the game pad button is released.
+         * @param GamepadID gid: ID of the game pad.
+         * @param GamepadButton button
+         */
+        static bool getGamepadButtonUp(GamepadID gid, GamepadButton button);
+
+        /**
+         * @brief Get state of each game pad axis.
+         * @param GamepadID id
+         * @param GamepadAxis axis
+         * @return The state of each axis is in [-1, 1] range.
+         */
+        static float getGamepadAxis(GamepadID gid, GamepadAxis axis);
+
+    private:
+        static bool getGamepadState(GamepadID gid, GamepadState& state);
 
     private:
         static GLFWwindow * m_window;
-
+        static uint8_t      m_activeGamepadsCount;
         /**
          * States:
          * false -> key was not pressed
          * true  -> key was pressed
          */
-        static std::unordered_map<KeyCode, bool> m_lastKeysStates;
-        static std::unordered_map<KeyCode, bool> m_lastMouseStates;
+        static std::unordered_map<KeyCode, bool>  m_lastKeysStates;
+        static std::unordered_map<KeyCode, bool>  m_lastMouseStates;
+
+        static std::vector<GamepadState> m_lastGamepadStates;
     };
 }

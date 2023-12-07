@@ -230,13 +230,13 @@ void TestDemo::onDestroy()
 void TestDemo::onUpdate(float dt)
 {
     static bool isDebugRender = false;
-
-    if (Input::getKeyUp(KeyCode::Escape))
+    
+    if (Input::getKeyUp(KeyCode::Escape) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::BACK))
     {
         Services::application()->stop();
     }
 
-    if (Input::getKeyUp(KeyCode::H))
+    if (Input::getKeyUp(KeyCode::H) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::Y))
     {
         isDebugRender = !isDebugRender;
         RenderingSystem::DEBUG_RENDERING = isDebugRender;
@@ -249,10 +249,8 @@ void TestDemo::onUpdate(float dt)
         Services::application()->getWindow()->setFullscreen(fullscreen);
     }
 
-    m_freeCameraController->onUpdate(dt);
-
     static bool shouldMoveLights = false;
-    if (Input::getKeyUp(KeyCode::Space))
+    if (Input::getKeyUp(KeyCode::Space) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::X))
     {
         shouldMoveLights = !shouldMoveLights;
     }
@@ -263,7 +261,7 @@ void TestDemo::onUpdate(float dt)
     }
 
     static bool isCamera1Primary = true;
-    if (Input::getKeyUp(KeyCode::P))
+    if (Input::getKeyUp(KeyCode::P) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::RIGHT_BUMPER))
     {
         isCamera1Primary = !isCamera1Primary;
         
@@ -278,6 +276,8 @@ void TestDemo::onUpdate(float dt)
             m_freeCameraController->setCameraEntity(m_camera2);
         }
     }
+
+    m_freeCameraController->onUpdate(dt);
 }
 
 void TestDemo::onGui()

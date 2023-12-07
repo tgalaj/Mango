@@ -5,6 +5,8 @@ namespace mango
 {
     GLFWwindow * Input::m_window = nullptr;
 
+    uint8_t Input::m_activeGamepadsCount = 1;
+
     std::unordered_map<KeyCode, bool> Input::m_lastKeysStates = {
         { KeyCode::Backspace,      false },
         { KeyCode::Delete,         false },
@@ -118,9 +120,12 @@ namespace mango
         { KeyCode::Mouse3,      false}
     };
 
+    std::vector<GamepadState> Input::m_lastGamepadStates = {};
+
     void Input::init(GLFWwindow* window)
     {
         m_window = window;
+        m_lastGamepadStates.resize(m_activeGamepadsCount);
     }
 
     void Input::update()
@@ -134,6 +139,11 @@ namespace mango
         for (auto & kv : m_lastMouseStates)
         {
             kv.second = getMouse(kv.first);
+        }
+
+        for (uint8_t i = 0; i < m_activeGamepadsCount; ++i)
+        {
+            getGamepadState(GamepadID(uint8_t(GamepadID::PAD_1) + i), m_lastGamepadStates[i]);
         }
     }
 
@@ -193,5 +203,53 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
         glfwSetCursorPos(m_window, cursorPosition.x, cursorPosition.y);
+    }
+
+    void Input::setActiveGamepadsCount(uint8_t count)
+    {
+        m_activeGamepadsCount = glm::clamp(count, static_cast<uint8_t>(1), static_cast<uint8_t>(GamepadID::COUNT));
+        m_lastGamepadStates.resize(m_activeGamepadsCount);
+    }
+
+    bool Input::isGamepadPresent(GamepadID gid)
+    {
+        return glfwJoystickIsGamepad(static_cast<int>(gid));
+    }
+
+    std::string Input::getGamepadName(GamepadID gid)
+    {
+        return std::string(glfwGetGamepadName(static_cast<int>(gid)));
+    }
+
+    bool Input::getGamepadButton(GamepadID gid, GamepadButton button)
+    {   
+        MG_CORE_ASSERT_MSG(static_cast<int>(gid) < m_activeGamepadsCount, "Can't check game pad button state for not active pad!");
+
+        GamepadState state;
+        if (getGamepadState(gid, state))
+            return state.buttons[static_cast<int>(button)];
+
+        return false;
+    }
+
+    bool Input::getGamepadButtonDown(GamepadID gid, GamepadButton button)
+    {
+        return getGamepadButton(gid, button) && !m_lastGamepadStates[int(gid)].buttons[static_cast<int>(button)];
+    }
+
+    bool Input::getGamepadButtonUp(GamepadID gid, GamepadButton button)
+    {
+        return !getGamepadButton(gid, button) && m_lastGamepadStates[int(gid)].buttons[static_cast<int>(button)];
+    }
+
+    float Input::getGamepadAxis(GamepadID gid, GamepadAxis axis)
+    {
+        MG_CORE_ASSERT_MSG(static_cast<int>(gid) < m_activeGamepadsCount, "Can't check game pad axis state for not active pad!");
+        return m_lastGamepadStates[static_cast<int>(gid)].axes[static_cast<int>(axis)];
+    }
+
+    bool Input::getGamepadState(GamepadID gid, GamepadState& state)
+    {
+        return glfwGetGamepadState(static_cast<int>(gid), &state);
     }
 }
