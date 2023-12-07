@@ -16,6 +16,18 @@ void TestDemo::onInit()
 
     Services::application()->getWindow()->setVSync(false);
 
+    Services::eventBus()->subscribe<GamepadConnectedEvent>([](const GamepadConnectedEvent& event)
+    {
+        if (event.isConnected)
+        {
+            MG_CORE_INFO("Conencted gamepad:\n  ID: {}\n  Name: {}", int(event.gid), Input::getGamepadName(event.gid));
+        }
+        else
+        {
+            MG_CORE_ERROR("Disconencted gamepad:\n  ID: {}", int(event.gid));
+        }
+    });
+
     m_camera1 = m_mainScene->createEntity("MainCamera");
     m_camera1.addComponent<CameraComponent>(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 500.0f);
     m_camera1.setPosition(0, 4, 30);

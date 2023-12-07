@@ -10,6 +10,7 @@
 #include "Mango/Core/VFI.h"
 
 #include "Mango/Events/EntityEvents.h"
+#include "Mango/Events/GamepadEvents.h"
 #include "Mango/Events/SceneEvents.h"
 
 #include "Mango/Rendering/Camera/FreeCameraController.h"

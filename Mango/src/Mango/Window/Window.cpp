@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Input.h"
 #include "Mango/Core/Services.h"
+#include "Mango/Events/GamepadEvents.h"
 #include "Mango/Rendering/DebugOutputGL.h"
 #include "Mango/Systems/ImGuiSystem.h"
 #include "Mango/Systems/RenderingSystem.h"
@@ -120,7 +121,10 @@ namespace mango
             MG_CORE_ERROR("GLFW error: {}", description);
         });
 
-        glfwSetJoystickUserPointer(GLFW_JOYSTICK_16, this);
+        glfwSetJoystickCallback([](int jid, int event)
+        {
+            Services::eventBus()->emit(GamepadConnectedEvent(GamepadID(jid), event == GLFW_CONNECTED));
+        });
 
         m_monitor = glfwGetPrimaryMonitor();
 
