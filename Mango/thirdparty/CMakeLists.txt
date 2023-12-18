@@ -20,7 +20,7 @@ target_include_directories(stb_image PUBLIC ${STB_IMAGE_DIR})
 
 # other
 CPMAddPackage("gh:g-truc/glm#0.9.9.8")
-CPMAddPackage("gh:ocornut/imgui@1.88")
+CPMAddPackage("gh:ocornut/imgui@1.90")
 CPMAddPackage("gh:gabime/spdlog@1.10.0")
 CPMAddPackage("gh:jarro2783/cxxopts@3.1.1")
 
@@ -28,6 +28,7 @@ CPMAddPackage(
     NAME assimp
     GITHUB_REPOSITORY assimp/assimp
     VERSION 5.3.1
+    GIT_SHALLOW TRUE
     OPTIONS
         "BUILD_SHARED_LIBS OFF"
         "ASSIMP_NO_EXPORT ON"  
@@ -46,6 +47,7 @@ CPMAddPackage(
     NAME glfw
     GITHUB_REPOSITORY glfw/glfw
     GIT_TAG 3.3.8
+    GIT_SHALLOW TRUE
     OPTIONS
         "GLFW_BUILD_EXAMPLES OFF"
         "GLFW_BUILD_TESTS OFF"
@@ -144,9 +146,10 @@ set_target_properties(glad
                       imgui 
                       spdlog
                       TracyClient
-                      physfs-static
-                      Taskflow PROPERTIES FOLDER "thirdparty")
+                      physfs-static PROPERTIES FOLDER "thirdparty")
+
 set_target_properties(update_mappings PROPERTIES FOLDER "thirdparty/GLFW3")
+set_target_properties(Continuous Experimental Nightly NightlyMemoryCheck PROPERTIES FOLDER "thirdparty/CTestDashboardTargets")
 
 if(MSVC)
     set_target_properties(UpdateAssimpLibsDebugSymbolsAndDLLs uninstall PROPERTIES FOLDER "thirdparty/assimps")

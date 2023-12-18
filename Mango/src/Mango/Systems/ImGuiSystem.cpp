@@ -9,8 +9,8 @@
 #include "glm/vec2.hpp"
 #include "glm/common.hpp"
 #include "imgui_internal.h"
-#include "Mango/ImGui/imgui_impl_glfw.h"
-#include "Mango/ImGui/imgui_impl_opengl3.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 
 namespace mango
 {
@@ -86,11 +86,18 @@ namespace mango
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 0.0f });
-        ImGui::Begin("##Backbuffer", nullptr, ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoFocusOnAppearing|ImGuiWindowFlags_NoBringToFrontOnFocus);
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x, io.DisplaySize.y));
+        ImGui::Begin("##Backbuffer", nullptr, ImGuiWindowFlags_NoTitleBar         |
+                                              ImGuiWindowFlags_NoResize           |
+                                              ImGuiWindowFlags_NoMove             |
+                                              ImGuiWindowFlags_NoInputs           |
+                                              ImGuiWindowFlags_NoBackground       |
+                                              ImGuiWindowFlags_NoScrollbar        |
+                                              ImGuiWindowFlags_NoSavedSettings    |
+                                              ImGuiWindowFlags_NoFocusOnAppearing |
+                                              ImGuiWindowFlags_NoBringToFrontOnFocus);
 
-        ImGui::SetWindowPos(ImVec2(0, 0), ImGuiCond_Always);
-        ImGui::SetWindowSize(ImVec2(io.DisplaySize.x, io.DisplaySize.y), ImGuiCond_Always);
     }
 
     void ImGuiSystem::endHUD()
@@ -101,7 +108,6 @@ namespace mango
         window->DrawList->PushClipRectFullScreen();
 
         ImGui::End();
-        ImGui::PopStyleColor();
         ImGui::PopStyleVar(2);
     }
 

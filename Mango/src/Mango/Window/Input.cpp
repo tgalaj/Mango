@@ -1,5 +1,6 @@
 #include "mgpch.h"
 #include "Input.h"
+#include "imgui.h"
 
 namespace mango
 {
@@ -149,6 +150,8 @@ namespace mango
 
     bool Input::getKey(KeyCode keyCode)
     {
+        if (ImGuiIO& io = ImGui::GetIO(); io.WantCaptureKeyboard) return false;
+
         return glfwGetKey(m_window, static_cast<int>(keyCode)) == GLFW_PRESS;
     }
 
@@ -164,6 +167,8 @@ namespace mango
 
     bool Input::getMouse(KeyCode keyCode)
     {
+        if (ImGuiIO& io = ImGui::GetIO(); io.WantCaptureMouse) return false;
+
         return glfwGetMouseButton(m_window, static_cast<int>(keyCode)) == GLFW_PRESS;
     }
 
