@@ -294,6 +294,8 @@ void TestDemo::onUpdate(float dt)
 
 void TestDemo::onGui()
 {
+    CVarSystem::get()->drawImguiEditor();
+
     /* Overlay start */
     const  float DISTANCE = 10.0f;
     static int   corner   = 0;
@@ -319,9 +321,9 @@ void TestDemo::onGui()
 
     ImGuiSystem::beginHUD();
 
-//    GUI::circleFilled({ Window::getWidth() / 2.0f, Window::getHeight() / 2.0f}, 2.0f, glm::vec4(0.0, 1.0, 0.0, 1.0));
-//    auto pos = GUI::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo!", { Window::getWidth() / 2.0f, Window::getHeight() / 2.0f + 100.0f}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, true);
-//    GUI::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo2!", { Window::getWidth() / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
+    //ImGuiSystem::circleFilled({ ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f}, 2.0f, glm::vec4(0.0, 1.0, 0.0, 1.0));
+    //auto pos = ImGuiSystem::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo!", { ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f + 100.0f}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, true);
+    //ImGuiSystem::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo2!", { ImGui::GetIO().DisplaySize.x / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
     auto window = Services::application()->getWindow();
     ImGuiSystem::image(AssetManager::getTexture2D("textures/opengl.png"), { window->getWidth() - 200, 0 }, { window->getWidth(), 100 }, { 1.0f, 1.0f, 1.0f, 0.5f });
 

@@ -1,6 +1,7 @@
 #include "mgpch.h"
 
 #include "Application.h"
+#include "CVars.h"
 #include "Services.h"
 #include "Timer.h"
 #include "Mango/Scene/SceneManager.h"
@@ -12,6 +13,7 @@
 #include "Mango/Window/Window.h"
 
 #include "cxxopts.hpp"
+#include "strutil.h"
 
 namespace mango
 {
@@ -23,13 +25,18 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
+        // Set CVars
+        CVarFloat CVarCameraRotationSpeed("camera.rotationSpeed", "rotation speed of the camera", 0.2f);
+        CVarFloat CVarCameraMoveSpeed    ("camera.moveSpeed",     "movement speed of the camera", 10.0f);
+
         // Parse command line args.
         cxxopts::Options options(appSettings.windowTitle, "");
 
         options.add_options()
-            ("w,width", "Window width", cxxopts::value<uint32_t>())
-            ("h,height", "Window height", cxxopts::value<uint32_t>())
-            ("fullscreen", "Set fullscreen window", cxxopts::value<bool>()->default_value("false")->implicit_value("true"));
+            ("w,width",      "Window width",          cxxopts::value<uint32_t>())
+            ("h,height",     "Window height",         cxxopts::value<uint32_t>())
+            ("f,fullscreen", "Set fullscreen window", cxxopts::value<bool>()->default_value("false")->implicit_value("true"))
+            ("setCVars",     "Set console variables", cxxopts::value<std::string>());
 
         auto optResult = options.parse(appSettings.commandLineArgs.argsCount, appSettings.commandLineArgs.argsValues);
 
@@ -49,6 +56,37 @@ namespace mango
         if (optResult["fullscreen"].as<bool>())
         {
             m_window->setFullscreen(true);
+        }
+
+        // Parse CVars
+        if (optResult.count("setCVars"))
+        {
+            auto res = optResult["setCVars"].as<std::string>();
+
+            auto tokens = strutil::split(res, ',');
+
+            for (auto& token : tokens)
+            {
+                strutil::trim(token);
+                auto kv = strutil::split(token, " ");
+
+                auto cvarParam = CVarSystem::get()->getCVar(kv[0]);
+                if (cvarParam)
+                {
+                    switch (cvarParam->type)
+                    {
+                        case CVarType::INT:
+                            CVarSystem::get()->setIntCVar(kv[0], std::stoi(kv[1]));
+                            break;
+                        case CVarType::FLOAT:
+                            CVarSystem::get()->setFloatCVar(kv[0], std::stod(kv[1]));
+                            break;
+                        case CVarType::STRING:
+                            CVarSystem::get()->setStringCVar(kv[0], kv[1]);
+                            break;
+                    }
+                }
+            }
         }
 
         // Init Log, Input and GUI systems

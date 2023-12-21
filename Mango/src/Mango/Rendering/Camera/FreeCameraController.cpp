@@ -23,7 +23,7 @@ namespace mango
         camera.setView(R * T);
 
         // Free Move
-        auto movementAmount = moveSpeed * dt;
+        auto movementAmount = *CVarSystem::get()->getFloatCVar("camera.moveSpeed") * dt;
 
         if (Input::getKey(KeyCode::LeftShift))
             movementAmount *= 4.0f;
@@ -69,6 +69,8 @@ namespace mango
 
             auto yRot = deltaPos.x != 0.0f;
             auto xRot = deltaPos.y != 0.0f;
+
+            float mouseSensitivity = *CVarSystem::get()->getFloatCVar("camera.rotationSpeed");
 
             // pitch
             if (xRot)

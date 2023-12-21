@@ -19,10 +19,10 @@ namespace mango
             CameraComponent& getCameraComponent();
             void setCameraEntity(Entity entity);
 
-            float   mouseSensitivity = 0.2f;
+            // float   mouseSensitivity = 0.2f;
             KeyCode unlockMouseKey   = KeyCode::MouseRight;
 
-            float   moveSpeed   = 10.0f;
+            // float   moveSpeed   = 10.0f;
             KeyCode forwardKey  = KeyCode::W;
             KeyCode backwardKey = KeyCode::S;
             KeyCode leftKey     = KeyCode::A;
@@ -30,7 +30,7 @@ namespace mango
             KeyCode upKey       = KeyCode::E;
             KeyCode downKey     = KeyCode::Q;
 
-            float gamePadDeadZone = 0.3f;
+            float gamePadDeadZone            = 0.3f;
             float gamePadRotationSensitivity = 0.1f;
 
         private:

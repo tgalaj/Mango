@@ -67,6 +67,17 @@ if (tinyddsloader_ADDED)
 endif()
 
 CPMAddPackage(
+    GITHUB_REPOSITORY tgalaj/strutil
+    GIT_TAG master
+    GIT_SHALLOW TRUE
+    DOWNLOAD_ONLY TRUE)
+
+if (strutil_ADDED)
+    add_library(strutil INTERFACE)
+    target_include_directories(strutil INTERFACE ${strutil_SOURCE_DIR})
+endif()
+
+CPMAddPackage(
     NAME entt
     GITHUB_REPOSITORY skypjack/entt
     VERSION 3.12.2

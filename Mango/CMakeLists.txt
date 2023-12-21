@@ -60,6 +60,7 @@ target_link_libraries(Mango PUBLIC ${OPENGL_LIBRARIES}
                                    cxxopts
                                    glm::glm
                                    tinyddsloader
+                                   strutil
                                    entt
                                    Tracy::TracyClient
                                    physfs-static
