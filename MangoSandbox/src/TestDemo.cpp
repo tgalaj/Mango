@@ -69,7 +69,7 @@ void TestDemo::onInit()
     wallModel.genQuad(5, 5);
 
     auto groundTex           = AssetManager::createTexture2D("textures/trak_tile_g.jpg", true);
-    auto brickwallTex        = AssetManager::createTexture2D("textures/brickwall.jpg", true);
+    auto brickwallTex        = AssetManager::createTexture2D("textures/brickwall.dds", true);
     auto brickwallNormalTex  = AssetManager::createTexture2D("textures/brickwall_normal.jpg");
     auto bricks2             = AssetManager::createTexture2D("textures/bricks2.jpg", true);
     auto bricks2Depth        = AssetManager::createTexture2D("textures/bricks2_disp.jpg");

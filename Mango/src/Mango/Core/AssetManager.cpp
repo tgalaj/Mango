@@ -31,11 +31,23 @@ namespace mango
             return m_loadedTextures[filename];
         }
 
-        auto texture2D = std::make_shared<Texture>();
-        texture2D->genTexture2D(filename, numMipmaps, isSrgb);
-        m_loadedTextures[filename] = texture2D;
+        auto extension = std::filesystem::path(filename).extension();
+        if (extension == ".dds")
+        {
+            auto textureDDS = std::make_shared<TextureDDS>();
+            textureDDS->genTexture(filename);
+            m_loadedTextures[filename] = textureDDS;
 
-        return texture2D;
+            return textureDDS;
+        }
+        else
+        {
+            auto texture2D = std::make_shared<Texture>();
+            texture2D->genTexture2D(filename, numMipmaps, isSrgb);
+            m_loadedTextures[filename] = texture2D;
+
+            return texture2D;
+        }
     }
 
     std::shared_ptr<Texture> AssetManager::createTexture2D1x1(const std::string& textureName, const glm::uvec4& color)

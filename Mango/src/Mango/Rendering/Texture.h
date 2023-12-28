@@ -6,47 +6,58 @@
 
 namespace mango
 {
-    struct ImageData
+    struct TextureDescriptorGL
     {
-        ImageData()
-            : width   (0),
-              height  (0),
-              channels(0)
-        {}
+        TextureDescriptorGL() {}
 
-        GLuint width;
-        GLuint height;
-        GLuint channels;
+        GLenum             type           = 0;
+        GLenum             format         = 0;
+        GLenum             internalFormat = 0;
+        GLuint             mipLevels      = 1;
+        GLuint             width          = 0;
+        GLuint             height         = 0;
+        GLuint             depth          = 1;
+        glm::ivec4         swizzles       = glm::ivec4(GL_TEXTURE_SWIZZLE_R, GL_TEXTURE_SWIZZLE_G, GL_TEXTURE_SWIZZLE_B, GL_TEXTURE_SWIZZLE_A);
+        bool               compressed     = false;
     };
 
-    class Texture final
+    // Handles loading images with stb_image (jpg, png, tga, bmp, psd, gif, hdr, pic, pnm)
+    class Texture
     {
     public:
         Texture();
-        ~Texture();
+        virtual ~Texture();
 
         void bind(GLuint unit = 0) const;
         static void unbindTextureUnit(GLuint unit);
         
-        GLuint getWidth()  const { return m_texData.width; }
-        GLuint getHeight() const { return m_texData.height; }
+        GLuint getWidth()  const { return m_descriptor.width; }
+        GLuint getHeight() const { return m_descriptor.height; }
         GLuint getID()     const { return m_id; }
+    
+    protected:
+        GLuint              m_id;
+        TextureDescriptorGL m_descriptor;
 
     private:
-        unsigned char* loadTexture(const std::string& filename, ImageData& imageData);
+        uint8_t* loadTexture(const std::string& filename, TextureDescriptorGL& descriptor);
         
         void genTexture2D     (const std::string & filename,  GLuint numMipmaps, bool isSrgb = false);
         void genTexture2D1x1  (const glm::uvec4 & color);
-
         void genCubeMapTexture(const std::string * filenames, GLuint numMipmaps, bool isSrgb = false);
 
     private:
-        ImageData m_texData;
-        GLuint    m_id;
-        GLenum    m_type;
-        GLuint    m_numMipmaps;
-        GLenum    m_format;
-        GLint     m_internalFormat;
+        friend class AssetManager;
+        friend class ImGuiSystem;
+    };
+
+    class TextureDDS : public Texture
+    {
+    public:
+        TextureDDS();
+
+    private:
+        void genTexture(const std::string& filename);
 
     private:
         friend class AssetManager;
