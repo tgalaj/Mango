@@ -52,7 +52,7 @@ target_include_directories(Mango PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURC
 
 target_link_libraries(Mango PUBLIC ${OPENGL_LIBRARIES} 
                                    glad
-                                   stb_image
+                                   stb
                                    assimp
                                    glfw
                                    imgui

@@ -3,6 +3,8 @@
 
 #include "glm/common.hpp"
 #include "glm/exponential.hpp"
+
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 #define TINYDDSLOADER_IMPLEMENTATION
