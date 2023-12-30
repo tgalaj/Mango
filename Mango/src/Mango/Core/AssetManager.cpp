@@ -32,34 +32,33 @@ namespace mango
         }
 
         auto extension = std::filesystem::path(filename).extension();
+
+        auto texture2D = std::make_shared<Texture>();
+
         if (extension == ".dds")
         {
-            auto textureDDS = std::make_shared<TextureDDS>();
-            textureDDS->genTexture(filename);
-            m_loadedTextures[filename] = textureDDS;
-
-            return textureDDS;
+            texture2D->createTextureDDS(filename);
         }
         else
         {
-            auto texture2D = std::make_shared<Texture>();
-            texture2D->genTexture2D(filename, numMipmaps, isSrgb);
-            m_loadedTextures[filename] = texture2D;
-
-            return texture2D;
+            texture2D->createTexture2d(filename, isSrgb, numMipmaps);
         }
+        m_loadedTextures[filename] = texture2D;
+
+        return texture2D;
     }
 
     std::shared_ptr<Texture> AssetManager::createTexture2D1x1(const std::string& textureName, const glm::uvec4& color)
     {
         MG_PROFILE_ZONE_SCOPED;
+
         if (m_loadedTextures.count(textureName))
         {
             return m_loadedTextures[textureName];
         }
 
         auto texture2D = std::make_shared<Texture>();
-        texture2D->genTexture2D1x1(color);
+        texture2D->createTexture2d1x1(color);
         m_loadedTextures[textureName] = texture2D;
 
         return texture2D;
@@ -78,7 +77,7 @@ namespace mango
         }
 
         auto textureCube = std::make_shared<Texture>();
-        textureCube->genCubeMapTexture(filenames, numMipmaps, isSrgb);
+        textureCube->createTextureCubeMap(filenames, isSrgb, numMipmaps);
         m_loadedTextures[filepathString] = textureCube;
 
         return textureCube;

@@ -118,7 +118,7 @@ namespace mango
         m_skyboxShader->bind();
         m_skyboxShader->setUniform("view_projection", projection * glm::mat4(glm::mat3(view)));
 
-        m_cubeMapTexture->bind();
+        m_cubeMapTexture->bind(0);
         glBindVertexArray(m_vao);
 
         glDepthFunc(GL_LEQUAL);

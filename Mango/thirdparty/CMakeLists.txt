@@ -15,7 +15,7 @@ set(STB_IMAGE_DIR ${CMAKE_CURRENT_LIST_DIR}/stb_image)
 set(stb_image_SOURCE_DIR ${STB_IMAGE_DIR} CACHE INTERNAL "")
 add_library(stb_image STATIC ${STB_IMAGE_DIR}/stb_image.cpp 
                              ${STB_IMAGE_DIR}/stb_image_write.cpp 
-                             ${STB_IMAGE_DIR}/stb_image_resize.cpp)
+                             ${STB_IMAGE_DIR}/stb_image_resize2.cpp)
 target_include_directories(stb_image PUBLIC ${STB_IMAGE_DIR})
 
 # other

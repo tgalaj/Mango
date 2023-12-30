@@ -23,6 +23,8 @@ namespace
 
     bool translateDdsFormat(DDSFile::DXGIFormat fmt, GLFormat* outFormat)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         static const glm::ivec4 sws[] =
         {
             { GL_RED,  GL_GREEN, GL_BLUE, GL_ALPHA },
@@ -69,6 +71,8 @@ namespace
 
     bool isDdsCompressed(GLenum fmt)
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         switch (fmt)
         {
             case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
@@ -88,21 +92,190 @@ namespace
 
 namespace mango
 {
-    Texture::Texture()
-        : m_id(0)
+    // --------------------- Texture Sampler -------------------------
+    TextureSampler::TextureSampler() : m_so_id(0), m_max_anisotropy(1.0f) {}
+
+    void TextureSampler::create()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
+        glCreateSamplers(1, &m_so_id);
+
+        setFiltering(TextureFiltering::MIN,       TextureFilteringParam::LINEAR_MIP_LINEAR);
+        setFiltering(TextureFiltering::MAG,       TextureFilteringParam::LINEAR);
+        setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::CLAMP_TO_EDGE);
+        setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::CLAMP_TO_EDGE);
     }
 
-    Texture::~Texture()
+    void TextureSampler::setFiltering(TextureFiltering type, TextureFilteringParam param)
     {
-        if (m_id != 0)
+        MG_PROFILE_ZONE_SCOPED;
+
+        if (type == TextureFiltering::MAG && param > TextureFilteringParam::LINEAR)
         {
-            glDeleteTextures(1, &m_id);
-            m_id = 0;
+            param = TextureFilteringParam::LINEAR;
+        }
+
+        glSamplerParameteri(m_so_id, GLenum(type), GLint(param));
+    }
+
+    void TextureSampler::setMinLod(float min)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        glSamplerParameterf(m_so_id, GL_TEXTURE_MIN_LOD, min);
+    }
+
+    void TextureSampler::setMaxLod(float max)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        glSamplerParameterf(m_so_id, GL_TEXTURE_MAX_LOD, max);
+    }
+
+    void TextureSampler::setWraping(TextureWrapingCoordinate coord, TextureWrapingParam param)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        glSamplerParameteri(m_so_id, GLenum(coord), GLint(param));
+    }
+
+    void TextureSampler::setBorderColor(float r, float g, float b, float a)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        float color[4] = { r, g, b, a };
+        glSamplerParameterfv(m_so_id, GL_TEXTURE_BORDER_COLOR, color);
+    }
+
+    void TextureSampler::setCompareMode(TextureCompareMode mode)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        glSamplerParameteri(m_so_id, GL_TEXTURE_COMPARE_MODE, GLint(mode));
+    }
+
+    void TextureSampler::setCompareFunc(TextureCompareFunc func)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        glSamplerParameteri(m_so_id, GL_TEXTURE_COMPARE_FUNC, GLint(func));
+    }
+
+    void TextureSampler::setAnisotropy(float anisotropy)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        float max_anisotropy;
+        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &max_anisotropy);
+
+        glm::clamp(anisotropy, 1.0f, max_anisotropy);
+        glSamplerParameterf(m_so_id, GL_TEXTURE_MAX_ANISOTROPY, anisotropy);
+    }
+
+    // --------------------- Texture -------------------------
+
+    void Texture::setFiltering(TextureFiltering type, TextureFilteringParam param)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        if (type == TextureFiltering::MAG && param > TextureFilteringParam::LINEAR)
+        {
+            param = TextureFilteringParam::LINEAR;
+        }
+
+        glTextureParameteri(m_id, GLenum(type), GLint(param));
+    }
+
+    void Texture::setMinLod(float min)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        glTextureParameterf(m_id, GL_TEXTURE_MIN_LOD, min);
+    }
+
+    void Texture::setMaxLod(float max)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        glTextureParameterf(m_id, GL_TEXTURE_MAX_LOD, max);
+    }
+
+    void Texture::setMaxMipmapLevel(int level)
+    {
+        glTextureParameteri(m_id, GL_TEXTURE_MAX_LEVEL, level);
+    }
+
+    void Texture::setSwizzle(const glm::ivec4& swizzle)
+    {
+        glTextureParameteriv(m_id, GL_TEXTURE_SWIZZLE_RGBA, &swizzle[0]);
+    }
+
+    void Texture::setWraping(TextureWrapingCoordinate coord, TextureWrapingParam param)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        glTextureParameteri(m_id, GLenum(coord), GLint(param));
+    }
+
+    void Texture::setBorderColor(float r, float g, float b, float a)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        float color[4] = { r, g, b, a };
+        glTextureParameterfv(m_id, GL_TEXTURE_BORDER_COLOR, color);
+    }
+
+    void Texture::setCompareMode(TextureCompareMode mode)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        glTextureParameteri(m_id, GL_TEXTURE_COMPARE_MODE, GLint(mode));
+    }
+
+    void Texture::setCompareFunc(TextureCompareFunc func)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        glTextureParameteri(m_id, GL_TEXTURE_COMPARE_FUNC, GLint(func));
+    }
+
+    void Texture::setAnisotropy(float anisotropy)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        float max_anisotropy;
+        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &max_anisotropy);
+
+        glm::clamp(anisotropy, 1.0f, max_anisotropy);
+        glTextureParameterf(m_id, GL_TEXTURE_MAX_ANISOTROPY, anisotropy);
+    }
+
+    // --------------------- Texture creation methods -------------------------
+
+    void Texture::setDescriptor(int width, int height, int channelsCount, bool isSrgb)
+    {
+        m_descriptor.width  = width;
+        m_descriptor.height = height;
+        
+        if (channelsCount == 1)
+        {
+            m_descriptor.format         = GL_RED;
+            m_descriptor.internalFormat = GL_R8;
+        }
+        else if (channelsCount == 3)
+        {
+            m_descriptor.format         = GL_RGB;
+            m_descriptor.internalFormat = isSrgb ? GL_SRGB8 : GL_RGB8;
+        }
+        else if (channelsCount == 4)
+        {
+            m_descriptor.format         = GL_RGBA;
+            m_descriptor.internalFormat = isSrgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
         }
     }
 
-    uint8_t* Texture::loadTexture(const std::string& filename, TextureDescriptorGL& descriptor)
+    uint8_t* Texture::load(const std::string& filename, bool isSrgb)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -113,68 +286,86 @@ namespace mango
         
         if (data)
         {
-            descriptor.width     = width;
-            descriptor.height    = height;
-            m_descriptor.format  = channelsCount == 4 ? GL_RGBA : GL_RGB;
+            setDescriptor(width, height, channelsCount, isSrgb);
         }
 
         return data;
     }
 
-    void Texture::genTexture2D(const std::string& filename, GLuint numMipmaps, bool isSrgb /*= false*/)
+    uint8_t* Texture::load(uint8_t* memoryData, uint64_t dataSize, bool isSrgb)
     {
         MG_PROFILE_ZONE_SCOPED;
-        MG_PROFILE_GL_ZONE("Texture::genTexture2D");
 
-        /* Pointer to the image */
-        unsigned char* data = loadTexture(filename, m_descriptor);
+        int width, height, channelsCount;
+        uint8_t* data = stbi_load_from_memory(memoryData, dataSize, &width, &height, &channelsCount, 0);
+
+        if (data)
+        {
+            setDescriptor(width, height, channelsCount, isSrgb);
+        }
+
+        return data;
+    }
+
+    float* Texture::loadf(const std::string& filename)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        auto filepath = VFI::getFilepath(filename);
+        stbi_set_flip_vertically_on_load(true);
+
+        int width, height, channelsCount;
+        float* data = stbi_loadf(filepath.string().c_str(), &width, &height, &channelsCount, 3);
+
+        stbi_set_flip_vertically_on_load(false);
+
+        if (data)
+        {
+            m_descriptor.width          = width;
+            m_descriptor.height         = height;
+            m_descriptor.format         = GL_RGB;
+            m_descriptor.internalFormat = GL_RGB32F;
+        }
+
+        return data;
+    }
+
+    bool Texture::createTexture2d(const std::string& filename, bool isSrgb, uint32_t mipmapLevels)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Texture::createTexture2d");
+
+        auto data = load(filename, isSrgb);
 
         if (!data)
         {
-            MG_CORE_ERROR("Could not load texture {}", filename);
-            return;
+            MG_CORE_ERROR("Texture failed to load at path: {}", VFI::getFilepath(filename));
+            return false;
         }
-        
-        m_descriptor.type           = GL_TEXTURE_2D;
-        m_descriptor.internalFormat = isSrgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
 
-        const GLuint maxNumMipmaps          = 1 + glm::floor(glm::log2(glm::max(float(m_descriptor.width), float(m_descriptor.height))));
-                     m_descriptor.mipLevels = glm::clamp(numMipmaps, 1u, maxNumMipmaps);
+        const GLuint maxMipmapLevels = calcMaxMipMapsLevels(m_descriptor.width, m_descriptor.height, 0);
+                     mipmapLevels    = mipmapLevels == 0 ? maxMipmapLevels : glm::clamp(mipmapLevels, 1u, maxMipmapLevels);
 
-        /* Generate GL texture object */
-        glCreateTextures(m_descriptor.type, 1, &m_id);
-        glTextureStorage2D(m_id,
-                           m_descriptor.mipLevels,
-                           m_descriptor.internalFormat,
-                           m_descriptor.width,
-                           m_descriptor.height);
-
-        glTextureSubImage2D(m_id,
-                            0 /*level*/,
-                            0 /*xoffset*/,
-                            0 /*yoffset*/,
-                            m_descriptor.width,
-                            m_descriptor.height,
-                            m_descriptor.format,
-                            GL_UNSIGNED_BYTE,
-                            data);
-
+        glCreateTextures       (GLenum(TextureType::Texture2D), 1, &m_id);
+        glTextureStorage2D     (m_id, mipmapLevels, m_descriptor.internalFormat, m_descriptor.width, m_descriptor.height);
+        glTextureSubImage2D    (m_id, 0 /* level */, 0 /* xoffset */, 0 /* yoffset */, m_descriptor.width, m_descriptor.height, m_descriptor.format, GL_UNSIGNED_BYTE, data);
         glGenerateTextureMipmap(m_id);
 
-        glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTextureParameteri(m_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTextureParameteri(m_id, GL_TEXTURE_MAX_ANISOTROPY, 16); // TODO anisotropy as Renderer parameter
+        setFiltering (TextureFiltering::MIN,       TextureFilteringParam::LINEAR_MIP_LINEAR);
+        setFiltering (TextureFiltering::MAG,       TextureFilteringParam::LINEAR);
+        setWraping   (TextureWrapingCoordinate::S, TextureWrapingParam::REPEAT);
+        setWraping   (TextureWrapingCoordinate::T, TextureWrapingParam::REPEAT);
+        setAnisotropy(16.0f);
 
-        /* Release image data */
         stbi_image_free(data);
+
+        return true;
     }
 
-    void Texture::genTexture2D1x1(const glm::uvec4 & color)
+    bool Texture::createTexture2d1x1(const glm::uvec4& color)
     {
         MG_PROFILE_ZONE_SCOPED;
-        MG_PROFILE_GL_ZONE("Texture::genTexture2D1x1");
+        MG_PROFILE_GL_ZONE("Texture::createTexture2d1x1");
 
         m_descriptor.width    = 1;
         m_descriptor.height   = 1;
@@ -206,94 +397,81 @@ namespace mango
                             GL_UNSIGNED_BYTE,
                             pixelData);
 
-        glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTextureParameteri(m_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        setFiltering(TextureFiltering::MIN,       TextureFilteringParam::LINEAR);
+        setFiltering(TextureFiltering::MAG,       TextureFilteringParam::LINEAR);
+        setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::CLAMP_TO_EDGE);
+        setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::CLAMP_TO_EDGE);
+
+        return true;
     }
 
-    void Texture::genCubeMapTexture(const std::string * filenames, GLuint numMipmaps, bool isSrgb /*= false*/)
+    bool Texture::createTexture2dFromMemory(uint8_t* memoryData, uint64_t dataSize, bool isSrgb, uint32_t mipmapLevels)
     {
         MG_PROFILE_ZONE_SCOPED;
-        MG_PROFILE_GL_ZONE("Texture::genCubeMapTexture");
+        MG_PROFILE_GL_ZONE("Texture::createTexture2dFromMemory");
 
-        const int numCubeFaces = 6;
+        auto data = load(memoryData, dataSize, isSrgb);
 
-        /* Pointer to the image data */
-        unsigned char * imgsData[numCubeFaces];
-
-        for (int i = 0; i < numCubeFaces; ++i)
+        if (!data)
         {
-            imgsData[i] = loadTexture(filenames[i], m_descriptor);
+            MG_CORE_ERROR("Texture failed to load from the memory.");
+            return false;
         }
 
-        m_descriptor.type           = GL_TEXTURE_CUBE_MAP;
-        m_descriptor.internalFormat = isSrgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
-       
-        const GLuint maxNumMipmaps          = 1 + glm::floor(glm::log2(glm::max(float(m_descriptor.width), float(m_descriptor.height))));
-                     m_descriptor.mipLevels = glm::clamp(numMipmaps, 1u, maxNumMipmaps);
-        
-        /* Generate GL texture object */
-        glCreateTextures(m_descriptor.type, 1, &m_id);
-        glTextureStorage2D(m_id,
-                           m_descriptor.mipLevels,
-                           m_descriptor.internalFormat,
-                           m_descriptor.width,
-                           m_descriptor.height);
+        const GLuint maxMipmapLevels = calcMaxMipMapsLevels(m_descriptor.width, m_descriptor.height, 0);
+                     mipmapLevels    = mipmapLevels == 0 ? maxMipmapLevels : glm::clamp(mipmapLevels, 1u, maxMipmapLevels);
 
-        for (int i = 0; i < numCubeFaces; ++i)
-        {
-            glTextureSubImage3D(m_id,
-                                0 /*level*/,
-                                0 /*xoffset*/,
-                                0 /*yoffset*/,
-                                i /*zoffset*/,
-                                m_descriptor.width,
-                                m_descriptor.height,
-                                1 /*depth*/,
-                                m_descriptor.format,
-                                GL_UNSIGNED_BYTE,
-                                imgsData[i]);
-        }
 
+        glCreateTextures       (GLenum(TextureType::Texture2D), 1, &m_id);
+        glTextureStorage2D     (m_id, mipmapLevels /* levels */, m_descriptor.internalFormat, m_descriptor.width, m_descriptor.height);
+        glTextureSubImage2D    (m_id, 0 /* level */, 0 /* xoffset */, 0 /* yoffset */, m_descriptor.width, m_descriptor.height, m_descriptor.format, GL_UNSIGNED_BYTE, data);
         glGenerateTextureMipmap(m_id);
 
-        glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTextureParameteri(m_id, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-        glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTextureParameteri(m_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTextureParameteri(m_id, GL_TEXTURE_MAX_ANISOTROPY, 16);
+        setFiltering(TextureFiltering::MIN,       TextureFilteringParam::LINEAR_MIP_LINEAR);
+        setFiltering(TextureFiltering::MAG,       TextureFilteringParam::LINEAR);
+        setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::REPEAT);
+        setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::REPEAT);
 
-        for (int i = 0; i < numCubeFaces; ++i)
+        stbi_image_free(data);
+
+        return true;
+    }
+
+    bool Texture::createTexture2dHDR(const std::string & filename, uint32_t mipmapLevels)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Texture::createTexture2dHDR");
+
+        float* data = loadf(filename);
+
+        if (!data)
         {
-            /* Release images' data */
-            stbi_image_free(imgsData[i]);
+            MG_CORE_ERROR("Texture failed to load at path: {}", VFI::getFilepath(filename));
+            return false;
         }
+
+        const GLuint maxMipmapLevels = calcMaxMipMapsLevels(m_descriptor.width, m_descriptor.height, 0);
+                     mipmapLevels    = mipmapLevels == 0 ? maxMipmapLevels : glm::clamp(mipmapLevels, 1u, maxMipmapLevels);
+
+        glCreateTextures       (GLenum(TextureType::Texture2D), 1, &m_id);
+        glTextureStorage2D     (m_id, 1 /* levels */, m_descriptor.internalFormat, m_descriptor.width, m_descriptor.height);
+        glTextureSubImage2D    (m_id, 0 /* level */, 0 /* xoffset */, 0 /* yoffset */, m_descriptor.width, m_descriptor.height, m_descriptor.format, GL_FLOAT, data);
+        glGenerateTextureMipmap(m_id);
+
+        setFiltering(TextureFiltering::MIN,       TextureFilteringParam::LINEAR);
+        setFiltering(TextureFiltering::MAG,       TextureFilteringParam::LINEAR);
+        setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::CLAMP_TO_EDGE);
+        setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::CLAMP_TO_EDGE);
+        
+        stbi_image_free(data);
+
+        return true;
     }
 
-    void Texture::bind(GLuint unit) const
+    bool Texture::createTextureDDS(const std::string& filename)
     {
         MG_PROFILE_ZONE_SCOPED;
-        MG_PROFILE_GL_ZONE("Texture::bind");
-
-        glBindTextureUnit(unit, m_id);
-    }
-
-    void Texture::unbindTextureUnit(GLuint unit)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        MG_PROFILE_GL_ZONE("Texture::unbindTextureUnit");
-
-        glBindTextureUnit(unit, 0);
-    }
-
-    TextureDDS::TextureDDS() {}
-
-    void TextureDDS::genTexture(const std::string& filename)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        MG_PROFILE_GL_ZONE("TextureCompressed::genTexture");
+        MG_PROFILE_GL_ZONE("Texture::createTextureDDS");
 
         auto filepath = VFI::getFilepath(filename);
 
@@ -302,13 +480,8 @@ namespace mango
 
         if (Result::Success != ret)
         {
-            std::cout << "Failed to load.[" << filepath << "]\n";
-            std::cout << "Result : " << int(ret) << "\n";
-
-            // TODO assert
-            fprintf(stderr, "Texture failed to load at path: %s\n", filepath.string().c_str());
-            fprintf(stderr, "Result: %d", int(ret));
-            return;
+            MG_CORE_ERROR("Texture failed to load at path: {}\nResult: {}", filepath, int(ret));
+            return false;
         }
 
         if (dds.GetTextureDimension() == DDSFile::TextureDimension::Texture2D)
@@ -323,12 +496,17 @@ namespace mango
         {
             m_descriptor.type = GL_TEXTURE_3D;
         }
+        else
+        {
+            MG_CORE_ERROR("Unsupported DDS texture type. DDS loader only supports textures 1D, 2D and 3D.");
+            return false;
+        }
 
         GLFormat format;
         if (!translateDdsFormat(dds.GetFormat(), &format))
         {
-            // TODO Assert
-            return;
+            MG_CORE_ERROR("Unsupported format translation. Couldn't translate DDS format to GL format.");
+            return false;
         }
 
         m_descriptor.format         = format.format;
@@ -341,9 +519,13 @@ namespace mango
         m_descriptor.compressed     = isDdsCompressed(format.format);
 
         glCreateTextures    (m_descriptor.type, 1, &m_id);
-        glTextureParameteri (m_id, GL_TEXTURE_BASE_LEVEL, 0);
-        glTextureParameteri (m_id, GL_TEXTURE_MAX_LEVEL,  m_descriptor.mipLevels - 1);
-        glTextureParameteriv(m_id, GL_TEXTURE_SWIZZLE_R,  &format.swizzle[0]);
+
+        setFiltering     (TextureFiltering::MIN, TextureFilteringParam::LINEAR_MIP_LINEAR);
+        setFiltering     (TextureFiltering::MAG, TextureFilteringParam::LINEAR);
+        setWraping       (TextureWrapingCoordinate::S, TextureWrapingParam::REPEAT);
+        setWraping       (TextureWrapingCoordinate::T, TextureWrapingParam::REPEAT);
+        setMaxMipmapLevel(m_descriptor.mipLevels - 1);
+        setSwizzle       (format.swizzle);
 
         glTextureStorage2D(m_id, m_descriptor.mipLevels, format.internalFormat, m_descriptor.width, m_descriptor.height);
         dds.Flip();
@@ -354,8 +536,19 @@ namespace mango
             switch (m_descriptor.type)
             {
                 case GL_TEXTURE_1D:
-                    // TODO
+                {
+                    auto w = imageData->m_width;
+
+                    if (m_descriptor.compressed)
+                    {
+                        glCompressedTextureSubImage1D(m_id, level, 0, w, format.format, imageData->m_memSlicePitch, imageData->m_mem);
+                    }
+                    else
+                    {
+                        glTextureSubImage1D(m_id, level, 0, w, format.format, format.type, imageData->m_mem);
+                    }
                     break;
+                }
 
                 case GL_TEXTURE_2D:
                 {
@@ -374,9 +567,81 @@ namespace mango
                 }
 
                 case GL_TEXTURE_3D:
-                    // TODO
+                {
+                    auto w = imageData->m_width;
+                    auto h = imageData->m_height;
+                    auto d = imageData->m_depth;
+
+                    if (m_descriptor.compressed)
+                    {
+                        glCompressedTextureSubImage3D(m_id, level, 0, 0, 0, w, h, d, format.format, imageData->m_memSlicePitch, imageData->m_mem);
+                    }
+                    else
+                    {
+                        glTextureSubImage3D(m_id, level, 0, 0, 0, w, h, d, format.format, format.type, imageData->m_mem);
+                    }
                     break;
+                }
             }
         }
+
+        return true;
+    }
+
+    bool Texture::createTextureCubeMap(const std::string* filenames, bool isSrgb, uint32_t mipmapLevels)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("Texture::createTextureCubeMap");
+
+        constexpr int NUM_FACES = 6;
+
+        uint8_t* images_data[NUM_FACES];
+
+        for (int i = 0; i < NUM_FACES; ++i)
+        {
+            images_data[i] = load(filenames[i], isSrgb);
+
+            if (!images_data[i])
+            {
+                MG_CORE_ERROR("Texture failed to load at path: {}", VFI::getFilepath(filenames[i]));
+                return false;
+            }
+        }
+
+        const GLuint maxMipmapLevels = calcMaxMipMapsLevels(m_descriptor.width, m_descriptor.height, 0);
+                     mipmapLevels    = mipmapLevels == 0 ? maxMipmapLevels : glm::clamp(mipmapLevels, 1u, maxMipmapLevels);
+
+        glCreateTextures  (GLenum(TextureType::TextureCubeMap), 1, &m_id);
+        glTextureStorage2D(m_id, mipmapLevels, m_descriptor.internalFormat, m_descriptor.width, m_descriptor.height);
+
+        for (int i = 0; i < NUM_FACES; ++i)
+        {
+            glTextureSubImage3D(m_id, 
+                                0 /*level*/, 
+                                0 /*xoffset*/, 
+                                0 /*yoffset*/,
+                                i /*zoffset*/,
+                                m_descriptor.width,
+                                m_descriptor.height,
+                                1 /*depth*/,
+                                m_descriptor.format,
+                                GL_UNSIGNED_BYTE,
+                                images_data[i]);
+        }
+
+        glGenerateTextureMipmap(m_id);
+
+        setFiltering(TextureFiltering::MIN,       TextureFilteringParam::LINEAR_MIP_LINEAR);
+        setFiltering(TextureFiltering::MAG,       TextureFilteringParam::LINEAR);
+        setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::CLAMP_TO_EDGE);
+        setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::CLAMP_TO_EDGE);
+        setWraping  (TextureWrapingCoordinate::R, TextureWrapingParam::CLAMP_TO_EDGE);
+
+        for (int i = 0; i < NUM_FACES; ++i)
+        {
+            stbi_image_free(images_data[i]);
+        }
+
+        return true;
     }
 }
