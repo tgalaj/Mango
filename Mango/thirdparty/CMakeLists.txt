@@ -88,7 +88,7 @@ CPMAddPackage(
     GIT_SHALLOW TRUE
 )
 
-if(entt_ADDED)
+if (entt_ADDED)
   add_library(entt INTERFACE)
   target_include_directories(entt INTERFACE ${entt_SOURCE_DIR}/single_include/entt)
 endif()
@@ -106,7 +106,7 @@ CPMAddPackage(
 )
 
 set(TRACY_SERVER_ARCHIVE_PATH "${CMAKE_BINARY_DIR}/TracyServer/Tracy-${tracy_VERSION}.7z")
-if(NOT EXISTS "${TRACY_SERVER_ARCHIVE_PATH}")
+if (NOT EXISTS "${TRACY_SERVER_ARCHIVE_PATH}")
     file(DOWNLOAD "https://github.com/wolfpld/tracy/releases/download/v${tracy_VERSION}/Tracy-${tracy_VERSION}.7z"  
          "${TRACY_SERVER_ARCHIVE_PATH}" 
          SHOW_PROGRESS)
@@ -145,6 +145,23 @@ CPMAddPackage(
         "TF_BUILD_EXAMPLES OFF"
 )
 
+CPMAddPackage(
+    NAME JoltPhysics
+    GITHUB_REPOSITORY jrouwe/JoltPhysics
+    VERSION 4.0.2
+    GIT_SHALLOW TRUE
+    SOURCE_SUBDIR "Build"
+    OPTIONS
+        "DOUBLE_PRECISION OFF"
+        "GENERATE_DEBUG_SYMBOLS ON"
+        "CROSS_PLATFORM_DETERMINISTIC OFF"
+        "INTERPROCEDURAL_OPTIMIZATION ON"
+        "FLOATING_POINT_EXCEPTIONS_ENABLED OFF"
+        "OBJECT_LAYER_BITS 16"
+        "USE_STATIC_MSVC_RUNTIME_LIBRARY ${MG_USE_STATIC_MSVC_RUNTIME_LIBRARY}"
+)
+
+
 add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
                          ${imgui_SOURCE_DIR}/imgui_demo.cpp
                          ${imgui_SOURCE_DIR}/imgui_draw.cpp
@@ -159,12 +176,14 @@ set_target_properties(glad
                       imgui 
                       spdlog
                       TracyClient
-                      physfs-static PROPERTIES FOLDER "thirdparty")
+                      physfs-static 
+                      Jolt
+                      PROPERTIES FOLDER "thirdparty")
 
 set_target_properties(update_mappings PROPERTIES FOLDER "thirdparty/GLFW3")
 set_target_properties(Continuous Experimental Nightly NightlyMemoryCheck PROPERTIES FOLDER "thirdparty/CTestDashboardTargets")
 
-if(MSVC)
+if (MSVC)
     set_target_properties(UpdateAssimpLibsDebugSymbolsAndDLLs uninstall PROPERTIES FOLDER "thirdparty/assimps")
 endif()
 

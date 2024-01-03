@@ -36,10 +36,7 @@ set_target_properties(Mango PROPERTIES
 
 target_precompile_headers(Mango PRIVATE "src/mgpch.h")
 
-# Options
-option(MG_PROFILE_ENABLE "Enable profiling with Tracy profiler" OFF)
-
-if(MG_PROFILE_ENABLE MATCHES ON)
+if (MG_PROFILE_ENABLE)
     target_compile_definitions(Mango PRIVATE MG_PROFILE_ENABLE)
 endif()
 
@@ -64,7 +61,8 @@ target_link_libraries(Mango PUBLIC ${OPENGL_LIBRARIES}
                                    entt
                                    Tracy::TracyClient
                                    physfs-static
-                                   Taskflow)
+                                   Taskflow
+                                   Jolt)
 
 if(MinGW)
     target_link_libraries(Mango bz2)
@@ -83,5 +81,7 @@ macro(message_option option)
 endmacro()
 
 message(STATUS "Mango will be built with the following options:")
-message_option(MG_PROFILE_ENABLE)
 message_option(MG_BUILD_MANGO_SANDBOX)
+message_option(MG_BUILD_MANGO_EDITOR)
+message_option(MG_PROFILE_ENABLE)
+message_option(MG_USE_STATIC_MSVC_RUNTIME_LIBRARY)

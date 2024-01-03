@@ -15,6 +15,10 @@
 #include "cxxopts.hpp"
 #include "strutil.h"
 
+#include "Jolt/Jolt.h"
+#include "Jolt/Physics/PhysicsSystem.h"
+#include "Jolt/RegisterTypes.h"
+
 namespace mango
 {
     Application::Application(const ApplicationSettings& appSettings)
@@ -124,6 +128,13 @@ namespace mango
         m_renderingSystems.configure();
 
         Services::provide(renderingSystem);
+
+        JPH::RegisterDefaultAllocator();
+        JPH::Factory::sInstance = new JPH::Factory();
+        JPH::RegisterTypes();
+
+        JPH::UnregisterTypes();
+        delete JPH::Factory::sInstance;
     }
 
     Application::~Application()
