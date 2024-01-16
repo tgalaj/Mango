@@ -153,14 +153,24 @@ void TestDemo::onInit()
     auto plane2 = m_mainScene->createEntity();
     plane2.addComponent<ModelRendererComponent>(wallModel);
     plane2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
-    plane2.setOrientation(0.0f, 0.0f, 0.0f);
+    plane2.setOrientation(0.5f, 0.0f, 0.0f);
     plane2.setPosition(5, 0.5, -11.5);
+    plane2.addComponent<BoxCollider3DComponent>(glm::vec3(100.0f, 0.1f, 100.0f), glm::vec3(0.0f, -0.1f, 0.0f));
+    plane2.addComponent<RigidBody3DComponent>();
 
     auto sphere1 = m_mainScene->createEntity();
     sphere1.addComponent<ModelRendererComponent>(sphereModel, ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC);
-    sphere1.setPosition(5, 2, -11.5);
+    sphere1.setPosition(5, 20, -11.5);
     sphere1.setScale(0.5f);
+    sphere1.addComponent<SphereColliderComponent>(0.5f);
 
+    auto& rb3dSphere1                      = sphere1.addComponent<RigidBody3DComponent>();
+          rb3dSphere1.motionType           = RigidBody3DComponent::MotionType::Dynamic;
+          rb3dSphere1.isInitiallyActivated = true;
+          rb3dSphere1.friction             = 0.1f;
+          rb3dSphere1.linearDamping        = 0.05f;
+          rb3dSphere1.restitution          = 0.7f;
+    
     auto sphere2 = m_mainScene->createEntity();
     sphere2.addComponent<ModelRendererComponent>(sphereModel);
     sphere2.setPosition(5, 3, -12.5);

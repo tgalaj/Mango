@@ -2,22 +2,19 @@
 
 #include "Application.h"
 #include "CVars.h"
-#include "Services.h"
-#include "Timer.h"
 #include "Mango/Scene/SceneManager.h"
 #include "Mango/Systems/AudioSystem.h"
 #include "Mango/Systems/ImGuiSystem.h"
+#include "Mango/Systems/PhysicsSystem.h"
 #include "Mango/Systems/RenderingSystem.h"
 #include "Mango/Systems/SceneGraphSystem.h"
 #include "Mango/Window/Input.h"
 #include "Mango/Window/Window.h"
+#include "Services.h"
+#include "Timer.h"
 
 #include "cxxopts.hpp"
 #include "strutil.h"
-
-#include "Jolt/Jolt.h"
-#include "Jolt/Physics/PhysicsSystem.h"
-#include "Jolt/RegisterTypes.h"
 
 namespace mango
 {
@@ -113,7 +110,8 @@ namespace mango
         Services::provide(m_sceneManager);
         Services::provide(m_eventBus);
 
-        // Add core systems - do not forget to configure them!
+        // Add core systems - do not forget to configure them!        
+        // TODO: Rename to high freq. systems ???
         m_systems.add(new SceneGraphSystem());
         m_systems.add(new AudioSystem());
         m_systems.configure();
@@ -121,20 +119,16 @@ namespace mango
         // Create Rendering and ImGui systems
         // renderingSystem and m_imGuiSystem will be deleted by m_renderingSystems
         RenderingSystem* renderingSystem = new RenderingSystem();
-        m_imGuiSystem = new ImGuiSystem();
+                         m_imGuiSystem   = new ImGuiSystem();
+                         m_physicsSystem = new PhysicsSystem();
 
+        // TODO: Rename to low freq. systems ???
+        m_renderingSystems.add(m_physicsSystem);
         m_renderingSystems.add(renderingSystem);
         m_renderingSystems.add(m_imGuiSystem);
         m_renderingSystems.configure();
 
         Services::provide(renderingSystem);
-
-        JPH::RegisterDefaultAllocator();
-        JPH::Factory::sInstance = new JPH::Factory();
-        JPH::RegisterTypes();
-
-        JPH::UnregisterTypes();
-        delete JPH::Factory::sInstance;
     }
 
     Application::~Application()
@@ -165,6 +159,8 @@ namespace mango
             return;
         }
 
+        MG_CORE_ASSERT_MSG(m_physicsSystem, "Mango::PhysicsSystem has be initialized at this point!");
+        m_physicsSystem->onInitBodies();
         run();
     }
 

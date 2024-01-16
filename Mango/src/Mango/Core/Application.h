@@ -6,6 +6,7 @@ namespace mango
 {
     class EventBus;
     class ImGuiSystem;
+    class PhysicsSystem;
     class Scene;
     class SceneManager;
     class Window;
@@ -54,9 +55,10 @@ namespace mango
         SystemManager  m_systems;
         SystemManager  m_renderingSystems;
         
-        SceneManager * m_sceneManager;
-        EventBus     * m_eventBus;
-        ImGuiSystem  * m_imGuiSystem;
+        SceneManager  * m_sceneManager;
+        EventBus      * m_eventBus;
+        ImGuiSystem   * m_imGuiSystem;
+        PhysicsSystem * m_physicsSystem;
 
         double       m_frameTime;
         unsigned int m_fps;

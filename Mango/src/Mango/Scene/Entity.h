@@ -12,6 +12,7 @@ namespace mango
     {
     public:
         Entity() = default;
+        Entity(entt::entity handle, Scene* scene) : m_entityHandle(handle), m_scene(scene) {}
         Entity(const Entity& other) = default;
         ~Entity() = default;
 
@@ -79,17 +80,16 @@ namespace mango
         
         void setScale(float x, float y, float z);
         void setScale(float uniformScale);
+
+        glm::vec3 position();
+        glm::vec3 scale();
+        glm::quat orientation();
         
         void addChild(Entity& child);
 
     private:
         entt::entity m_entityHandle = entt::null;
-        Scene* m_scene = nullptr;
-
-    private:
-        Entity(entt::entity handle, Scene* scene)
-            : m_entityHandle(handle),
-              m_scene       (scene) {}
+        Scene* m_scene = nullptr;        
 
     private:
         friend class Scene;

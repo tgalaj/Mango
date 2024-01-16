@@ -344,4 +344,49 @@ namespace mango
         
         bool m_isDirty;
     };
+
+    // Physics
+
+    struct RigidBody3DComponent
+    {
+        enum class MotionType : uint8_t { Static, Kinematic, Dynamic };
+        MotionType motionType = MotionType::Static;
+
+        float friction       = 0.2f;
+        float restitution    = 0.0f;
+        float linearDamping  = 0.05f;
+        float angularDamping = 0.05f;
+
+        bool isInitiallyActivated = false;
+
+    protected:
+        void* runtimeBody = nullptr;
+
+    private:
+        friend class PhysicsSystem;
+    };
+
+    struct SphereColliderComponent
+    {
+        SphereColliderComponent() = default;
+        SphereColliderComponent(float            radius, 
+                                const glm::vec3& offset = { 0.0f, 0.0f, 0.0f }) 
+            : radius(radius),
+              offset(offset) {}
+
+        glm::vec3 offset = { 0.0f, 0.0f, 0.0f };
+        float     radius = 0.5f;
+    };
+
+    struct BoxCollider3DComponent
+    {
+        BoxCollider3DComponent() = default;
+        BoxCollider3DComponent(const glm::vec3& halfExtent, 
+                               const glm::vec3& offset = { 0.0f, 0.0f, 0.0f }) 
+            : halfExtent(halfExtent),
+              offset    (offset){}
+
+        glm::vec3 offset     = { 0.0f, 0.0f, 0.0f };
+        glm::vec3 halfExtent = { 0.5f, 0.5f, 0.5f };
+    };
 }
