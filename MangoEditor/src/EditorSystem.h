@@ -1,11 +1,11 @@
 #pragma once
 #include "Mango.h"
 
-class TestDemo : public mango::System
+class EditorSystem : public mango::System
 {
 public:
-    TestDemo();
-    ~TestDemo() = default;
+    EditorSystem();
+    ~EditorSystem() = default;
 
     void onInit() override;
     void onDestroy() override;

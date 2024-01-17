@@ -12,7 +12,6 @@ target_include_directories(glad PUBLIC ${GLAD_DIR}/include)
 
 # other
 CPMAddPackage("gh:g-truc/glm#0.9.9.8")
-CPMAddPackage("gh:ocornut/imgui@1.90")
 CPMAddPackage("gh:gabime/spdlog@1.10.0")
 CPMAddPackage("gh:jarro2783/cxxopts@3.1.1")
 
@@ -161,14 +160,23 @@ CPMAddPackage(
         "USE_STATIC_MSVC_RUNTIME_LIBRARY ${MG_USE_STATIC_MSVC_RUNTIME_LIBRARY}"
 )
 
+CPMAddPackage(
+    NAME imgui
+    GITHUB_REPOSITORY ocornut/imgui
+    GIT_TAG docking # use the docking branch
+    GIT_SHALLOW TRUE
+    DOWNLOAD_ONLY TRUE
+)
 
-add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
-                         ${imgui_SOURCE_DIR}/imgui_demo.cpp
-                         ${imgui_SOURCE_DIR}/imgui_draw.cpp
-                         ${imgui_SOURCE_DIR}/imgui_tables.cpp
-                         ${imgui_SOURCE_DIR}/imgui_widgets.cpp)
-target_include_directories(imgui INTERFACE ${imgui_SOURCE_DIR})
-                         
+if (imgui_ADDED)
+    add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
+                             ${imgui_SOURCE_DIR}/imgui_demo.cpp
+                             ${imgui_SOURCE_DIR}/imgui_draw.cpp
+                             ${imgui_SOURCE_DIR}/imgui_tables.cpp
+                             ${imgui_SOURCE_DIR}/imgui_widgets.cpp)
+    target_include_directories(imgui INTERFACE ${imgui_SOURCE_DIR})
+endif()
+
 set_target_properties(glad 
                       assimp
                       glfw 

@@ -1,17 +1,17 @@
 #define GLFW_INCLUDE_NONE 
 
-#include "TestDemo.h"
+#include "EditorSystem.h"
 
 using namespace mango;
 
-TestDemo::TestDemo()
-    : System("Sandbox")
+EditorSystem::EditorSystem()
+    : System("EditorSystem")
 {
 }
 
-void TestDemo::onInit()
+void EditorSystem::onInit()
 {
-    m_mainScene = Services::sceneManager()->createScene("Test Demo Scene");
+    m_mainScene = Services::sceneManager()->createScene("Editor Scene");
     Services::sceneManager()->setActiveScene(m_mainScene);
 
     Services::application()->getWindow()->setVSync(false);
@@ -155,7 +155,7 @@ void TestDemo::onInit()
     plane2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
     plane2.setOrientation(0.5f, 0.0f, 0.0f);
     plane2.setPosition(5, 0.5, -11.5);
-    plane2.addComponent<BoxCollider3DComponent>(glm::vec3(100.0f, 0.1f, 100.0f), glm::vec3(0.0f, -0.1f, 0.0f));
+    plane2.addComponent<BoxCollider3DComponent>(glm::vec3(2.5f, 0.1f, 2.5f), glm::vec3(0.0f, -0.1f, 0.0f));
     plane2.addComponent<RigidBody3DComponent>();
 
     auto sphere1 = m_mainScene->createEntity();
@@ -245,11 +245,11 @@ void TestDemo::onInit()
     spotLight.getComponent<SpotLightComponent>().setCastsShadows(true);
 }
 
-void TestDemo::onDestroy()
+void EditorSystem::onDestroy()
 {
 }
 
-void TestDemo::onUpdate(float dt)
+void EditorSystem::onUpdate(float dt)
 {
     static bool isDebugRender = false;
     
@@ -302,7 +302,7 @@ void TestDemo::onUpdate(float dt)
     m_freeCameraController->onUpdate(dt);
 }
 
-void TestDemo::onGui()
+void EditorSystem::onGui()
 {
     CVarSystem::get()->drawImguiEditor();
 
@@ -340,7 +340,7 @@ void TestDemo::onGui()
     ImGuiSystem::endHUD();
 }
 
-void TestDemo::moveLights(float dt)
+void EditorSystem::moveLights(float dt)
 {    
     static float acc = 0.0f;
     acc += dt / 6.0f;

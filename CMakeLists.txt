@@ -1,4 +1,4 @@
-# Copyright (C) 2023 Tomasz Gałaj
+# Copyright (C) 2024 Tomasz Gałaj
 cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 
 project(Mango VERSION 1.0.0)
@@ -15,7 +15,7 @@ option(MG_BUILD_MANGO_SANDBOX
 
 option(MG_BUILD_MANGO_EDITOR
        "Build Mango Editor."
-       OFF)
+       ON)
 
 option(MG_PROFILE_ENABLE "Enable profiling with Tracy profiler for Mango" OFF)
 
@@ -42,7 +42,7 @@ if (MG_BUILD_MANGO_SANDBOX)
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT MangoSandbox)
 endif()
 
-if (BUILD_MANGO_EDITOR)
+if (MG_BUILD_MANGO_EDITOR)
     message(STATUS "Creating Mango Editor Project")
     add_subdirectory(MangoEditor)
 endif()

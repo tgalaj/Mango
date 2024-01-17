@@ -1,14 +1,14 @@
 #include "Mango.h"
 #include "Mango/Core/EntryPoint.h"
 
-#include "Sandbox.h"
+#include "EditorSystem.h"
 
 #include <memory>
 
-class MangoSandboxApp : public mango::Application
+class MangoEditorApp : public mango::Application
 {
 public:
-    MangoSandboxApp(const mango::ApplicationSettings& appSettings)
+    MangoEditorApp(const mango::ApplicationSettings& appSettings)
         : Application(appSettings)
     {
         auto rootDir = std::filesystem::path(MG_ROOT_DIR);
@@ -19,6 +19,7 @@ public:
         mango::VFI::addToSearchPath(executableDir);
         mango::VFI::addToSearchPath(rootDir / "MangoTestAssets");
         mango::VFI::addToSearchPath(rootDir / "MangoSandbox/assets");
+        mango::VFI::addToSearchPath(rootDir / "MangoEditor/assets");
 
         MG_TRACE("Search path:");
         for (auto const& p : mango::VFI::getSearchPath())
@@ -26,10 +27,10 @@ public:
             MG_TRACE("  - {}", p.string());
         }
 
-        addSystem(new Sandbox());
+        addSystem(new EditorSystem());
     }
 
-    ~MangoSandboxApp()
+    ~MangoEditorApp()
     {
 
     }
@@ -38,11 +39,11 @@ public:
 mango::Application* mango::createApplication(mango::ApplicationCommandLineArgs args)
 {
     mango::ApplicationSettings appSettings{};
-                               appSettings.windowWidth     = 1600;
-                               appSettings.windowHeight    = 800;
-                               appSettings.windowTitle     = "Mango Sandbox";
+                               appSettings.windowWidth     = 1920;
+                               appSettings.windowHeight    = 1080;
+                               appSettings.windowTitle     = "Test App";
                                appSettings.maxFramerate    = 999.0;
                                appSettings.commandLineArgs = args;
 
-    return new MangoSandboxApp(appSettings);
+    return new MangoEditorApp(appSettings);
 }
