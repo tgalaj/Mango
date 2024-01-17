@@ -19,7 +19,21 @@
 
 namespace mango
 {
-    class ShadowInfo
+    struct TagComponent
+    {
+        TagComponent() = default;
+        TagComponent(const std::string& tag)
+            : tag(tag) {}
+
+        std::string tag;
+    };
+
+    struct IDComponent
+    {
+        // TODO
+    };
+
+    struct ShadowInfo
     {
     public:
         explicit ShadowInfo(const glm::mat4& projection = glm::mat4(1.0f), bool castsShadows = true)
@@ -38,7 +52,7 @@ namespace mango
         bool      m_castsShadows;
     };
 
-    class BaseLightComponent
+    struct BaseLightComponent
     {
     public:
         BaseLightComponent(const glm::vec3& color, float intensity)
@@ -62,7 +76,7 @@ namespace mango
         ShadowInfo m_shadowInfo;
     };
 
-    class DirectionalLightComponent : public BaseLightComponent
+    struct DirectionalLightComponent : public BaseLightComponent
     {
     public:
         DirectionalLightComponent(const glm::vec3 & color, float intensity, float size = 20.0f)
@@ -76,7 +90,7 @@ namespace mango
         {}
     };
 
-    class PointLightComponent : public BaseLightComponent
+    struct PointLightComponent : public BaseLightComponent
     {
     public:
         PointLightComponent()
@@ -119,7 +133,7 @@ namespace mango
         }
     };
 
-    class SpotLightComponent : public PointLightComponent
+    struct SpotLightComponent : public PointLightComponent
     {
     public:
         SpotLightComponent()
@@ -152,7 +166,7 @@ namespace mango
         float m_cutoff;
     };
 
-    class CameraComponent
+    struct CameraComponent
     {
     public:
         CameraComponent()
@@ -198,7 +212,7 @@ namespace mango
         friend class Scene;
     };
 
-    class ModelRendererComponent
+    struct ModelRendererComponent
     {
     public:
         enum class RenderQueue { RQ_OPAQUE, RQ_ALPHA, RQ_ENVIRO_MAPPING_STATIC, RQ_ENVIRO_MAPPING_DYNAMIC };
@@ -221,7 +235,7 @@ namespace mango
         RenderQueue m_renderQueue;
     };
 
-    class TransformComponent
+    struct TransformComponent
     {
     public:
         explicit TransformComponent(const glm::vec3 & position    = glm::vec3(0.0f),

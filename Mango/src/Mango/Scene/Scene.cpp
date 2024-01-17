@@ -20,9 +20,12 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
         Entity entity = { m_registry.create(), this };
-        entity.addComponent<TransformComponent>();
+        
+        auto& transform = entity.addComponent<TransformComponent>();
+        auto& tag       = entity.addComponent<TagComponent>();
+              tag.tag   = name;
 
-        SceneGraphSystem::ROOT_NODE.addChild(entity.getComponent<TransformComponent>());
+        SceneGraphSystem::ROOT_NODE.addChild(transform);
 
         return entity;
     }

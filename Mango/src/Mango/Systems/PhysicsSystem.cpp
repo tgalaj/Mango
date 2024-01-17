@@ -158,7 +158,9 @@ namespace mango
 
             if (!collisionShape)
             {
-                MG_CORE_WARN("Physics System: entity [{}] does not have a collision shape assigned. Did you forget to add a collider component?", "TODO: entity name");
+                MG_CORE_WARN("Physics System: entity named [{}] does not have a collision shape assigned."
+                             "Did you forget to add a collider component?", 
+                             entity.getComponent<TagComponent>().tag);
                 continue;
             }
 

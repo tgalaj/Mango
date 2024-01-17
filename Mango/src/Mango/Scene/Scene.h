@@ -16,7 +16,7 @@ namespace mango
 
         std::string& getName() { return m_name; };
         
-        Entity createEntity(const std::string& name = "");
+        Entity createEntity(const std::string& name = "Entity");
         void destroyEntity(Entity entity);
 
         Entity getPrimaryCamera();
