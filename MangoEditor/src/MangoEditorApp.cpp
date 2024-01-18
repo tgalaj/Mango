@@ -41,7 +41,7 @@ mango::Application* mango::createApplication(mango::ApplicationCommandLineArgs a
     mango::ApplicationSettings appSettings{};
                                appSettings.windowWidth     = 1920;
                                appSettings.windowHeight    = 1080;
-                               appSettings.windowTitle     = "Test App";
+                               appSettings.windowTitle     = "Mango Editor";
                                appSettings.maxFramerate    = 999.0;
                                appSettings.commandLineArgs = args;
 

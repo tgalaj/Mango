@@ -43,6 +43,8 @@ namespace mango
         static void imageRounded(std::shared_ptr<Texture> pTexture, const glm::vec2 & from, const glm::vec2 & to, const glm::vec4 & color = glm::vec4(1.0f), float rounding = 0.0f, uint32_t roundingCornersFlags = ImDrawFlags_RoundCornersAll);
 
     private:
+        void setDarkThemeColors();
+
         static glm::vec2 m_windowSize;
     };
 }

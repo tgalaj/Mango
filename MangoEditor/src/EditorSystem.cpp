@@ -303,41 +303,26 @@ void EditorSystem::onUpdate(float dt)
 }
 
 void EditorSystem::onGui()
-{
-    CVarSystem::get()->drawImguiEditor();
+{    
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
-    /* Overlay start */
-    const  float DISTANCE = 10.0f;
-    static int   corner   = 0;
-
-    ImVec2 windowPos      = ImVec2((corner & 1) ? ImGui::GetIO().DisplaySize.x - DISTANCE : DISTANCE, (corner & 2) ? ImGui::GetIO().DisplaySize.y - DISTANCE : DISTANCE);
-    ImVec2 windowPosPivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
-
-    if (corner != -1)
+    if (ImGui::BeginMainMenuBar())
     {
-        ImGui::SetNextWindowPos(windowPos, ImGuiCond_Always, windowPosPivot);
-        ImGui::SetNextWindowSize({ 250, 0 });
+        if (ImGui::BeginMenu("File"))
+        {
+            ImGui::MenuItem("Test item");
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
     }
 
-    ImGui::SetNextWindowBgAlpha(0.3f); // Transparent background
-    if (ImGui::Begin("Perf info", 0, (corner != -1 ? ImGuiWindowFlags_NoMove : 0) | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
+    if (ImGui::Begin("CVars Editor"))
     {
-        ImGui::Text("Performance info\n");
-        ImGui::Separator();
-        ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+        CVarSystem::get()->drawImguiEditor();
+        ImGui::End();
     }
-    ImGui::End();
-    /* Overlay end */
 
-    ImGuiSystem::beginHUD();
-
-    //ImGuiSystem::circleFilled({ ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f}, 2.0f, glm::vec4(0.0, 1.0, 0.0, 1.0));
-    //auto pos = ImGuiSystem::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo!", { ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f + 100.0f}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, true);
-    //ImGuiSystem::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo2!", { ImGui::GetIO().DisplaySize.x / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
-    auto window = Services::application()->getWindow();
-    ImGuiSystem::image(AssetManager::getTexture2D("textures/opengl.png"), { window->getWidth() - 200, 0 }, { window->getWidth(), 100 }, { 1.0f, 1.0f, 1.0f, 0.5f });
-
-    ImGuiSystem::endHUD();
+    ImGui::ShowDemoWindow();
 }
 
 void EditorSystem::moveLights(float dt)
