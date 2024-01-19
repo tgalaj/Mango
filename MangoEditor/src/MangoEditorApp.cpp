@@ -5,45 +5,48 @@
 
 #include <memory>
 
-class MangoEditorApp : public mango::Application
+namespace mango
 {
-public:
-    MangoEditorApp(const mango::ApplicationSettings& appSettings)
-        : Application(appSettings)
+    class MangoEditorApp : public Application
     {
-        auto rootDir = std::filesystem::path(MG_ROOT_DIR);
-        auto executableDir = mango::VFI::getExecutableDir();
-
-        mango::VFI::setWriteDir(executableDir / "output");
-
-        mango::VFI::addToSearchPath(executableDir);
-        mango::VFI::addToSearchPath(rootDir / "MangoTestAssets");
-        mango::VFI::addToSearchPath(rootDir / "MangoSandbox/assets");
-        mango::VFI::addToSearchPath(rootDir / "MangoEditor/assets");
-
-        MG_TRACE("Search path:");
-        for (auto const& p : mango::VFI::getSearchPath())
+    public:
+        MangoEditorApp(const ApplicationSettings& appSettings)
+            : Application(appSettings)
         {
-            MG_TRACE("  - {}", p.string());
+            auto rootDir       = std::filesystem::path(MG_ROOT_DIR);
+            auto executableDir = VFI::getExecutableDir();
+
+            VFI::setWriteDir(executableDir / "output");
+
+            VFI::addToSearchPath(executableDir);
+            VFI::addToSearchPath(rootDir / "MangoTestAssets");
+            VFI::addToSearchPath(rootDir / "MangoSandbox/assets");
+            VFI::addToSearchPath(rootDir / "MangoEditor/assets");
+
+            MG_TRACE("Search path:");
+            for (auto const& p : VFI::getSearchPath())
+            {
+                MG_TRACE("  - {}", p.string());
+            }
+
+            addSystem(new EditorSystem());
         }
 
-        addSystem(new EditorSystem());
-    }
+        ~MangoEditorApp()
+        {
 
-    ~MangoEditorApp()
+        }
+    };
+
+    Application* createApplication(ApplicationCommandLineArgs args)
     {
+        ApplicationSettings appSettings{};
+        appSettings.windowWidth     = 1920;
+        appSettings.windowHeight    = 1080;
+        appSettings.windowTitle     = "Mango Editor";
+        appSettings.maxFramerate    = 999.0;
+        appSettings.commandLineArgs = args;
 
+        return new MangoEditorApp(appSettings);
     }
-};
-
-mango::Application* mango::createApplication(mango::ApplicationCommandLineArgs args)
-{
-    mango::ApplicationSettings appSettings{};
-                               appSettings.windowWidth     = 1920;
-                               appSettings.windowHeight    = 1080;
-                               appSettings.windowTitle     = "Mango Editor";
-                               appSettings.maxFramerate    = 999.0;
-                               appSettings.commandLineArgs = args;
-
-    return new MangoEditorApp(appSettings);
 }

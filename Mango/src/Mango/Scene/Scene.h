@@ -43,6 +43,7 @@ namespace mango
 
     private:
         friend class Entity;
+        friend class SceneHierarchyPanel;
     };
 }
 

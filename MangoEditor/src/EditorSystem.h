@@ -1,24 +1,30 @@
 #pragma once
 #include "Mango.h"
+#include "Panels/SceneHierarchyPanel.h"
 
-class EditorSystem : public mango::System
+namespace mango
 {
-public:
-    EditorSystem();
-    ~EditorSystem() = default;
+    class EditorSystem : public System
+    {
+    public:
+        EditorSystem();
+        ~EditorSystem() = default;
 
-    void onInit() override;
-    void onDestroy() override;
-    void onUpdate(float dt) override;
-    void onGui() override;
+        void onInit() override;
+        void onDestroy() override;
+        void onUpdate(float dt) override;
+        void onGui() override;
 
-private:
-    void moveLights(float dt);
+    private:
+        void moveLights(float dt);
 
-private:
-    std::shared_ptr<mango::Scene> m_mainScene;
-    std::shared_ptr<mango::FreeCameraController> m_freeCameraController;
+    private:
+        SceneHierarchyPanel m_sceneHierarchyPanel;
 
-    mango::Entity m_camera1;
-    mango::Entity m_camera2;
-};
+        std::shared_ptr<Scene> m_mainScene;
+        std::shared_ptr<FreeCameraController> m_freeCameraController;
+
+        Entity m_camera1;
+        Entity m_camera2;
+    };
+}
