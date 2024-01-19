@@ -37,6 +37,9 @@ namespace mango
         void setSkybox(const std::shared_ptr<Skybox> & skybox);
         void resize(unsigned width, unsigned height);
 
+        void setOutputToOffscreenTexture(bool enabled) { m_outputToOffscreenTexture = enabled; }
+        uint32_t getOutputOffscreenTextureID() const;
+
         TransformComponent & getCameraTransform();
         CameraComponent    & getCamera();
 
@@ -115,5 +118,7 @@ namespace mango
         Entity m_primaryCamera;
         Scene* m_activeScene = nullptr;
         std::shared_ptr<Window> m_mainWindow;
+
+        bool m_outputToOffscreenTexture = false;
     };
 }

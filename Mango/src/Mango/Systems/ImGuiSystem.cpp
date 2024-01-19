@@ -84,6 +84,7 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("ImGuiSystem::end");
 
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, GLsizei(m_windowSize.x), GLsizei(m_windowSize.y));
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

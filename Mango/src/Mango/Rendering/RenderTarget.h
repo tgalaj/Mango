@@ -146,5 +146,8 @@ namespace mango
 
         GLuint m_width, m_height;
         GLenum m_type;
+
+    private:
+        friend class RenderingSystem;
     };
 }

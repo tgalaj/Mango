@@ -254,6 +254,11 @@ namespace mango
         m_ssao->create();
     }
 
+    uint32_t RenderingSystem::getOutputOffscreenTextureID() const
+    {
+        return m_mainRenderTarget->m_textureID[0];
+    }
+
     TransformComponent& RenderingSystem::getCameraTransform()
     {
         return m_primaryCamera.getComponent<TransformComponent>();
@@ -376,7 +381,7 @@ namespace mango
         m_bloomFilter->bindBrightnessTexture(1);
 
         applyPostprocess(m_hdrFilter, &m_mainRenderTarget, &m_helperRenderTarget);
-        applyPostprocess(m_fxaaFilter, &m_helperRenderTarget, 0);
+        applyPostprocess(m_fxaaFilter, &m_helperRenderTarget, m_outputToOffscreenTexture ? &m_mainRenderTarget : 0);
     }
 
     void RenderingSystem::renderDeferred(Scene* scene)
@@ -458,7 +463,7 @@ namespace mango
         m_bloomFilter->bindBrightnessTexture(1);
 
         applyPostprocess(m_hdrFilter, &m_mainRenderTarget, &m_helperRenderTarget);
-        applyPostprocess(m_fxaaFilter, &m_helperRenderTarget, 0);
+        applyPostprocess(m_fxaaFilter, &m_helperRenderTarget, m_outputToOffscreenTexture ? &m_mainRenderTarget : 0);
     }
 
     void RenderingSystem::renderDebug()

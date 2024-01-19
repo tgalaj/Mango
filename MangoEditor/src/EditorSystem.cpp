@@ -14,6 +14,7 @@ void EditorSystem::onInit()
     m_mainScene = Services::sceneManager()->createScene("Editor Scene");
     Services::sceneManager()->setActiveScene(m_mainScene);
 
+    Services::renderer()->setOutputToOffscreenTexture(true);
     Services::application()->getWindow()->setVSync(false);
 
     Services::eventBus()->subscribe<GamepadConnectedEvent>([](const GamepadConnectedEvent& event)
@@ -321,6 +322,23 @@ void EditorSystem::onGui()
         CVarSystem::get()->drawImguiEditor();
         ImGui::End();
     }
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
+    if (ImGui::Begin("Viewport"))
+    {
+        if (ImGui::IsWindowFocused() || ImGui::IsWindowHovered())
+        {
+            ImGui::SetNextFrameWantCaptureKeyboard(false);
+            ImGui::SetNextFrameWantCaptureMouse(false);
+        }
+
+        ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+        uint32_t outputTextureID = Services::renderer()->getOutputOffscreenTextureID();
+
+        ImGui::Image((ImTextureID)outputTextureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
+        ImGui::End();
+    }
+    ImGui::PopStyleVar();
 
     ImGui::ShowDemoWindow();
 }
