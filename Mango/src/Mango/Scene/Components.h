@@ -304,6 +304,12 @@ namespace mango
             m_isDirty = true;
         }
 
+        void setScale(const glm::vec3 & scale)
+        {
+            m_scale   = scale;
+            m_isDirty = true;
+        }
+
         void addChild(TransformComponent& child)
         {
             m_children.push_back(&child);

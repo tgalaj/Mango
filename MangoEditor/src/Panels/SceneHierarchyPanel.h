@@ -19,6 +19,7 @@ namespace mango
 
     private:
         void drawEntityNode(Entity entity);
+        void drawComponents(Entity entity);
 
     private:
         std::shared_ptr<Scene> m_scene;
