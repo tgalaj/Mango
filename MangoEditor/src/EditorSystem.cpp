@@ -32,15 +32,15 @@ namespace mango
         });
 
         m_camera1 = m_mainScene->createEntity("MainCamera");
-        m_camera1.addComponent<CameraComponent>(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 500.0f);
+        m_camera1.addComponent<CameraComponent>().setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
         m_camera1.setPosition(0, 4, 30);
 
         m_camera2 = m_mainScene->createEntity("MainCamera2");
-        m_camera2.addComponent<CameraComponent>(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 500.0f);
+        m_camera2.addComponent<CameraComponent>().setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
         m_camera2.setPosition(0, 4, -30);
         m_camera2.setOrientation({0, 1, 0}, 180.0f);
 
-        m_freeCameraController = std::make_shared<FreeCameraController>(m_camera1);
+        m_freeCameraController = std::make_shared<FreeCameraController>();
 
         auto font = AssetManager::createFont("Droid48", "fonts/Roboto-Regular.ttf", 48.0f);
 
@@ -99,7 +99,7 @@ namespace mango
         auto sponza = m_mainScene->createEntity();
         sponza.addComponent<ModelRendererComponent>(sponzaModel);
         sponza.setPosition(-1.5f, 0.0f, 10.0f);
-        sponza.setOrientation(0.0f, -90.0f, 0.0f);
+        sponza.setRotation(0.0f, -90.0f, 0.0f);
         sponza.setScale(6.0f);
 
         auto wall = m_mainScene->createEntity();
@@ -107,7 +107,7 @@ namespace mango
         wall.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, brickwallTex);
         wall.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::NORMAL, brickwallNormalTex);
         //wall.getComponent<ModelRendererComponent>()->model.getMesh().material.addTexture(Material::TextureType::DEPTH, bricks2Depth);
-        wall.setOrientation(90.0f, 0.0f, 0.0f);
+        wall.setRotation(90.0f, 0.0f, 0.0f);
         wall.setPosition(0, 2.0, -9);
 
         auto wall2 = m_mainScene->createEntity();
@@ -115,53 +115,53 @@ namespace mango
         wall2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
         wall2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::NORMAL, bricks2Normal);
         wall2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DEPTH, bricks2Depth);
-        wall2.setOrientation(90.0f, 0.0f, 0.0f);
+        wall2.setRotation(90.0f, 0.0f, 0.0f);
         wall2.setPosition(-5, 2.0, -9);
 
         auto grass = m_mainScene->createEntity();
         grass.addComponent<ModelRendererComponent>(wallModel);
         grass.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, grassTex);
         grass.getComponent<ModelRendererComponent>().model.getMesh().material.addFloat("alpha_cutoff", 0.1f);
-        grass.setOrientation(90.0f, 0.0f, 0.0f);
+        grass.setRotation(90.0f, 0.0f, 0.0f);
         grass.setPosition(-5, 1.2, 9);
         grass.setScale(0.5);
 
         auto window1 = m_mainScene->createEntity();
         window1.addComponent<ModelRendererComponent>(wallModel, ModelRendererComponent::RenderQueue::RQ_ALPHA);
         window1.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, windowTex);
-        window1.setOrientation(90.0f, 0.0f, 0.0f);
+        window1.setRotation(90.0f, 0.0f, 0.0f);
         window1.setPosition(0, 1.2, 9);
         window1.setScale(0.51);
 
         auto window3 = m_mainScene->createEntity();
         window3.addComponent<ModelRendererComponent>(wallModel, ModelRendererComponent::RenderQueue::RQ_ALPHA);
         window3.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, windowTex);
-        window3.setOrientation(90.0f, 0.0f, 0.0f);
+        window3.setRotation(90.0f, 0.0f, 0.0f);
         window3.setPosition(3, 1.2, 13);
         window3.setScale(0.5);
 
         auto window2 = m_mainScene->createEntity();
         window2.addComponent<ModelRendererComponent>(wallModel, ModelRendererComponent::RenderQueue::RQ_ALPHA);
         window2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, windowTex);
-        window2.setOrientation(90.0f, 0.0f, 0.0f);
+        window2.setRotation(90.0f, 0.0f, 0.0f);
         window2.setPosition(5, 1.2, 9);
         window2.setScale(0.5);
 
         auto plane1 = m_mainScene->createEntity();
         plane1.addComponent<ModelRendererComponent>(wallModel);
         plane1.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
-        plane1.setOrientation(90.0f, 0.0f, 0.0f);
+        plane1.setRotation(90.0f, 0.0f, 0.0f);
         plane1.setPosition(5, 3.0, -14);
 
         auto plane2 = m_mainScene->createEntity();
         plane2.addComponent<ModelRendererComponent>(wallModel);
         plane2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
-        plane2.setOrientation(0.5f, 0.0f, 0.0f);
+        plane2.setRotation(0.5f, 0.0f, 0.0f);
         plane2.setPosition(5, 0.5, -11.5);
         plane2.addComponent<BoxCollider3DComponent>(glm::vec3(2.5f, 0.1f, 2.5f), glm::vec3(0.0f, -0.1f, 0.0f));
         plane2.addComponent<RigidBody3DComponent>();
 
-        auto sphere1 = m_mainScene->createEntity();
+        auto sphere1 = m_mainScene->createEntity("Bouncing Sphere");
         sphere1.addComponent<ModelRendererComponent>(sphereModel, ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC);
         sphere1.setPosition(5, 20, -11.5);
         sphere1.setScale(0.5f);
@@ -206,7 +206,7 @@ namespace mango
         /* Lights */
         auto dirLight = m_mainScene->createEntity();
         dirLight.addComponent<DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f);
-        dirLight.setOrientation(-45.0f, 180.0f, 0.0f);
+        dirLight.setRotation(-45.0f, 180.0f, 0.0f);
 
         float d = 8;
         glm::vec3 positions[4]
@@ -244,7 +244,7 @@ namespace mango
         spotLight.getComponent<SpotLightComponent>().intensity = 1000;
         spotLight.getComponent<SpotLightComponent>().setCutOffAngle(30.0f);
         spotLight.setPosition(1.5, 5, 1.5);
-        spotLight.setOrientation(-45, 45, 45);
+        spotLight.setRotation(-45, 45, 45);
         spotLight.getComponent<SpotLightComponent>().setCastsShadows(true);
     }
 
@@ -293,12 +293,10 @@ namespace mango
             if (isCamera1Primary)
             {
                 m_camera1.getComponent<CameraComponent>().setPrimary();
-                m_freeCameraController->setCameraEntity(m_camera1);
             }
             else
             {
                 m_camera2.getComponent<CameraComponent>().setPrimary();
-                m_freeCameraController->setCameraEntity(m_camera2);
             }
         }
 
@@ -380,7 +378,7 @@ namespace mango
 
                 glm::quat previousOrientation = transform.getOrientation();
 
-                transform.setOrientation(0.0f, 16.667f * dt, 0.0f);
+                transform.setRotation(0.0f, 16.667f * dt, 0.0f);
                 transform.setOrientation(previousOrientation * transform.getOrientation());
             }
         }

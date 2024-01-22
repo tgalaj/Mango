@@ -75,7 +75,8 @@ namespace mango
         void setPosition(float x, float y, float z);
         void setPosition(const glm::vec3& position);
         
-        void setOrientation(float x, float y, float z);
+        void setRotation   (float x, float y, float z);
+        void setRotation   (const glm::vec3& rotation);
         void setOrientation(const glm::vec3& axis, float angle);
         void setOrientation(const glm::quat& quat);
         

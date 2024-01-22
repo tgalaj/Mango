@@ -3,7 +3,6 @@
 
 namespace mango
 {
-
     void Entity::setPosition(float x, float y, float z)
     {
         getComponent<TransformComponent>().setPosition(x, y, z);
@@ -13,10 +12,15 @@ namespace mango
     {
         getComponent<TransformComponent>().setPosition(position);
     }
-
-    void Entity::setOrientation(float x, float y, float z)
+    
+    void Entity::setRotation(const glm::vec3& rotation)
     {
-        getComponent<TransformComponent>().setOrientation(x, y, z);
+        getComponent<TransformComponent>().setRotation(rotation);
+    }
+
+    void Entity::setRotation(float x, float y, float z)
+    {
+        getComponent<TransformComponent>().setRotation(x, y, z);
     }
 
     void Entity::setOrientation(const glm::vec3& axis, float angle)

@@ -169,28 +169,37 @@ namespace mango
     struct CameraComponent
     {
     public:
-        CameraComponent()
-            : m_isOrtho(false)
-        {
-        }
+        enum class ProjectionType { Perspective = 0, Orthographic = 1 };
+    public:
+        CameraComponent();
+        
+        /** verticalFov in degrees. */
+        void setPerspective(float verticalFov, float aspectRatio, float nearClip, float farClip);
+        void setOrtographic(float size,        float aspectRatio, float nearClip, float farClip);
 
-        /*
-         * Perspective camera
-         */
-        CameraComponent(float fov, 
-                        float aspectRatio, 
-                        float zNear, 
-                        float zFar);
+        /** Returns vertical field of view angle in radians. */
+        float getPerspectiveVerticalFieldOfView() const { return m_perspectiveFov; }
+        
+        /** verticalFov in degrees. */
+        void  setPerspectiveVerticalFieldOfView(float verticalFov) { m_perspectiveFov = glm::radians(verticalFov); recalculateProjection(); }
+        
+        float getPerspectiveNearClip() const         { return m_perspectiveNear; }
+        void  setPerspectiveNearClip(float nearClip) { m_perspectiveNear = nearClip; recalculateProjection(); }
+        
+        float getPerspectiveFarClip() const        { return m_perspectiveFar; }
+        void  setPerspectiveFarClip(float farClip) { m_perspectiveFar = farClip; recalculateProjection(); }
 
-        /*
-         * Ortho camera
-         */
-        CameraComponent(float left, 
-                        float right, 
-                        float bottom, 
-                        float top,
-                        float zNear, 
-                        float zFar);
+        float getOrthographicSize() const     { return m_orthographicSize; }
+        void  setOrthographicSize(float size) { m_orthographicSize = size; recalculateProjection(); }
+        
+        float getOrthographicNearClip() const         { return m_orthographicNear; }
+        void  setOrthographicNearClip(float nearClip) { m_orthographicNear = nearClip; recalculateProjection(); }
+        
+        float getOrthographicFarClip() const        { return m_orthographicFar; }
+        void  setOrthographicFarClip(float farClip) { m_orthographicFar = farClip; recalculateProjection(); }
+
+        ProjectionType getProjectionType() const    { return m_projectionType; }
+        void setProjectionType(ProjectionType type) { m_projectionType = type; recalculateProjection(); }
 
         bool isPrimary() const { return m_isPrimary; }
         void setPrimary();
@@ -198,15 +207,25 @@ namespace mango
         const glm::mat4& view()       const { return m_view; }
         const glm::mat4& projection() const { return m_projection; }
 
-        void setView      (const glm::mat4& view)      { m_view       = view; }
-        void setProjection(const glm::mat4 projection) { m_projection = projection; };
+        void setView(const glm::mat4& view) { m_view = view; }
 
-     private:
+    private:
+        void recalculateProjection();
+
+    private:
         glm::mat4 m_view{};
         glm::mat4 m_projection{};
 
-        bool m_isOrtho;
-        bool m_isPrimary = true;
+        float m_perspectiveFov  = glm::radians(60.0f);
+        float m_perspectiveNear = 0.01f, m_perspectiveFar = 1000.0f;
+
+        float m_orthographicSize = 10.0f;
+        float m_orthographicNear = 0.01f, m_orthographicFar = 1000.0f;
+
+        float m_aspectRatio = 1.0f;
+
+        ProjectionType m_projectionType = ProjectionType::Perspective;
+        bool           m_isPrimary      = false;
     
     private:
         friend class Scene;
@@ -238,11 +257,12 @@ namespace mango
     struct TransformComponent
     {
     public:
-        explicit TransformComponent(const glm::vec3 & position    = glm::vec3(0.0f),
-                                    const glm::vec3 & orientation = glm::vec3(0.0f, 0.0f, 0.0f),
-                                    const glm::vec3 & scale       = glm::vec3(1.0f))
-            : m_orientation (orientation),
+        explicit TransformComponent(const glm::vec3 & position = glm::vec3(0.0f),
+                                    const glm::vec3 & rotation = glm::vec3(0.0f, 0.0f, 0.0f),
+                                    const glm::vec3 & scale    = glm::vec3(1.0f))
+            : m_orientation (rotation),
               m_position    (position),
+              m_rotation    (rotation),
               m_scale       (scale),
               m_isDirty     (true),
               m_worldMatrix (glm::mat4(1.0f)),
@@ -263,16 +283,22 @@ namespace mango
         }
 
         /*
-         * Set orientation using Euler Angles in degrees
+         * Set rotation using Euler Angles in degrees
          */
-        
-        void setOrientation(float x, float y, float z)
+        void setRotation(const glm::vec3& euler)
         {
-            m_orientation = glm::angleAxis(glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f)) *
-                            glm::angleAxis(glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f)) *
-                            glm::angleAxis(glm::radians(z), glm::vec3(0.0f, 0.0f, 1.0f));
+            m_rotation    = glm::radians(euler);
+            m_orientation = glm::quat(m_rotation);
             m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_isDirty     = true;
+        }
+
+        /*
+         * Set rotation using Euler Angles in degrees
+         */
+        void setRotation(float x, float y, float z)
+        {
+            setRotation(glm::vec3(x, y, z));
         }
 
         /*
@@ -280,15 +306,17 @@ namespace mango
         */
         void setOrientation(const glm::vec3 & axis, float angle)
         {
-            m_orientation = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
+            m_orientation = glm::normalize(glm::angleAxis(glm::radians(angle), glm::normalize(axis)));
+            m_rotation    = glm::eulerAngles(m_orientation);
             m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
-            m_isDirty    = true;
+            m_isDirty     = true;
         }
 
         void setOrientation(const glm::quat & quat)
         {
-            m_orientation = quat;
+            m_orientation = glm::normalize(quat);
             m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
+            m_rotation    = glm::eulerAngles(m_orientation);
             m_isDirty     = true;
         }
 
@@ -338,6 +366,9 @@ namespace mango
         glm::mat3 getNormalMatrix() const { return m_normalMatrix; }
         glm::quat getOrientation () const { return m_orientation;  }
         glm::vec3 getPosition    () const { return m_position;     }
+        
+        /** Returns rotation in radians. */
+        glm::vec3 getRotation    () const { return m_rotation;     }
         glm::vec3 getScale       () const { return m_scale;        }
         glm::vec3 getDirection   () const { return m_direction;    }
 
@@ -359,7 +390,8 @@ namespace mango
 
         glm::quat m_orientation{};
         glm::vec3 m_position{};
-        glm::vec3 m_scale{};
+        glm::vec3 m_rotation{};
+        glm::vec3 m_scale{1.0f};
         glm::vec3 m_direction{};
         
         bool m_isDirty;

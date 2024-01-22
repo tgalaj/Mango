@@ -1,21 +1,21 @@
 #include "mgpch.h"
 #include "FreeCameraController.h"
 
+#include "Mango/Core/Services.h"
+#include "Mango/Scene/Entity.h"
+#include "Mango/Scene/SceneManager.h"
+
 namespace mango
 {
-    FreeCameraController::FreeCameraController(Entity& entity)
-    {
-        MG_CORE_ASSERT_MSG(entity.hasComponent<CameraComponent>(), "entity doesn't have CameraComponent added!");
-        m_cameraEntity = entity;   
-    }
-
     void FreeCameraController::onUpdate(float dt)
     {
         MG_PROFILE_ZONE_SCOPED;
 
         // Update the camera's view matrix
-        auto& transform = m_cameraEntity.getComponent<TransformComponent>();
-        auto& camera    = m_cameraEntity.getComponent<CameraComponent>();
+        Entity cameraEntity = Services::sceneManager()->getActiveScene()->getPrimaryCamera();
+
+        auto& transform = cameraEntity.getComponent<TransformComponent>();
+        auto& camera    = cameraEntity.getComponent<CameraComponent>();
 
         glm::mat4 R = glm::mat4_cast(transform.getOrientation());
         glm::mat4 T = glm::translate(glm::mat4(1.0f), -transform.getPosition());
@@ -133,15 +133,7 @@ namespace mango
 
     CameraComponent& FreeCameraController::getCameraComponent()
     {
-        return m_cameraEntity.getComponent<CameraComponent>();
-    }
-
-    void FreeCameraController::setCameraEntity(Entity entity)
-    {
-        if (entity.hasComponent<CameraComponent>())
-        {
-            m_cameraEntity = entity;
-        }
+        return  Services::sceneManager()->getActiveScene()->getPrimaryCamera().getComponent<CameraComponent>();
     }
 
     void FreeCameraController::move(TransformComponent& transform, const glm::vec3& dir, float amount)

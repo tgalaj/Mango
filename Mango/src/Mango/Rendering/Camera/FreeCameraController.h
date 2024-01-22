@@ -1,6 +1,4 @@
 #pragma once
-
-#include "Mango/Scene/Entity.h"
 #include "Mango/Window/Input.h"
 
 namespace mango
@@ -11,13 +9,12 @@ namespace mango
     class FreeCameraController
     {
         public:
-            explicit FreeCameraController(Entity& entity);
+            explicit FreeCameraController() = default;
             virtual ~FreeCameraController() = default;
 
             void onUpdate(float dt);
 
             CameraComponent& getCameraComponent();
-            void setCameraEntity(Entity entity);
 
             // float   mouseSensitivity = 0.2f;
             KeyCode unlockMouseKey   = KeyCode::MouseRight;
@@ -37,7 +34,6 @@ namespace mango
             void move(TransformComponent& transform, const glm::vec3& dir, float amount);
 
         private:
-            Entity    m_cameraEntity;
             glm::vec2 m_mousePressedPosition{ 0.0f, 0.0f };
             bool      m_isMouseMove{ false };
     };

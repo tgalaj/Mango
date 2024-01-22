@@ -29,15 +29,15 @@ void Sandbox::onInit()
     });
 
     m_camera1 = m_mainScene->createEntity("MainCamera");
-    m_camera1.addComponent<CameraComponent>(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 500.0f);
+    m_camera1.addComponent<CameraComponent>().setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
     m_camera1.setPosition(0, 4, 30);
 
     m_camera2 = m_mainScene->createEntity("MainCamera2");
-    m_camera2.addComponent<CameraComponent>(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 500.0f);
+    m_camera2.addComponent<CameraComponent>().setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
     m_camera2.setPosition(0, 4, -30);
-    m_camera2.setOrientation({0, 1, 0}, 180.0f);
+    m_camera2.setOrientation({ 0, 1, 0 }, 180.0f);
 
-    m_freeCameraController = std::make_shared<FreeCameraController>(m_camera1);
+    m_freeCameraController = std::make_shared<FreeCameraController>();
 
     auto font = AssetManager::createFont("Droid48", "fonts/Roboto-Regular.ttf", 48.0f);
 
@@ -290,12 +290,10 @@ void Sandbox::onUpdate(float dt)
         if (isCamera1Primary)
         {
             m_camera1.getComponent<CameraComponent>().setPrimary();
-            m_freeCameraController->setCameraEntity(m_camera1);
         }
         else
         {
             m_camera2.getComponent<CameraComponent>().setPrimary();
-            m_freeCameraController->setCameraEntity(m_camera2);
         }
     }
 

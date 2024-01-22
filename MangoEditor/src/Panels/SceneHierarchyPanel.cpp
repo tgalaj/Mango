@@ -90,6 +90,28 @@ namespace mango
         }
     }
 
+    template<typename ComponentType, typename UIFunction>
+    static void drawComponent(const std::string& name, Entity entity, UIFunction uiFunction)
+    {
+        const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen    | 
+                                                 ImGuiTreeNodeFlags_Framed         |
+                                                 ImGuiTreeNodeFlags_FramePadding   |
+                                                 ImGuiTreeNodeFlags_SpanAvailWidth |
+                                                 ImGuiTreeNodeFlags_AllowItemOverlap;
+
+        if (entity.hasComponent<ComponentType>())
+        {
+            bool opened = ImGui::TreeNodeEx((void*)typeid(ComponentType).hash_code(), treeNodeFlags, name.c_str());
+
+            if (opened)
+            {
+                auto& component = entity.getComponent<ComponentType>();
+                uiFunction(component);
+                ImGui::TreePop();
+            }
+        }
+    }
+
     void SceneHierarchyPanel::drawComponents(Entity entity)
     {
         if (entity.hasComponent<TagComponent>())
@@ -106,34 +128,107 @@ namespace mango
             }
         }
 
-        if (entity.hasComponent<TransformComponent>())
+        drawComponent<TransformComponent>("Transform", entity, [](auto& transform)
         {
-            if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
+            auto position = transform.getPosition();
+            auto rotation = glm::degrees(transform.getRotation());
+            auto scale    = transform.getScale();
+
+            if (ImGui::DragFloat3("Position", &position[0], 0.5f))
             {
-                auto& transform = entity.getComponent<TransformComponent>();
-
-                auto position = transform.getPosition();
-                auto rotation = transform.getOrientation();
-                auto scale    = transform.getScale();
-
-                if (ImGui::DragFloat3("Position", &position[0], 0.5f))
-                {
-                    transform.setPosition(position);
-                }
-
-                if (ImGui::DragFloat4("Rotation", &rotation[0], 0.5f))
-                {
-                    transform.setOrientation(rotation);
-                }
-
-                if (ImGui::DragFloat3("Scale", &scale[0], 0.5f))
-                {
-                    transform.setScale(scale);
-                }
-
-                ImGui::TreePop();
+                transform.setPosition(position);
             }
-        }
+
+            if (ImGui::DragFloat3("Rotation", &rotation[0], 0.5f))
+            {
+                transform.setRotation(rotation);
+            }
+
+            if (ImGui::DragFloat3("Scale", &scale[0], 0.5f))
+            {
+                transform.setScale(scale);
+            }
+        });
+
+        drawComponent<CameraComponent>("Camera", entity, [](auto& cameraComponent)
+        {
+            bool isPrimary = cameraComponent.isPrimary();
+            
+            ImGui::BeginDisabled();
+            ImGui::Checkbox("Primary", &isPrimary);
+            ImGui::EndDisabled();
+
+            ImGui::SameLine();
+            if (ImGui::Button("Set as primary"))
+            {
+                cameraComponent.setPrimary();
+            }
+
+            const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
+            const char* currentProjectionTypeString = projectionTypeStrings[int(cameraComponent.getProjectionType())];
+
+            if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
+            {
+                for (int i = 0; i < std::size(projectionTypeStrings); ++i)
+                {
+                    bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
+                    if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
+                    {
+                        currentProjectionTypeString = projectionTypeStrings[i];
+                        cameraComponent.setProjectionType(CameraComponent::ProjectionType(i));
+                    }
+
+                    if (isSelected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            if (cameraComponent.getProjectionType() == CameraComponent::ProjectionType::Perspective)
+            {
+                float verticalFov = glm::degrees(cameraComponent.getPerspectiveVerticalFieldOfView());
+                if (ImGui::DragFloat("Vertical FOV", &verticalFov))
+                {
+                    cameraComponent.setPerspectiveVerticalFieldOfView(verticalFov);
+                }
+
+                float nearClip = cameraComponent.getPerspectiveNearClip();
+                if (ImGui::DragFloat("Near Clip", &nearClip))
+                {
+                    cameraComponent.setPerspectiveNearClip(nearClip);
+                }
+
+                float farClip = cameraComponent.getPerspectiveFarClip();
+                if (ImGui::DragFloat("Far Clip", &farClip))
+                {
+                    cameraComponent.setPerspectiveFarClip(farClip);
+                }
+            }
+
+            if (cameraComponent.getProjectionType() == CameraComponent::ProjectionType::Orthographic)
+            {
+                float orthoSize = cameraComponent.getOrthographicSize();
+                if (ImGui::DragFloat("Size", &orthoSize))
+                {
+                    cameraComponent.setOrthographicSize(orthoSize);
+                }
+
+                float nearClip = cameraComponent.getOrthographicNearClip();
+                if (ImGui::DragFloat("Near Clip", &nearClip))
+                {
+                    cameraComponent.setOrthographicNearClip(nearClip);
+                }
+
+                float farClip = cameraComponent.getOrthographicFarClip();
+                if (ImGui::DragFloat("Far Clip", &farClip))
+                {
+                    cameraComponent.setOrthographicFarClip(farClip);
+                }
+            }
+
+        });
     }
 
 }
