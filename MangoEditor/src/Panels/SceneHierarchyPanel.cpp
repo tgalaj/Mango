@@ -24,15 +24,25 @@ namespace mango
             if (m_scene)
             {
                 m_scene->m_registry.each([&](auto entityID)
-                    {
-                        Entity entity{ entityID, m_scene.get() };
-                        drawEntityNode(entity);
-                    });
+                { 
+                    Entity entity{ entityID, m_scene.get() };
+                    drawEntityNode(entity);
+                });
             }
 
             if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
             {
                 m_selectedEntity = {};
+            }
+
+            // Right click on empty space
+            if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
+            {
+                if (ImGui::MenuItem("Create Empty Entity"))
+                {
+                    m_scene->createEntity("Empty Entity");
+                }
+                ImGui::EndPopup();
             }
 
             ImGui::End();
