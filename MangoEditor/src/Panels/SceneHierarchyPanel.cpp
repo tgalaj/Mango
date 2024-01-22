@@ -112,6 +112,75 @@ namespace mango
         }
     }
 
+    static bool customDragFloat3(const std::string& label, glm::vec3& values, float defaultValue = 0.0f, float columnWidth = 100.0f)
+    {
+        bool ret = false;
+
+        ImGui::PushID(label.c_str());
+
+        ImGui::Columns(2);
+        ImGui::SetColumnWidth(0, columnWidth);
+        ImGui::Text(label.c_str());
+        ImGui::NextColumn();
+
+        ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
+
+        float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+        ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
+        ImGui::PushStyleColor(ImGuiCol_Button,        { 0.8f, 0.1f, 0.15f, 1.0f });
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.9f, 0.2f, 0.25f, 1.0f });
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive,  { 0.8f, 0.1f, 0.15f, 1.0f });
+        if (ImGui::Button("X", buttonSize)) 
+        {
+            values.x = defaultValue;
+            ret |= true;
+        }
+        ImGui::PopStyleColor(3);
+
+        ImGui::SameLine();
+        ret |= ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
+        ImGui::PopItemWidth();
+        ImGui::SameLine();
+
+        ImGui::PushStyleColor(ImGuiCol_Button,        { 0.2f, 0.7f, 0.2f, 1.0f });
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.3f, 0.8f, 0.3f, 1.0f });
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive,  { 0.2f, 0.7f, 0.2f, 1.0f });
+        if (ImGui::Button("Y", buttonSize))
+        {
+            values.y = defaultValue;
+            ret |= true;
+        }
+        ImGui::PopStyleColor(3);
+
+        ImGui::SameLine();
+        ret |= ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
+        ImGui::PopItemWidth();
+        ImGui::SameLine();
+
+        ImGui::PushStyleColor(ImGuiCol_Button,        { 0.1f, 0.25f, 0.8f, 1.0f });
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.2f, 0.35f, 0.9f, 1.0f });
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive,  { 0.1f, 0.25f, 0.8f, 1.0f });
+        if (ImGui::Button("Z", buttonSize))
+        {
+            values.z = defaultValue;
+            ret |= true;
+        }
+        ImGui::PopStyleColor(3);
+
+        ImGui::SameLine();
+        ret |= ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
+        ImGui::PopItemWidth();
+
+        ImGui::PopStyleVar();
+        ImGui::Columns(1);
+
+        ImGui::PopID();
+
+        return ret;
+    }
+
     void SceneHierarchyPanel::drawComponents(Entity entity)
     {
         if (entity.hasComponent<TagComponent>())
@@ -134,20 +203,22 @@ namespace mango
             auto rotation = glm::degrees(transform.getRotation());
             auto scale    = transform.getScale();
 
-            if (ImGui::DragFloat3("Position", &position[0], 0.5f))
+            if (customDragFloat3("Position", position))
             {
                 transform.setPosition(position);
             }
-
-            if (ImGui::DragFloat3("Rotation", &rotation[0], 0.5f))
+            
+            if (customDragFloat3("Rotation", rotation))
             {
                 transform.setRotation(rotation);
             }
 
-            if (ImGui::DragFloat3("Scale", &scale[0], 0.5f))
+            if (customDragFloat3("Scale", scale, 1.0f))
             {
                 transform.setScale(scale);
             }
+
+            ImGui::Spacing();
         });
 
         drawComponent<CameraComponent>("Camera", entity, [](auto& cameraComponent)
