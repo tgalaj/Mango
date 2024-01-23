@@ -31,6 +31,7 @@ namespace mango
 
         m_mainWindow = Services::application()->getWindow();
 
+        Services::eventBus()->subscribe<EntityRemovedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ComponentAddedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ComponentRemovedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ActiveSceneChangedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
@@ -161,6 +162,17 @@ namespace mango
         m_enviroDynamicQueue.clear();
     }
 
+    void RenderingSystem::receive(const EntityRemovedEvent& event)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        if (event.entity.get().hasComponent<ModelRendererComponent>())
+        {
+            auto renderQueue = event.entity.get().getComponent<ModelRendererComponent>().getRenderQueue();
+            removeEntityFromRenderQueue(event.entity, renderQueue);
+        }
+    }
+
     void RenderingSystem::receive(const ComponentAddedEvent<ModelRendererComponent>& event)
     {
         MG_PROFILE_ZONE_SCOPED;
@@ -185,40 +197,7 @@ namespace mango
     void RenderingSystem::receive(const ComponentRemovedEvent<ModelRendererComponent>& event)
     {
         MG_PROFILE_ZONE_SCOPED;
-
-        std::vector<Entity>::iterator entityIterator;
-
-        switch (event.component.getRenderQueue())
-        {
-        case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
-            entityIterator = std::find(m_opaqueQueue.begin(), m_opaqueQueue.end(), event.entity);
-            if (entityIterator != m_opaqueQueue.end())
-            {
-                m_opaqueQueue.erase(entityIterator);
-            }
-            break;
-        case ModelRendererComponent::RenderQueue::RQ_ALPHA:
-            entityIterator = std::find(m_alphaQueue.begin(), m_alphaQueue.end(), event.entity);
-            if (entityIterator != m_alphaQueue.end())
-            {
-                m_alphaQueue.erase(entityIterator);
-            }
-            break;
-        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
-            entityIterator = std::find(m_enviroStaticQueue.begin(), m_enviroStaticQueue.end(), event.entity);
-            if (entityIterator != m_enviroStaticQueue.end())
-            {
-                m_enviroStaticQueue.erase(entityIterator);
-            }
-            break;
-        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
-            entityIterator = std::find(m_enviroDynamicQueue.begin(), m_enviroDynamicQueue.end(), event.entity);
-            if (entityIterator != m_enviroDynamicQueue.end())
-            {
-                m_enviroDynamicQueue.erase(entityIterator);
-            }
-            break;
-        }
+        removeEntityFromRenderQueue(event.entity, event.component.getRenderQueue());
     }
 
     void RenderingSystem::receive(const ActiveSceneChangedEvent& event)
@@ -1038,4 +1017,42 @@ namespace mango
                             return glm::length(camPos - pos1) >= glm::length(camPos - pos2);
                          });
     }
+
+    void RenderingSystem::removeEntityFromRenderQueue(Entity entity, ModelRendererComponent::RenderQueue renderQueue)
+    {
+        std::vector<Entity>::iterator entityIterator;
+
+        switch (renderQueue)
+        {
+        case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
+            entityIterator = std::find(m_opaqueQueue.begin(), m_opaqueQueue.end(), entity);
+            if (entityIterator != m_opaqueQueue.end())
+            {
+                m_opaqueQueue.erase(entityIterator);
+            }
+            break;
+        case ModelRendererComponent::RenderQueue::RQ_ALPHA:
+            entityIterator = std::find(m_alphaQueue.begin(), m_alphaQueue.end(), entity);
+            if (entityIterator != m_alphaQueue.end())
+            {
+                m_alphaQueue.erase(entityIterator);
+            }
+            break;
+        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
+            entityIterator = std::find(m_enviroStaticQueue.begin(), m_enviroStaticQueue.end(), entity);
+            if (entityIterator != m_enviroStaticQueue.end())
+            {
+                m_enviroStaticQueue.erase(entityIterator);
+            }
+            break;
+        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
+            entityIterator = std::find(m_enviroDynamicQueue.begin(), m_enviroDynamicQueue.end(), entity);
+            if (entityIterator != m_enviroDynamicQueue.end())
+            {
+                m_enviroDynamicQueue.erase(entityIterator);
+            }
+            break;
+        }
+    }
+
 }

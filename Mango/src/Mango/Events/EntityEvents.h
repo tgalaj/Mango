@@ -6,6 +6,20 @@ namespace mango
 {
     class Entity;
 
+    struct EntityAddedEvent : Event
+    {
+        EntityAddedEvent(Entity& e) : entity(e) {}
+
+        std::reference_wrapper<Entity> entity;
+    };
+
+    struct EntityRemovedEvent : Event
+    {
+        EntityRemovedEvent(Entity& e) : entity(e) {}
+
+        std::reference_wrapper<Entity> entity;
+    };
+
     template<typename T>
     struct ComponentAddedEvent : Event
     {

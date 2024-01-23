@@ -30,6 +30,7 @@ namespace mango
         void onUpdate(float dt);
         void onDestroy();
 
+        void receive(const EntityRemovedEvent                            & event);
         void receive(const ComponentAddedEvent<ModelRendererComponent>   & event);
         void receive(const ComponentRemovedEvent<ModelRendererComponent> & event);
         void receive(const ActiveSceneChangedEvent                       & event);
@@ -72,6 +73,7 @@ namespace mango
         void renderLightsDeferred(Scene* scene);
 
         void sortAlpha();
+        void removeEntityFromRenderQueue(Entity entity, ModelRendererComponent::RenderQueue renderQueue);
 
     private:
         enum TextureMaps { SHADOW_MAP = 5 }; //TODO: move to Material class

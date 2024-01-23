@@ -5,6 +5,8 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
+#include <type_traits>
+
 namespace mango
 {
     SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene>& scene)
@@ -51,9 +53,8 @@ namespace mango
         if (ImGui::Begin("Properties"))
         {
             if (m_selectedEntity)
-            {
                 drawComponents(m_selectedEntity);
-            }
+
             ImGui::End();
         }
     }
@@ -76,11 +77,28 @@ namespace mango
                            flags |= ImGuiTreeNodeFlags_OpenOnArrow;
                            flags |= ImGuiTreeNodeFlags_OpenOnDoubleClick;
                            flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
-        bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
-        
+        bool opened     = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
+        bool isSelected = flags & ImGuiTreeNodeFlags_Selected;
+
         if (ImGui::IsItemClicked())
         {
             m_selectedEntity = entity;
+        }
+
+        // Right click on empty space
+        bool isEntityDeleted = false;
+        if (ImGui::BeginPopupContextItem())
+        {
+            if (ImGui::MenuItem("Delete Entity"))
+            {
+                isEntityDeleted = true;
+            }
+            ImGui::EndPopup();
+        }
+        
+        if (isSelected && ImGui::IsItemFocused() && !isEntityDeleted && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Delete)))
+        {
+            isEntityDeleted = true;
         }
 
         if (opened)
@@ -98,6 +116,16 @@ namespace mango
 
             ImGui::TreePop();
         }
+
+        if (isEntityDeleted)
+        {
+            m_scene->destroyEntity(entity);
+
+            if (m_selectedEntity == entity)
+            {
+                m_selectedEntity = {};
+            }
+        }
     }
 
     template<typename ComponentType, typename UIFunction>
@@ -111,13 +139,43 @@ namespace mango
 
         if (entity.hasComponent<ComponentType>())
         {
+            ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
+
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+            float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+
             bool opened = ImGui::TreeNodeEx((void*)typeid(ComponentType).hash_code(), treeNodeFlags, name.c_str());
+            ImGui::PopStyleVar();
+
+            if (!std::is_same_v<ComponentType, TransformComponent>)
+            {
+                ImGui::SameLine(contentRegionAvailable.x - (lineHeight + 3.0f) * 0.5f);
+
+                if (ImGui::Button("...", ImVec2{lineHeight + 3.0f, lineHeight}))
+                {
+                    ImGui::OpenPopup("ComponentSettings");
+                }
+            }
+
+            float removeComponent = false;
+            if (ImGui::BeginPopup("ComponentSettings"))
+            {
+                if(ImGui::MenuItem("Remove component"))
+                    removeComponent = true;
+
+                ImGui::EndPopup();
+            }
 
             if (opened)
             {
                 auto& component = entity.getComponent<ComponentType>();
                 uiFunction(component);
                 ImGui::TreePop();
+            }
+
+            if (removeComponent)
+            {
+                entity.removeComponent<ComponentType>();
             }
         }
     }
@@ -201,11 +259,33 @@ namespace mango
             memset(buffer, 0, sizeof(buffer));
             strcpy_s(buffer, sizeof(buffer), tag.c_str());
 
-            if (ImGui::InputText("Tag", buffer, sizeof(buffer)))
+            if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
             {
                 tag = std::string(buffer);
             }
         }
+
+        ImGui::SameLine();
+        ImGui::PushItemWidth(-1);
+
+        if (ImGui::Button("Add Component"))
+            ImGui::OpenPopup("AddComponent");
+
+        if (ImGui::BeginPopup("AddComponent"))
+        {
+            if (!m_selectedEntity.hasComponent<CameraComponent>())
+            {
+                if (ImGui::MenuItem("Camera"))
+                {
+                    m_selectedEntity.addComponent<CameraComponent>();
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+
+            ImGui::EndPopup();
+        }
+
+        ImGui::PopItemWidth();
 
         drawComponent<TransformComponent>("Transform", entity, [](auto& transform)
         {

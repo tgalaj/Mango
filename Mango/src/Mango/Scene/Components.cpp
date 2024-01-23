@@ -6,11 +6,15 @@
 #include "Mango/Scene/Entity.h"
 #include "Mango/Scene/Scene.h"
 #include "Mango/Scene/SceneManager.h"
+#include "Mango/Core/Services.h"
+#include "Mango/Window/Window.h"
 
 namespace mango
 {
     CameraComponent::CameraComponent()
     {
+        m_aspectRatio = Services::application()->getWindow()->getAspectRatio();
+
         recalculateProjection();
 
         // If there's no primary camera yet, set this one as primary

@@ -33,6 +33,7 @@ namespace mango
     void Scene::destroyEntity(Entity entity)
     {
         MG_PROFILE_ZONE_SCOPED;
+        Services::eventBus()->emit(EntityRemovedEvent(entity));
         m_registry.destroy(entity);
     }
 
