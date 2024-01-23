@@ -305,7 +305,14 @@ namespace mango
 
     void EditorSystem::onGui()
     {    
+        ImGuiStyle& style               = ImGui::GetStyle();
+        float       minImGuiWindowSizeX = style.WindowMinSize.x;
+
+        style.WindowMinSize.x = 370.0f;
+        
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+
+        style.WindowMinSize.x = minImGuiWindowSizeX;
 
         if (ImGui::BeginMainMenuBar())
         {

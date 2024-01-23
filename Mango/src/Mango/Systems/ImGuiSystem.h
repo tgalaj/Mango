@@ -30,7 +30,7 @@ namespace mango
         void end();
         void updateWindowSize(float width, float height);
 
-        /* HUD rendering */
+        // HUD rendering
         static void beginHUD();
         static void endHUD();
 
@@ -43,9 +43,10 @@ namespace mango
         static void image(std::shared_ptr<Texture> pTexture, const glm::vec2 & from, const glm::vec2 & to, const glm::vec4 & color = glm::vec4(1.0f));
         static void imageRounded(std::shared_ptr<Texture> pTexture, const glm::vec2 & from, const glm::vec2 & to, const glm::vec4 & color = glm::vec4(1.0f), float rounding = 0.0f, uint32_t roundingCornersFlags = ImDrawFlags_RoundCornersAll);
 
-    private:
+        // Theme colors
         void setDarkThemeColors();
 
+    private:
         static glm::vec2 m_windowSize;
     };
 }

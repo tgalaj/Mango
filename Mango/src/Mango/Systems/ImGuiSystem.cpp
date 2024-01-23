@@ -38,10 +38,17 @@ namespace mango
         ImGui::CreateContext();
 
         ImGuiIO& io = ImGui::GetIO();
-        io.Fonts->AddFontDefault();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+        // TODO: make VFI paths visible also here, so we can use VFI class to get filepaths
+        auto rootDir = std::filesystem::path(MG_ROOT_DIR);
+        auto interRegular = rootDir / "MangoEditor/assets/fonts/inter/Inter-Regular.ttf";
+        auto interBold    = rootDir / "MangoEditor/assets/fonts/inter/Inter-Bold.ttf";
+        
+        io.Fonts->AddFontFromFileTTF(interBold.string().c_str(), 16.0f);
+        io.FontDefault = io.Fonts->AddFontFromFileTTF(interRegular.string().c_str(), 16.0f);
 
         // Setup Dear ImGui style
         ImGui::StyleColorsDark();

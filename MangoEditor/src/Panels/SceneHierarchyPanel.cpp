@@ -72,7 +72,7 @@ namespace mango
     void SceneHierarchyPanel::drawEntityNode(Entity entity)
     {
         auto& tag = entity.getComponent<TagComponent>().tag;
-        
+
         ImGuiTreeNodeFlags flags  = ((m_selectedEntity == entity) ? ImGuiTreeNodeFlags_Selected : 0);
                            flags |= ImGuiTreeNodeFlags_OpenOnArrow;
                            flags |= ImGuiTreeNodeFlags_OpenOnDoubleClick;
@@ -182,6 +182,9 @@ namespace mango
 
     static bool customDragFloat3(const std::string& label, glm::vec3& values, float defaultValue = 0.0f, float columnWidth = 100.0f)
     {
+        ImGuiIO& io = ImGui::GetIO();
+        auto boldFont = io.Fonts->Fonts[0];
+
         bool ret = false;
 
         ImGui::PushID(label.c_str());
@@ -200,11 +203,15 @@ namespace mango
         ImGui::PushStyleColor(ImGuiCol_Button,        { 0.8f, 0.1f, 0.15f, 1.0f });
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.9f, 0.2f, 0.25f, 1.0f });
         ImGui::PushStyleColor(ImGuiCol_ButtonActive,  { 0.8f, 0.1f, 0.15f, 1.0f });
-        if (ImGui::Button("X", buttonSize)) 
+        ImGui::PushFont(boldFont);
+
+        if (ImGui::Button("X", buttonSize))
         {
             values.x = defaultValue;
             ret |= true;
         }
+
+        ImGui::PopFont();
         ImGui::PopStyleColor(3);
 
         ImGui::SameLine();
@@ -215,11 +222,15 @@ namespace mango
         ImGui::PushStyleColor(ImGuiCol_Button,        { 0.2f, 0.7f, 0.2f, 1.0f });
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.3f, 0.8f, 0.3f, 1.0f });
         ImGui::PushStyleColor(ImGuiCol_ButtonActive,  { 0.2f, 0.7f, 0.2f, 1.0f });
+        ImGui::PushFont(boldFont);
+
         if (ImGui::Button("Y", buttonSize))
         {
             values.y = defaultValue;
             ret |= true;
         }
+
+        ImGui::PopFont();
         ImGui::PopStyleColor(3);
 
         ImGui::SameLine();
@@ -230,11 +241,15 @@ namespace mango
         ImGui::PushStyleColor(ImGuiCol_Button,        { 0.1f, 0.25f, 0.8f, 1.0f });
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.2f, 0.35f, 0.9f, 1.0f });
         ImGui::PushStyleColor(ImGuiCol_ButtonActive,  { 0.1f, 0.25f, 0.8f, 1.0f });
+        ImGui::PushFont(boldFont);
+
         if (ImGui::Button("Z", buttonSize))
         {
             values.z = defaultValue;
             ret |= true;
         }
+
+        ImGui::PopFont();
         ImGui::PopStyleColor(3);
 
         ImGui::SameLine();
