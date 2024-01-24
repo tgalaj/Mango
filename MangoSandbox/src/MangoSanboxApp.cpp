@@ -14,6 +14,7 @@ public:
         auto rootDir = std::filesystem::path(MG_ROOT_DIR);
         auto executableDir = mango::VFI::getExecutableDir();
 
+        // TODO: Add below search paths to config
         mango::VFI::setWriteDir(executableDir / "output");
 
         mango::VFI::addToSearchPath(executableDir);

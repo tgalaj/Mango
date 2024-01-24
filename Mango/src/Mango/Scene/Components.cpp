@@ -47,7 +47,7 @@ namespace mango
     void CameraComponent::setPrimary()
     {
         m_isPrimary = true; 
-        Services::application()->getEventBus()->emit(ChangedPrimaryCameraEvent()); // todo: make m_freeCameraController react on this event
+        Services::application()->getEventBus()->emit(ChangedPrimaryCameraEvent());
     }
 
     void CameraComponent::recalculateProjection()

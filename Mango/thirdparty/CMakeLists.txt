@@ -168,6 +168,13 @@ CPMAddPackage(
     DOWNLOAD_ONLY TRUE
 )
 
+CPMAddPackage(
+    NAME yaml-cpp
+    GITHUB_REPOSITORY jbeder/yaml-cpp
+    GIT_TAG 0.8.0
+    GIT_SHALLOW TRUE
+)
+
 if (imgui_ADDED)
     add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
                              ${imgui_SOURCE_DIR}/imgui_demo.cpp

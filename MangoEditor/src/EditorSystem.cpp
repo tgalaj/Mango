@@ -1,6 +1,7 @@
 #define GLFW_INCLUDE_NONE 
 
 #include "EditorSystem.h"
+#include "Mango/Scene/SceneSerializer.h"
 
 namespace mango
 {
@@ -81,28 +82,28 @@ namespace mango
         auto grassTex            = AssetManager::createTexture2D("textures/grass.png");
         auto openglLogo          = AssetManager::createTexture2D("textures/opengl.png");
 
-        auto cyborg = m_mainScene->createEntity();
+        auto cyborg = m_mainScene->createEntity("Cyborg");
         cyborg.addComponent<ModelRendererComponent>(cyborgModel);
         cyborg.setPosition(0.0f, 0.0f, 0.0f);
         cyborg.setScale(1.0f);
 
-        auto zen3c = m_mainScene->createEntity();
+        auto zen3c = m_mainScene->createEntity("Zen3c");
         zen3c.addComponent<ModelRendererComponent>(zen3cModel);
         zen3c.setPosition(-3.0f, -2.3f, 0.0f);
         zen3c.setScale(0.018f);
 
-        auto damagedHelmet = m_mainScene->createEntity();
+        auto damagedHelmet = m_mainScene->createEntity("Damaged Helmet");
         damagedHelmet.addComponent<ModelRendererComponent>(damagedHelmetModel);
         damagedHelmet.setPosition(3.0f, 2.5f, 0.0f);
         damagedHelmet.setScale(1.0f);
 
-        auto sponza = m_mainScene->createEntity();
+        auto sponza = m_mainScene->createEntity("Sponza");
         sponza.addComponent<ModelRendererComponent>(sponzaModel);
         sponza.setPosition(-1.5f, 0.0f, 10.0f);
         sponza.setRotation(0.0f, -90.0f, 0.0f);
         sponza.setScale(6.0f);
 
-        auto wall = m_mainScene->createEntity();
+        auto wall = m_mainScene->createEntity("Brickwall");
         wall.addComponent<ModelRendererComponent>(wallModel);
         wall.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, brickwallTex);
         wall.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::NORMAL, brickwallNormalTex);
@@ -110,7 +111,7 @@ namespace mango
         wall.setRotation(90.0f, 0.0f, 0.0f);
         wall.setPosition(0, 2.0, -9);
 
-        auto wall2 = m_mainScene->createEntity();
+        auto wall2 = m_mainScene->createEntity("Parallax brickwall");
         wall2.addComponent<ModelRendererComponent>(wallModel);
         wall2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
         wall2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::NORMAL, bricks2Normal);
@@ -118,7 +119,7 @@ namespace mango
         wall2.setRotation(90.0f, 0.0f, 0.0f);
         wall2.setPosition(-5, 2.0, -9);
 
-        auto grass = m_mainScene->createEntity();
+        auto grass = m_mainScene->createEntity("Grass");
         grass.addComponent<ModelRendererComponent>(wallModel);
         grass.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, grassTex);
         grass.getComponent<ModelRendererComponent>().model.getMesh().material.addFloat("alpha_cutoff", 0.1f);
@@ -126,34 +127,34 @@ namespace mango
         grass.setPosition(-5, 1.2, 9);
         grass.setScale(0.5);
 
-        auto window1 = m_mainScene->createEntity();
+        auto window1 = m_mainScene->createEntity("Window1");
         window1.addComponent<ModelRendererComponent>(wallModel, ModelRendererComponent::RenderQueue::RQ_ALPHA);
         window1.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, windowTex);
         window1.setRotation(90.0f, 0.0f, 0.0f);
         window1.setPosition(0, 1.2, 9);
         window1.setScale(0.51);
 
-        auto window3 = m_mainScene->createEntity();
+        auto window3 = m_mainScene->createEntity("Window3");
         window3.addComponent<ModelRendererComponent>(wallModel, ModelRendererComponent::RenderQueue::RQ_ALPHA);
         window3.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, windowTex);
         window3.setRotation(90.0f, 0.0f, 0.0f);
         window3.setPosition(3, 1.2, 13);
         window3.setScale(0.5);
 
-        auto window2 = m_mainScene->createEntity();
+        auto window2 = m_mainScene->createEntity("Window2");
         window2.addComponent<ModelRendererComponent>(wallModel, ModelRendererComponent::RenderQueue::RQ_ALPHA);
         window2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, windowTex);
         window2.setRotation(90.0f, 0.0f, 0.0f);
         window2.setPosition(5, 1.2, 9);
         window2.setScale(0.5);
 
-        auto plane1 = m_mainScene->createEntity();
+        auto plane1 = m_mainScene->createEntity("Plane1");
         plane1.addComponent<ModelRendererComponent>(wallModel);
         plane1.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
         plane1.setRotation(90.0f, 0.0f, 0.0f);
         plane1.setPosition(5, 3.0, -14);
 
-        auto plane2 = m_mainScene->createEntity();
+        auto plane2 = m_mainScene->createEntity("Plane2");
         plane2.addComponent<ModelRendererComponent>(wallModel);
         plane2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
         plane2.setRotation(0.5f, 0.0f, 0.0f);
@@ -174,7 +175,7 @@ namespace mango
               rb3dSphere1.linearDamping        = 0.05f;
               rb3dSphere1.restitution          = 0.7f;
     
-        auto sphere2 = m_mainScene->createEntity();
+        auto sphere2 = m_mainScene->createEntity("Static sphere");
         sphere2.addComponent<ModelRendererComponent>(sphereModel);
         sphere2.setPosition(5, 3, -12.5);
         sphere2.setScale(0.5f);
@@ -188,7 +189,7 @@ namespace mango
 
             for(int j = 0; j < numObjects; ++j)
             {
-                auto object = m_mainScene->createEntity();
+                auto object = m_mainScene->createEntity("Sphere" + std::to_string(int(i * numObjects + j + 1)));
                 object.addComponent<ModelRendererComponent>(sphereModel);
                 object.setScale(0.75f);
             
@@ -204,7 +205,7 @@ namespace mango
         }
 
         /* Lights */
-        auto dirLight = m_mainScene->createEntity();
+        auto dirLight = m_mainScene->createEntity("Directional Light");
         dirLight.addComponent<DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f);
         dirLight.setRotation(-45.0f, 180.0f, 0.0f);
 
@@ -227,7 +228,7 @@ namespace mango
 
         for (int i = 0; i < 4; ++i)
         {
-            auto pointLight = m_mainScene->createEntity();
+            auto pointLight = m_mainScene->createEntity("PointLight" + std::to_string(i));
             pointLight.addComponent<PointLightComponent>();
             pointLight.getComponent<PointLightComponent>().setAttenuation(3.0f, 4.0f, 10.0f);
             pointLight.getComponent<PointLightComponent>().color = colors[i];
@@ -238,7 +239,7 @@ namespace mango
             //    pointLight.getComponent<TransformComponent>()->addChild(nanobot.getComponent<TransformComponent>());
         }
 
-        auto spotLight = m_mainScene->createEntity();
+        auto spotLight = m_mainScene->createEntity("SpotLight");
         spotLight.addComponent<SpotLightComponent>();
         spotLight.getComponent<SpotLightComponent>().color = glm::vec3(255, 206, 250) / 255.0f;
         spotLight.getComponent<SpotLightComponent>().intensity = 1000;
@@ -318,7 +319,35 @@ namespace mango
         {
             if (ImGui::BeginMenu("File"))
             {
-                ImGui::MenuItem("Test item");
+                // TODO: need editor camera to make this work
+                // if (ImGui::MenuItem("New", "Ctrl+N"))
+                // {
+                //     m_mainScene = Services::sceneManager()->createScene("New Scene");
+                //     Services::sceneManager()->setActiveScene(m_mainScene);
+                //     m_sceneHierarchyPanel.setScene(m_mainScene);
+                // }
+
+                // TODO: make shortcuts work
+                if (ImGui::MenuItem("Open", "Ctrl+O"))
+                {
+                    // TODO: file dialog
+                    m_mainScene = SceneSerializer::deserialize("D:/Projekty/Private/Mango/scene.mango");
+                    Services::sceneManager()->setActiveScene(m_mainScene);
+                    m_sceneHierarchyPanel.setScene(m_mainScene);
+                }
+
+                if (ImGui::MenuItem("Save", "Ctrl+S"))
+                {
+                    // TODO: file dialog
+                    SceneSerializer::serialize(m_mainScene, "D:/Projekty/Private/Mango/scene.mango");
+                }
+
+                if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+                {
+                    // TODO: file dialog
+                }
+
+                if (ImGui::MenuItem("Exit")) Services::application()->stop();
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();

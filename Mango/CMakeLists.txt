@@ -62,7 +62,8 @@ target_link_libraries(Mango PUBLIC ${OPENGL_LIBRARIES}
                                    Tracy::TracyClient
                                    physfs-static
                                    Taskflow
-                                   Jolt)
+                                   Jolt
+                                   yaml-cpp::yaml-cpp)
 
 if(MinGW)
     target_link_libraries(Mango bz2)

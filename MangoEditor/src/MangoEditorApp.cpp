@@ -16,6 +16,7 @@ namespace mango
             auto rootDir       = std::filesystem::path(MG_ROOT_DIR);
             auto executableDir = VFI::getExecutableDir();
 
+            // TODO: Add below search paths to config
             VFI::setWriteDir(executableDir / "output");
 
             VFI::addToSearchPath(executableDir);

@@ -10,13 +10,15 @@
 namespace mango
 {
     SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene>& scene)
-        : m_scene(scene) 
+        : m_scene(scene),
+          m_selectedEntity{}
     {
     }
 
     void SceneHierarchyPanel::setScene(const std::shared_ptr<Scene>& scene)
     {
-        m_scene = scene;
+        m_scene          = scene;
+        m_selectedEntity = {};
     }
 
     void SceneHierarchyPanel::draw()
@@ -67,6 +69,19 @@ namespace mango
     void SceneHierarchyPanel::setSelectedEntity(Entity entity)
     {
         m_selectedEntity = entity;
+    }
+
+    template<typename ComponentType>
+    void SceneHierarchyPanel::displayAddComponentEntry(const std::string& entryName)
+    {
+        if (!m_selectedEntity.hasComponent<ComponentType>())
+        {
+            if (ImGui::MenuItem(entryName.c_str()))
+            {
+                m_selectedEntity.addComponent<ComponentType>();
+                ImGui::CloseCurrentPopup();
+            }
+        }
     }
 
     void SceneHierarchyPanel::drawEntityNode(Entity entity)
@@ -288,14 +303,8 @@ namespace mango
 
         if (ImGui::BeginPopup("AddComponent"))
         {
-            if (!m_selectedEntity.hasComponent<CameraComponent>())
-            {
-                if (ImGui::MenuItem("Camera"))
-                {
-                    m_selectedEntity.addComponent<CameraComponent>();
-                    ImGui::CloseCurrentPopup();
-                }
-            }
+            // TODO: add missing components
+            displayAddComponentEntry<CameraComponent>("Camera");
 
             ImGui::EndPopup();
         }
