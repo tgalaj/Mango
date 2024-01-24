@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Mango/Core/UUID.h"
 #include "Mango/Rendering/Attenuation.h"
 #include "Mango/Rendering/Model.h"
 
@@ -19,6 +20,14 @@
 
 namespace mango
 {
+    struct IDComponent
+    {
+        IDComponent() = default;
+        IDComponent(UUID uuid) : id(uuid) {}
+
+        UUID id;
+    };
+
     struct TagComponent
     {
         TagComponent() = default;
@@ -26,11 +35,6 @@ namespace mango
             : tag(tag) {}
 
         std::string tag;
-    };
-
-    struct IDComponent
-    {
-        // TODO
     };
 
     struct ShadowInfo

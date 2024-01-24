@@ -3,6 +3,11 @@
 
 namespace mango
 {
+    UUID Entity::getUUID()
+    {
+        return getComponent<IDComponent>().id;
+    }
+
     void Entity::setPosition(float x, float y, float z)
     {
         getComponent<TransformComponent>().setPosition(x, y, z);

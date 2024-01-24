@@ -92,7 +92,7 @@ namespace mango
                            flags |= ImGuiTreeNodeFlags_OpenOnArrow;
                            flags |= ImGuiTreeNodeFlags_OpenOnDoubleClick;
                            flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
-        bool opened     = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
+        bool opened     = ImGui::TreeNodeEx((void*)(uint64_t)(entity.getUUID()), flags, tag.c_str());
         bool isSelected = flags & ImGuiTreeNodeFlags_Selected;
 
         if (ImGui::IsItemClicked())

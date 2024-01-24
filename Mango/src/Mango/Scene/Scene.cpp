@@ -19,11 +19,19 @@ namespace mango
     Entity Scene::createEntity(const std::string& name)
     {
         MG_PROFILE_ZONE_SCOPED;
+
+        return createEntityWithUUID(UUID(), name);
+    }
+
+    mango::Entity Scene::createEntityWithUUID(UUID uuid, const std::string& name /*= "Entity"*/)
+    {
+        MG_PROFILE_ZONE_SCOPED;
         Entity entity = { m_registry.create(), this };
         
-        auto& transform = entity.addComponent<TransformComponent>();
+                          entity.addComponent<IDComponent>(uuid);
         auto& tag       = entity.addComponent<TagComponent>();
               tag.tag   = name;
+        auto& transform = entity.addComponent<TransformComponent>();
 
         SceneGraphSystem::ROOT_NODE.addChild(transform);
 

@@ -117,7 +117,7 @@ namespace mango
     static void serializeEntity(YAML::Emitter& out, Entity entity)
     {
         out << YAML::BeginMap; // Entity
-        out << YAML::Key << "Entity" << YAML::Value << 9823748; // TODO: UUID for entity
+        out << YAML::Key << "Entity" << YAML::Value << entity.getUUID();
 
         if (entity.hasComponent<TagComponent>())
         {
@@ -227,7 +227,7 @@ namespace mango
         {
             for (auto entity : entities)
             {
-                uint64_t uuid = entity["Entity"].as<uint64_t>(); // TODO: UUID component
+                uint64_t uuid = entity["Entity"].as<uint64_t>();
 
                 std::string entityName;
                 auto tagComponent = entity["TagComponent"];
@@ -237,7 +237,7 @@ namespace mango
                 }
                 MG_CORE_TRACE("\tDeserializing entity with ID = {}, name = {}", uuid, entityName);
 
-                Entity deserializedEntity = scene->createEntity(entityName);
+                Entity deserializedEntity = scene->createEntityWithUUID(uuid, entityName);
 
                 auto transformComponent = entity["TransformComponent"];
                 if (transformComponent)

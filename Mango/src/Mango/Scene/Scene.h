@@ -1,5 +1,7 @@
 #pragma once
-#include "entt.hpp"
+#include "Mango/Core/UUID.h"
+
+#include <entt.hpp>
 
 #include <string>
 
@@ -17,6 +19,8 @@ namespace mango
         std::string& getName() { return m_name; };
         
         Entity createEntity(const std::string& name = "Entity");
+        Entity createEntityWithUUID(UUID uuid, const std::string& name = "Entity");
+
         void destroyEntity(Entity entity);
 
         Entity getPrimaryCamera();
