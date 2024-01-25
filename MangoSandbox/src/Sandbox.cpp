@@ -375,7 +375,7 @@ void Sandbox::moveLights(float dt)
             glm::quat previousOrientation = transform.getOrientation();
 
             transform.setRotation(0.0f, 16.667f * dt, 0.0f);
-            transform.setOrientation(previousOrientation * transform.getOrientation());
+            transform.setRotation(previousOrientation * transform.getOrientation());
         }
     }
 }

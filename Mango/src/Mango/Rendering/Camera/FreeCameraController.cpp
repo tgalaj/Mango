@@ -75,13 +75,13 @@ namespace mango
             // pitch
             if (xRot)
             {
-                transform.setOrientation(glm::angleAxis(glm::radians(deltaPos.y * mouseSensitivity), glm::vec3(1, 0, 0)) * transform.getOrientation());
+                transform.setRotation(glm::angleAxis(glm::radians(deltaPos.y * mouseSensitivity), glm::vec3(1, 0, 0)) * transform.getOrientation());
             }
 
             // yaw
             if (yRot)
             {
-                transform.setOrientation(transform.getOrientation() * glm::angleAxis(glm::radians(deltaPos.x * mouseSensitivity), glm::vec3(0, 1, 0)));
+                transform.setRotation(transform.getOrientation() * glm::angleAxis(glm::radians(deltaPos.x * mouseSensitivity), glm::vec3(0, 1, 0)));
             }
 
             if(xRot || yRot)
@@ -120,13 +120,13 @@ namespace mango
             float rightX = Input::getGamepadAxis(GamepadID::PAD_1, GamepadAxis::RIGHT_X);
             if (glm::abs(rightX) >= gamePadDeadZone)
             {
-                transform.setOrientation(transform.getOrientation() * glm::angleAxis(glm::radians(rightX * gamePadRotationSensitivity), glm::vec3(0, 1, 0)));
+                transform.setRotation(transform.getOrientation() * glm::angleAxis(glm::radians(rightX * gamePadRotationSensitivity), glm::vec3(0, 1, 0)));
             }
 
             float rightY = Input::getGamepadAxis(GamepadID::PAD_1, GamepadAxis::RIGHT_Y);
             if (glm::abs(rightY) >= gamePadDeadZone)
             {
-                transform.setOrientation(glm::angleAxis(glm::radians(rightY * gamePadRotationSensitivity), glm::vec3(1, 0, 0)) * transform.getOrientation());
+                transform.setRotation(glm::angleAxis(glm::radians(rightY * gamePadRotationSensitivity), glm::vec3(1, 0, 0)) * transform.getOrientation());
             }
         }
     }

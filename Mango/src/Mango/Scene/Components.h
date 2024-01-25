@@ -322,8 +322,24 @@ namespace mango
          */
         void setRotation(const glm::vec3& euler)
         {
-            m_rotation    = glm::radians(euler);
-            m_orientation = glm::quat(m_rotation);
+            // Change to rotation order if x is set to pi/2 or -pi/2
+            // to avoid the gimbal lock
+            if (euler.x == 90.0f || euler.x == -90.0f)
+            {
+                m_rotation    = glm::radians(euler);
+                m_orientation = glm::quat({ m_rotation.x, 0,            0            }) *
+                                glm::quat({ 0,            m_rotation.z, 0            }) *
+                                glm::quat({ 0,            0,            m_rotation.y });
+            }
+            else
+            {
+                m_rotation    = glm::radians(euler);
+                m_orientation = glm::quat({ 0,            0,            m_rotation.z }) *
+                                glm::quat({ m_rotation.x, 0,            0            }) * 
+                                glm::quat({ 0,            m_rotation.y, 0            }); 
+            }
+            
+            m_orientation = glm::normalize(m_orientation);
             m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_isDirty     = true;
         }
@@ -339,7 +355,7 @@ namespace mango
         /*
         * Set orientation using axis and angle in degrees
         */
-        void setOrientation(const glm::vec3 & axis, float angle)
+        void setRotation(const glm::vec3 & axis, float angle)
         {
             m_orientation = glm::normalize(glm::angleAxis(glm::radians(angle), glm::normalize(axis)));
             m_rotation    = glm::eulerAngles(m_orientation);
@@ -347,11 +363,11 @@ namespace mango
             m_isDirty     = true;
         }
 
-        void setOrientation(const glm::quat & quat)
+        void setRotation(const glm::quat & quat)
         {
             m_orientation = glm::normalize(quat);
-            m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_rotation    = glm::eulerAngles(m_orientation);
+            m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_isDirty     = true;
         }
 
@@ -399,9 +415,8 @@ namespace mango
 
         glm::mat4 getWorldMatrix () const { return m_worldMatrix;  }
         glm::mat3 getNormalMatrix() const { return m_normalMatrix; }
-        glm::quat getOrientation () const { return m_orientation;  }
         glm::vec3 getPosition    () const { return m_position;     }
-        
+        glm::quat getOrientation () const { return m_orientation;  }
         /** Returns rotation in radians. */
         glm::vec3 getRotation    () const { return m_rotation;     }
         glm::vec3 getScale       () const { return m_scale;        }

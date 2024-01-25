@@ -30,12 +30,12 @@ namespace mango
 
     void Entity::setOrientation(const glm::vec3& axis, float angle)
     {
-        getComponent<TransformComponent>().setOrientation(axis, angle);
+        getComponent<TransformComponent>().setRotation(axis, angle);
     }
 
     void Entity::setOrientation(const glm::quat& quat)
     {
-        getComponent<TransformComponent>().setOrientation(quat);
+        getComponent<TransformComponent>().setRotation(quat);
     }
 
     void Entity::setScale(float x, float y, float z)
