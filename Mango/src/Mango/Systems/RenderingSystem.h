@@ -73,6 +73,7 @@ namespace mango
         void renderLightsDeferred(Scene* scene);
 
         void sortAlpha();
+        void addEntityToRenderQueue     (Entity entity, ModelRendererComponent::RenderQueue renderQueue);
         void removeEntityFromRenderQueue(Entity entity, ModelRendererComponent::RenderQueue renderQueue);
 
     private:

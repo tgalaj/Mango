@@ -5,11 +5,11 @@
 
 namespace mango
 {
-    void GeomPrimitive::genCube(VertexBuffers & buffers, float radius)
+    void GeomPrimitive::genCube(VertexBuffers & buffers, float size)
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        float r2 = radius * 0.5f;
+        float r2 = size * 0.5f;
 
         std::vector<glm::vec3> positions = 
         {

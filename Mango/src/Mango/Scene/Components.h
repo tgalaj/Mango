@@ -277,7 +277,7 @@ namespace mango
 
         explicit ModelRendererComponent(const Model& model, RenderQueue renderQueue = RenderQueue::RQ_OPAQUE)
             : model(model),
-            m_renderQueue(renderQueue)
+              m_renderQueue(renderQueue)
         {}
 
         RenderQueue getRenderQueue() const { return m_renderQueue; }

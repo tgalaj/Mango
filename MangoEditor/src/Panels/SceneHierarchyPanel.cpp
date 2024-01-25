@@ -194,6 +194,8 @@ namespace mango
             {
                 entity.removeComponent<ComponentType>();
             }
+
+            ImGui::Spacing();
         }
     }
 
@@ -309,42 +311,47 @@ namespace mango
 
             // TODO: add missing components
             shouldClosePopup |= !displayAddComponentEntry<CameraComponent>("Camera");
+            shouldClosePopup |= !displayAddComponentEntry<DirectionalLightComponent>("Directional Light");
+            shouldClosePopup |= !displayAddComponentEntry<PointLightComponent>("Point Light");
+            shouldClosePopup |= !displayAddComponentEntry<SpotLightComponent>("Spot Light");
+            shouldClosePopup |= !displayAddComponentEntry<ModelRendererComponent>("Model Renderer");
+            shouldClosePopup |= !displayAddComponentEntry<RigidBody3DComponent>("Rigidbody 3D");
+            shouldClosePopup |= !displayAddComponentEntry<BoxCollider3DComponent>("Box Collider 3D");
+            shouldClosePopup |= !displayAddComponentEntry<SphereColliderComponent>("Sphere Collider");
 
-            if (shouldClosePopup)
-                ImGui::CloseCurrentPopup();
+            //if (shouldClosePopup)
+            //    ImGui::CloseCurrentPopup();
 
             ImGui::EndPopup();
         }
 
         ImGui::PopItemWidth();
 
-        drawComponent<TransformComponent>("Transform", entity, [](auto& transform)
+        drawComponent<TransformComponent>("Transform", entity, [](auto& component)
         {
-            auto position = transform.getPosition();
-            auto rotation = glm::degrees(transform.getRotation());
-            auto scale    = transform.getScale();
+            auto position = component.getPosition();
+            auto rotation = glm::degrees(component.getRotation());
+            auto scale    = component.getScale();
 
             if (customDragFloat3("Position", position))
             {
-                transform.setPosition(position);
+                component.setPosition(position);
             }
             
             if (customDragFloat3("Rotation", rotation))
             {
-                transform.setRotation(rotation);
+                component.setRotation(rotation);
             }
 
             if (customDragFloat3("Scale", scale, 1.0f))
             {
-                transform.setScale(scale);
+                component.setScale(scale);
             }
-
-            ImGui::Spacing();
         });
 
-        drawComponent<CameraComponent>("Camera", entity, [](auto& cameraComponent)
+        drawComponent<CameraComponent>("Camera", entity, [](auto& component)
         {
-            bool isPrimary = cameraComponent.isPrimary();
+            bool isPrimary = component.isPrimary();
             
             ImGui::BeginDisabled();
             ImGui::Checkbox("Primary", &isPrimary);
@@ -353,11 +360,11 @@ namespace mango
             ImGui::SameLine();
             if (ImGui::Button("Set as primary"))
             {
-                cameraComponent.setPrimary();
+                component.setPrimary();
             }
 
             const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
-            const char* currentProjectionTypeString = projectionTypeStrings[int(cameraComponent.getProjectionType())];
+            const char* currentProjectionTypeString = projectionTypeStrings[int(component.getProjectionType())];
 
             if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
             {
@@ -367,7 +374,7 @@ namespace mango
                     if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
                     {
                         currentProjectionTypeString = projectionTypeStrings[i];
-                        cameraComponent.setProjectionType(CameraComponent::ProjectionType(i));
+                        component.setProjectionType(CameraComponent::ProjectionType(i));
                     }
 
                     if (isSelected)
@@ -378,48 +385,92 @@ namespace mango
                 ImGui::EndCombo();
             }
 
-            if (cameraComponent.getProjectionType() == CameraComponent::ProjectionType::Perspective)
+            if (component.getProjectionType() == CameraComponent::ProjectionType::Perspective)
             {
-                float verticalFov = glm::degrees(cameraComponent.getPerspectiveVerticalFieldOfView());
+                float verticalFov = glm::degrees(component.getPerspectiveVerticalFieldOfView());
                 if (ImGui::DragFloat("Vertical FOV", &verticalFov))
                 {
-                    cameraComponent.setPerspectiveVerticalFieldOfView(verticalFov);
+                    component.setPerspectiveVerticalFieldOfView(verticalFov);
                 }
 
-                float nearClip = cameraComponent.getPerspectiveNearClip();
+                float nearClip = component.getPerspectiveNearClip();
                 if (ImGui::DragFloat("Near Clip", &nearClip))
                 {
-                    cameraComponent.setPerspectiveNearClip(nearClip);
+                    component.setPerspectiveNearClip(nearClip);
                 }
 
-                float farClip = cameraComponent.getPerspectiveFarClip();
+                float farClip = component.getPerspectiveFarClip();
                 if (ImGui::DragFloat("Far Clip", &farClip))
                 {
-                    cameraComponent.setPerspectiveFarClip(farClip);
+                    component.setPerspectiveFarClip(farClip);
                 }
             }
 
-            if (cameraComponent.getProjectionType() == CameraComponent::ProjectionType::Orthographic)
+            if (component.getProjectionType() == CameraComponent::ProjectionType::Orthographic)
             {
-                float orthoSize = cameraComponent.getOrthographicSize();
+                float orthoSize = component.getOrthographicSize();
                 if (ImGui::DragFloat("Size", &orthoSize))
                 {
-                    cameraComponent.setOrthographicSize(orthoSize);
+                    component.setOrthographicSize(orthoSize);
                 }
 
-                float nearClip = cameraComponent.getOrthographicNearClip();
+                float nearClip = component.getOrthographicNearClip();
                 if (ImGui::DragFloat("Near Clip", &nearClip))
                 {
-                    cameraComponent.setOrthographicNearClip(nearClip);
+                    component.setOrthographicNearClip(nearClip);
                 }
 
-                float farClip = cameraComponent.getOrthographicFarClip();
+                float farClip = component.getOrthographicFarClip();
                 if (ImGui::DragFloat("Far Clip", &farClip))
                 {
-                    cameraComponent.setOrthographicFarClip(farClip);
+                    component.setOrthographicFarClip(farClip);
                 }
             }
 
+        });
+
+        drawComponent<RigidBody3DComponent>("Rigidbody 3D", entity, [](auto& component)
+        {
+            const char* motionTypeStrings[] = { "Static", "Kinematic", "Dynamic"};
+            const char* currentMotionType   = motionTypeStrings[int(component.motionType)];
+
+            if (ImGui::BeginCombo("Motion Type", currentMotionType))
+            {
+                for (int i = 0; i < std::size(motionTypeStrings); ++i)
+                {
+                    bool isSelected = currentMotionType == motionTypeStrings[i];
+                    if (ImGui::Selectable(motionTypeStrings[i], isSelected))
+                    {
+                        currentMotionType = motionTypeStrings[i];
+                        component.motionType = RigidBody3DComponent::MotionType(i);
+                    }
+
+                    if (isSelected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            ImGui::DragFloat("Friction",        &component.friction,       0.01f, 0.0f, 1.0f);
+            ImGui::DragFloat("Restitution",     &component.restitution,    0.01f, 0.0f, 1.0f);
+            ImGui::DragFloat("Linear Damping",  &component.linearDamping,  0.01f, 0.0f, 1.0f);
+            ImGui::DragFloat("Angular Damping", &component.angularDamping, 0.01f, 0.0f, 1.0f);
+
+            ImGui::Checkbox("Activated",       &component.isInitiallyActivated);
+        });
+
+        drawComponent<BoxCollider3DComponent>("Box Collider 3D", entity, [](auto& component)
+        {
+            ImGui::DragFloat3("Offset", &component.offset[0]);
+            ImGui::DragFloat3("Extent", &component.halfExtent[0]);
+        });
+
+        drawComponent<SphereColliderComponent>("Sphere Collider", entity, [](auto& component)
+        {
+            ImGui::DragFloat3("Offset", &component.offset[0]);
+            ImGui::DragFloat ("Radius", &component.radius);
         });
     }
 

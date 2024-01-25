@@ -10,17 +10,22 @@
 
 namespace mango
 {
-    Model::Model()
+    Model::Model(const std::string& filename)
     {
-    }
-
-    Model::~Model()
-    {
+        load(filename);
     }
 
     void Model::load(const std::string & filename)
     {
         MG_PROFILE_ZONE_SCOPED;
+
+        m_modelType = ModelType::Model3D;
+        m_filename  = filename;
+
+        if (!m_meshes.empty())
+        {
+            m_meshes.clear();
+        }
 
         Assimp::Importer importer;
 
@@ -187,6 +192,11 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
+        if (!m_meshes.empty())
+        {
+            m_meshes.clear();
+        }
+
         Mesh mesh;
 
         if (calcTangents) calcTangentSpace(buffers);
@@ -200,32 +210,85 @@ namespace mango
         m_meshes.push_back(mesh);
     }
 
+    void Model::regeneratePrimitive()
+    {
+        switch (m_modelType)
+        {
+        case mango::Model::ModelType::Cone:
+            genCone(m_primitiveProperties.height, m_primitiveProperties.radius, m_primitiveProperties.slices, m_primitiveProperties.stacks);
+            break;
+        case mango::Model::ModelType::Cube:
+            genCube(m_primitiveProperties.size);
+            break;
+        case mango::Model::ModelType::Cylinder:
+            genCylinder(m_primitiveProperties.height, m_primitiveProperties.radius, m_primitiveProperties.slices);
+            break;
+        case mango::Model::ModelType::Plane:
+            genPlane(m_primitiveProperties.width, m_primitiveProperties.height, m_primitiveProperties.slices, m_primitiveProperties.stacks);
+            break;
+        case mango::Model::ModelType::Sphere:
+            genSphere(m_primitiveProperties.radius, m_primitiveProperties.slices);
+            break;
+        case mango::Model::ModelType::Torus:
+            genTorus(m_primitiveProperties.innerRadius, m_primitiveProperties.outerRadius, m_primitiveProperties.slices, m_primitiveProperties.stacks);
+            break;
+        case mango::Model::ModelType::Quad:
+            genQuad(m_primitiveProperties.width, m_primitiveProperties.height);
+            break;
+        default:
+            break;
+        }
+    }
+
     void Model::genCone(float height, float radius, unsigned int slices, unsigned int stacks)
     {
         MG_PROFILE_ZONE_SCOPED;
 
+        m_modelType = ModelType::Cone;
+
         VertexBuffers buffers;
         GeomPrimitive::genCone(buffers, height, radius, slices, stacks);
+        m_primitiveProperties = 
+        { 
+            .height = height, 
+            .radius = radius, 
+            .slices = slices, 
+            .stacks = stacks 
+        };
+        
+        genPrimitive(buffers);
+    }
+
+    void Model::genCube(float size)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        m_modelType = ModelType::Cube;
+
+        VertexBuffers buffers;
+        GeomPrimitive::genCube(buffers, size);
+        m_primitiveProperties =
+        {
+            .size = size
+        };
 
         genPrimitive(buffers);
     }
 
-    void Model::genCube(float radius)
+    void Model::genCylinder(float height, float radius, unsigned int slices)
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        VertexBuffers buffers;
-        GeomPrimitive::genCube(buffers, radius);
-
-        genPrimitive(buffers);
-    }
-
-    void Model::genCylinder(float height, float r, unsigned int slices)
-    {
-        MG_PROFILE_ZONE_SCOPED;
+        m_modelType = ModelType::Cylinder;
 
         VertexBuffers buffers;
-        GeomPrimitive::genCylinder(buffers, height, r, slices);
+        GeomPrimitive::genCylinder(buffers, height, radius, slices);
+        m_primitiveProperties =
+        {
+            .height = height,
+            .radius = radius,
+            .slices = slices
+        };
 
         genPrimitive(buffers);
     }
@@ -234,8 +297,17 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
+        m_modelType = ModelType::Plane;
+
         VertexBuffers buffers;
         GeomPrimitive::genPlane(buffers, width, height, slices, stacks);
+        m_primitiveProperties =
+        {
+            .width  = width,
+            .height = height,
+            .slices = slices,
+            .stacks = stacks
+        };
 
         genPrimitive(buffers);
     }
@@ -244,8 +316,15 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
+        m_modelType = ModelType::Sphere;
+
         VertexBuffers buffers;
         GeomPrimitive::genSphere(buffers, radius, slices);
+        m_primitiveProperties =
+        {
+            .radius = radius,
+            .slices = slices
+        };
 
         genPrimitive(buffers);
     }
@@ -254,8 +333,17 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
+        m_modelType = ModelType::Torus;
+
         VertexBuffers buffers;
         GeomPrimitive::genTorus(buffers, innerRadius, outerRadius, slices, stacks);
+        m_primitiveProperties =
+        {
+            .innerRadius = innerRadius,
+            .outerRadius = outerRadius,
+            .slices = slices,
+            .stacks = stacks
+        };
 
         genPrimitive(buffers);
     }
@@ -264,8 +352,15 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
+        m_modelType = ModelType::Quad;
+
         VertexBuffers buffers;
         GeomPrimitive::genQuad(buffers, width, height);
+        m_primitiveProperties =
+        {
+            .width  = width,
+            .height = height
+        };
 
         // quad has its own predefined tangents
         genPrimitive(buffers, false);

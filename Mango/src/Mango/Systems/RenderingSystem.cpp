@@ -177,21 +177,7 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        switch (event.component.getRenderQueue())
-        {
-        case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
-            m_opaqueQueue.push_back(event.entity);
-            break;
-        case ModelRendererComponent::RenderQueue::RQ_ALPHA:
-            m_alphaQueue.push_back(event.entity);
-            break;
-        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
-            m_enviroStaticQueue.push_back(event.entity);
-            break;
-        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
-            m_enviroDynamicQueue.push_back(event.entity);
-            break;
-        }
+        addEntityToRenderQueue(event.entity, event.component.getRenderQueue());
     }
 
     void RenderingSystem::receive(const ComponentRemovedEvent<ModelRendererComponent>& event)
@@ -1016,6 +1002,25 @@ namespace mango
 
                             return glm::length(camPos - pos1) >= glm::length(camPos - pos2);
                          });
+    }
+
+    void RenderingSystem::addEntityToRenderQueue(Entity entity, ModelRendererComponent::RenderQueue renderQueue)
+    {
+        switch (renderQueue)
+        {
+        case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
+            m_opaqueQueue.push_back(entity);
+            break;
+        case ModelRendererComponent::RenderQueue::RQ_ALPHA:
+            m_alphaQueue.push_back(entity);
+            break;
+        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
+            m_enviroStaticQueue.push_back(entity);
+            break;
+        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
+            m_enviroDynamicQueue.push_back(entity);
+            break;
+        }
     }
 
     void RenderingSystem::removeEntityFromRenderQueue(Entity entity, ModelRendererComponent::RenderQueue renderQueue)
