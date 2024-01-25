@@ -32,6 +32,17 @@ namespace mango
     };
 
     template<typename T>
+    struct ComponentReplacedEvent : Event
+    {
+        ComponentReplacedEvent(const T& comp, Entity& e)
+            : component(comp),
+              entity   (e) {}
+
+        T component;
+        std::reference_wrapper<Entity> entity;
+    };
+
+    template<typename T>
     struct ComponentRemovedEvent : Event
     {
         ComponentRemovedEvent(const T& comp, Entity& e)

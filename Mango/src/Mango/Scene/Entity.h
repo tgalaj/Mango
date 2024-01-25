@@ -19,7 +19,11 @@ namespace mango
         template <typename T, typename... Args>
         T& addOrReplaceComponent(Args&&... args)
         {
+            Services::eventBus()->emit(ComponentRemovedEvent<T>(getComponent<T>(), *this));
+            
             T& component = m_scene->m_registry.emplace_or_replace<T>(m_entityHandle, std::forward<Args>(args)...);
+            
+            Services::eventBus()->emit(ComponentAddedEvent<T>(component, *this));
 
             return component;
         }

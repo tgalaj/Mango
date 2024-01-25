@@ -4,6 +4,7 @@
 
 #include <imgui.h>
 #include <imgui_internal.h>
+#include <misc/cpp/imgui_stdlib.h>
 
 #include <type_traits>
 
@@ -538,6 +539,116 @@ namespace mango
                 }
             }
 
+        });
+
+        drawComponent<ModelRendererComponent>("Model Renderer", entity, [&entity](auto& component)
+        {
+            const char* renderQueueStrings[] = { "Opaque", "Alpha", "Static Environment Mapping", "Dynamic Environment Mapping"};
+            const char* currentRenderQueue   = renderQueueStrings[int(component.getRenderQueue())];
+
+            if (ImGui::BeginCombo("Render Queue", currentRenderQueue))
+            {
+                for (int i = 0; i < std::size(renderQueueStrings); ++i)
+                {
+                    bool isSelected = currentRenderQueue == renderQueueStrings[i];
+                    if (ImGui::Selectable(renderQueueStrings[i], isSelected))
+                    {
+                        currentRenderQueue   = renderQueueStrings[i];
+                        entity.addOrReplaceComponent<ModelRendererComponent>(component.model, ModelRendererComponent::RenderQueue(i));
+                    }
+
+                    if (isSelected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            Model& model = component.model;
+            const char* modelTypeStrings[] = { "Model3D", "Cone", "Cube", "Cylinder", "Plane", "Sphere", "Torus", "Quad" };
+            const char* currentModelType = modelTypeStrings[int(model.getModelType())];
+
+            if (ImGui::BeginCombo("Type", currentModelType))
+            {
+                for (int i = 0; i < std::size(modelTypeStrings); ++i)
+                {
+                    bool isSelected = currentModelType == modelTypeStrings[i];
+                    if (ImGui::Selectable(modelTypeStrings[i], isSelected))
+                    {
+                        currentModelType = modelTypeStrings[i];
+                        model.setModelType(Model::ModelType(i));
+                    }
+
+                    if (isSelected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            PrimitiveProperties pp = model.getPrimitiveProperties();
+            switch (model.getModelType())
+            {
+                case Model::ModelType::Model3D:
+                    // TODO: file dialog
+                    ImGui::InputText("##Filename", &model.m_filename);
+
+                    ImGui::SameLine();
+                    ImGui::PushItemWidth(-1);
+
+                    if (ImGui::Button("Load"))
+                    {
+                        model.load(model.m_filename);
+                    }
+                    ImGui::PopItemWidth();
+                    break;
+
+                case mango::Model::ModelType::Cone:
+                    if (ImGui::DragFloat("Height", &pp.height)) model.setPrimitiveProperties(pp);
+                    if (ImGui::DragFloat("Radius", &pp.radius)) model.setPrimitiveProperties(pp);
+                    if (ImGui::DragInt  ("Slices", &pp.slices)) model.setPrimitiveProperties(pp);
+                    if (ImGui::DragInt  ("Stacks", &pp.stacks)) model.setPrimitiveProperties(pp);
+                    break;
+
+                case mango::Model::ModelType::Cube:
+                    if (ImGui::DragFloat("Size", &pp.size)) model.setPrimitiveProperties(pp);
+                    break;
+
+                case mango::Model::ModelType::Cylinder:
+                    if (ImGui::DragFloat("Height", &pp.height)) model.setPrimitiveProperties(pp);
+                    if (ImGui::DragFloat("Radius", &pp.radius)) model.setPrimitiveProperties(pp);
+                    if (ImGui::DragInt  ("Slices", &pp.slices)) model.setPrimitiveProperties(pp);
+                    break;
+
+                case mango::Model::ModelType::Plane:
+                    if (ImGui::DragFloat("Width",  &pp.width))  model.setPrimitiveProperties(pp);
+                    if (ImGui::DragFloat("Height", &pp.height)) model.setPrimitiveProperties(pp);
+                    if (ImGui::DragInt  ("Slices", &pp.slices)) model.setPrimitiveProperties(pp);
+                    if (ImGui::DragInt  ("Stacks", &pp.stacks)) model.setPrimitiveProperties(pp);
+                    break;
+
+                case mango::Model::ModelType::Sphere:
+                    if (ImGui::DragFloat("Radius", &pp.radius)) model.setPrimitiveProperties(pp);
+                    if (ImGui::DragInt  ("Slices", &pp.slices)) model.setPrimitiveProperties(pp);
+                    break;
+
+                case mango::Model::ModelType::Torus:
+                    if (ImGui::DragFloat("Inner Radius", &pp.innerRadius)) model.setPrimitiveProperties(pp);
+                    if (ImGui::DragFloat("Outer Radius", &pp.outerRadius)) model.setPrimitiveProperties(pp);
+                    if (ImGui::DragInt  ("Slices",       &pp.slices))      model.setPrimitiveProperties(pp);
+                    if (ImGui::DragInt  ("Stacks",       &pp.stacks))      model.setPrimitiveProperties(pp);
+                    break;
+
+                case mango::Model::ModelType::Quad:
+                    if (ImGui::DragFloat("Width",  &pp.width))  model.setPrimitiveProperties(pp);
+                    if (ImGui::DragFloat("Height", &pp.height)) model.setPrimitiveProperties(pp);
+                    break;
+
+                default:
+                    break;
+            }
         });
 
         drawComponent<RigidBody3DComponent>("Rigidbody 3D", entity, [](auto& component)

@@ -33,6 +33,7 @@ namespace mango
 
         Services::eventBus()->subscribe<EntityRemovedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ComponentAddedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
+        Services::eventBus()->subscribe<ComponentReplacedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ComponentRemovedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ActiveSceneChangedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
 
@@ -176,7 +177,13 @@ namespace mango
     void RenderingSystem::receive(const ComponentAddedEvent<ModelRendererComponent>& event)
     {
         MG_PROFILE_ZONE_SCOPED;
+        addEntityToRenderQueue(event.entity, event.component.getRenderQueue());
+    }
 
+    void RenderingSystem::receive(const ComponentReplacedEvent<ModelRendererComponent>& event)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+        removeEntityFromRenderQueue(event.entity, event.component.getRenderQueue());
         addEntityToRenderQueue(event.entity, event.component.getRenderQueue());
     }
 

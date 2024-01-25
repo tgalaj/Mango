@@ -32,6 +32,7 @@ namespace mango
 
         void receive(const EntityRemovedEvent                            & event);
         void receive(const ComponentAddedEvent<ModelRendererComponent>   & event);
+        void receive(const ComponentReplacedEvent<ModelRendererComponent>& event);
         void receive(const ComponentRemovedEvent<ModelRendererComponent> & event);
         void receive(const ActiveSceneChangedEvent                       & event);
 

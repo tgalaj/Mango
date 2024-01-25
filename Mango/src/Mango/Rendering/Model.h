@@ -18,8 +18,8 @@ namespace mango
         float    size        = 1.0f;
         float    innerRadius = 1.0f;
         float    outerRadius = 2.0f;
-        uint32_t slices      = 10;
-        uint32_t stacks      = 10;
+        int32_t  slices      = 10;
+        int32_t  stacks      = 10;
     }; 
 
     class Model
@@ -45,13 +45,15 @@ namespace mango
         void render(Shader & shader);
 
         ModelType getModelType() const { return m_modelType; }
-        void setModelType(ModelType type) { m_modelType = type; regeneratePrimitive(); }
+        void setModelType(ModelType type);
 
         void setDrawMode(GLenum drawMode);
         GLenum getDrawMode() { return getMesh(0).getDrawMode(); }
 
         PrimitiveProperties getPrimitiveProperties() const { return m_primitiveProperties; }
         void setPrimitiveProperties(PrimitiveProperties properties) { m_primitiveProperties = properties; regeneratePrimitive(); }
+
+        std::string getFilename() const { return m_filename; }
 
         Mesh & getMesh(unsigned int index = 0)
         {
@@ -64,6 +66,9 @@ namespace mango
         }
 
         unsigned meshesCount() const { return m_meshes.size(); }
+    
+    public:
+        std::string m_filename = "";
 
     private:
         void calcTangentSpace(VertexBuffers & buffers) const;
@@ -77,7 +82,6 @@ namespace mango
 
     private:
         std::vector<Mesh>   m_meshes;
-        std::string         m_filename  = "";
         ModelType           m_modelType = ModelType::None;
         PrimitiveProperties m_primitiveProperties{};
     };

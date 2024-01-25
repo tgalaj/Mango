@@ -19,6 +19,8 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
+        if (filename.empty()) return;
+
         m_modelType = ModelType::Model3D;
         m_filename  = filename;
 
@@ -252,8 +254,8 @@ namespace mango
         { 
             .height = height, 
             .radius = radius, 
-            .slices = slices, 
-            .stacks = stacks 
+            .slices = (int32_t)slices, 
+            .stacks = (int32_t)stacks 
         };
         
         genPrimitive(buffers);
@@ -287,7 +289,7 @@ namespace mango
         {
             .height = height,
             .radius = radius,
-            .slices = slices
+            .slices = (int32_t)slices
         };
 
         genPrimitive(buffers);
@@ -305,8 +307,8 @@ namespace mango
         {
             .width  = width,
             .height = height,
-            .slices = slices,
-            .stacks = stacks
+            .slices = (int32_t)slices,
+            .stacks = (int32_t)stacks
         };
 
         genPrimitive(buffers);
@@ -323,7 +325,7 @@ namespace mango
         m_primitiveProperties =
         {
             .radius = radius,
-            .slices = slices
+            .slices = (int32_t)slices
         };
 
         genPrimitive(buffers);
@@ -341,8 +343,8 @@ namespace mango
         {
             .innerRadius = innerRadius,
             .outerRadius = outerRadius,
-            .slices = slices,
-            .stacks = stacks
+            .slices      = (int32_t)slices,
+            .stacks      = (int32_t)stacks
         };
 
         genPrimitive(buffers);
@@ -376,6 +378,20 @@ namespace mango
         {
             shader.updateUniforms(m_meshes[i].material);
             m_meshes[i].render();
+        }
+    }
+
+    void Model::setModelType(ModelType type)
+    {
+        m_modelType = type; 
+        
+        if (m_modelType == ModelType::Model3D)
+        {
+            load(m_filename);
+        }
+        else
+        {
+            regeneratePrimitive();
         }
     }
 
