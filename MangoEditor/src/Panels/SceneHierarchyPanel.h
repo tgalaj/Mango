@@ -19,7 +19,7 @@ namespace mango
 
     private:
         template<typename T>
-        void displayAddComponentEntry(const std::string& entryName);
+        bool displayAddComponentEntry(const std::string& entryName);
 
         void drawEntityNode(Entity entity);
         void drawComponents(Entity entity);
