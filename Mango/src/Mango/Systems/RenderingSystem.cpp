@@ -492,7 +492,7 @@ namespace mango
                 auto [pointLight, transform] = view.get(entity);
 
                 auto model       = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
-                                   glm::scale(glm::mat4(1.0f), glm::vec3(pointLight.range));
+                                   glm::scale(glm::mat4(1.0f), glm::vec3(pointLight.getRange()));
                 auto view        = getCamera().view();
                 auto projection  = getCamera().projection();
 
@@ -513,8 +513,8 @@ namespace mango
             {
                 auto [spotLight, transform] = view.get(entity);
 
-                float heightScale = spotLight.range;
-                float radiusScale = spotLight.range * glm::tan(glm::acos(spotLight.getCutOffAngle()) * 1.0f);
+                float heightScale = spotLight.getRange();
+                float radiusScale = spotLight.getRange() * glm::tan(spotLight.getCutOffAngle());
 
                 auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
                                   glm::mat4_cast(glm::inverse(transform.getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
@@ -681,11 +681,11 @@ namespace mango
 
                 m_forwardPoint->setUniform(S_POINT_LIGHT ".base.color",      pointLight.color);
                 m_forwardPoint->setUniform(S_POINT_LIGHT ".base.intensity",  pointLight.intensity);
-                m_forwardPoint->setUniform(S_POINT_LIGHT ".atten.constant",  pointLight.attenuation.constant);
-                m_forwardPoint->setUniform(S_POINT_LIGHT ".atten.linear",    pointLight.attenuation.linear);
-                m_forwardPoint->setUniform(S_POINT_LIGHT ".atten.quadratic", pointLight.attenuation.quadratic);
+                m_forwardPoint->setUniform(S_POINT_LIGHT ".atten.constant",  pointLight.getAttenuation().constant);
+                m_forwardPoint->setUniform(S_POINT_LIGHT ".atten.linear",    pointLight.getAttenuation().linear);
+                m_forwardPoint->setUniform(S_POINT_LIGHT ".atten.quadratic", pointLight.getAttenuation().quadratic);
                 m_forwardPoint->setUniform(S_POINT_LIGHT ".position",        transform.getPosition());
-                m_forwardPoint->setUniform(S_POINT_LIGHT ".range",           pointLight.range);
+                m_forwardPoint->setUniform(S_POINT_LIGHT ".range",           pointLight.getRange());
                 m_forwardPoint->setUniform("s_far_plane", 100.0f);
 
                 beginForwardRendering();
@@ -728,13 +728,13 @@ namespace mango
 
                 m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.base.color",      spotLight.color);
                 m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.base.intensity",  spotLight.intensity);
-                m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spotLight.attenuation .constant);
-                m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spotLight.attenuation   .linear);
-                m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spotLight.attenuation.quadratic);
+                m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spotLight.getAttenuation().constant);
+                m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spotLight.getAttenuation().linear);
+                m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spotLight.getAttenuation().quadratic);
                 m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.position",        transform.getPosition());
-                m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.range",           spotLight.range);
+                m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.range",           spotLight.getRange());
                 m_forwardSpot->setUniform(S_SPOT_LIGHT ".direction",             transform.getDirection());
-                m_forwardSpot->setUniform(S_SPOT_LIGHT ".cutoff",                spotLight.getCutOffAngle());
+                m_forwardSpot->setUniform(S_SPOT_LIGHT ".cutoff",                glm::cos(spotLight.getCutOffAngle()));
                 m_forwardSpot->setUniform("s_light_matrix",                      lightMatrix);
 
                 beginForwardRendering();
@@ -802,7 +802,7 @@ namespace mango
         /* Point Lights */
         glEnable(GL_STENCIL_TEST);
         {   
-            MG_PROFILE_ZONE_NAMED_N(dirLightsZone, "Deferred Point Lights", true);
+            MG_PROFILE_ZONE_NAMED_N(pointLightsZone, "Deferred Point Lights", true);
             MG_PROFILE_GL_ZONE("Deferred Point Lights");
 
             auto view = scene->getEntitiesWithComponent<PointLightComponent, TransformComponent>();
@@ -847,7 +847,7 @@ namespace mango
 
                 /* Bounding sphere MVP matrix setup */
                 auto model = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
-                             glm::scale    (glm::mat4(1.0f), glm::vec3(pointLight.range));
+                             glm::scale    (glm::mat4(1.0f), glm::vec3(pointLight.getRange()));
 
                 auto view       = getCamera().view();
                 auto projection = getCamera().projection();
@@ -886,12 +886,12 @@ namespace mango
 
                 m_deferredPoint->setUniform(S_POINT_LIGHT ".base.color",      pointLight.color);
                 m_deferredPoint->setUniform(S_POINT_LIGHT ".base.intensity",  pointLight.intensity);
-                m_deferredPoint->setUniform(S_POINT_LIGHT ".atten.constant",  pointLight.attenuation.constant);
-                m_deferredPoint->setUniform(S_POINT_LIGHT ".atten.linear",    pointLight.attenuation.linear);
-                m_deferredPoint->setUniform(S_POINT_LIGHT ".atten.quadratic", pointLight.attenuation.quadratic);
+                m_deferredPoint->setUniform(S_POINT_LIGHT ".atten.constant",  pointLight.getAttenuation().constant);
+                m_deferredPoint->setUniform(S_POINT_LIGHT ".atten.linear",    pointLight.getAttenuation().linear);
+                m_deferredPoint->setUniform(S_POINT_LIGHT ".atten.quadratic", pointLight.getAttenuation().quadratic);
                 m_deferredPoint->setUniform(S_POINT_LIGHT ".position",        transform.getPosition());
-                m_deferredPoint->setUniform(S_POINT_LIGHT ".range",           pointLight.range);
-                m_deferredPoint->setUniform("s_far_plane",                    100.0f);
+                m_deferredPoint->setUniform(S_POINT_LIGHT ".range",           pointLight.getRange());
+                m_deferredPoint->setUniform("s_far_plane",                    pointLight.getShadowFarPlane());
 
                 m_deferredPoint->setUniform("g_mvp", mvp);
                 m_lightBoundingSphere.render(*m_deferredPoint);
@@ -903,7 +903,7 @@ namespace mango
 
         /* Spot Lights */
         {
-            MG_PROFILE_ZONE_NAMED_N(dirLightsZone, "Deferred Spot Lights", true);
+            MG_PROFILE_ZONE_NAMED_N(spotLightsZone, "Deferred Spot Lights", true);
             MG_PROFILE_GL_ZONE("Deferred Spot Lights");
 
             auto view = scene->getEntitiesWithComponent<SpotLightComponent, TransformComponent>();
@@ -939,8 +939,8 @@ namespace mango
                 bindMainRenderTarget();
 
                 /* Bounding cone MVP matrix setup */
-                float heightScale = spotLight.range;
-                float radiusScale = spotLight.range * glm::tan(glm::acos(spotLight.getCutOffAngle()));
+                float heightScale = spotLight.getRange();
+                float radiusScale = spotLight.getRange() * glm::tan(spotLight.getCutOffAngle());
 
                 auto model = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
                              glm::mat4_cast(glm::inverse(transform.getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
@@ -983,13 +983,13 @@ namespace mango
 
                 m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.base.color",      spotLight.color);
                 m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.base.intensity",  spotLight.intensity);
-                m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spotLight.attenuation.constant);
-                m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spotLight.attenuation.linear);
-                m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spotLight.attenuation.quadratic);
+                m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spotLight.getAttenuation().constant);
+                m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spotLight.getAttenuation().linear);
+                m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spotLight.getAttenuation().quadratic);
                 m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.position",        transform.getPosition());
-                m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.range",           spotLight.range);
+                m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.range",           spotLight.getRange());
                 m_deferredSpot->setUniform(S_SPOT_LIGHT ".direction",             transform.getDirection());
-                m_deferredSpot->setUniform(S_SPOT_LIGHT ".cutoff",                spotLight.getCutOffAngle());
+                m_deferredSpot->setUniform(S_SPOT_LIGHT ".cutoff",                glm::cos(spotLight.getCutOffAngle()));
                 m_deferredSpot->setUniform("s_light_matrix",                      lightMatrix);
 
                 m_deferredSpot->setUniform("g_mvp", mvp);

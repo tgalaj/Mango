@@ -206,7 +206,7 @@ namespace mango
 
         /* Lights */
         auto dirLight = m_mainScene->createEntity("Directional Light");
-        dirLight.addComponent<DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f);
+        dirLight.addComponent<DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f, true);
         dirLight.setRotation(-45.0f, 180.0f, 0.0f);
 
         float d = 8;
@@ -229,7 +229,7 @@ namespace mango
         for (int i = 0; i < 4; ++i)
         {
             auto pointLight = m_mainScene->createEntity("PointLight" + std::to_string(i));
-            pointLight.addComponent<PointLightComponent>();
+            pointLight.addComponent<PointLightComponent>(true);
             pointLight.getComponent<PointLightComponent>().setAttenuation(3.0f, 4.0f, 10.0f);
             pointLight.getComponent<PointLightComponent>().color = colors[i];
             pointLight.getComponent<PointLightComponent>().intensity = 200.0f;

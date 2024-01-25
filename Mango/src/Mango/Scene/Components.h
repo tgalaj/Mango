@@ -16,13 +16,15 @@
 #include "glm/vec3.hpp"
 
 #include <memory>
+#include <typeinfo>
 #include <vector>
 
 namespace mango
 {
     struct IDComponent
     {
-        IDComponent() = default;
+        IDComponent()                   = default;
+        IDComponent(const IDComponent&) = default;
         IDComponent(UUID uuid) : id(uuid) {}
 
         UUID id;
@@ -46,8 +48,8 @@ namespace mango
 
         ~ShadowInfo() {}
 
-        const glm::mat4& getProjection()   const { return m_projection; }
-        bool             getCastsShadows() const { return m_castsShadows; }
+        glm::mat4 getProjection()   const { return m_projection; }
+        bool      getCastsShadows() const { return m_castsShadows; }
 
         void setCastsShadows(bool castsShadows) { m_castsShadows = castsShadows; }
 
@@ -59,115 +61,144 @@ namespace mango
     struct BaseLightComponent
     {
     public:
-        BaseLightComponent(const glm::vec3& color, float intensity)
-            : color       (color),
-              intensity   (intensity),
-              m_shadowInfo(ShadowInfo()) {}
+        BaseLightComponent(const glm::vec3& color, float intensity, bool castsShadows = false)
+            : color         (color),
+              intensity     (intensity),
+              m_shadowInfo  (ShadowInfo(glm::mat4(1.0f), castsShadows)) {}
 
         virtual ~BaseLightComponent() {}
 
-        const ShadowInfo& getShadowInfo() const { return m_shadowInfo; }
+        ShadowInfo getShadowInfo() const { return m_shadowInfo; }
 
-        void setCastsShadows(bool castsShadows) { m_shadowInfo.setCastsShadows(castsShadows); }
+        void setCastsShadows(bool castsShadows)       { m_shadowInfo.setCastsShadows(castsShadows); }
+        bool getCastsShadows()                  const { m_shadowInfo.getCastsShadows(); }
 
         glm::vec3 color{};
         float     intensity;
 
     protected:
         void setShadowInfo(const ShadowInfo& shadowInfo) { m_shadowInfo = shadowInfo; }
-
-    private:
+    
+    protected:
         ShadowInfo m_shadowInfo;
     };
 
     struct DirectionalLightComponent : public BaseLightComponent
     {
     public:
-        DirectionalLightComponent(const glm::vec3 & color, float intensity, float size = 20.0f)
+        DirectionalLightComponent(const glm::vec3 & color, float intensity, float size = 20.0f, bool castsShadows = false)
             : BaseLightComponent(color, intensity)
         {
-            setShadowInfo(ShadowInfo(glm::ortho(-size, size, -size, size, -size, size), true));
+            m_shadowInfo = ShadowInfo(glm::ortho(-size, size, -size, size, -size, size), castsShadows);
         }
 
         explicit DirectionalLightComponent()
             : BaseLightComponent(glm::vec3(1.0f), 1.0f)
         {}
+
+        void setSize(float size)
+        { 
+            m_size = size; 
+            setShadowInfo(ShadowInfo(glm::ortho(-size, size, -size, size, -size, size), m_shadowInfo.getCastsShadows()));
+        }
+
+        float getSize() const { return m_size; }
+
+    private:
+        float m_size;
     };
 
     struct PointLightComponent : public BaseLightComponent
     {
     public:
-        PointLightComponent()
+        PointLightComponent(bool castsShadows = false)
             : BaseLightComponent(glm::vec3(1.0f), 1.0f),
-              attenuation       (0.0, 0.0f, 1.0f)
+              m_attenuation     (0.0, 0.0f, 1.0f)
         {
             calculateRange();
-            setShadowInfo(ShadowInfo(glm::perspective(glm::radians(90.0f), 1.0f, 0.001f, 100.0f), true));
+            recalculateShadowInfo(castsShadows);
         }
 
         PointLightComponent(const glm::vec3 &   color, 
                                   float         intensity, 
-                            const Attenuation & attenuation)
-            : BaseLightComponent(color, intensity),
-              attenuation       (attenuation)
+                            const Attenuation & attenuation,
+                                  bool          castsShadows = false)
+            : BaseLightComponent(color, intensity, castsShadows),
+              m_attenuation     (attenuation)
         {
             calculateRange();
-            setShadowInfo(ShadowInfo(glm::perspective(glm::radians(90.0f), 1.0f, 0.001f, 100.0f), true));
+            recalculateShadowInfo(castsShadows);
         }
 
         void setAttenuation(float constant, float linear, float quadratic)
         {
-            attenuation = Attenuation(constant, linear, quadratic);
+            m_attenuation = Attenuation(constant, linear, quadratic);
             calculateRange();
         }
 
-        Attenuation attenuation;
-        float       range{};
+        Attenuation getAttenuation() const { return m_attenuation; }
 
-    private:
+        void  setShadowNearPlane(float shadowNearPlane)       { m_shadowNearPlane = shadowNearPlane; recalculateShadowInfo(m_shadowInfo.getCastsShadows()); }
+        float getShadowNearPlane()                      const { return m_shadowNearPlane; }
+
+        void  setShadowFarPlane(float shadowFarPlane)        { m_shadowFarPlane = shadowFarPlane; recalculateShadowInfo(m_shadowInfo.getCastsShadows()); }
+        float getShadowFarPlane()                      const { return m_shadowFarPlane; }
+
+        float getRange() const { return m_range; }
+
+    protected:
         static const int COLOR_DEPTH = 255;
 
         void calculateRange()
         {
-            float a = attenuation.quadratic;
-            float b = attenuation.linear;
-            float c = attenuation.constant - COLOR_DEPTH * intensity * glm::compMax(color);
+            float a = m_attenuation.quadratic;
+            float b = m_attenuation.linear;
+            float c = m_attenuation.constant - COLOR_DEPTH * intensity * glm::compMax(color);
 
-            range = (-b + glm::sqrt(b * b - 4 * a * c)) / (2 * a);
+            m_range = (-b + glm::sqrt(b * b - 4 * a * c)) / (2 * a);
         }
+
+        void recalculateShadowInfo(bool castsShadows)
+        {
+            m_shadowInfo = ShadowInfo(glm::perspective(m_cutoff, 1.0f, m_shadowNearPlane, m_shadowFarPlane), castsShadows);
+        }
+
+    protected:
+        Attenuation m_attenuation;
+        float       m_range{};
+        float       m_shadowNearPlane = 0.001f;
+        float       m_shadowFarPlane  = 100.0f;
+        float       m_cutoff          = glm::radians(90.0f);
     };
 
     struct SpotLightComponent : public PointLightComponent
     {
     public:
         SpotLightComponent()
-            : m_cutoff(0.3f)
-        {
-            setShadowInfo(ShadowInfo(glm::perspective(glm::acos(m_cutoff), 1.0f, 0.001f, 100.0f), true));
+        {   
+            setCutOffAngle(30.0f);
         }
 
-        SpotLightComponent(const glm::vec3 & color, float intensity, const Attenuation & attenuation, float cutoff)
-            : PointLightComponent(color, intensity, attenuation),
-              m_cutoff(cutoff)
+        SpotLightComponent(const glm::vec3   & color, 
+                                 float         intensity, 
+                           const Attenuation & attenuation, 
+                                 float         cutoff,
+                                 bool          castsShadows = false)
+            : PointLightComponent(color, intensity, attenuation, castsShadows)
         {
-            setShadowInfo(ShadowInfo(glm::perspective(glm::acos(m_cutoff), 1.0f, 0.001f, 100.0f), true));
+            m_shadowInfo.setCastsShadows(castsShadows);
+            setCutOffAngle(cutoff);
         }
 
-        /* 
-         * Set angle in degrees. 
-         */
+        /** Sets the cutoff angle in degrees. */
         void setCutOffAngle(float angle)
         {
-            m_cutoff = glm::cos(glm::radians(angle));
+            m_cutoff = glm::radians(angle);
+            recalculateShadowInfo(m_shadowInfo.getCastsShadows());
         }
 
-        /* 
-         * Returns cosine of cutoff angle. 
-         */
+        /** Returns the cutoff angle in radians. */
         float getCutOffAngle() const { return m_cutoff; }
-
-    private:
-        float m_cutoff;
     };
 
     struct CameraComponent
