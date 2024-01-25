@@ -349,6 +349,117 @@ namespace mango
             }
         });
 
+        drawComponent<DirectionalLightComponent>("Directional Light", entity, [](auto& component)
+        {
+            ImGui::ColorEdit3("Color", &component.color[0]);
+            
+            if (ImGui::DragFloat("Intensity", &component.intensity, 0.01f, 0.0f, 0.0f, "%.2f"));
+
+            float size = component.getSize();
+            if (ImGui::DragFloat("Size", &size))
+            {
+                component.setSize(size);
+            }
+            
+            bool castsShadows = component.getCastsShadows();
+            if (ImGui::Checkbox("Casts shadows", &castsShadows))
+            {
+                component.setCastsShadows(castsShadows);
+            }
+        });
+
+        drawComponent<PointLightComponent>("Point Light", entity, [](auto& component)
+        {
+            ImGui::ColorEdit3("Color", &component.color[0]);
+            
+            if (ImGui::DragFloat("Intensity", &component.intensity, 0.01f, 0.0f, 0.0f, "%.2f"));
+
+            ImGui::Text("Attenuation");
+            Attenuation attenuation = component.getAttenuation();
+
+            if (ImGui::DragFloat("Constant", &attenuation.constant))
+            {
+                component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
+            }
+
+            if (ImGui::DragFloat("Linear", &attenuation.linear))
+            {
+                component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
+            }
+
+            if (ImGui::DragFloat("Quadratic", &attenuation.quadratic))
+            {
+                component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
+            }
+            
+            float shadowNearPlane = component.getShadowNearPlane();
+            if (ImGui::DragFloat("Shadow Near Plane", &shadowNearPlane))
+            {
+                component.setShadowNearPlane(shadowNearPlane);
+            }
+
+            float shadowFarPlane = component.getShadowFarPlane();
+            if (ImGui::DragFloat("Shadow Far Plane", &shadowFarPlane))
+            {
+                component.setShadowFarPlane(shadowFarPlane);
+            }
+
+            bool castsShadows = component.getCastsShadows();
+            if (ImGui::Checkbox("Casts shadows", &castsShadows))
+            {
+                component.setCastsShadows(castsShadows);
+            }
+        });
+
+        drawComponent<SpotLightComponent>("Spot Light", entity, [](auto& component)
+        {
+            ImGui::ColorEdit3("Color", &component.color[0]);
+            
+            if (ImGui::DragFloat("Intensity", &component.intensity, 0.01f, 0.0f, 0.0f, "%.2f"));
+
+            float cutoffAngle = glm::degrees(component.getCutOffAngle());
+            if (ImGui::DragFloat("Cut-off Angle", &cutoffAngle))
+            {
+                component.setCutOffAngle(cutoffAngle);
+            }
+
+            ImGui::Text("Attenuation");
+            Attenuation attenuation = component.getAttenuation();
+
+            if (ImGui::DragFloat("Constant", &attenuation.constant))
+            {
+                component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
+            }
+
+            if (ImGui::DragFloat("Linear", &attenuation.linear))
+            {
+                component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
+            }
+
+            if (ImGui::DragFloat("Quadratic", &attenuation.quadratic))
+            {
+                component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
+            }
+            
+            float shadowNearPlane = component.getShadowNearPlane();
+            if (ImGui::DragFloat("Shadow Near Plane", &shadowNearPlane))
+            {
+                component.setShadowNearPlane(shadowNearPlane);
+            }
+
+            float shadowFarPlane = component.getShadowFarPlane();
+            if (ImGui::DragFloat("Shadow Far Plane", &shadowFarPlane))
+            {
+                component.setShadowFarPlane(shadowFarPlane);
+            }
+
+            bool castsShadows = component.getCastsShadows();
+            if (ImGui::Checkbox("Casts shadows", &castsShadows))
+            {
+                component.setCastsShadows(castsShadows);
+            }
+        });
+
         drawComponent<CameraComponent>("Camera", entity, [](auto& component)
         {
             bool isPrimary = component.isPrimary();

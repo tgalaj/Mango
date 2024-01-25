@@ -239,14 +239,17 @@ namespace mango
 
             auto& rb3d = entity.getComponent<RigidBody3DComponent>();
 
-            auto bodyID = static_cast<JPH::Body*>(rb3d.runtimeBody)->GetID();
-            if (bodyInterface.IsActive(bodyID))
+            if (rb3d.runtimeBody)
             {
-                JPH::RVec3 p = bodyInterface.GetCenterOfMassPosition(bodyID);
-                JPH::Quat  r = bodyInterface.GetRotation(bodyID);
+                auto bodyID = static_cast<JPH::Body*>(rb3d.runtimeBody)->GetID();
+                if (bodyInterface.IsActive(bodyID))
+                {
+                    JPH::RVec3 p = bodyInterface.GetCenterOfMassPosition(bodyID);
+                    JPH::Quat  r = bodyInterface.GetRotation(bodyID);
 
-                entity.setPosition(p.GetX(), p.GetY(), p.GetZ());
-                entity.setOrientation(glm::quat(r.GetW(), r.GetX(), r.GetY(), r.GetZ()));
+                    entity.setPosition(p.GetX(), p.GetY(), p.GetZ());
+                    entity.setOrientation(glm::quat(r.GetW(), r.GetX(), r.GetY(), r.GetZ()));
+                }
             }
         }
     }

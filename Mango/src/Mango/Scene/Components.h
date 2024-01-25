@@ -71,7 +71,7 @@ namespace mango
         ShadowInfo getShadowInfo() const { return m_shadowInfo; }
 
         void setCastsShadows(bool castsShadows)       { m_shadowInfo.setCastsShadows(castsShadows); }
-        bool getCastsShadows()                  const { m_shadowInfo.getCastsShadows(); }
+        bool getCastsShadows()                  const { return m_shadowInfo.getCastsShadows(); }
 
         glm::vec3 color{};
         float     intensity;
@@ -105,7 +105,7 @@ namespace mango
         float getSize() const { return m_size; }
 
     private:
-        float m_size;
+        float m_size = 20.0f;
     };
 
     struct PointLightComponent : public BaseLightComponent
