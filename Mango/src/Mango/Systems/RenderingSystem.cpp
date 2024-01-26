@@ -197,6 +197,11 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
+        m_opaqueQueue.clear();
+        m_alphaQueue.clear();
+        m_enviroStaticQueue.clear();
+        m_enviroDynamicQueue.clear();
+
         if (!m_activeScene)
         {
             m_activeScene = event.scene;

@@ -644,9 +644,6 @@ namespace mango
                     updatePrimitiveProperties |= ImGui::DragFloat("Width",  &pp.width,  0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
                     updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
                     break;
-
-                default:
-                    break;
             }
 
             if (updatePrimitiveProperties) model.setPrimitiveProperties(pp);

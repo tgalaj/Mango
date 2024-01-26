@@ -25,10 +25,10 @@ namespace mango
     class Model
     {
     public:
-        enum class ModelType { Model3D, Cone, Cube, Cylinder, Plane, Sphere, Torus, Quad, None };
+        enum class ModelType { Model3D, Cone, Cube, Cylinder, Plane, Sphere, Torus, Quad };
 
     public:
-        Model() = default;
+        Model();
         Model(const std::string& filename);
         virtual ~Model() = default;
 
@@ -51,7 +51,19 @@ namespace mango
         GLenum getDrawMode() { return getMesh(0).getDrawMode(); }
 
         PrimitiveProperties getPrimitiveProperties() const { return m_primitiveProperties; }
-        void setPrimitiveProperties(PrimitiveProperties properties) { m_primitiveProperties = properties; regeneratePrimitive(); }
+
+        void setPrimitiveProperties(PrimitiveProperties properties)
+        {
+            m_primitiveProperties = properties;
+            regeneratePrimitive();
+        }
+
+        void setPrimitiveProperties(ModelType modelType, PrimitiveProperties properties) 
+        { 
+            m_modelType           = modelType;
+            m_primitiveProperties = properties; 
+            regeneratePrimitive(); 
+        }
 
         std::string getFilename() const { return m_filename; }
 
@@ -82,7 +94,7 @@ namespace mango
 
     private:
         std::vector<Mesh>   m_meshes;
-        ModelType           m_modelType = ModelType::None;
+        ModelType           m_modelType = ModelType::Cube;
         PrimitiveProperties m_primitiveProperties{};
     };
 }

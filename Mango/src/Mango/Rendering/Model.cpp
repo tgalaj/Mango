@@ -15,7 +15,12 @@ namespace mango
         load(filename);
     }
 
-    void Model::load(const std::string & filename)
+    Model::Model()
+    {
+        regeneratePrimitive();
+    }
+
+    void Model::load(const std::string& filename)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -216,29 +221,27 @@ namespace mango
     {
         switch (m_modelType)
         {
-        case mango::Model::ModelType::Cone:
-            genCone(m_primitiveProperties.height, m_primitiveProperties.radius, m_primitiveProperties.slices, m_primitiveProperties.stacks);
-            break;
-        case mango::Model::ModelType::Cube:
-            genCube(m_primitiveProperties.size);
-            break;
-        case mango::Model::ModelType::Cylinder:
-            genCylinder(m_primitiveProperties.height, m_primitiveProperties.radius, m_primitiveProperties.slices);
-            break;
-        case mango::Model::ModelType::Plane:
-            genPlane(m_primitiveProperties.width, m_primitiveProperties.height, m_primitiveProperties.slices, m_primitiveProperties.stacks);
-            break;
-        case mango::Model::ModelType::Sphere:
-            genSphere(m_primitiveProperties.radius, m_primitiveProperties.slices);
-            break;
-        case mango::Model::ModelType::Torus:
-            genTorus(m_primitiveProperties.innerRadius, m_primitiveProperties.outerRadius, m_primitiveProperties.slices, m_primitiveProperties.stacks);
-            break;
-        case mango::Model::ModelType::Quad:
-            genQuad(m_primitiveProperties.width, m_primitiveProperties.height);
-            break;
-        default:
-            break;
+            case mango::Model::ModelType::Cone:
+                genCone(m_primitiveProperties.height, m_primitiveProperties.radius, m_primitiveProperties.slices, m_primitiveProperties.stacks);
+                break;
+            case mango::Model::ModelType::Cube:
+                genCube(m_primitiveProperties.size);
+                break;
+            case mango::Model::ModelType::Cylinder:
+                genCylinder(m_primitiveProperties.height, m_primitiveProperties.radius, m_primitiveProperties.slices);
+                break;
+            case mango::Model::ModelType::Plane:
+                genPlane(m_primitiveProperties.width, m_primitiveProperties.height, m_primitiveProperties.slices, m_primitiveProperties.stacks);
+                break;
+            case mango::Model::ModelType::Sphere:
+                genSphere(m_primitiveProperties.radius, m_primitiveProperties.slices);
+                break;
+            case mango::Model::ModelType::Torus:
+                genTorus(m_primitiveProperties.innerRadius, m_primitiveProperties.outerRadius, m_primitiveProperties.slices, m_primitiveProperties.stacks);
+                break;
+            case mango::Model::ModelType::Quad:
+                genQuad(m_primitiveProperties.width, m_primitiveProperties.height);
+                break;
         }
     }
 

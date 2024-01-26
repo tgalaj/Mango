@@ -144,13 +144,87 @@ namespace mango
             out << YAML::EndMap;
         }
 
+        if (entity.hasComponent<DirectionalLightComponent>())
+        {
+            out << YAML::Key << "DirectionalLightComponent";
+            out << YAML::BeginMap;
+            {
+                auto& dlc = entity.getComponent<DirectionalLightComponent>();
+                out << YAML::Key << "Color"        << YAML::Value << dlc.color;
+                out << YAML::Key << "Intensity"    << YAML::Value << dlc.intensity;
+                out << YAML::Key << "Size"         << YAML::Value << dlc.getSize();
+                out << YAML::Key << "CastsShadows" << YAML::Value << dlc.getCastsShadows();
+            }
+            out << YAML::EndMap;
+        }
+
+        if (entity.hasComponent<PointLightComponent>())
+        {
+            out << YAML::Key << "PointLightComponent";
+            out << YAML::BeginMap;
+            {
+                auto& plc = entity.getComponent<PointLightComponent>();
+                out << YAML::Key << "Color"        << YAML::Value << plc.color;
+                out << YAML::Key << "Intensity"    << YAML::Value << plc.intensity;
+                out << YAML::Key << "Attenuation"  << YAML::Value;
+                out << YAML::BeginMap;
+                {
+                    auto attenuation = plc.getAttenuation();
+                    out << YAML::Key << "Constant"  << YAML::Value << attenuation.constant;
+                    out << YAML::Key << "Linear"    << YAML::Value << attenuation.linear;
+                    out << YAML::Key << "Quadratic" << YAML::Value << attenuation.quadratic;
+                }
+                out << YAML::EndMap;
+                out << YAML::Key << "ShadowNearPlane" << YAML::Value << plc.getShadowNearPlane();
+                out << YAML::Key << "ShadowFarPlane"  << YAML::Value << plc.getShadowFarPlane();
+                out << YAML::Key << "CastsShadows"    << YAML::Value << plc.getCastsShadows();
+            }
+            out << YAML::EndMap;
+        }
+
+        if (entity.hasComponent<SpotLightComponent>())
+        {
+            out << YAML::Key << "SpotLightComponent";
+            out << YAML::BeginMap;
+            {
+                auto& slc = entity.getComponent<SpotLightComponent>();
+                out << YAML::Key << "Color"       << YAML::Value << slc.color;
+                out << YAML::Key << "Intensity"   << YAML::Value << slc.intensity;
+                out << YAML::Key << "CutOffAngle" << YAML::Value << glm::degrees(slc.getCutOffAngle());
+                out << YAML::Key << "Attenuation" << YAML::Value;
+                out << YAML::BeginMap;
+                {
+                    auto attenuation = slc.getAttenuation();
+                    out << YAML::Key << "Constant"  << YAML::Value << attenuation.constant;
+                    out << YAML::Key << "Linear"    << YAML::Value << attenuation.linear;
+                    out << YAML::Key << "Quadratic" << YAML::Value << attenuation.quadratic;
+                }
+                out << YAML::EndMap;
+                out << YAML::Key << "ShadowNearPlane" << YAML::Value << slc.getShadowNearPlane();
+                out << YAML::Key << "ShadowFarPlane"  << YAML::Value << slc.getShadowFarPlane();
+                out << YAML::Key << "CastsShadows"    << YAML::Value << slc.getCastsShadows();
+            }
+            out << YAML::EndMap;
+        }
+
         if (entity.hasComponent<CameraComponent>())
         {
+            auto projectionTypeToString = [](CameraComponent::ProjectionType type) -> std::string
+            {
+                switch (type)
+                {
+                    case CameraComponent::ProjectionType::Perspective:  return "Perspective";
+                    case CameraComponent::ProjectionType::Orthographic: return "Orthographic";
+                }
+                MG_CORE_ASSERT_MSG(false, "Unknown projection type");
+                return {};
+            };
+
             out << YAML::Key << "CameraComponent";
             out << YAML::BeginMap;
             {
                 auto& camera = entity.getComponent<CameraComponent>();
-                out << YAML::Key << "ProjectionType"   << YAML::Value << (int)camera.getProjectionType();
+                out << YAML::Key << "ProjectionType"   << YAML::Value << projectionTypeToString(camera.getProjectionType());
                 out << YAML::Key << "PerspectiveFOV"   << YAML::Value << camera.getPerspectiveVerticalFieldOfView();
                 out << YAML::Key << "PerspectiveNear"  << YAML::Value << camera.getPerspectiveNearClip();
                 out << YAML::Key << "PerspectiveFar"   << YAML::Value << camera.getPerspectiveFarClip();
@@ -158,6 +232,122 @@ namespace mango
                 out << YAML::Key << "OrthographicNear" << YAML::Value << camera.getOrthographicNearClip();
                 out << YAML::Key << "OrthographicFar"  << YAML::Value << camera.getOrthographicFarClip();
                 out << YAML::Key << "IsPrimary"        << YAML::Value << camera.isPrimary();
+            }
+            out << YAML::EndMap;
+        }
+
+        if (entity.hasComponent<ModelRendererComponent>())
+        {
+            auto modelTypeToString = [](Model::ModelType type) -> std::string
+            {
+                switch (type)
+                {
+                    case Model::ModelType::Model3D:  return "Model3D";
+                    case Model::ModelType::Cone:     return "Cone";
+                    case Model::ModelType::Cube:     return "Cube";
+                    case Model::ModelType::Cylinder: return "Cylinder";
+                    case Model::ModelType::Plane:    return "Plane";
+                    case Model::ModelType::Sphere:   return "Sphere";
+                    case Model::ModelType::Torus:    return "Torus";
+                    case Model::ModelType::Quad:     return "Quad";
+                }
+                MG_CORE_ASSERT_MSG(false, "Unknown model type");
+                return {};
+            };
+
+            auto renderQueueToString = [](ModelRendererComponent::RenderQueue queue) -> std::string
+            {
+                switch (queue)
+                {
+                    case ModelRendererComponent::RenderQueue::RQ_OPAQUE:                 return "Opaque";
+                    case ModelRendererComponent::RenderQueue::RQ_ALPHA:                  return "Alpha";
+                    case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:  return "StaticEnvMapping";
+                    case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC: return "DynamicEnvMapping";
+                }
+                MG_CORE_ASSERT_MSG(false, "Unknown render queue type");
+                return {};
+            };
+
+            out << YAML::Key << "ModelRendererComponent";
+            out << YAML::BeginMap;
+            {
+                auto& mrc = entity.getComponent<ModelRendererComponent>();
+                out << YAML::Key << "ModelType"   << YAML::Value << modelTypeToString(mrc.model.getModelType());
+                out << YAML::Key << "RenderQueue" << YAML::Value << renderQueueToString(mrc.getRenderQueue());
+                
+                if (mrc.model.getModelType() == Model::ModelType::Model3D)
+                {
+                    out << YAML::Key << "Filename"  << YAML::Value << mrc.model.m_filename;
+                }
+                else
+                {
+                    out << YAML::Key << "PrimitiveProperties" << YAML::Value;
+                    out << YAML::BeginMap;
+                    {
+                        auto pp = mrc.model.getPrimitiveProperties();
+                        out << YAML::Key << "Width"       << YAML::Value << pp.width;
+                        out << YAML::Key << "Height"      << YAML::Value << pp.height;
+                        out << YAML::Key << "Radius"      << YAML::Value << pp.radius;
+                        out << YAML::Key << "Size"        << YAML::Value << pp.size;
+                        out << YAML::Key << "InnerRadius" << YAML::Value << pp.innerRadius;
+                        out << YAML::Key << "OuterRadius" << YAML::Value << pp.outerRadius;
+                        out << YAML::Key << "Slices"      << YAML::Value << pp.slices;
+                        out << YAML::Key << "Stacks"      << YAML::Value << pp.stacks;
+                    }
+                    out << YAML::EndMap;
+                }
+            }
+            out << YAML::EndMap;
+        }
+
+        if (entity.hasComponent<RigidBody3DComponent>())
+        {
+            auto motionTypeToString = [](RigidBody3DComponent::MotionType type) -> std::string
+            {
+                switch (type)
+                {
+                    case RigidBody3DComponent::MotionType::Static:    return "Static";
+                    case RigidBody3DComponent::MotionType::Kinematic: return "Kinematic";
+                    case RigidBody3DComponent::MotionType::Dynamic:   return "Dynamic";
+                }
+                MG_CORE_ASSERT_MSG(false, "Unknown motion type");
+                return {};
+            };
+
+            out << YAML::Key << "RigidBody3DComponent";
+            out << YAML::BeginMap;
+            {
+                auto& rb3d = entity.getComponent<RigidBody3DComponent>();
+                out << YAML::Key << "MotionType"     << YAML::Value << motionTypeToString(rb3d.motionType);
+                out << YAML::Key << "Friction"       << YAML::Value << rb3d.friction;
+                out << YAML::Key << "Restitution"    << YAML::Value << rb3d.restitution;
+                out << YAML::Key << "LinearDamping"  << YAML::Value << rb3d.linearDamping;
+                out << YAML::Key << "AngularDamping" << YAML::Value << rb3d.angularDamping;
+                out << YAML::Key << "Activated"      << YAML::Value << rb3d.isInitiallyActivated;
+            }
+            out << YAML::EndMap;
+        }
+
+        if (entity.hasComponent<BoxCollider3DComponent>())
+        {
+            out << YAML::Key << "BoxCollider3DComponent";
+            out << YAML::BeginMap;
+            {
+                auto& bc3d = entity.getComponent<BoxCollider3DComponent>();
+                out << YAML::Key << "Offset" << YAML::Value << bc3d.offset;
+                out << YAML::Key << "Extent" << YAML::Value << bc3d.halfExtent;
+            }
+            out << YAML::EndMap;
+        }
+
+        if (entity.hasComponent<SphereColliderComponent>())
+        {
+            out << YAML::Key << "SphereColliderComponent";
+            out << YAML::BeginMap;
+            {
+                auto& sc = entity.getComponent<SphereColliderComponent>();
+                out << YAML::Key << "Offset" << YAML::Value << sc.offset;
+                out << YAML::Key << "Radius" << YAML::Value << sc.radius;
             }
             out << YAML::EndMap;
         }
@@ -249,11 +439,68 @@ namespace mango
                     tc.setScale   (transformComponent["Scale"].as<glm::vec3>());
                 }
 
+                auto directionalLightComponent = entity["DirectionalLightComponent"];
+                if (directionalLightComponent)
+                {
+                    auto& dlc           = deserializedEntity.addComponent<DirectionalLightComponent>();
+                          dlc.color     = directionalLightComponent["Color"].as<glm::vec3>();
+                          dlc.intensity = directionalLightComponent["Intensity"].as<float>();
+                          
+                          dlc.setSize        (directionalLightComponent["Size"].as<float>());
+                          dlc.setCastsShadows(directionalLightComponent["CastsShadows"].as<bool>());
+                }
+
+                auto pointLightComponent = entity["PointLightComponent"];
+                if (pointLightComponent)
+                {
+                    auto& plc           = deserializedEntity.addComponent<PointLightComponent>();
+                          plc.color     = pointLightComponent["Color"].as<glm::vec3>();
+                          plc.intensity = pointLightComponent["Intensity"].as<float>();
+                    
+                    auto  attenuation = pointLightComponent["Attenuation"];
+                    float constant    = attenuation["Constant"].as<float>();
+                    float linear      = attenuation["Linear"].as<float>();
+                    float quadratic   = attenuation["Quadratic"].as<float>();
+                    
+                    plc.setAttenuation(constant, linear, quadratic);
+                    plc.setShadowNearPlane(pointLightComponent["ShadowNearPlane"].as<float>());
+                    plc.setShadowFarPlane(pointLightComponent["ShadowFarPlane"].as<float>());
+                    plc.setCastsShadows(pointLightComponent["CastsShadows"].as<bool>());
+                }
+
+                auto spotLightComponent = entity["SpotLightComponent"];
+                if (spotLightComponent)
+                {
+                    auto& slc           = deserializedEntity.addComponent<SpotLightComponent>();
+                          slc.color     = spotLightComponent["Color"].as<glm::vec3>();
+                          slc.intensity = spotLightComponent["Intensity"].as<float>();
+                          slc.setCutOffAngle(spotLightComponent["CutOffAngle"].as<float>());
+                    
+                    auto  attenuation = spotLightComponent["Attenuation"];
+                    float constant    = attenuation["Constant"].as<float>();
+                    float linear      = attenuation["Linear"].as<float>();
+                    float quadratic   = attenuation["Quadratic"].as<float>();
+                    
+                    slc.setAttenuation(constant, linear, quadratic);
+                    slc.setShadowNearPlane(spotLightComponent["ShadowNearPlane"].as<float>());
+                    slc.setShadowFarPlane(spotLightComponent["ShadowFarPlane"].as<float>());
+                    slc.setCastsShadows(spotLightComponent["CastsShadows"].as<bool>());
+                }
+
                 auto cameraComponent = entity["CameraComponent"];
                 if (cameraComponent)
                 {
+                    auto stringToProjectionType = [](const std::string& s) -> CameraComponent::ProjectionType
+                    {
+                        if (s == "Perspective")  return CameraComponent::ProjectionType::Perspective;
+                        if (s == "Orthographic") return CameraComponent::ProjectionType::Orthographic;
+
+                        MG_CORE_ASSERT_MSG(false, "Unknown projection type");
+                        return CameraComponent::ProjectionType::Perspective;
+                    };
+
                     auto& camera = deserializedEntity.addComponent<CameraComponent>();
-                    camera.setProjectionType                ((CameraComponent::ProjectionType)cameraComponent["ProjectionType"].as<int>());
+                    camera.setProjectionType                (stringToProjectionType(cameraComponent["ProjectionType"].as<std::string>()));
                     camera.setPerspectiveVerticalFieldOfView(glm::degrees(cameraComponent["PerspectiveFOV"].as<float>()));
                     camera.setPerspectiveNearClip           (cameraComponent["PerspectiveNear"].as<float>());
                     camera.setPerspectiveFarClip            (cameraComponent["PerspectiveFar"].as<float>());
@@ -263,6 +510,103 @@ namespace mango
                     
                     if (cameraComponent["IsPrimary"].as<bool>())
                         camera.setPrimary();
+                }
+
+                auto modelRendererComponent = entity["ModelRendererComponent"];
+                if (modelRendererComponent)
+                {
+                    auto stringToModelType = [](const std::string& s) -> Model::ModelType
+                    {
+                        if (s == "Model3D")  return Model::ModelType::Model3D;
+                        if (s == "Cone")     return Model::ModelType::Cone;
+                        if (s == "Cube")     return Model::ModelType::Cube;
+                        if (s == "Cylinder") return Model::ModelType::Cylinder;
+                        if (s == "Plane")    return Model::ModelType::Plane;
+                        if (s == "Sphere")   return Model::ModelType::Sphere;
+                        if (s == "Torus")    return Model::ModelType::Torus;
+                        if (s == "Quad")     return Model::ModelType::Quad;
+
+                        MG_CORE_ASSERT_MSG(false, "Unknown model type");
+                        return Model::ModelType::Cube;
+                    };
+
+                    auto stringToRenderQueue = [](const std::string& s) -> ModelRendererComponent::RenderQueue
+                    {
+                        if (s == "Opaque")            return ModelRendererComponent::RenderQueue::RQ_OPAQUE;
+                        if (s == "Alpha")             return ModelRendererComponent::RenderQueue::RQ_ALPHA;
+                        if (s == "StaticEnvMapping")  return ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC;
+                        if (s == "DynamicEnvMapping") return ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC;
+
+                        MG_CORE_ASSERT_MSG(false, "Unknown render queue");
+                        return ModelRendererComponent::RenderQueue::RQ_OPAQUE;
+                    };
+
+                    auto modelType = stringToModelType(modelRendererComponent["ModelType"].as<std::string>());
+                    auto renderQueue = stringToRenderQueue(modelRendererComponent["RenderQueue"].as<std::string>());
+
+                    if (modelType == Model::ModelType::Model3D)
+                    {
+                        auto filename = modelRendererComponent["Filename"].as<std::string>();
+                        Model model(filename);
+
+                        deserializedEntity.addComponent<ModelRendererComponent>(model, renderQueue);
+                    }
+                    else
+                    {
+                        Model model("");
+                        auto  primitiveProperties = modelRendererComponent["PrimitiveProperties"];
+
+                        PrimitiveProperties pp;
+                        pp.width       = primitiveProperties["Width"].as<float>();
+                        pp.height      = primitiveProperties["Height"].as<float>();
+                        pp.radius      = primitiveProperties["Radius"].as<float>();
+                        pp.size        = primitiveProperties["Size"].as<float>();
+                        pp.innerRadius = primitiveProperties["InnerRadius"].as<float>();
+                        pp.outerRadius = primitiveProperties["OuterRadius"].as<float>();
+                        pp.slices      = primitiveProperties["Slices"].as<int32_t>();
+                        pp.stacks      = primitiveProperties["Stacks"].as<int32_t>();
+                        model.setPrimitiveProperties(modelType, pp);
+
+                        deserializedEntity.addComponent<ModelRendererComponent>(model, renderQueue);
+                    }
+                }
+
+                auto rigidbody3DComponent = entity["RigidBody3DComponent"];
+                if (rigidbody3DComponent)
+                {
+                    auto stringToMotionType= [](const std::string& s) -> RigidBody3DComponent::MotionType
+                    {
+                        if (s == "Static")    return RigidBody3DComponent::MotionType::Static;
+                        if (s == "Kinematic") return RigidBody3DComponent::MotionType::Kinematic;
+                        if (s == "Dynamic")   return RigidBody3DComponent::MotionType::Dynamic;
+
+                        MG_CORE_ASSERT_MSG(false, "Unknown motion type");
+                        return RigidBody3DComponent::MotionType::Static;
+                    };
+
+                    auto& rb3d = deserializedEntity.addComponent<RigidBody3DComponent>();
+                    rb3d.motionType           = stringToMotionType(rigidbody3DComponent["MotionType"].as<std::string>());
+                    rb3d.friction             = rigidbody3DComponent["Friction"].as<float>();
+                    rb3d.restitution          = rigidbody3DComponent["Restitution"].as<float>();
+                    rb3d.linearDamping        = rigidbody3DComponent["LinearDamping"].as<float>();
+                    rb3d.angularDamping       = rigidbody3DComponent["AngularDamping"].as<float>();
+                    rb3d.isInitiallyActivated = rigidbody3DComponent["Activated"].as<bool>();
+                }
+
+                auto boxCollider3DComponent = entity["BoxCollider3DComponent"];
+                if (boxCollider3DComponent)
+                {
+                    auto& bc3d = deserializedEntity.addComponent<BoxCollider3DComponent>();
+                    bc3d.offset     = boxCollider3DComponent["Offset"].as<glm::vec3>();
+                    bc3d.halfExtent = boxCollider3DComponent["Extent"].as<glm::vec3>();
+                }
+
+                auto sphereColliderComponent = entity["SphereColliderComponent"];
+                if (sphereColliderComponent)
+                {
+                    auto& sc = deserializedEntity.addComponent<SphereColliderComponent>();
+                    sc.offset = sphereColliderComponent["Offset"].as<glm::vec3>();
+                    sc.radius = sphereColliderComponent["Radius"].as<float>();
                 }
             }
         }
