@@ -352,9 +352,8 @@ namespace mango
 
         drawComponent<DirectionalLightComponent>("Directional Light", entity, [](auto& component)
         {
-            ImGui::ColorEdit3("Color", &component.color[0]);
-            
-            if (ImGui::DragFloat("Intensity", &component.intensity, 0.01f, 0.0f, 0.0f, "%.2f"));
+            ImGui::ColorEdit3("Color",     &component.color[0]);
+            ImGui::DragFloat ("Intensity", &component.intensity, 0.1f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 
             float size = component.getSize();
             if (ImGui::DragFloat("Size", &size))
@@ -371,24 +370,23 @@ namespace mango
 
         drawComponent<PointLightComponent>("Point Light", entity, [](auto& component)
         {
-            ImGui::ColorEdit3("Color", &component.color[0]);
-            
-            if (ImGui::DragFloat("Intensity", &component.intensity, 0.01f, 0.0f, 0.0f, "%.2f"));
+            ImGui::ColorEdit3("Color",     &component.color[0]);
+            ImGui::DragFloat ("Intensity", &component.intensity, 0.1f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 
             ImGui::Text("Attenuation");
             Attenuation attenuation = component.getAttenuation();
 
-            if (ImGui::DragFloat("Constant", &attenuation.constant))
+            if (ImGui::DragFloat("Constant", &attenuation.constant, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
             }
 
-            if (ImGui::DragFloat("Linear", &attenuation.linear))
+            if (ImGui::DragFloat("Linear", &attenuation.linear, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
             }
 
-            if (ImGui::DragFloat("Quadratic", &attenuation.quadratic))
+            if (ImGui::DragFloat("Quadratic", &attenuation.quadratic, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
             }
@@ -414,12 +412,11 @@ namespace mango
 
         drawComponent<SpotLightComponent>("Spot Light", entity, [](auto& component)
         {
-            ImGui::ColorEdit3("Color", &component.color[0]);
-            
-            if (ImGui::DragFloat("Intensity", &component.intensity, 0.01f, 0.0f, 0.0f, "%.2f"));
+            ImGui::ColorEdit3("Color",     &component.color[0]);
+            ImGui::DragFloat ("Intensity", &component.intensity, 0.01f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 
             float cutoffAngle = glm::degrees(component.getCutOffAngle());
-            if (ImGui::DragFloat("Cut-off Angle", &cutoffAngle))
+            if (ImGui::DragFloat("Cut-off Angle", &cutoffAngle, 0.01f, 0.0f, 89.99999f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setCutOffAngle(cutoffAngle);
             }
@@ -427,17 +424,17 @@ namespace mango
             ImGui::Text("Attenuation");
             Attenuation attenuation = component.getAttenuation();
 
-            if (ImGui::DragFloat("Constant", &attenuation.constant))
+            if (ImGui::DragFloat("Constant", &attenuation.constant, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
             }
 
-            if (ImGui::DragFloat("Linear", &attenuation.linear))
+            if (ImGui::DragFloat("Linear", &attenuation.linear, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
             }
 
-            if (ImGui::DragFloat("Quadratic", &attenuation.quadratic))
+            if (ImGui::DragFloat("Quadratic", &attenuation.quadratic, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
             }
@@ -500,7 +497,7 @@ namespace mango
             if (component.getProjectionType() == CameraComponent::ProjectionType::Perspective)
             {
                 float verticalFov = glm::degrees(component.getPerspectiveVerticalFieldOfView());
-                if (ImGui::DragFloat("Vertical FOV", &verticalFov))
+                if (ImGui::DragFloat("Vertical FOV", &verticalFov, 0.01f, 0.0f, 89.9999f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
                 {
                     component.setPerspectiveVerticalFieldOfView(verticalFov);
                 }
@@ -588,7 +585,9 @@ namespace mango
                 ImGui::EndCombo();
             }
 
-            PrimitiveProperties pp = model.getPrimitiveProperties();
+            PrimitiveProperties pp                        = model.getPrimitiveProperties();
+            bool                updatePrimitiveProperties = false;
+
             switch (model.getModelType())
             {
                 case Model::ModelType::Model3D:
@@ -605,50 +604,52 @@ namespace mango
                     ImGui::PopItemWidth();
                     break;
 
-                case mango::Model::ModelType::Cone:
-                    if (ImGui::DragFloat("Height", &pp.height)) model.setPrimitiveProperties(pp);
-                    if (ImGui::DragFloat("Radius", &pp.radius)) model.setPrimitiveProperties(pp);
-                    if (ImGui::DragInt  ("Slices", &pp.slices)) model.setPrimitiveProperties(pp);
-                    if (ImGui::DragInt  ("Stacks", &pp.stacks)) model.setPrimitiveProperties(pp);
+                case mango::Model::ModelType::Cone: 
+                    updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragFloat("Radius", &pp.radius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices", &pp.slices, 1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragInt  ("Stacks", &pp.stacks, 1,     1,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
                     break;
 
                 case mango::Model::ModelType::Cube:
-                    if (ImGui::DragFloat("Size", &pp.size)) model.setPrimitiveProperties(pp);
+                    updatePrimitiveProperties |= ImGui::DragFloat("Size", &pp.size, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
                     break;
 
                 case mango::Model::ModelType::Cylinder:
-                    if (ImGui::DragFloat("Height", &pp.height)) model.setPrimitiveProperties(pp);
-                    if (ImGui::DragFloat("Radius", &pp.radius)) model.setPrimitiveProperties(pp);
-                    if (ImGui::DragInt  ("Slices", &pp.slices)) model.setPrimitiveProperties(pp);
+                    updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragFloat("Radius", &pp.radius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices", &pp.slices, 1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
                     break;
 
                 case mango::Model::ModelType::Plane:
-                    if (ImGui::DragFloat("Width",  &pp.width))  model.setPrimitiveProperties(pp);
-                    if (ImGui::DragFloat("Height", &pp.height)) model.setPrimitiveProperties(pp);
-                    if (ImGui::DragInt  ("Slices", &pp.slices)) model.setPrimitiveProperties(pp);
-                    if (ImGui::DragInt  ("Stacks", &pp.stacks)) model.setPrimitiveProperties(pp);
+                    updatePrimitiveProperties |= ImGui::DragFloat("Width",  &pp.width,  0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices", &pp.slices, 1,     1,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragInt  ("Stacks", &pp.stacks, 1,     1,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
                     break;
 
                 case mango::Model::ModelType::Sphere:
-                    if (ImGui::DragFloat("Radius", &pp.radius)) model.setPrimitiveProperties(pp);
-                    if (ImGui::DragInt  ("Slices", &pp.slices)) model.setPrimitiveProperties(pp);
+                    updatePrimitiveProperties |= ImGui::DragFloat("Radius", &pp.radius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices", &pp.slices, 1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
                     break;
 
                 case mango::Model::ModelType::Torus:
-                    if (ImGui::DragFloat("Inner Radius", &pp.innerRadius)) model.setPrimitiveProperties(pp);
-                    if (ImGui::DragFloat("Outer Radius", &pp.outerRadius)) model.setPrimitiveProperties(pp);
-                    if (ImGui::DragInt  ("Slices",       &pp.slices))      model.setPrimitiveProperties(pp);
-                    if (ImGui::DragInt  ("Stacks",       &pp.stacks))      model.setPrimitiveProperties(pp);
+                    updatePrimitiveProperties |= ImGui::DragFloat("Inner Radius", &pp.innerRadius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragFloat("Outer Radius", &pp.outerRadius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices",       &pp.slices,      1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragInt  ("Stacks",       &pp.stacks,      1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
                     break;
 
                 case mango::Model::ModelType::Quad:
-                    if (ImGui::DragFloat("Width",  &pp.width))  model.setPrimitiveProperties(pp);
-                    if (ImGui::DragFloat("Height", &pp.height)) model.setPrimitiveProperties(pp);
+                    updatePrimitiveProperties |= ImGui::DragFloat("Width",  &pp.width,  0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+                    updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
                     break;
 
                 default:
                     break;
             }
+
+            if (updatePrimitiveProperties) model.setPrimitiveProperties(pp);
         });
 
         drawComponent<RigidBody3DComponent>("Rigidbody 3D", entity, [](auto& component)
@@ -675,10 +676,10 @@ namespace mango
                 ImGui::EndCombo();
             }
 
-            ImGui::DragFloat("Friction",        &component.friction,       0.01f, 0.0f, 1.0f);
-            ImGui::DragFloat("Restitution",     &component.restitution,    0.01f, 0.0f, 1.0f);
-            ImGui::DragFloat("Linear Damping",  &component.linearDamping,  0.01f, 0.0f, 1.0f);
-            ImGui::DragFloat("Angular Damping", &component.angularDamping, 0.01f, 0.0f, 1.0f);
+            ImGui::DragFloat("Friction",        &component.friction,       0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+            ImGui::DragFloat("Restitution",     &component.restitution,    0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+            ImGui::DragFloat("Linear Damping",  &component.linearDamping,  0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+            ImGui::DragFloat("Angular Damping", &component.angularDamping, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 
             ImGui::Checkbox("Activated",       &component.isInitiallyActivated);
         });

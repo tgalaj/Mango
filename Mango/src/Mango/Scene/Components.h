@@ -322,22 +322,11 @@ namespace mango
          */
         void setRotation(const glm::vec3& euler)
         {
-            // Change to rotation order if x is set to pi/2 or -pi/2
-            // to avoid the gimbal lock
-            if (euler.x == 90.0f || euler.x == -90.0f)
-            {
-                m_rotation    = glm::radians(euler);
-                m_orientation = glm::quat({ m_rotation.x, 0,            0            }) *
-                                glm::quat({ 0,            m_rotation.z, 0            }) *
-                                glm::quat({ 0,            0,            m_rotation.y });
-            }
-            else
-            {
-                m_rotation    = glm::radians(euler);
-                m_orientation = glm::quat({ 0,            0,            m_rotation.z }) *
-                                glm::quat({ m_rotation.x, 0,            0            }) * 
-                                glm::quat({ 0,            m_rotation.y, 0            }); 
-            }
+            /** ZXY rotation order */
+            m_rotation    = glm::radians(euler);
+            m_orientation = glm::quat({ 0,            m_rotation.y, 0            }) *
+                            glm::quat({ m_rotation.x, 0,            0            }) * 
+                            glm::quat({ 0,            0,            m_rotation.z });
             
             m_orientation = glm::normalize(m_orientation);
             m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));

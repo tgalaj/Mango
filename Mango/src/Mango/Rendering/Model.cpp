@@ -248,15 +248,16 @@ namespace mango
 
         m_modelType = ModelType::Cone;
 
-        VertexBuffers buffers;
-        GeomPrimitive::genCone(buffers, height, radius, slices, stacks);
         m_primitiveProperties = 
         { 
-            .height = height, 
-            .radius = radius, 
-            .slices = (int32_t)slices, 
-            .stacks = (int32_t)stacks 
+            .height = height <= 0.0f ? 0.01f : height, 
+            .radius = radius <= 0.0f ? 0.01f : radius,
+            .slices = (int32_t)slices < 3 ? 3 : (int32_t)slices, 
+            .stacks = (int32_t)stacks < 1 ? 1 : (int32_t)stacks
         };
+
+        VertexBuffers buffers;
+        GeomPrimitive::genCone(buffers, m_primitiveProperties.height, m_primitiveProperties.radius, m_primitiveProperties.slices, m_primitiveProperties.stacks);
         
         genPrimitive(buffers);
     }
@@ -267,12 +268,13 @@ namespace mango
 
         m_modelType = ModelType::Cube;
 
-        VertexBuffers buffers;
-        GeomPrimitive::genCube(buffers, size);
         m_primitiveProperties =
         {
-            .size = size
+            .size = size <= 0.0f ? 0.01f : size
         };
+
+        VertexBuffers buffers;
+        GeomPrimitive::genCube(buffers, m_primitiveProperties.size);
 
         genPrimitive(buffers);
     }
@@ -283,14 +285,15 @@ namespace mango
 
         m_modelType = ModelType::Cylinder;
 
-        VertexBuffers buffers;
-        GeomPrimitive::genCylinder(buffers, height, radius, slices);
         m_primitiveProperties =
         {
-            .height = height,
-            .radius = radius,
-            .slices = (int32_t)slices
+            .height = height <= 0.0f ? 0.01f : height,
+            .radius = radius <= 0.0f ? 0.01f : radius,
+            .slices = (int32_t)slices < 3 ? 3 : (int32_t)slices
         };
+
+        VertexBuffers buffers;
+        GeomPrimitive::genCylinder(buffers, m_primitiveProperties.height, m_primitiveProperties.radius, m_primitiveProperties.slices);
 
         genPrimitive(buffers);
     }
@@ -301,15 +304,16 @@ namespace mango
 
         m_modelType = ModelType::Plane;
 
-        VertexBuffers buffers;
-        GeomPrimitive::genPlane(buffers, width, height, slices, stacks);
         m_primitiveProperties =
         {
-            .width  = width,
-            .height = height,
-            .slices = (int32_t)slices,
-            .stacks = (int32_t)stacks
+            .width  = width  <= 0.0f ? 0.01f : width,
+            .height = height <= 0.0f ? 0.01f : height,
+            .slices = (int32_t)slices < 1 ? 1 : (int32_t)slices,
+            .stacks = (int32_t)stacks < 1 ? 1 : (int32_t)stacks
         };
+
+        VertexBuffers buffers;
+        GeomPrimitive::genPlane(buffers, m_primitiveProperties.width, m_primitiveProperties.height, m_primitiveProperties.slices, m_primitiveProperties.stacks);
 
         genPrimitive(buffers);
     }
@@ -320,13 +324,14 @@ namespace mango
 
         m_modelType = ModelType::Sphere;
 
-        VertexBuffers buffers;
-        GeomPrimitive::genSphere(buffers, radius, slices);
         m_primitiveProperties =
         {
-            .radius = radius,
-            .slices = (int32_t)slices
+            .radius = radius <= 0.0f ? 0.01f : radius,
+            .slices = (int32_t)slices < 3 ? 3 : (int32_t)slices
         };
+
+        VertexBuffers buffers;
+        GeomPrimitive::genSphere(buffers, m_primitiveProperties.radius, m_primitiveProperties.slices);
 
         genPrimitive(buffers);
     }
@@ -337,15 +342,16 @@ namespace mango
 
         m_modelType = ModelType::Torus;
 
-        VertexBuffers buffers;
-        GeomPrimitive::genTorus(buffers, innerRadius, outerRadius, slices, stacks);
         m_primitiveProperties =
         {
-            .innerRadius = innerRadius,
-            .outerRadius = outerRadius,
-            .slices      = (int32_t)slices,
-            .stacks      = (int32_t)stacks
+            .innerRadius = innerRadius <= 0.0f ? 0.01f : innerRadius,
+            .outerRadius = outerRadius <= 0.0f ? 0.01f : outerRadius,
+            .slices      = (int32_t)slices < 3 ? 3 : (int32_t)slices,
+            .stacks      = (int32_t)stacks < 3 ? 3 : (int32_t)stacks
         };
+
+        VertexBuffers buffers;
+        GeomPrimitive::genTorus(buffers, m_primitiveProperties.innerRadius, m_primitiveProperties.outerRadius, m_primitiveProperties.slices, m_primitiveProperties.stacks);
 
         genPrimitive(buffers);
     }
@@ -356,16 +362,18 @@ namespace mango
 
         m_modelType = ModelType::Quad;
 
-        VertexBuffers buffers;
-        GeomPrimitive::genQuad(buffers, width, height);
         m_primitiveProperties =
         {
-            .width  = width,
-            .height = height
+            .width  = width  <= 0.0f ? 0.01f : width,
+            .height = height <= 0.0f ? 0.01f : height
         };
+
+        VertexBuffers buffers;
+        GeomPrimitive::genQuad(buffers, m_primitiveProperties.width, m_primitiveProperties.height);
 
         // quad has its own predefined tangents
         genPrimitive(buffers, false);
+
         m_meshes[m_meshes.size() - 1].setDrawMode(GL_TRIANGLE_STRIP);
     }
 
