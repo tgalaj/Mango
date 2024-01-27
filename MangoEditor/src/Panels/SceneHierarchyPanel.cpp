@@ -376,17 +376,17 @@ namespace mango
             ImGui::Text("Attenuation");
             Attenuation attenuation = component.getAttenuation();
 
-            if (ImGui::DragFloat("Constant", &attenuation.constant, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+            if (ImGui::DragFloat("Constant", &attenuation.constant, 0.01f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
             }
 
-            if (ImGui::DragFloat("Linear", &attenuation.linear, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+            if (ImGui::DragFloat("Linear", &attenuation.linear, 0.01f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
             }
 
-            if (ImGui::DragFloat("Quadratic", &attenuation.quadratic, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+            if (ImGui::DragFloat("Quadratic", &attenuation.quadratic, 0.01f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
             }
@@ -413,7 +413,7 @@ namespace mango
         drawComponent<SpotLightComponent>("Spot Light", entity, [](auto& component)
         {
             ImGui::ColorEdit3("Color",     &component.color[0]);
-            ImGui::DragFloat ("Intensity", &component.intensity, 0.01f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+            ImGui::DragFloat ("Intensity", &component.intensity, 0.1f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 
             float cutoffAngle = glm::degrees(component.getCutOffAngle());
             if (ImGui::DragFloat("Cut-off Angle", &cutoffAngle, 0.01f, 0.0f, 89.99999f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
@@ -424,17 +424,17 @@ namespace mango
             ImGui::Text("Attenuation");
             Attenuation attenuation = component.getAttenuation();
 
-            if (ImGui::DragFloat("Constant", &attenuation.constant, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+            if (ImGui::DragFloat("Constant", &attenuation.constant, 0.01f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
             }
 
-            if (ImGui::DragFloat("Linear", &attenuation.linear, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+            if (ImGui::DragFloat("Linear", &attenuation.linear, 0.01f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
             }
 
-            if (ImGui::DragFloat("Quadratic", &attenuation.quadratic, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+            if (ImGui::DragFloat("Quadratic", &attenuation.quadratic, 0.01f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp))
             {
                 component.setAttenuation(attenuation.constant, attenuation.linear, attenuation.quadratic);
             }

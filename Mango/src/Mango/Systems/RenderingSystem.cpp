@@ -196,15 +196,22 @@ namespace mango
     void RenderingSystem::receive(const ActiveSceneChangedEvent& event)
     {
         MG_PROFILE_ZONE_SCOPED;
+        MG_CORE_ASSERT_MSG(event.scene != nullptr, "New active scene pointer is nullptr.");
 
         m_opaqueQueue.clear();
         m_alphaQueue.clear();
         m_enviroStaticQueue.clear();
         m_enviroDynamicQueue.clear();
 
-        if (!m_activeScene)
+        m_activeScene = event.scene;
+
+        auto view = m_activeScene->getEntitiesWithComponent<ModelRendererComponent>();
+        for (auto e : view)
         {
-            m_activeScene = event.scene;
+            Entity entity = { e, m_activeScene };
+            auto mrc = entity.getComponent<ModelRendererComponent>();
+
+            addEntityToRenderQueue(entity, mrc.getRenderQueue());
         }
     }
 
@@ -1007,31 +1014,31 @@ namespace mango
         auto camPos = getCameraTransform().getPosition();
 
         std::sort(m_alphaQueue.begin(), m_alphaQueue.end(), 
-                   [&camPos](Entity & obj1, Entity & obj2)
-                         {
-                            const auto pos1 = obj1.getComponent<TransformComponent>().getPosition();
-                            const auto pos2 = obj2.getComponent<TransformComponent>().getPosition();
+                  [&camPos](Entity & obj1, Entity & obj2)
+                  {
+                     const auto pos1 = obj1.getComponent<TransformComponent>().getPosition();
+                     const auto pos2 = obj2.getComponent<TransformComponent>().getPosition();
 
-                            return glm::length(camPos - pos1) >= glm::length(camPos - pos2);
-                         });
+                     return glm::length(camPos - pos1) >= glm::length(camPos - pos2);
+                  });
     }
 
     void RenderingSystem::addEntityToRenderQueue(Entity entity, ModelRendererComponent::RenderQueue renderQueue)
     {
         switch (renderQueue)
         {
-        case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
-            m_opaqueQueue.push_back(entity);
-            break;
-        case ModelRendererComponent::RenderQueue::RQ_ALPHA:
-            m_alphaQueue.push_back(entity);
-            break;
-        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
-            m_enviroStaticQueue.push_back(entity);
-            break;
-        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
-            m_enviroDynamicQueue.push_back(entity);
-            break;
+            case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
+                m_opaqueQueue.push_back(entity);
+                break;
+            case ModelRendererComponent::RenderQueue::RQ_ALPHA:
+                m_alphaQueue.push_back(entity);
+                break;
+            case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
+                m_enviroStaticQueue.push_back(entity);
+                break;
+            case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
+                m_enviroDynamicQueue.push_back(entity);
+                break;
         }
     }
 
@@ -1041,34 +1048,34 @@ namespace mango
 
         switch (renderQueue)
         {
-        case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
-            entityIterator = std::find(m_opaqueQueue.begin(), m_opaqueQueue.end(), entity);
-            if (entityIterator != m_opaqueQueue.end())
-            {
-                m_opaqueQueue.erase(entityIterator);
-            }
-            break;
-        case ModelRendererComponent::RenderQueue::RQ_ALPHA:
-            entityIterator = std::find(m_alphaQueue.begin(), m_alphaQueue.end(), entity);
-            if (entityIterator != m_alphaQueue.end())
-            {
-                m_alphaQueue.erase(entityIterator);
-            }
-            break;
-        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
-            entityIterator = std::find(m_enviroStaticQueue.begin(), m_enviroStaticQueue.end(), entity);
-            if (entityIterator != m_enviroStaticQueue.end())
-            {
-                m_enviroStaticQueue.erase(entityIterator);
-            }
-            break;
-        case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
-            entityIterator = std::find(m_enviroDynamicQueue.begin(), m_enviroDynamicQueue.end(), entity);
-            if (entityIterator != m_enviroDynamicQueue.end())
-            {
-                m_enviroDynamicQueue.erase(entityIterator);
-            }
-            break;
+            case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
+                entityIterator = std::find(m_opaqueQueue.begin(), m_opaqueQueue.end(), entity);
+                if (entityIterator != m_opaqueQueue.end())
+                {
+                    m_opaqueQueue.erase(entityIterator);
+                }
+                break;
+            case ModelRendererComponent::RenderQueue::RQ_ALPHA:
+                entityIterator = std::find(m_alphaQueue.begin(), m_alphaQueue.end(), entity);
+                if (entityIterator != m_alphaQueue.end())
+                {
+                    m_alphaQueue.erase(entityIterator);
+                }
+                break;
+            case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
+                entityIterator = std::find(m_enviroStaticQueue.begin(), m_enviroStaticQueue.end(), entity);
+                if (entityIterator != m_enviroStaticQueue.end())
+                {
+                    m_enviroStaticQueue.erase(entityIterator);
+                }
+                break;
+            case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
+                entityIterator = std::find(m_enviroDynamicQueue.begin(), m_enviroDynamicQueue.end(), entity);
+                if (entityIterator != m_enviroDynamicQueue.end())
+                {
+                    m_enviroDynamicQueue.erase(entityIterator);
+                }
+                break;
         }
     }
 

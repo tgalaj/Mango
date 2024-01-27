@@ -239,7 +239,7 @@ void Sandbox::onInit()
     auto spotLight = m_mainScene->createEntity();
     spotLight.addComponent<SpotLightComponent>();
     spotLight.getComponent<SpotLightComponent>().color = glm::vec3(255, 206, 250) / 255.0f;
-    spotLight.getComponent<SpotLightComponent>().intensity = 1000;
+    spotLight.getComponent<SpotLightComponent>().intensity = 1000.0f;
     spotLight.getComponent<SpotLightComponent>().setCutOffAngle(30.0f);
     spotLight.setPosition(1.5, 5, 1.5);
     spotLight.setRotation(-45, 45, 45);

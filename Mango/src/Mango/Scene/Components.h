@@ -74,7 +74,7 @@ namespace mango
         bool getCastsShadows()                  const { return m_shadowInfo.getCastsShadows(); }
 
         glm::vec3 color{};
-        float     intensity;
+        float     intensity = 1.0f;
 
     protected:
         void setShadowInfo(const ShadowInfo& shadowInfo) { m_shadowInfo = shadowInfo; }
@@ -87,9 +87,10 @@ namespace mango
     {
     public:
         DirectionalLightComponent(const glm::vec3 & color, float intensity, float size = 20.0f, bool castsShadows = false)
-            : BaseLightComponent(color, intensity)
+            : BaseLightComponent(color, intensity),
+              m_size            (size)
         {
-            m_shadowInfo = ShadowInfo(glm::ortho(-size, size, -size, size, -size, size), castsShadows);
+            m_shadowInfo = ShadowInfo(glm::ortho(-m_size, m_size, -m_size, m_size, -m_size, m_size), castsShadows);
         }
 
         explicit DirectionalLightComponent()
@@ -99,7 +100,7 @@ namespace mango
         void setSize(float size)
         { 
             m_size = size; 
-            setShadowInfo(ShadowInfo(glm::ortho(-size, size, -size, size, -size, size), m_shadowInfo.getCastsShadows()));
+            setShadowInfo(ShadowInfo(glm::ortho(-m_size, m_size, -m_size, m_size, -m_size, m_size), m_shadowInfo.getCastsShadows()));
         }
 
         float getSize() const { return m_size; }
@@ -147,13 +148,14 @@ namespace mango
         float getRange() const { return m_range; }
 
     protected:
-        static const int COLOR_DEPTH = 255;
+        static const int COLOR_DEPTH = 256;
 
         void calculateRange()
         {
+            // This is wrong, temporary solution...
             float a = m_attenuation.quadratic;
             float b = m_attenuation.linear;
-            float c = m_attenuation.constant - COLOR_DEPTH * intensity * glm::compMax(color);
+            float c = m_attenuation.constant - (float)COLOR_DEPTH * glm::compMax(color);
 
             m_range = (-b + glm::sqrt(b * b - 4 * a * c)) / (2 * a);
         }

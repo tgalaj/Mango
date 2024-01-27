@@ -23,8 +23,5 @@ namespace mango
 
         std::shared_ptr<Scene> m_mainScene;
         std::shared_ptr<FreeCameraController> m_freeCameraController;
-
-        Entity m_camera1;
-        Entity m_camera2;
     };
 }

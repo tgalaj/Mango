@@ -32,14 +32,14 @@ namespace mango
             }
         });
 
-        m_camera1 = m_mainScene->createEntity("MainCamera");
-        m_camera1.addComponent<CameraComponent>().setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
-        m_camera1.setPosition(0, 4, 30);
+        auto camera1 = m_mainScene->createEntity("MainCamera");
+        camera1.addComponent<CameraComponent>().setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
+        camera1.setPosition(0, 4, 30);
 
-        m_camera2 = m_mainScene->createEntity("MainCamera2");
-        m_camera2.addComponent<CameraComponent>().setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
-        m_camera2.setPosition(0, 4, -30);
-        m_camera2.setOrientation({0, 1, 0}, 180.0f);
+        auto camera2 = m_mainScene->createEntity("MainCamera2");
+        camera2.addComponent<CameraComponent>().setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
+        camera2.setPosition(0, 4, -30);
+        camera2.setOrientation({0, 1, 0}, 180.0f);
 
         m_freeCameraController = std::make_shared<FreeCameraController>();
 
@@ -205,7 +205,7 @@ namespace mango
         }
 
         /* Lights */
-        auto dirLight = m_mainScene->createEntity("Directional Light");
+        auto dirLight = m_mainScene->createEntity("DirectionalLight");
         dirLight.addComponent<DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f, true);
         dirLight.setRotation(-45.0f, 180.0f, 0.0f);
 
@@ -242,7 +242,7 @@ namespace mango
         auto spotLight = m_mainScene->createEntity("SpotLight");
         spotLight.addComponent<SpotLightComponent>();
         spotLight.getComponent<SpotLightComponent>().color = glm::vec3(255, 206, 250) / 255.0f;
-        spotLight.getComponent<SpotLightComponent>().intensity = 1000;
+        spotLight.getComponent<SpotLightComponent>().intensity = 1000.0f;
         spotLight.getComponent<SpotLightComponent>().setCutOffAngle(30.0f);
         spotLight.setPosition(1.5, 5, 1.5);
         spotLight.setRotation(-45, 45, 45);
@@ -286,21 +286,6 @@ namespace mango
             moveLights(dt);
         }
 
-        static bool isCamera1Primary = true;
-        if (Input::getKeyUp(KeyCode::P) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::RIGHT_BUMPER))
-        {
-            isCamera1Primary = !isCamera1Primary;
-        
-            if (isCamera1Primary)
-            {
-                m_camera1.getComponent<CameraComponent>().setPrimary();
-            }
-            else
-            {
-                m_camera2.getComponent<CameraComponent>().setPrimary();
-            }
-        }
-
         m_freeCameraController->onUpdate(dt);
     }
 
@@ -331,6 +316,7 @@ namespace mango
                 if (ImGui::MenuItem("Open", "Ctrl+O"))
                 {
                     // TODO: file dialog
+                    m_mainScene.reset();
                     m_mainScene = SceneSerializer::deserialize("D:/Projekty/Private/Mango/scene.mango");
                     Services::sceneManager()->setActiveScene(m_mainScene);
                     m_sceneHierarchyPanel.setScene(m_mainScene);
