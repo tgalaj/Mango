@@ -231,7 +231,7 @@ namespace mango
                 out << YAML::Key << "OrthographicSize" << YAML::Value << camera.getOrthographicSize();
                 out << YAML::Key << "OrthographicNear" << YAML::Value << camera.getOrthographicNearClip();
                 out << YAML::Key << "OrthographicFar"  << YAML::Value << camera.getOrthographicFarClip();
-                out << YAML::Key << "IsPrimary"        << YAML::Value << camera.isPrimary();
+                out << YAML::Key << "IsPrimary"        << YAML::Value << camera.isPrimary;
             }
             out << YAML::EndMap;
         }
@@ -499,7 +499,8 @@ namespace mango
                         return CameraComponent::ProjectionType::Perspective;
                     };
 
-                    auto& camera = deserializedEntity.addComponent<CameraComponent>();
+                    auto& camera     = deserializedEntity.addComponent<CameraComponent>();
+                    camera.isPrimary = cameraComponent["IsPrimary"].as<bool>();
                     camera.setProjectionType                (stringToProjectionType(cameraComponent["ProjectionType"].as<std::string>()));
                     camera.setPerspectiveVerticalFieldOfView(glm::degrees(cameraComponent["PerspectiveFOV"].as<float>()));
                     camera.setPerspectiveNearClip           (cameraComponent["PerspectiveNear"].as<float>());
@@ -507,9 +508,6 @@ namespace mango
                     camera.setOrthographicSize              (cameraComponent["OrthographicSize"].as<float>());
                     camera.setOrthographicNearClip          (cameraComponent["OrthographicNear"].as<float>());
                     camera.setOrthographicFarClip           (cameraComponent["OrthographicFar"].as<float>());
-                    
-                    if (cameraComponent["IsPrimary"].as<bool>())
-                        camera.setPrimary();
                 }
 
                 auto modelRendererComponent = entity["ModelRendererComponent"];

@@ -16,12 +16,6 @@ namespace mango
         m_aspectRatio = Services::application()->getWindow()->getAspectRatio();
 
         recalculateProjection();
-
-        // If there's no primary camera yet, set this one as primary
-        if (!Services::sceneManager()->getActiveScene()->getPrimaryCamera())
-        {
-            setPrimary();
-        }
     }
 
     void CameraComponent::setPerspective(float verticalFov, float aspectRatio, float nearClip, float farClip)
@@ -42,12 +36,6 @@ namespace mango
         m_orthographicNear = nearClip;
         m_orthographicFar  = farClip;
         recalculateProjection();
-    }
-
-    void CameraComponent::setPrimary()
-    {
-        m_isPrimary = true; 
-        Services::application()->getEventBus()->emit(ChangedPrimaryCameraEvent());
     }
 
     void CameraComponent::recalculateProjection()

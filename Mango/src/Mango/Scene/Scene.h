@@ -8,13 +8,12 @@
 namespace mango
 {
     class Entity;
-    struct ChangedPrimaryCameraEvent;
 
     class Scene
     {
     public:
         Scene(const std::string& name);
-        virtual ~Scene();
+        virtual ~Scene() = default;
 
         std::string& getName() { return m_name; };
         
@@ -37,13 +36,8 @@ namespace mango
         }
 
     private:
-        void setPrimaryCamera(const ChangedPrimaryCameraEvent & event);
-
-    private:
         entt::registry m_registry;
         std::string m_name;
-
-        entt::entity m_primaryCameraEntityHandle = entt::null;
 
     private:
         friend class Entity;

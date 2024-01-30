@@ -290,11 +290,13 @@ void Sandbox::onUpdate(float dt)
         
         if (isCamera1Primary)
         {
-            m_camera1.getComponent<CameraComponent>().setPrimary();
+            m_camera1.getComponent<CameraComponent>().isPrimary = true;
+            m_camera2.getComponent<CameraComponent>().isPrimary = false;
         }
         else
         {
-            m_camera2.getComponent<CameraComponent>().setPrimary();
+            m_camera1.getComponent<CameraComponent>().isPrimary = false;
+            m_camera2.getComponent<CameraComponent>().isPrimary = true;
         }
     }
 

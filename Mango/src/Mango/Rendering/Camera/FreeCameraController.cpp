@@ -14,6 +14,13 @@ namespace mango
         // Update the camera's view matrix
         Entity cameraEntity = Services::sceneManager()->getActiveScene()->getPrimaryCamera();
 
+        if (!cameraEntity)
+        {
+            // TODO: this should be Editor camera actually...
+            MG_CORE_WARN("FreeCameraController: no active (primary) camera.");
+            return;
+        }
+
         auto& transform = cameraEntity.getComponent<TransformComponent>();
         auto& camera    = cameraEntity.getComponent<CameraComponent>();
 

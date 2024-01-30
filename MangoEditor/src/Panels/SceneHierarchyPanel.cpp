@@ -24,7 +24,7 @@ namespace mango
 
     void SceneHierarchyPanel::draw()
     {
-        if (ImGui::Begin("Hierarchy Panel"))
+        ImGui::Begin("Hierarchy Panel");
         {
             if (m_scene)
             {
@@ -49,17 +49,14 @@ namespace mango
                 }
                 ImGui::EndPopup();
             }
-
-            ImGui::End();
         }
+        ImGui::End();
 
-        if (ImGui::Begin("Properties"))
+        ImGui::Begin("Properties");
         {
-            if (m_selectedEntity)
-                drawComponents(m_selectedEntity);
-
-            ImGui::End();
+            if (m_selectedEntity) drawComponents(m_selectedEntity);
         }
+        ImGui::End();
     }
 
     Entity SceneHierarchyPanel::getSelectedEntity() const
@@ -459,18 +456,8 @@ namespace mango
         });
 
         drawComponent<CameraComponent>("Camera", entity, [](auto& component)
-        {
-            bool isPrimary = component.isPrimary();
-            
-            ImGui::BeginDisabled();
-            ImGui::Checkbox("Primary", &isPrimary);
-            ImGui::EndDisabled();
-
-            ImGui::SameLine();
-            if (ImGui::Button("Set as primary"))
-            {
-                component.setPrimary();
-            }
+        {            
+            ImGui::Checkbox("Primary", &component.isPrimary);
 
             const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
             const char* currentProjectionTypeString = projectionTypeStrings[int(component.getProjectionType())];

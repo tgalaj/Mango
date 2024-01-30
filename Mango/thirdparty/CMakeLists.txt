@@ -10,7 +10,6 @@ set(glad_SOURCE_DIR ${GLAD_DIR}/include CACHE INTERNAL "")
 add_library(glad STATIC ${GLAD_DIR}/src/glad.c)
 target_include_directories(glad PUBLIC ${GLAD_DIR}/include)
 
-# other
 CPMAddPackage("gh:g-truc/glm#0.9.9.8")
 CPMAddPackage("gh:gabime/spdlog@1.10.0")
 CPMAddPackage("gh:jarro2783/cxxopts@3.1.1")
@@ -168,21 +167,34 @@ CPMAddPackage(
     DOWNLOAD_ONLY TRUE
 )
 
-CPMAddPackage(
-    NAME yaml-cpp
-    GITHUB_REPOSITORY jbeder/yaml-cpp
-    GIT_TAG 0.8.0
-    GIT_SHALLOW TRUE
-)
-
 if (imgui_ADDED)
     add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
                              ${imgui_SOURCE_DIR}/imgui_demo.cpp
                              ${imgui_SOURCE_DIR}/imgui_draw.cpp
                              ${imgui_SOURCE_DIR}/imgui_tables.cpp
                              ${imgui_SOURCE_DIR}/imgui_widgets.cpp)
-    target_include_directories(imgui INTERFACE ${imgui_SOURCE_DIR})
+    target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR})
 endif()
+
+CPMAddPackage(
+    NAME portableFileDialogs
+    GITHUB_REPOSITORY samhocevar/portable-file-dialogs
+    GIT_TAG main
+    GIT_SHALLOW TRUE
+    DOWNLOAD_ONLY TRUE
+)
+
+if (portableFileDialogs_ADDED)
+    add_library(portableFileDialogs INTERFACE)
+    target_include_directories(portableFileDialogs INTERFACE ${portableFileDialogs_SOURCE_DIR})
+endif()
+
+CPMAddPackage(
+    NAME yaml-cpp
+    GITHUB_REPOSITORY jbeder/yaml-cpp
+    GIT_TAG 0.8.0
+    GIT_SHALLOW TRUE
+)
 
 set_target_properties(glad 
                       assimp
@@ -193,6 +205,10 @@ set_target_properties(glad
                       TracyClient
                       physfs-static 
                       Jolt
+                      yaml-cpp
+                      yaml-cpp-parse
+                      yaml-cpp-read
+                      yaml-cpp-sandbox
                       PROPERTIES FOLDER "thirdparty")
 
 set_target_properties(update_mappings PROPERTIES FOLDER "thirdparty/GLFW3")

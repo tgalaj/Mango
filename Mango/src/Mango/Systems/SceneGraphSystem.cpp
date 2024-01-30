@@ -1,10 +1,11 @@
 ﻿#include "mgpch.h"
 #include "SceneGraphSystem.h"
+#include "Mango/Core/Services.h"
+#include "Mango/Scene/Scene.h"
+#include "Mango/Scene/SceneManager.h"
 
 namespace mango
 {
-    TransformComponent SceneGraphSystem::ROOT_NODE;
-
     SceneGraphSystem::SceneGraphSystem()
         : System("SceneGraphSystem")
     {
@@ -14,6 +15,13 @@ namespace mango
     void SceneGraphSystem::onUpdate(float dt)
     {
         MG_PROFILE_ZONE_SCOPED;
-        ROOT_NODE.update(ROOT_NODE.getWorldMatrix(), false);
+        static glm::mat4 rootTransform = glm::mat4(1.0f);
+
+        auto view = Services::sceneManager()->getActiveScene()->getEntitiesWithComponent<TransformComponent>();
+        for (auto entity : view)
+        {
+            auto& tc = view.get<TransformComponent>(entity);
+            tc.update(rootTransform, false);
+        }
     }
 }

@@ -11,11 +11,5 @@ namespace mango
         ~SceneGraphSystem() = default;
 
         void onUpdate(float dt) override;
-
-    private:
-        static TransformComponent ROOT_NODE;
-
-    private:
-        friend class Scene;
     };
 }

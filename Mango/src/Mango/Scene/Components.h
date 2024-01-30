@@ -238,13 +238,13 @@ namespace mango
         ProjectionType getProjectionType() const    { return m_projectionType; }
         void setProjectionType(ProjectionType type) { m_projectionType = type; recalculateProjection(); }
 
-        bool isPrimary() const { return m_isPrimary; }
-        void setPrimary();
-
         const glm::mat4& view()       const { return m_view; }
         const glm::mat4& projection() const { return m_projection; }
 
         void setView(const glm::mat4& view) { m_view = view; }
+
+    public:
+        bool isPrimary = true;
 
     private:
         void recalculateProjection();
@@ -262,7 +262,6 @@ namespace mango
         float m_aspectRatio = 1.0f;
 
         ProjectionType m_projectionType = ProjectionType::Perspective;
-        bool           m_isPrimary      = false;
     
     private:
         friend class Scene;

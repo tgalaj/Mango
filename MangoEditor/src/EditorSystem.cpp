@@ -3,6 +3,8 @@
 #include "EditorSystem.h"
 #include "Mango/Scene/SceneSerializer.h"
 
+#include <portable-file-dialogs.h>
+
 namespace mango
 {
     EditorSystem::EditorSystem()
@@ -37,7 +39,9 @@ namespace mango
         camera1.setPosition(0, 4, 30);
 
         auto camera2 = m_mainScene->createEntity("MainCamera2");
-        camera2.addComponent<CameraComponent>().setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
+        auto& cc2 = camera2.addComponent<CameraComponent>();
+        cc2.setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
+        cc2.isPrimary = false;
         camera2.setPosition(0, 4, -30);
         camera2.setOrientation({0, 1, 0}, 180.0f);
 
@@ -255,28 +259,68 @@ namespace mango
 
     void EditorSystem::onUpdate(float dt)
     {
+        
+        bool ctrl  = Input::getKey(KeyCode::LeftControl) || Input::getKey(KeyCode::RightControl);
+        bool shift = Input::getKey(KeyCode::LeftShift)   || Input::getKey(KeyCode::RightShift);
+
+        if (Input::getKeyDown(KeyCode::N))
+        {
+            if (ctrl)
+            {
+                newScene();
+                return;
+            }
+        }
+
+        if (Input::getKeyDown(KeyCode::O))
+        {
+            if (ctrl)
+            {
+                openScene();
+                return;
+            }
+        }
+
+        if (Input::getKeyDown(KeyCode::S))
+        {
+            if (ctrl)
+            {
+                if (shift)
+                {
+                    saveSceneAs();
+                    return;
+                }
+                else
+                {
+                    saveScene();
+                    return;
+                }
+            }
+        }
+
+        /** TODO: BELOW TO BE REMOVED */
         static bool isDebugRender = false;
     
-        if (Input::getKeyUp(KeyCode::Escape) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::BACK))
+        if (Input::getKeyDown(KeyCode::Escape) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::BACK))
         {
             Services::application()->stop();
         }
 
-        if (Input::getKeyUp(KeyCode::H) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::Y))
+        if (Input::getKeyDown(KeyCode::H) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::Y))
         {
             isDebugRender = !isDebugRender;
             RenderingSystem::DEBUG_RENDERING = isDebugRender;
         }
 
         static bool fullscreen = Services::application()->getWindow()->isFullscreen();
-        if (Input::getKeyUp(KeyCode::F11))
+        if (Input::getKeyDown(KeyCode::F11))
         {
             fullscreen = !fullscreen;
             Services::application()->getWindow()->setFullscreen(fullscreen);
         }
 
         static bool shouldMoveLights = false;
-        if (Input::getKeyUp(KeyCode::Space) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::X))
+        if (Input::getKeyDown(KeyCode::Space) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::X))
         {
             shouldMoveLights = !shouldMoveLights;
         }
@@ -291,64 +335,86 @@ namespace mango
 
     void EditorSystem::onGui()
     {    
-        ImGuiStyle& style               = ImGui::GetStyle();
-        float       minImGuiWindowSizeX = style.WindowMinSize.x;
+        static bool dockspaceOpen = true;
+        static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 
-        style.WindowMinSize.x = 370.0f;
-        
-        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+        // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
+        // because it would be confusing to have two docking targets within each others.
+        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+        const ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos);
+        ImGui::SetNextWindowSize(viewport->WorkSize);
+        ImGui::SetNextWindowViewport(viewport->ID);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
+        // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
+        // and handle the pass-thru hole, so we ask Begin() to not render a background.
+        if (dockspaceFlags & ImGuiDockNodeFlags_PassthruCentralNode)
+            windowFlags |= ImGuiWindowFlags_NoBackground;
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+        ImGui::Begin("Mango Editor", &dockspaceOpen, windowFlags);
+        ImGui::PopStyleVar(3);
+
+        // Submit the DockSpace
+        ImGuiIO&    io                    = ImGui::GetIO();
+        ImGuiStyle& style                 = ImGui::GetStyle();
+        float       minImGuiWindowSizeX   = style.WindowMinSize.x;
+                    style.WindowMinSize.x = 370.0f;
+
+        if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+        {
+            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspaceFlags);
+        }
         style.WindowMinSize.x = minImGuiWindowSizeX;
 
-        if (ImGui::BeginMainMenuBar())
+        /** Menu Bar */
+        if (ImGui::BeginMenuBar())
         {
             if (ImGui::BeginMenu("File"))
             {
-                // TODO: need editor camera to make this work
-                // if (ImGui::MenuItem("New", "Ctrl+N"))
-                // {
-                //     m_mainScene = Services::sceneManager()->createScene("New Scene");
-                //     Services::sceneManager()->setActiveScene(m_mainScene);
-                //     m_sceneHierarchyPanel.setScene(m_mainScene);
-                // }
-
-                // TODO: make shortcuts work
-                if (ImGui::MenuItem("Open", "Ctrl+O"))
+                if (ImGui::MenuItem("New Scene", "Ctrl+N"))
                 {
-                    // TODO: file dialog
-                    m_mainScene.reset();
-                    m_mainScene = SceneSerializer::deserialize("D:/Projekty/Private/Mango/scene.mango");
-                    Services::sceneManager()->setActiveScene(m_mainScene);
-                    m_sceneHierarchyPanel.setScene(m_mainScene);
+                    newScene();
                 }
 
-                if (ImGui::MenuItem("Save", "Ctrl+S"))
+                if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
                 {
-                    // TODO: file dialog
-                    SceneSerializer::serialize(m_mainScene, "D:/Projekty/Private/Mango/scene.mango");
+                    openScene();
                 }
 
-                if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+                if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
                 {
-                    // TODO: file dialog
+                    saveScene();
                 }
+
+                if (ImGui::MenuItem("Save Scene As...", "Ctrl+Shift+S"))
+                {
+                    saveSceneAs();
+                }
+
+                ImGui::Separator();
 
                 if (ImGui::MenuItem("Exit")) Services::application()->stop();
                 ImGui::EndMenu();
             }
-            ImGui::EndMainMenuBar();
+            ImGui::EndMenuBar();
         }
 
-        if (ImGui::Begin("CVars Editor"))
+        ImGui::Begin("CVars Editor");
         {
             CVarSystem::get()->drawImguiEditor();
-            ImGui::End();
         }
+        ImGui::End();
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
-        if (ImGui::Begin("Viewport"))
+        ImGui::Begin("Viewport");
         {
-            if (ImGui::IsWindowFocused() || ImGui::IsWindowHovered())
+            if (ImGui::IsWindowFocused())
             {
                 ImGui::SetNextFrameWantCaptureKeyboard(false);
                 ImGui::SetNextFrameWantCaptureMouse(false);
@@ -358,13 +424,68 @@ namespace mango
             uint32_t outputTextureID = Services::renderer()->getOutputOffscreenTextureID();
 
             ImGui::Image((ImTextureID)outputTextureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
-            ImGui::End();
         }
+        ImGui::End();
         ImGui::PopStyleVar();
 
         m_sceneHierarchyPanel.draw();
 
-        ImGui::ShowDemoWindow();
+        ImGui::End(); // Mango Editor
+    }
+
+    void EditorSystem::newScene()
+    {
+        m_mainScene = Services::sceneManager()->createScene("New Scene");
+        Services::sceneManager()->setActiveScene(m_mainScene);
+        m_sceneHierarchyPanel.setScene(m_mainScene);
+
+        m_editorScenePath = std::filesystem::path();
+    }
+
+    void EditorSystem::openScene()
+    {
+        auto file = pfd::open_file("", "." /*TODO: project path here*/, {"Mango Scene (*.mango)", "*.mango"}, false);
+        
+        if (!file.result().empty())
+        {
+            openScene(file.result()[0]);
+        }
+    }
+
+    void EditorSystem::openScene(const std::filesystem::path& path)
+    {
+        m_editorScenePath = path;
+        m_mainScene       = SceneSerializer::deserialize(m_editorScenePath);
+        Services::sceneManager()->setActiveScene(m_mainScene);
+        m_sceneHierarchyPanel.setScene(m_mainScene);
+    }
+
+    void EditorSystem::saveScene()
+    {
+        if (!m_editorScenePath.empty())
+        {
+            SceneSerializer::serialize(m_mainScene, m_editorScenePath);
+        }
+        else
+        {
+            saveSceneAs();
+        }
+    }
+
+    void EditorSystem::saveSceneAs()
+    {
+        auto file = pfd::save_file("", "." /*TODO: project path here*/, { "Mango Scene (*.mango)", "*.mango" }, true);
+        if (!file.result().empty())
+        {
+            m_editorScenePath = file.result();
+
+            if (!m_editorScenePath.has_extension())
+            {
+                m_editorScenePath += ".mango";
+            }
+
+            SceneSerializer::serialize(m_mainScene, m_editorScenePath);
+        }
     }
 
     void EditorSystem::moveLights(float dt)

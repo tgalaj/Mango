@@ -63,7 +63,8 @@ target_link_libraries(Mango PUBLIC ${OPENGL_LIBRARIES}
                                    physfs-static
                                    Taskflow
                                    Jolt
-                                   yaml-cpp::yaml-cpp)
+                                   yaml-cpp::yaml-cpp
+                                   portableFileDialogs)
 
 if(MinGW)
     target_link_libraries(Mango bz2)

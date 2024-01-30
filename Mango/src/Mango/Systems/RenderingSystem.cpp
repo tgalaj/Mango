@@ -137,11 +137,13 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderingSystem::onUpdate");
+        MG_CORE_ASSERT_MSG(m_activeScene != nullptr, "Active scene can't be nullptr!");
+
+        glBindFramebuffer(GL_FRAMEBUFFER, m_outputToOffscreenTexture ? m_mainRenderTarget->m_fbo : 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         m_primaryCamera = m_activeScene->getPrimaryCamera();
-
-        MG_CORE_ASSERT_MSG(m_activeScene != nullptr, "Active scene can't be nullptr!");
-        MG_CORE_ASSERT_MSG(m_primaryCamera, "primaryCamera can't be nullptr!");
+        if (!m_primaryCamera) return;
 
         //renderForward(m_activeScene);
         renderDeferred(m_activeScene);
@@ -209,7 +211,7 @@ namespace mango
         for (auto e : view)
         {
             Entity entity = { e, m_activeScene };
-            auto mrc = entity.getComponent<ModelRendererComponent>();
+            auto& mrc = entity.getComponent<ModelRendererComponent>();
 
             addEntityToRenderQueue(entity, mrc.getRenderQueue());
         }
@@ -496,10 +498,10 @@ namespace mango
             {
                 auto [pointLight, transform] = view.get(entity);
 
-                auto model       = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
-                                   glm::scale(glm::mat4(1.0f), glm::vec3(pointLight.getRange()));
-                auto view        = getCamera().view();
-                auto projection  = getCamera().projection();
+                auto model        = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
+                                    glm::scale(glm::mat4(1.0f), glm::vec3(pointLight.getRange()));
+                auto& view        = getCamera().view();
+                auto& projection  = getCamera().projection();
 
                 m_boundingboxShader->bind();
                 m_boundingboxShader->setUniform("g_mvp", projection * view * model);
@@ -816,7 +818,6 @@ namespace mango
                 auto [pointLight, transform] = view.get(entity);
 
                 ShadowInfo shadowInfo = pointLight.getShadowInfo();
-                glm::mat4 lightMatrices[6];
 
                 if (shadowInfo.getCastsShadows())
                 {
@@ -827,7 +828,8 @@ namespace mango
 
                     m_omniShadowMap->bind();
                     glClear(GL_DEPTH_BUFFER_BIT);
-
+                    
+                    glm::mat4 lightMatrices[6]{};
                     lightMatrices[0] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3( 1,  0,  0), glm::vec3(0, -1,  0));
                     lightMatrices[1] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3(-1,  0,  0), glm::vec3(0, -1,  0));
                     lightMatrices[2] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3( 0,  1,  0), glm::vec3(0,  0,  1));
@@ -854,9 +856,9 @@ namespace mango
                 auto model = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
                              glm::scale    (glm::mat4(1.0f), glm::vec3(pointLight.getRange()));
 
-                auto view       = getCamera().view();
-                auto projection = getCamera().projection();
-                auto mvp        = projection * view * model;
+                auto& view       = getCamera().view();
+                auto& projection = getCamera().projection();
+                auto  mvp        = projection * view * model;
 
                 /* Stencil pass */
                 m_nullShader->bind();
