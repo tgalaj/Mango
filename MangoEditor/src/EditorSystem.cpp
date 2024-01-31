@@ -365,10 +365,10 @@ namespace mango
         float       minImGuiWindowSizeX   = style.WindowMinSize.x;
                     style.WindowMinSize.x = 370.0f;
 
+        ImGuiID dockspaceID = ImGui::GetID("MyDockSpace");
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
         {
-            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspaceFlags);
+            ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
         }
         style.WindowMinSize.x = minImGuiWindowSizeX;
 
@@ -444,7 +444,7 @@ namespace mango
 
     void EditorSystem::openScene()
     {
-        auto file = pfd::open_file("", "." /*TODO: project path here*/, {"Mango Scene (*.mango)", "*.mango"}, false);
+        auto file = pfd::open_file("", "." /*TODO: project path here*/, { "Mango Scene (*" MG_SCENE_EXTENSION ")", "*" MG_SCENE_EXTENSION }, false);
         
         if (!file.result().empty())
         {
@@ -474,7 +474,7 @@ namespace mango
 
     void EditorSystem::saveSceneAs()
     {
-        auto file = pfd::save_file("", "." /*TODO: project path here*/, { "Mango Scene (*.mango)", "*.mango" }, true);
+        auto file = pfd::save_file("", "." /*TODO: project path here*/, { "Mango Scene (*" MG_SCENE_EXTENSION ")", "*" MG_SCENE_EXTENSION }, true);
         if (!file.result().empty())
         {
             m_editorScenePath = file.result();

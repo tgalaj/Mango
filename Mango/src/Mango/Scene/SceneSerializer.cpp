@@ -384,12 +384,6 @@ namespace mango
         return false;
     }
 
-    bool SceneSerializer::serializeBinary(const std::shared_ptr<Scene>& scene, const std::filesystem::path& outFilepath)
-    {
-        MG_CORE_ASSERT_MSG(false, "Not implemented!");
-        return true;
-    }
-
     std::shared_ptr<Scene> SceneSerializer::deserialize(const std::filesystem::path& inFilepath)
     {
         YAML::Node data;
@@ -610,11 +604,5 @@ namespace mango
         }
 
         return scene;
-    }
-
-    std::shared_ptr<Scene> SceneSerializer::deserializeBinary(const std::filesystem::path& inFilepath)
-    {
-        MG_CORE_ASSERT_MSG(false, "Not implemented!");
-        return nullptr;
     }
 }
