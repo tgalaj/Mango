@@ -21,7 +21,7 @@ namespace mango
     void CameraComponent::setPerspective(float verticalFov, float aspectRatio, float nearClip, float farClip)
     {
         m_projectionType  = ProjectionType::Perspective;
-        m_perspectiveFov  = glm::radians(verticalFov);
+        m_perspectiveFov  = verticalFov;
         m_aspectRatio     = aspectRatio;
         m_perspectiveNear = nearClip;
         m_perspectiveFar  = farClip;

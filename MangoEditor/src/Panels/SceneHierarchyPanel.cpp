@@ -338,7 +338,7 @@ namespace mango
             
             if (customDragFloat3("Rotation", rotation))
             {
-                component.setRotation(rotation);
+                component.setRotation(glm::radians(rotation));
             }
 
             if (customDragFloat3("Scale", scale, 1.0f))
@@ -486,7 +486,7 @@ namespace mango
                 float verticalFov = glm::degrees(component.getPerspectiveVerticalFieldOfView());
                 if (ImGui::DragFloat("Vertical FOV", &verticalFov, 0.01f, 0.0f, 89.9999f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
                 {
-                    component.setPerspectiveVerticalFieldOfView(verticalFov);
+                    component.setPerspectiveVerticalFieldOfView(glm::radians(verticalFov));
                 }
 
                 float nearClip = component.getPerspectiveNearClip();

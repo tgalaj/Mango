@@ -138,7 +138,7 @@ namespace mango
         for (auto e : view)
         {
                   Entity      entity         = { e, m_scene.get() };
-                  auto        scale          = entity.scale();
+                  auto        scale          = entity.getScale();
             const JPH::Shape* collisionShape = nullptr;
             if (entity.hasComponent<BoxCollider3DComponent>())
             {
@@ -166,8 +166,8 @@ namespace mango
 
             auto& rb3d = entity.getComponent<RigidBody3DComponent>();
 
-            auto position    = entity.position();
-            auto orientation = entity.orientation();
+            auto position    = entity.getPosition();
+            auto orientation = entity.getOrientation();
 
             JPH::BodyCreationSettings bodySettings(collisionShape,
                                                    JPH::RVec3(position.x, position.y, position.z),

@@ -1,9 +1,40 @@
 #define GLFW_INCLUDE_NONE 
 
 #include "EditorSystem.h"
+#include "Mango/Math/Math.h"
 #include "Mango/Scene/SceneSerializer.h"
 
-#include <portable-file-dialogs.h>
+#include "glm/gtc/type_ptr.hpp"
+#include "ImGuizmo.h"
+#include "portable-file-dialogs.h"
+
+namespace
+{
+    ImGuizmo::OPERATION getImGuizmoOp(mango::GizmoType type)
+    {
+        switch (type)
+        {
+            case mango::GizmoType::TRANSLATE: return ImGuizmo::OPERATION::TRANSLATE;
+            case mango::GizmoType::ROTATE:    return ImGuizmo::OPERATION::ROTATE;
+            case mango::GizmoType::SCALE:     return ImGuizmo::OPERATION::SCALE;
+        }
+
+        MG_ASSERT_FAIL("Unknown GizmoType!");
+        return ImGuizmo::OPERATION::TRANSLATE;
+    }
+
+    ImGuizmo::MODE getImGuizmoMode(mango::GizmoMode mode)
+    {
+        switch (mode)
+        {
+            case mango::GizmoMode::LOCAL: return ImGuizmo::MODE::LOCAL;
+            case mango::GizmoMode::WORLD: return ImGuizmo::MODE::WORLD;
+        }
+
+        MG_ASSERT_FAIL("Unknown GizmoMode!");
+        return ImGuizmo::MODE::LOCAL;
+    }
+}
 
 namespace mango
 {
@@ -35,15 +66,15 @@ namespace mango
         });
 
         auto camera1 = m_mainScene->createEntity("MainCamera");
-        camera1.addComponent<CameraComponent>().setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
+        camera1.addComponent<CameraComponent>().setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
         camera1.setPosition(0, 4, 30);
 
         auto camera2 = m_mainScene->createEntity("MainCamera2");
         auto& cc2 = camera2.addComponent<CameraComponent>();
-        cc2.setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
+        cc2.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
         cc2.isPrimary = false;
         camera2.setPosition(0, 4, -30);
-        camera2.setOrientation({0, 1, 0}, 180.0f);
+        camera2.setOrientation({0, 1, 0}, glm::radians(180.0f));
 
         m_freeCameraController = std::make_shared<FreeCameraController>();
 
@@ -259,7 +290,6 @@ namespace mango
 
     void EditorSystem::onUpdate(float dt)
     {
-        
         bool ctrl  = Input::getKey(KeyCode::LeftControl) || Input::getKey(KeyCode::RightControl);
         bool shift = Input::getKey(KeyCode::LeftShift)   || Input::getKey(KeyCode::RightShift);
 
@@ -298,6 +328,31 @@ namespace mango
             }
         }
 
+        if (Input::getKeyDown(KeyCode::Alpha1))
+        {
+            m_gizmoType = GizmoType::TRANSLATE;
+        }
+
+        if (Input::getKeyDown(KeyCode::Alpha2))
+        {
+            m_gizmoType = GizmoType::ROTATE;
+        }
+
+        if (Input::getKeyDown(KeyCode::Alpha3))
+        {
+            m_gizmoType = GizmoType::SCALE;
+        }
+
+        if (Input::getKeyDown(KeyCode::Alpha0))
+        {
+            m_gizmoType = GizmoType::NONE;
+        }
+
+        if (Input::getKeyDown(KeyCode::Alpha4))
+        {
+            m_gizmoMode = m_gizmoMode == GizmoMode::LOCAL ? GizmoMode::WORLD : GizmoMode::LOCAL;
+        }
+
         /** TODO: BELOW TO BE REMOVED */
         static bool isDebugRender = false;
     
@@ -332,7 +387,7 @@ namespace mango
 
         m_freeCameraController->onUpdate(dt);
     }
-
+    #include <glm/gtx/string_cast.hpp>
     void EditorSystem::onGui()
     {    
         static bool dockspaceOpen = true;
@@ -414,16 +469,85 @@ namespace mango
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
         ImGui::Begin("Viewport");
         {
-            if (ImGui::IsWindowFocused())
+            auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+            auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+            auto viewportOffset    = ImGui::GetWindowPos();
+
+            m_viewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+            m_viewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
+
+            m_viewportFocused = ImGui::IsWindowFocused();
+            m_viewportHovered = ImGui::IsWindowHovered();
+
+            if (m_viewportHovered)
             {
                 ImGui::SetNextFrameWantCaptureKeyboard(false);
                 ImGui::SetNextFrameWantCaptureMouse(false);
             }
 
             ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+                   m_viewportSize    = { viewportPanelSize.x, viewportPanelSize.y };
+
             uint32_t outputTextureID = Services::renderer()->getOutputOffscreenTextureID();
 
             ImGui::Image((ImTextureID)outputTextureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
+
+            /** ImGuizmo */
+            Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
+            if (selectedEntity && m_gizmoType != GizmoType::NONE)
+            {
+                ImGuizmo::SetOrthographic(false);
+                ImGuizmo::SetDrawlist();
+
+                ImGuizmo::SetRect(m_viewportBounds[0].x, m_viewportBounds[0].y, m_viewportBounds[1].x - m_viewportBounds[0].x, m_viewportBounds[1].y - m_viewportBounds[0].y);
+
+                // Camera
+                auto cameraEntity = m_mainScene->getPrimaryCamera();
+                const auto& camera = cameraEntity.getComponent<CameraComponent>();
+                const glm::mat4& cameraView = camera.view(); // TODO rename to getView
+                const glm::mat4& cameraProjection = camera.projection(); // TODO rename to getProjection
+
+                // Entity transform
+                auto& tc = selectedEntity.getComponent<TransformComponent>();
+                glm::mat4 transform = tc.getWorldMatrix();
+
+                // Snapping
+                bool snap = Input::getKey(KeyCode::LeftControl);
+                float snapValue = 0.5f; // Snap to 0.5m for translation and scale
+
+                // Snap to 45 degrees for rotation
+                if (m_gizmoType == GizmoType::ROTATE)
+                {
+                    snapValue = 45.0f;
+                }
+                glm::vec3 snapValues = glm::vec3(snapValue);
+
+                ImGuizmo::Manipulate(glm::value_ptr(cameraView), 
+                                     glm::value_ptr(cameraProjection), 
+                                     getImGuizmoOp(m_gizmoType), 
+                                     getImGuizmoMode(m_gizmoMode), 
+                                     glm::value_ptr(transform),
+                                     nullptr /*deltaMatrix*/,
+                                     snap ? glm::value_ptr(snapValues) : nullptr);
+
+                if (ImGuizmo::IsUsing())
+                {
+                    glm::vec3 translation, rotation, scale;
+                    math::decompose(transform,
+                                    translation,
+                                    rotation,
+                                    scale);
+
+                    // Calculate delta rotation, to always add 
+                    // small portion of the rotation to avoid the gimbal lock
+                    glm::vec3 currentRotation = tc.getRotation();
+                    glm::vec3 deltaRotation   = rotation - currentRotation;
+
+                    tc.setPosition(translation);
+                    tc.setRotation(currentRotation + deltaRotation);
+                    tc.setScale(scale);
+                }
+            }
         }
         ImGui::End();
         ImGui::PopStyleVar();

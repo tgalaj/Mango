@@ -48,17 +48,22 @@ namespace mango
         getComponent<TransformComponent>().setScale(uniformScale);
     }
 
-    glm::vec3 Entity::position()
+    glm::vec3 Entity::getPosition()
     {
         return getComponent<TransformComponent>().getPosition();
     }
 
-    glm::vec3 Entity::scale()
+    glm::vec3 Entity::getScale()
     {
         return getComponent<TransformComponent>().getScale();
     }
 
-    glm::quat Entity::orientation()
+    glm::vec3 Entity::getRotation()
+    {
+        return getComponent<TransformComponent>().getRotation();
+    }
+
+    glm::quat Entity::getOrientation()
     {
         return getComponent<TransformComponent>().getOrientation();
     }

@@ -11,6 +11,7 @@
 #include "imgui_internal.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
+#include "ImGuizmo.h"
 
 namespace mango
 {
@@ -62,6 +63,27 @@ namespace mango
         }
         setDarkThemeColors();
 
+        // Set ImGuizmo style
+        ImGuizmo::Style& imguizmoStyle = ImGuizmo::GetStyle();
+        imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_X] = { 0.847059f, 0.368627f, 0.443137f, 1.0f };
+        imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Y] = { 0.145098f, 0.666667f, 0.145098f, 1.0f };
+        imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Z] = { 0.172549f, 0.329411f, 0.8f,      1.0f };
+
+        imguizmoStyle.Colors[ImGuizmo::COLOR::PLANE_X] = { 0.847059f, 0.407843f, 0.482352f, 1.0f };
+        imguizmoStyle.Colors[ImGuizmo::COLOR::PLANE_Y] = { 0.333333f, 0.670588f, 0.333333f, 1.0f };
+        imguizmoStyle.Colors[ImGuizmo::COLOR::PLANE_Z] = { 0.258823f, 0.407843f, 0.850980f, 1.0f };
+
+        imguizmoStyle.Colors[ImGuizmo::COLOR::SELECTION] = { 0.8f, 0.666667f, 0.125490f, 1.0f };
+
+        imguizmoStyle.TranslationLineThickness   = 5.0f;
+        imguizmoStyle.TranslationLineArrowSize   = imguizmoStyle.TranslationLineThickness * 2.0f;
+        imguizmoStyle.RotationLineThickness      = 5.0f;
+        imguizmoStyle.RotationOuterLineThickness = imguizmoStyle.RotationLineThickness + 1.0f;
+        imguizmoStyle.ScaleLineThickness         = 5.0f;
+        imguizmoStyle.ScaleLineCircleSize        = imguizmoStyle.ScaleLineThickness * 2.0f;
+        imguizmoStyle.HatchedAxisLineThickness   = 10.0f;
+        imguizmoStyle.CenterCircleSize           = 10.0f;
+
         ImGui_ImplGlfw_InitForOpenGL(window->getNativeWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 460");
     }
@@ -84,6 +106,7 @@ namespace mango
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
     }
 
     void ImGuiSystem::end()

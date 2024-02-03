@@ -225,7 +225,7 @@ namespace mango
             {
                 auto& camera = entity.getComponent<CameraComponent>();
                 out << YAML::Key << "ProjectionType"   << YAML::Value << projectionTypeToString(camera.getProjectionType());
-                out << YAML::Key << "PerspectiveFOV"   << YAML::Value << camera.getPerspectiveVerticalFieldOfView();
+                out << YAML::Key << "PerspectiveFOV"   << YAML::Value << glm::degrees(camera.getPerspectiveVerticalFieldOfView());
                 out << YAML::Key << "PerspectiveNear"  << YAML::Value << camera.getPerspectiveNearClip();
                 out << YAML::Key << "PerspectiveFar"   << YAML::Value << camera.getPerspectiveFarClip();
                 out << YAML::Key << "OrthographicSize" << YAML::Value << camera.getOrthographicSize();
@@ -429,7 +429,7 @@ namespace mango
                     // Entities always have transforms
                     auto& tc = deserializedEntity.getComponent<TransformComponent>();
                     tc.setPosition(transformComponent["Position"].as<glm::vec3>());
-                    tc.setRotation(transformComponent["Rotation"].as<glm::vec3>());
+                    tc.setRotation(glm::radians(transformComponent["Rotation"].as<glm::vec3>()));
                     tc.setScale   (transformComponent["Scale"].as<glm::vec3>());
                 }
 
@@ -496,7 +496,7 @@ namespace mango
                     auto& camera     = deserializedEntity.addComponent<CameraComponent>();
                     camera.isPrimary = cameraComponent["IsPrimary"].as<bool>();
                     camera.setProjectionType                (stringToProjectionType(cameraComponent["ProjectionType"].as<std::string>()));
-                    camera.setPerspectiveVerticalFieldOfView(glm::degrees(cameraComponent["PerspectiveFOV"].as<float>()));
+                    camera.setPerspectiveVerticalFieldOfView(glm::radians(cameraComponent["PerspectiveFOV"].as<float>()));
                     camera.setPerspectiveNearClip           (cameraComponent["PerspectiveNear"].as<float>());
                     camera.setPerspectiveFarClip            (cameraComponent["PerspectiveFar"].as<float>());
                     camera.setOrthographicSize              (cameraComponent["OrthographicSize"].as<float>());

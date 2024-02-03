@@ -210,15 +210,15 @@ namespace mango
     public:
         CameraComponent();
         
-        /** verticalFov in degrees. */
+        /** verticalFov in radians. */
         void setPerspective(float verticalFov, float aspectRatio, float nearClip, float farClip);
         void setOrtographic(float size,        float aspectRatio, float nearClip, float farClip);
 
         /** Returns vertical field of view angle in radians. */
         float getPerspectiveVerticalFieldOfView() const { return m_perspectiveFov; }
         
-        /** verticalFov in degrees. */
-        void  setPerspectiveVerticalFieldOfView(float verticalFov) { m_perspectiveFov = glm::radians(verticalFov); recalculateProjection(); }
+        /** verticalFov in radians. */
+        void  setPerspectiveVerticalFieldOfView(float verticalFov) { m_perspectiveFov = verticalFov; recalculateProjection(); }
         
         float getPerspectiveNearClip() const         { return m_perspectiveNear; }
         void  setPerspectiveNearClip(float nearClip) { m_perspectiveNear = nearClip; recalculateProjection(); }
@@ -319,16 +319,12 @@ namespace mango
         }
 
         /*
-         * Set rotation using Euler Angles in degrees
+         * Set rotation using Euler Angles in radians
          */
         void setRotation(const glm::vec3& euler)
         {
-            /** ZXY rotation order */
-            m_rotation    = glm::radians(euler);
-            m_orientation = glm::quat({ 0,            m_rotation.y, 0            }) *
-                            glm::quat({ m_rotation.x, 0,            0            }) * 
-                            glm::quat({ 0,            0,            m_rotation.z });
-            
+            m_rotation    = euler;
+            m_orientation = glm::quat(m_rotation);
             m_orientation = glm::normalize(m_orientation);
             m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_isDirty     = true;
@@ -339,15 +335,15 @@ namespace mango
          */
         void setRotation(float x, float y, float z)
         {
-            setRotation(glm::vec3(x, y, z));
+            setRotation(glm::radians(glm::vec3(x, y, z)));
         }
 
         /*
-        * Set orientation using axis and angle in degrees
+        * Set orientation using axis and angle in radians
         */
         void setRotation(const glm::vec3 & axis, float angle)
         {
-            m_orientation = glm::normalize(glm::angleAxis(glm::radians(angle), glm::normalize(axis)));
+            m_orientation = glm::normalize(glm::angleAxis(angle, glm::normalize(axis)));
             m_rotation    = glm::eulerAngles(m_orientation);
             m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_isDirty     = true;

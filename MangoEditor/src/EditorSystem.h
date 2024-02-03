@@ -4,6 +4,20 @@
 
 namespace mango
 {
+    enum class GizmoType
+    {
+        TRANSLATE,
+        ROTATE,
+        SCALE,
+        NONE
+    };
+
+    enum class GizmoMode
+    {
+        LOCAL,
+        WORLD
+    };
+
     class EditorSystem : public System
     {
     public:
@@ -28,7 +42,14 @@ namespace mango
         std::filesystem::path  m_editorScenePath;
         std::shared_ptr<Scene> m_mainScene;
 
-        SceneHierarchyPanel   m_sceneHierarchyPanel;
+        bool m_viewportFocused = false, m_viewportHovered = false;
+        glm::vec2 m_viewportSize = { 0.0f, 0.0f };
+        glm::vec2 m_viewportBounds[2];
+
+        GizmoType m_gizmoType = GizmoType::NONE;
+        GizmoMode m_gizmoMode = GizmoMode::LOCAL;
+
+        SceneHierarchyPanel m_sceneHierarchyPanel;
 
         std::shared_ptr<FreeCameraController> m_freeCameraController;
     };

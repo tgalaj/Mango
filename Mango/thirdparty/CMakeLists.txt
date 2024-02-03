@@ -10,7 +10,7 @@ set(glad_SOURCE_DIR ${GLAD_DIR}/include CACHE INTERNAL "")
 add_library(glad STATIC ${GLAD_DIR}/src/glad.c)
 target_include_directories(glad PUBLIC ${GLAD_DIR}/include)
 
-CPMAddPackage("gh:g-truc/glm#0.9.9.8")
+CPMAddPackage("gh:g-truc/glm#1.0.0")
 CPMAddPackage("gh:gabime/spdlog@1.10.0")
 CPMAddPackage("gh:jarro2783/cxxopts@3.1.1")
 
@@ -167,13 +167,22 @@ CPMAddPackage(
     DOWNLOAD_ONLY TRUE
 )
 
-if (imgui_ADDED)
+CPMAddPackage(
+    NAME imguizmo
+    GITHUB_REPOSITORY CedricGuillemet/ImGuizmo
+    GIT_TAG master
+    GIT_SHALLOW TRUE
+    DOWNLOAD_ONLY TRUE
+)
+
+if (imgui_ADDED AND imguizmo_ADDED)
     add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
                              ${imgui_SOURCE_DIR}/imgui_demo.cpp
                              ${imgui_SOURCE_DIR}/imgui_draw.cpp
                              ${imgui_SOURCE_DIR}/imgui_tables.cpp
-                             ${imgui_SOURCE_DIR}/imgui_widgets.cpp)
-    target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR})
+                             ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+                             ${imguizmo_SOURCE_DIR}/ImGuizmo.cpp)
+    target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${imguizmo_SOURCE_DIR})
 endif()
 
 CPMAddPackage(

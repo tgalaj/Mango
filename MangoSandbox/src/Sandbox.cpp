@@ -30,13 +30,13 @@ void Sandbox::onInit()
     });
 
     m_camera1 = m_mainScene->createEntity("MainCamera");
-    m_camera1.addComponent<CameraComponent>().setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
+    m_camera1.addComponent<CameraComponent>().setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
     m_camera1.setPosition(0, 4, 30);
 
     m_camera2 = m_mainScene->createEntity("MainCamera2");
-    m_camera2.addComponent<CameraComponent>().setPerspective(45.0f, Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
+    m_camera2.addComponent<CameraComponent>().setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
     m_camera2.setPosition(0, 4, -30);
-    m_camera2.setOrientation({ 0, 1, 0 }, 180.0f);
+    m_camera2.setOrientation({ 0, 1, 0 }, glm::radians(180.0f));
 
     m_freeCameraController = std::make_shared<FreeCameraController>();
 
