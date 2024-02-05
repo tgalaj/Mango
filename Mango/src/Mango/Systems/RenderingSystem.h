@@ -17,7 +17,7 @@ namespace mango
     class DeferredRendering;
     class ModelRendererComponent;
     class TransformComponent;
-    class CameraComponent;
+    class Camera;
     class Window;
 
     class RenderingSystem : public System
@@ -43,7 +43,7 @@ namespace mango
         uint32_t getOutputOffscreenTextureID() const;
 
         TransformComponent & getCameraTransform();
-        CameraComponent    & getCamera();
+        Camera& getCamera();
 
     public:
         glm::vec3 sceneAmbientColor{};

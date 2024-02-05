@@ -209,12 +209,12 @@ namespace mango
 
         if (entity.hasComponent<CameraComponent>())
         {
-            auto projectionTypeToString = [](CameraComponent::ProjectionType type) -> std::string
+            auto projectionTypeToString = [](Camera::ProjectionType type) -> std::string
             {
                 switch (type)
                 {
-                    case CameraComponent::ProjectionType::Perspective:  return "Perspective";
-                    case CameraComponent::ProjectionType::Orthographic: return "Orthographic";
+                    case Camera::ProjectionType::Perspective:  return "Perspective";
+                    case Camera::ProjectionType::Orthographic: return "Orthographic";
                 }
                 MG_CORE_ASSERT_MSG(false, "Unknown projection type");
                 return {};
@@ -223,7 +223,9 @@ namespace mango
             out << YAML::Key << "CameraComponent";
             out << YAML::BeginMap;
             {
-                auto& camera = entity.getComponent<CameraComponent>();
+                auto& cc     = entity.getComponent<CameraComponent>();
+                auto& camera = cc.camera;
+
                 out << YAML::Key << "ProjectionType"   << YAML::Value << projectionTypeToString(camera.getProjectionType());
                 out << YAML::Key << "PerspectiveFOV"   << YAML::Value << glm::degrees(camera.getPerspectiveVerticalFieldOfView());
                 out << YAML::Key << "PerspectiveNear"  << YAML::Value << camera.getPerspectiveNearClip();
@@ -231,7 +233,7 @@ namespace mango
                 out << YAML::Key << "OrthographicSize" << YAML::Value << camera.getOrthographicSize();
                 out << YAML::Key << "OrthographicNear" << YAML::Value << camera.getOrthographicNearClip();
                 out << YAML::Key << "OrthographicFar"  << YAML::Value << camera.getOrthographicFarClip();
-                out << YAML::Key << "IsPrimary"        << YAML::Value << camera.isPrimary;
+                out << YAML::Key << "IsPrimary"        << YAML::Value << cc.isPrimary;
             }
             out << YAML::EndMap;
         }
@@ -484,17 +486,19 @@ namespace mango
                 auto cameraComponent = entity["CameraComponent"];
                 if (cameraComponent)
                 {
-                    auto stringToProjectionType = [](const std::string& s) -> CameraComponent::ProjectionType
+                    auto stringToProjectionType = [](const std::string& s) -> Camera::ProjectionType
                     {
-                        if (s == "Perspective")  return CameraComponent::ProjectionType::Perspective;
-                        if (s == "Orthographic") return CameraComponent::ProjectionType::Orthographic;
+                        if (s == "Perspective")  return Camera::ProjectionType::Perspective;
+                        if (s == "Orthographic") return Camera::ProjectionType::Orthographic;
 
                         MG_CORE_ASSERT_MSG(false, "Unknown projection type");
-                        return CameraComponent::ProjectionType::Perspective;
+                        return Camera::ProjectionType::Perspective;
                     };
 
-                    auto& camera     = deserializedEntity.addComponent<CameraComponent>();
-                    camera.isPrimary = cameraComponent["IsPrimary"].as<bool>();
+                    auto& cc     = deserializedEntity.addComponent<CameraComponent>();
+                    auto& camera = cc.camera;
+
+                    cc.isPrimary = cameraComponent["IsPrimary"].as<bool>();
                     camera.setProjectionType                (stringToProjectionType(cameraComponent["ProjectionType"].as<std::string>()));
                     camera.setPerspectiveVerticalFieldOfView(glm::radians(cameraComponent["PerspectiveFOV"].as<float>()));
                     camera.setPerspectiveNearClip           (cameraComponent["PerspectiveNear"].as<float>());

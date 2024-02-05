@@ -66,12 +66,12 @@ namespace mango
         });
 
         auto camera1 = m_mainScene->createEntity("MainCamera");
-        camera1.addComponent<CameraComponent>().setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
+        camera1.addComponent<CameraComponent>().camera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
         camera1.setPosition(0, 4, 30);
 
         auto camera2 = m_mainScene->createEntity("MainCamera2");
         auto& cc2 = camera2.addComponent<CameraComponent>();
-        cc2.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
+        cc2.camera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
         cc2.isPrimary = false;
         camera2.setPosition(0, 4, -30);
         camera2.setOrientation({0, 1, 0}, glm::radians(180.0f));
@@ -502,10 +502,11 @@ namespace mango
                 ImGuizmo::SetRect(m_viewportBounds[0].x, m_viewportBounds[0].y, m_viewportBounds[1].x - m_viewportBounds[0].x, m_viewportBounds[1].y - m_viewportBounds[0].y);
 
                 // Camera
-                auto cameraEntity = m_mainScene->getPrimaryCamera();
-                const auto& camera = cameraEntity.getComponent<CameraComponent>();
-                const glm::mat4& cameraView = camera.view(); // TODO rename to getView
-                const glm::mat4& cameraProjection = camera.projection(); // TODO rename to getProjection
+                auto cameraEntity  = m_mainScene->getPrimaryCamera();
+                const auto& camera = cameraEntity.getComponent<CameraComponent>().camera;
+
+                const glm::mat4& cameraView       = camera.getView();
+                const glm::mat4& cameraProjection = camera.getProjection();
 
                 // Entity transform
                 auto& tc = selectedEntity.getComponent<TransformComponent>();

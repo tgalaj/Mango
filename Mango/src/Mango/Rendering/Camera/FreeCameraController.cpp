@@ -21,13 +21,13 @@ namespace mango
             return;
         }
 
-        auto& transform = cameraEntity.getComponent<TransformComponent>();
-        auto& camera    = cameraEntity.getComponent<CameraComponent>();
+        auto& tc = cameraEntity.getComponent<TransformComponent>();
+        auto& cc = cameraEntity.getComponent<CameraComponent>();
 
-        glm::mat4 R = glm::mat4_cast(transform.getOrientation());
-        glm::mat4 T = glm::translate(glm::mat4(1.0f), -transform.getPosition());
+        glm::mat4 R = glm::mat4_cast(tc.getOrientation());
+        glm::mat4 T = glm::translate(glm::mat4(1.0f), -tc.getPosition());
 
-        camera.setView(R * T);
+        cc.camera.setView(R * T);
 
         // Free Move
         auto movementAmount = *CVarSystem::get()->getFloatCVar("camera.moveSpeed") * dt;
@@ -36,22 +36,22 @@ namespace mango
             movementAmount *= 4.0f;
 
         if (Input::getKey(forwardKey))
-            move(transform, glm::conjugate(transform.getOrientation()) * glm::vec3(0, 0, -1), movementAmount);
+            move(tc, glm::conjugate(tc.getOrientation()) * glm::vec3(0, 0, -1), movementAmount);
 
         if (Input::getKey(backwardKey))
-            move(transform, glm::conjugate(transform.getOrientation()) * glm::vec3(0, 0, 1), movementAmount);
+            move(tc, glm::conjugate(tc.getOrientation()) * glm::vec3(0, 0, 1), movementAmount);
 
         if (Input::getKey(rightKey))
-            move(transform, glm::conjugate(transform.getOrientation()) * glm::vec3(1, 0, 0), movementAmount);
+            move(tc, glm::conjugate(tc.getOrientation()) * glm::vec3(1, 0, 0), movementAmount);
 
         if (Input::getKey(leftKey))
-            move(transform, glm::conjugate(transform.getOrientation()) * glm::vec3(-1, 0, 0), movementAmount);
+            move(tc, glm::conjugate(tc.getOrientation()) * glm::vec3(-1, 0, 0), movementAmount);
 
         if (Input::getKey(upKey))
-            move(transform, glm::vec3(0, 1, 0), movementAmount);
+            move(tc, glm::vec3(0, 1, 0), movementAmount);
 
         if (Input::getKey(downKey))
-            move(transform, glm::vec3(0, -1, 0), movementAmount);
+            move(tc, glm::vec3(0, -1, 0), movementAmount);
 
         // Free Look
         if (Input::getMouse(unlockMouseKey))
@@ -82,13 +82,13 @@ namespace mango
             // pitch
             if (xRot)
             {
-                transform.setRotation(glm::angleAxis(glm::radians(deltaPos.y * mouseSensitivity), glm::vec3(1, 0, 0)) * transform.getOrientation());
+                tc.setRotation(glm::angleAxis(glm::radians(deltaPos.y * mouseSensitivity), glm::vec3(1, 0, 0)) * tc.getOrientation());
             }
 
             // yaw
             if (yRot)
             {
-                transform.setRotation(transform.getOrientation() * glm::angleAxis(glm::radians(deltaPos.x * mouseSensitivity), glm::vec3(0, 1, 0)));
+                tc.setRotation(tc.getOrientation() * glm::angleAxis(glm::radians(deltaPos.x * mouseSensitivity), glm::vec3(0, 1, 0)));
             }
 
             if(xRot || yRot)
@@ -109,38 +109,38 @@ namespace mango
             float leftY = Input::getGamepadAxis(GamepadID::PAD_1, GamepadAxis::LEFT_Y);
             if (glm::abs(leftY) >= gamePadDeadZone)
             {
-                move(transform, glm::conjugate(transform.getOrientation()) * glm::vec3(0, 0, 1), leftY * movementAmount);
+                move(tc, glm::conjugate(tc.getOrientation()) * glm::vec3(0, 0, 1), leftY * movementAmount);
             }
 
             float leftX = Input::getGamepadAxis(GamepadID::PAD_1, GamepadAxis::LEFT_X);
             if (glm::abs(leftX) >= gamePadDeadZone)
             {
-                move(transform, glm::conjugate(transform.getOrientation()) * glm::vec3(1, 0, 0), leftX * movementAmount);
+                move(tc, glm::conjugate(tc.getOrientation()) * glm::vec3(1, 0, 0), leftX * movementAmount);
             }
 
             if (Input::getGamepadButton(GamepadID::PAD_1, GamepadButton::A))
-                move(transform, glm::vec3(0, 1, 0), movementAmount);
+                move(tc, glm::vec3(0, 1, 0), movementAmount);
 
             if (Input::getGamepadButton(GamepadID::PAD_1, GamepadButton::B))
-                move(transform, glm::vec3(0, -1, 0), movementAmount);
+                move(tc, glm::vec3(0, -1, 0), movementAmount);
 
             float rightX = Input::getGamepadAxis(GamepadID::PAD_1, GamepadAxis::RIGHT_X);
             if (glm::abs(rightX) >= gamePadDeadZone)
             {
-                transform.setRotation(transform.getOrientation() * glm::angleAxis(glm::radians(rightX * gamePadRotationSensitivity), glm::vec3(0, 1, 0)));
+                tc.setRotation(tc.getOrientation() * glm::angleAxis(glm::radians(rightX * gamePadRotationSensitivity), glm::vec3(0, 1, 0)));
             }
 
             float rightY = Input::getGamepadAxis(GamepadID::PAD_1, GamepadAxis::RIGHT_Y);
             if (glm::abs(rightY) >= gamePadDeadZone)
             {
-                transform.setRotation(glm::angleAxis(glm::radians(rightY * gamePadRotationSensitivity), glm::vec3(1, 0, 0)) * transform.getOrientation());
+                tc.setRotation(glm::angleAxis(glm::radians(rightY * gamePadRotationSensitivity), glm::vec3(1, 0, 0)) * tc.getOrientation());
             }
         }
     }
 
     CameraComponent& FreeCameraController::getCameraComponent()
     {
-        return  Services::sceneManager()->getActiveScene()->getPrimaryCamera().getComponent<CameraComponent>();
+        return Services::sceneManager()->getActiveScene()->getPrimaryCamera().getComponent<CameraComponent>();
     }
 
     void FreeCameraController::move(TransformComponent& transform, const glm::vec3& dir, float amount)

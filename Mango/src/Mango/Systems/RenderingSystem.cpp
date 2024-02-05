@@ -250,9 +250,9 @@ namespace mango
         return m_primaryCamera.getComponent<TransformComponent>();
     }
 
-    CameraComponent& RenderingSystem::getCamera()
+    Camera& RenderingSystem::getCamera()
     {
-        return m_primaryCamera.getComponent<CameraComponent>();
+        return m_primaryCamera.getComponent<CameraComponent>().camera;
     }
 
     void RenderingSystem::initRenderingStates()
@@ -352,7 +352,7 @@ namespace mango
         /* Render skybox */
         if (m_skybox != nullptr)
         {
-            m_skybox->render(getCamera().projection(), getCamera().view());
+            m_skybox->render(getCamera().getProjection(), getCamera().getView());
 
             m_enviroMappingShader->bind();
             m_enviroMappingShader->setSubroutine(Shader::Type::FRAGMENT, "reflection"); // TODO: control this using Material class
@@ -387,7 +387,7 @@ namespace mango
         renderOpaque(m_gbufferShader);
 
         /* Compute SSAO */
-        m_ssao->computeSSAO(m_deferredRendering, getCamera().view(), getCamera().projection());
+        m_ssao->computeSSAO(m_deferredRendering, getCamera().getView(), getCamera().getProjection());
         m_ssao->blurSSAO();
 
         /* Light Pass - compute lighting */
@@ -433,7 +433,7 @@ namespace mango
         /* Render skybox */
         if (m_skybox != nullptr)
         {
-            m_skybox->render(getCamera().projection(), getCamera().view());
+            m_skybox->render(getCamera().getProjection(), getCamera().getView());
 
             m_enviroMappingShader->bind();
             //m_enviro_mapping_shader->setSubroutine(Shader::Type::FRAGMENT, "refraction"); // TODO: control this using Material class
@@ -500,8 +500,8 @@ namespace mango
 
                 auto model        = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
                                     glm::scale(glm::mat4(1.0f), glm::vec3(pointLight.getRange()));
-                auto& view        = getCamera().view();
-                auto& projection  = getCamera().projection();
+                auto& view        = getCamera().getView();
+                auto& projection  = getCamera().getProjection();
 
                 m_boundingboxShader->bind();
                 m_boundingboxShader->setUniform("g_mvp", projection * view * model);
@@ -526,8 +526,8 @@ namespace mango
                 auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
                                   glm::mat4_cast(glm::inverse(transform.getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
                                   glm::scale(glm::mat4(1.0f), glm::vec3(radiusScale, heightScale, radiusScale));
-                auto view       = getCamera().view();
-                auto projection = getCamera().projection();
+                auto view       = getCamera().getView();
+                auto projection = getCamera().getProjection();
 
                 m_boundingboxShader->bind();
                 m_boundingboxShader->setUniform("g_mvp", projection * view * model);
@@ -856,8 +856,8 @@ namespace mango
                 auto model = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
                              glm::scale    (glm::mat4(1.0f), glm::vec3(pointLight.getRange()));
 
-                auto& view       = getCamera().view();
-                auto& projection = getCamera().projection();
+                auto& view       = getCamera().getView();
+                auto& projection = getCamera().getProjection();
                 auto  mvp        = projection * view * model;
 
                 /* Stencil pass */
@@ -953,8 +953,8 @@ namespace mango
                              glm::mat4_cast(glm::inverse(transform.getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
                              glm::scale    (glm::mat4(1.0f), glm::vec3(radiusScale, heightScale, radiusScale));
 
-                auto view       = getCamera().view();
-                auto projection = getCamera().projection();
+                auto view       = getCamera().getView();
+                auto projection = getCamera().getProjection();
                 auto mvp        = projection * view * model;
 
                 /* Stencil pass */

@@ -457,10 +457,11 @@ namespace mango
 
         drawComponent<CameraComponent>("Camera", entity, [](auto& component)
         {            
+            auto& camera = component.camera;
             ImGui::Checkbox("Primary", &component.isPrimary);
 
             const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
-            const char* currentProjectionTypeString = projectionTypeStrings[int(component.getProjectionType())];
+            const char* currentProjectionTypeString = projectionTypeStrings[int(camera.getProjectionType())];
 
             if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
             {
@@ -470,7 +471,7 @@ namespace mango
                     if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
                     {
                         currentProjectionTypeString = projectionTypeStrings[i];
-                        component.setProjectionType(CameraComponent::ProjectionType(i));
+                        camera.setProjectionType(Camera::ProjectionType(i));
                     }
 
                     if (isSelected)
@@ -481,45 +482,45 @@ namespace mango
                 ImGui::EndCombo();
             }
 
-            if (component.getProjectionType() == CameraComponent::ProjectionType::Perspective)
+            if (camera.getProjectionType() == Camera::ProjectionType::Perspective)
             {
-                float verticalFov = glm::degrees(component.getPerspectiveVerticalFieldOfView());
+                float verticalFov = glm::degrees(camera.getPerspectiveVerticalFieldOfView());
                 if (ImGui::DragFloat("Vertical FOV", &verticalFov, 0.01f, 0.0f, 89.9999f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
                 {
-                    component.setPerspectiveVerticalFieldOfView(glm::radians(verticalFov));
+                    camera.setPerspectiveVerticalFieldOfView(glm::radians(verticalFov));
                 }
 
-                float nearClip = component.getPerspectiveNearClip();
+                float nearClip = camera.getPerspectiveNearClip();
                 if (ImGui::DragFloat("Near Clip", &nearClip))
                 {
-                    component.setPerspectiveNearClip(nearClip);
+                    camera.setPerspectiveNearClip(nearClip);
                 }
 
-                float farClip = component.getPerspectiveFarClip();
+                float farClip = camera.getPerspectiveFarClip();
                 if (ImGui::DragFloat("Far Clip", &farClip))
                 {
-                    component.setPerspectiveFarClip(farClip);
+                    camera.setPerspectiveFarClip(farClip);
                 }
             }
 
-            if (component.getProjectionType() == CameraComponent::ProjectionType::Orthographic)
+            if (camera.getProjectionType() == Camera::ProjectionType::Orthographic)
             {
-                float orthoSize = component.getOrthographicSize();
+                float orthoSize = camera.getOrthographicSize();
                 if (ImGui::DragFloat("Size", &orthoSize))
                 {
-                    component.setOrthographicSize(orthoSize);
+                    camera.setOrthographicSize(orthoSize);
                 }
 
-                float nearClip = component.getOrthographicNearClip();
+                float nearClip = camera.getOrthographicNearClip();
                 if (ImGui::DragFloat("Near Clip", &nearClip))
                 {
-                    component.setOrthographicNearClip(nearClip);
+                    camera.setOrthographicNearClip(nearClip);
                 }
 
-                float farClip = component.getOrthographicFarClip();
+                float farClip = camera.getOrthographicFarClip();
                 if (ImGui::DragFloat("Far Clip", &farClip))
                 {
-                    component.setOrthographicFarClip(farClip);
+                    camera.setOrthographicFarClip(farClip);
                 }
             }
 

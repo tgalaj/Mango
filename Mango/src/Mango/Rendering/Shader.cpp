@@ -335,8 +335,8 @@ namespace mango
                 {
                     if (G_MVP == uniformName)
                     {
-                        auto view       = Services::renderer()->getCamera().view();
-                        auto projection = Services::renderer()->getCamera().projection();
+                        auto view       = Services::renderer()->getCamera().getView();
+                        auto projection = Services::renderer()->getCamera().getProjection();
 
                         auto mvp = projection * view * transform.getWorldMatrix();
                         setUniform(G_MVP, mvp);
