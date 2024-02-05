@@ -30,6 +30,8 @@ namespace mango
         void end();
         void updateWindowSize(float width, float height);
 
+        void setDefaultIniSettingsFile(const std::string& filepath);
+
         // HUD rendering
         static void beginHUD();
         static void endHUD();
@@ -48,5 +50,6 @@ namespace mango
 
     private:
         static glm::vec2 m_windowSize;
+        std::string m_iniFilepath = "";
     };
 }

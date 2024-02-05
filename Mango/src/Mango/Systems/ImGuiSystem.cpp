@@ -44,7 +44,7 @@ namespace mango
         // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
         // TODO: make VFI paths visible also here, so we can use VFI class to get filepaths
-        auto rootDir = std::filesystem::path(MG_ROOT_DIR);
+        auto rootDir      = std::filesystem::path(MG_ROOT_DIR);
         auto interRegular = rootDir / "MangoEditor/assets/fonts/inter/Inter-Regular.ttf";
         auto interBold    = rootDir / "MangoEditor/assets/fonts/inter/Inter-Bold.ttf";
         
@@ -132,6 +132,13 @@ namespace mango
     void ImGuiSystem::updateWindowSize(float width, float height)
     {
         m_windowSize = glm::vec2(width, height);
+    }
+
+    void ImGuiSystem::setDefaultIniSettingsFile(const std::string& filename)
+    {
+        m_iniFilepath = VFI::getFilepath(filename).string();
+
+        ImGui::GetIO().IniFilename = m_iniFilepath.c_str();
     }
 
     void ImGuiSystem::beginHUD()

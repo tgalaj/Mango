@@ -58,6 +58,7 @@ namespace mango
 
         Services::renderer()->setOutputToOffscreenTexture(true);
         Services::application()->getWindow()->setVSync(false);
+        Services::application()->getImGuiSystem()->setDefaultIniSettingsFile("imgui.ini");
 
         Services::eventBus()->subscribe<GamepadConnectedEvent>([](const GamepadConnectedEvent& event)
         {
