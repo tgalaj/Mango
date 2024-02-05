@@ -20,6 +20,8 @@ namespace mango
     class Camera;
     class Window;
 
+    enum class RenderingMode { EDITOR, GAME };
+
     class RenderingSystem : public System
     {
     public:
@@ -42,8 +44,10 @@ namespace mango
         void setOutputToOffscreenTexture(bool enabled) { m_outputToOffscreenTexture = enabled; }
         uint32_t getOutputOffscreenTextureID() const;
 
-        TransformComponent & getCameraTransform();
-        Camera& getCamera();
+        void setRenderingMode(RenderingMode mode, Camera* editorCamera = nullptr, const glm::vec3& editorCameraPosition = glm::vec3(0.0f));
+
+        Camera& getCamera() const;
+        glm::vec3 getCameraPosition() const { return m_cameraPosition; }
 
     public:
         glm::vec3 sceneAmbientColor{};
@@ -119,9 +123,12 @@ namespace mango
 
         std::shared_ptr<Skybox> m_skybox;
 
-        Entity m_primaryCamera;
-        Scene* m_activeScene = nullptr;
-        std::shared_ptr<Window> m_mainWindow;
+        RenderingMode m_mode           = RenderingMode::GAME;
+        glm::vec3     m_cameraPosition = {};
+
+        Camera * m_camera      = nullptr;
+        Scene  * m_activeScene = nullptr;
+        Window * m_mainWindow  = nullptr;
 
         bool m_outputToOffscreenTexture = false;
     };

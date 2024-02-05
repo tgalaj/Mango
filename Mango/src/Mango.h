@@ -14,6 +14,10 @@
 #include "Mango/Events/GamepadEvents.h"
 #include "Mango/Events/SceneEvents.h"
 
+#include "Mango/Math/Math.h"
+
+#include "Mango/Profiling/Instrumentation.h"
+
 #include "Mango/Rendering/Camera/FreeCameraController.h"
 
 #include "Mango/Scene/Components.h"

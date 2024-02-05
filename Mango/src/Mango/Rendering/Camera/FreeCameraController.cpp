@@ -16,7 +16,6 @@ namespace mango
 
         if (!cameraEntity)
         {
-            // TODO: this should be Editor camera actually...
             MG_CORE_WARN("FreeCameraController: no active (primary) camera.");
             return;
         }
@@ -138,13 +137,9 @@ namespace mango
         }
     }
 
-    CameraComponent& FreeCameraController::getCameraComponent()
-    {
-        return Services::sceneManager()->getActiveScene()->getPrimaryCamera().getComponent<CameraComponent>();
-    }
-
     void FreeCameraController::move(TransformComponent& transform, const glm::vec3& dir, float amount)
     {
+        MG_PROFILE_ZONE_SCOPED;
         transform.setPosition(transform.getPosition() + (dir * amount));
     }
 

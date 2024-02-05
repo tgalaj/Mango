@@ -1,4 +1,5 @@
 #pragma once
+#include "glm/glm.hpp"
 
 namespace mango
 {
@@ -8,6 +9,7 @@ namespace mango
         enum class ProjectionType { Perspective = 0, Orthographic = 1 };
     public:
         Camera();
+        virtual ~Camera() = default;
 
         /** verticalFov in radians. */
         void setPerspective(float verticalFov, float aspectRatio, float nearClip, float farClip);
@@ -45,7 +47,7 @@ namespace mango
     private:
         void recalculateProjection();
 
-    private:
+    protected:
         glm::mat4 m_view{};
         glm::mat4 m_projection{};
 

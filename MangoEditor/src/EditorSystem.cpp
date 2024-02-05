@@ -41,6 +41,9 @@ namespace mango
     EditorSystem::EditorSystem()
         : System("EditorSystem")
     {
+        // Set CVars
+        CVarFloat CVarCameraRotationSpeed("editor.camera.rotationSpeed", "rotation speed of the editor camera", 0.2f);
+        CVarFloat CVarCameraMoveSpeed    ("editor.camera.moveSpeed",     "movement speed of the editor camera", 10.0f);
     }
 
     void EditorSystem::onInit()
@@ -49,6 +52,9 @@ namespace mango
         Services::sceneManager()->setActiveScene(m_mainScene);
 
         m_sceneHierarchyPanel.setScene(m_mainScene);
+
+        m_editorCamera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
+        m_editorCamera.setPosition(glm::vec3(0.0f, 4.0f, 30.0f));
 
         Services::renderer()->setOutputToOffscreenTexture(true);
         Services::application()->getWindow()->setVSync(false);
@@ -75,8 +81,6 @@ namespace mango
         cc2.isPrimary = false;
         camera2.setPosition(0, 4, -30);
         camera2.setOrientation({0, 1, 0}, glm::radians(180.0f));
-
-        m_freeCameraController = std::make_shared<FreeCameraController>();
 
         auto font = AssetManager::createFont("Droid48", "fonts/Roboto-Regular.ttf", 48.0f);
 
@@ -385,9 +389,9 @@ namespace mango
             moveLights(dt);
         }
 
-        m_freeCameraController->onUpdate(dt);
+        m_editorCamera.onUpdate(dt);
     }
-    #include <glm/gtx/string_cast.hpp>
+    
     void EditorSystem::onGui()
     {    
         static bool dockspaceOpen = true;
@@ -469,6 +473,8 @@ namespace mango
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
         ImGui::Begin("Viewport");
         {
+            Services::renderer()->setRenderingMode(RenderingMode::EDITOR, &m_editorCamera, m_editorCamera.getPosition());
+
             auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
             auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
             auto viewportOffset    = ImGui::GetWindowPos();
@@ -502,11 +508,8 @@ namespace mango
                 ImGuizmo::SetRect(m_viewportBounds[0].x, m_viewportBounds[0].y, m_viewportBounds[1].x - m_viewportBounds[0].x, m_viewportBounds[1].y - m_viewportBounds[0].y);
 
                 // Camera
-                auto cameraEntity  = m_mainScene->getPrimaryCamera();
-                const auto& camera = cameraEntity.getComponent<CameraComponent>().camera;
-
-                const glm::mat4& cameraView       = camera.getView();
-                const glm::mat4& cameraProjection = camera.getProjection();
+                const glm::mat4& cameraView       = m_editorCamera.getView();
+                const glm::mat4& cameraProjection = m_editorCamera.getProjection();
 
                 // Entity transform
                 auto& tc = selectedEntity.getComponent<TransformComponent>();

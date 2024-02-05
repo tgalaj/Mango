@@ -1,5 +1,6 @@
 #pragma once
 #include "Mango.h"
+#include "EditorCamera.h"
 #include "Panels/SceneHierarchyPanel.h"
 
 namespace mango
@@ -22,7 +23,7 @@ namespace mango
     {
     public:
         EditorSystem();
-        ~EditorSystem() = default;
+        virtual ~EditorSystem() = default;
 
         void onInit() override;
         void onDestroy() override;
@@ -42,15 +43,16 @@ namespace mango
         std::filesystem::path  m_editorScenePath;
         std::shared_ptr<Scene> m_mainScene;
 
-        bool m_viewportFocused = false, m_viewportHovered = false;
-        glm::vec2 m_viewportSize = { 0.0f, 0.0f };
-        glm::vec2 m_viewportBounds[2];
+        bool      m_viewportFocused   = false, 
+                  m_viewportHovered   = false;
+        glm::vec2 m_viewportSize      = { 0.0f, 0.0f };
+        glm::vec2 m_viewportBounds[2] = {{ 0.0f, 0.0f }, { 0.0f, 0.0f }};
 
         GizmoType m_gizmoType = GizmoType::NONE;
         GizmoMode m_gizmoMode = GizmoMode::LOCAL;
 
         SceneHierarchyPanel m_sceneHierarchyPanel;
 
-        std::shared_ptr<FreeCameraController> m_freeCameraController;
+        EditorCamera m_editorCamera;
     };
 }

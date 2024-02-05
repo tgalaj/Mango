@@ -327,7 +327,7 @@ namespace mango
         {
             dirty |= m_isDirty;
 
-            if(dirty)
+            if (dirty)
             {
                 m_worldMatrix  = getUpdatedWorldMatrix();
                 m_worldMatrix  = parentTransform * m_worldMatrix;
@@ -336,7 +336,7 @@ namespace mango
                 m_isDirty = false;
             }
 
-            for(unsigned i = 0; i < m_children.size(); ++i)
+            for (unsigned i = 0; i < m_children.size(); ++i)
             {
                 m_children[i]->update(m_worldMatrix, dirty);
             }

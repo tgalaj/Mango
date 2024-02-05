@@ -29,7 +29,7 @@ namespace mango
         MG_CORE_ASSERT_MSG(Services::application()->getWindow() != nullptr, "window can't be nullptr!");
         MG_CORE_ASSERT_MSG(Services::eventBus()                 != nullptr, "eventBus can't be nullptr!");
 
-        m_mainWindow = Services::application()->getWindow();
+        m_mainWindow = Services::application()->getWindow().get();
 
         Services::eventBus()->subscribe<EntityRemovedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ComponentAddedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
@@ -142,16 +142,38 @@ namespace mango
         glBindFramebuffer(GL_FRAMEBUFFER, m_outputToOffscreenTexture ? m_mainRenderTarget->m_fbo : 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        m_primaryCamera = m_activeScene->getPrimaryCamera();
-        if (!m_primaryCamera) return;
-
-        //renderForward(m_activeScene);
-        renderDeferred(m_activeScene);
-
-        if (DEBUG_RENDERING)
+        // TODO: create two methods: renderGame and renderEditor + use switch
+        if (m_mode == RenderingMode::GAME)
         {
-            renderDebugLightsBoundingBoxes(m_activeScene);
-            //renderDebug();
+            auto primaryCameraEntity = m_activeScene->getPrimaryCamera();
+
+            if (!primaryCameraEntity) return;
+
+            auto& cc = primaryCameraEntity.getComponent<CameraComponent>();
+            auto& tc = primaryCameraEntity.getComponent<TransformComponent>();
+            
+            m_camera         = &cc.camera;
+            m_cameraPosition = tc.getPosition();
+
+            // Update the view matrix of the primary camera
+            glm::mat4 cameraRotation    = glm::mat4_cast(tc.getOrientation());
+            glm::mat4 cameraTranslation = glm::translate(glm::mat4(1.0f), -tc.getPosition());
+
+            m_camera->setView(cameraRotation * cameraTranslation);
+
+            //renderForward(m_activeScene);
+            renderDeferred(m_activeScene);
+        }
+
+        if (m_mode == RenderingMode::EDITOR)
+        {
+            renderDeferred(m_activeScene);
+
+            if (DEBUG_RENDERING)
+            {
+                renderDebugLightsBoundingBoxes(m_activeScene);
+                //renderDebug();
+            }
         }
     }
 
@@ -245,14 +267,16 @@ namespace mango
         return m_mainRenderTarget->m_textureID[0];
     }
 
-    TransformComponent& RenderingSystem::getCameraTransform()
+    void RenderingSystem::setRenderingMode(RenderingMode mode, Camera* editorCamera /*= nullptr*/, const glm::vec3& editorCameraPosition /*= glm::vec3(0.0f)*/)
     {
-        return m_primaryCamera.getComponent<TransformComponent>();
+        m_mode           = mode;
+        m_camera         = editorCamera;
+        m_cameraPosition = editorCameraPosition;
     }
 
-    Camera& RenderingSystem::getCamera()
+    Camera& RenderingSystem::getCamera() const
     {
-        return m_primaryCamera.getComponent<CameraComponent>().camera;
+        return *(m_camera);
     }
 
     void RenderingSystem::initRenderingStates()
@@ -1013,15 +1037,13 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        auto camPos = getCameraTransform().getPosition();
-
         std::sort(m_alphaQueue.begin(), m_alphaQueue.end(), 
-                  [&camPos](Entity & obj1, Entity & obj2)
+                  [this](Entity & obj1, Entity & obj2)
                   {
                      const auto pos1 = obj1.getComponent<TransformComponent>().getPosition();
                      const auto pos2 = obj2.getComponent<TransformComponent>().getPosition();
 
-                     return glm::length(camPos - pos1) >= glm::length(camPos - pos2);
+                     return glm::length(m_cameraPosition - pos1) >= glm::length(m_cameraPosition - pos2);
                   });
     }
 

@@ -360,7 +360,7 @@ namespace mango
                 {
                     if (G_CAM_POS == uniformName)
                     {
-                        setUniform(G_CAM_POS, Services::renderer()->getCameraTransform().getPosition());
+                        setUniform(G_CAM_POS, Services::renderer()->getCameraPosition());
                     }
                 }
             }
