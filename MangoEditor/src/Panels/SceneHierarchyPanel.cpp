@@ -1,10 +1,12 @@
 #include "SceneHierarchyPanel.h"
 
+#include "Mango/Core/AssetManager.h"
 #include "Mango/Scene/Components.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <type_traits>
 
@@ -579,7 +581,6 @@ namespace mango
             switch (model.getModelType())
             {
                 case Model::ModelType::Model3D:
-                    // TODO: file dialog
                     ImGui::InputText("##Filename", &model.m_filename);
 
                     ImGui::SameLine();
@@ -635,6 +636,43 @@ namespace mango
             }
 
             if (updatePrimitiveProperties) model.setPrimitiveProperties(pp);
+
+            ImGui::Separator();
+
+            // TODO: this needs to be reworked, it's a temporary solution right now
+            // Display material for the base mesh only
+            auto& material = model.getMesh().material;
+
+            ImGui::Text("Material");
+
+            // Draw vec3 map
+            for (auto& kv : material.m_vec3Map)
+            {
+                ImGui::DragFloat3(kv.first.c_str(), glm::value_ptr(kv.second));
+            }
+            // Draw float map
+            for (auto& kv : material.m_floatMap)
+            {
+                ImGui::DragFloat(kv.first.c_str(), &kv.second);
+            }
+            // Draw textures
+            for (auto& kv : material.m_textureMap)
+            {
+                std::string textureName = "##" + Material::m_textureUniformsMap[kv.first];
+                ImGui::InputText(textureName.c_str(), &kv.second->getFilename());
+                ImGui::SameLine();
+                ImGui::PushItemWidth(-1);
+
+                if (ImGui::Button("Load"))
+                {
+                    if(kv.second->getFilename().empty()) return;
+
+                    bool isSrgb = (kv.first == Material::TextureType::DIFFUSE) || (kv.first == Material::TextureType::SPECULAR);
+                    kv.second = AssetManager::createTexture2D(kv.second->getFilename(), isSrgb);
+                }
+                ImGui::PopItemWidth();
+            }
+
         });
 
         drawComponent<RigidBody3DComponent>("Rigidbody 3D", entity, [](auto& component)

@@ -37,9 +37,11 @@ namespace mango
         Services::eventBus()->subscribe<ComponentRemovedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ActiveSceneChangedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
 
-        AssetManager::createTexture2D1x1("default_white",  glm::uvec4(255, 255, 255, 255));
-        AssetManager::createTexture2D1x1("default_black",  glm::uvec4(0,   0,   0,   255));
-        AssetManager::createTexture2D1x1("default_normal", glm::uvec4(128, 127, 254, 255));
+        AssetManager::createTexture2D1x1("default_diffuse",  glm::uvec4(255, 255, 255, 255));
+        AssetManager::createTexture2D1x1("default_specular", glm::uvec4(0,   0,   0,   255));
+        AssetManager::createTexture2D1x1("default_normal",   glm::uvec4(128, 127, 254, 255));
+        AssetManager::createTexture2D1x1("default_emission", glm::uvec4(0,   0,   0,   255));
+        AssetManager::createTexture2D1x1("default_depth",    glm::uvec4(0,   0,   0,   255));
 
         m_opaqueQueue.reserve(50);
         m_alphaQueue.reserve(5);

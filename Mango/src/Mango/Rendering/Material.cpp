@@ -23,11 +23,11 @@ namespace mango
 
         m_blendMode = BlendMode::NONE;
 
-        m_textureMap[TextureType::DIFFUSE]  = AssetManager::getTexture2D("default_white");
-        m_textureMap[TextureType::SPECULAR] = AssetManager::getTexture2D("default_black");
+        m_textureMap[TextureType::DIFFUSE]  = AssetManager::getTexture2D("default_diffuse");
+        m_textureMap[TextureType::SPECULAR] = AssetManager::getTexture2D("default_specular");
         m_textureMap[TextureType::NORMAL]   = AssetManager::getTexture2D("default_normal");
-        m_textureMap[TextureType::EMISSION] = AssetManager::getTexture2D("default_black");
-        m_textureMap[TextureType::DEPTH]    = AssetManager::getTexture2D("default_black");
+        m_textureMap[TextureType::EMISSION] = AssetManager::getTexture2D("default_emission");
+        m_textureMap[TextureType::DEPTH]    = AssetManager::getTexture2D("default_depth");
     }
 
 

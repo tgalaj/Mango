@@ -144,7 +144,8 @@ namespace mango
         bool createTextureDDS         (const std::string& filename);
         bool createTextureCubeMap     (const std::string* filenames, bool isSrgb = false, uint32_t mipmapLevels = 0);
 
-        TextureDescriptor getDescriptor() const { return m_descriptor; };
+        TextureDescriptor getDescriptor() const { return m_descriptor; }
+        std::string&      getFilename()         { return m_filename;   }
 
         static uint8_t calcMaxMipMapsLevels(uint32_t width, uint32_t height, uint32_t depth)
         {
@@ -166,8 +167,9 @@ namespace mango
         }
 
     private:
-        TextureDescriptor m_descriptor;
-        GLuint            m_id;
+        std::string       m_filename   {};
+        TextureDescriptor m_descriptor {};
+        GLuint            m_id         {};
 
     private:
         friend class AssetManager;

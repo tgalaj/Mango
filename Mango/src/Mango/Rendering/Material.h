@@ -35,5 +35,8 @@ namespace mango
         BlendMode m_blendMode;
 
         static std::unordered_map<TextureType, std::string> m_textureUniformsMap;
+
+    private:
+        friend class SceneHierarchyPanel;
     };
 }

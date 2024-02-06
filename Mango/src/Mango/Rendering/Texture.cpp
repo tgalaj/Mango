@@ -337,6 +337,7 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::createTexture2d");
 
+        m_filename = filename;
         auto data = load(filename, isSrgb);
 
         if (!data)
@@ -444,6 +445,7 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::createTexture2dHDR");
 
+        m_filename = filename;
         float* data = loadf(filename);
 
         if (!data)
@@ -475,6 +477,7 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::createTextureDDS");
 
+        m_filename = filename;
         auto filepath = VFI::getFilepath(filename);
 
         DDSFile dds;
