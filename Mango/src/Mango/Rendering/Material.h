@@ -27,6 +27,10 @@ namespace mango
 
         void setBlendMode(BlendMode mode) { m_blendMode = mode; }
 
+        std::unordered_map<TextureType, std::shared_ptr<Texture>>& getTexturesMap() { return m_textureMap; }
+        std::unordered_map<std::string, glm::vec3>               & getVec3Map()     { return m_vec3Map; }
+        std::unordered_map<std::string, float>                   & getFloatMap()    { return m_floatMap; }
+
     private:
         std::unordered_map<TextureType, std::shared_ptr<Texture>> m_textureMap;
         std::unordered_map<std::string, glm::vec3> m_vec3Map;

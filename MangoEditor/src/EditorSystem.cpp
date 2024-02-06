@@ -325,11 +325,9 @@ namespace mango
                     saveSceneAs();
                     return;
                 }
-                else
-                {
-                    saveScene();
-                    return;
-                }
+                
+                saveScene();
+                return;
             }
         }
 

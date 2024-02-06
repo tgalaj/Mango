@@ -646,29 +646,29 @@ namespace mango
             ImGui::Text("Material");
 
             // Draw vec3 map
-            for (auto& kv : material.m_vec3Map)
+            for (auto& [propertyName, vec3Value] : material.m_vec3Map)
             {
-                ImGui::DragFloat3(kv.first.c_str(), glm::value_ptr(kv.second));
+                ImGui::DragFloat3(propertyName.c_str(), glm::value_ptr(vec3Value));
             }
             // Draw float map
-            for (auto& kv : material.m_floatMap)
+            for (auto& [propertyName, floatValue] : material.m_floatMap)
             {
-                ImGui::DragFloat(kv.first.c_str(), &kv.second);
+                ImGui::DragFloat(propertyName.c_str(), &floatValue);
             }
             // Draw textures
-            for (auto& kv : material.m_textureMap)
+            for (auto& [textureType, texture] : material.m_textureMap)
             {
-                std::string textureName = "##" + Material::m_textureUniformsMap[kv.first];
-                ImGui::InputText(textureName.c_str(), &kv.second->getFilename());
+                std::string textureName = "##" + Material::m_textureUniformsMap[textureType];
+                ImGui::InputText(textureName.c_str(), &texture->getFilename());
                 ImGui::SameLine();
                 ImGui::PushItemWidth(-1);
 
                 if (ImGui::Button("Load"))
                 {
-                    if(kv.second->getFilename().empty()) return;
+                    if(texture->getFilename().empty()) return;
 
-                    bool isSrgb = (kv.first == Material::TextureType::DIFFUSE) || (kv.first == Material::TextureType::SPECULAR);
-                    kv.second = AssetManager::createTexture2D(kv.second->getFilename(), isSrgb);
+                    bool isSrgb = (textureType == Material::TextureType::DIFFUSE) || (textureType == Material::TextureType::SPECULAR);
+                    texture = AssetManager::createTexture2D(texture->getFilename(), isSrgb);
                 }
                 ImGui::PopItemWidth();
             }

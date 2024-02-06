@@ -1,6 +1,8 @@
 #include "mgpch.h"
-#include "SceneSerializer.h"
+
 #include "Entity.h"
+#include "SceneSerializer.h"
+#include "Mango/Core/AssetManager.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -270,6 +272,20 @@ namespace mango
                 return {};
             };
 
+            auto materialTextureTypeToString = [](Material::TextureType type) -> std::string
+            {
+                switch (type)
+                {
+                    case Material::TextureType::DIFFUSE:  return "Diffuse";
+                    case Material::TextureType::SPECULAR: return "Specular";
+                    case Material::TextureType::NORMAL:   return "Normal";
+                    case Material::TextureType::EMISSION: return "Emission";
+                    case Material::TextureType::DEPTH:    return "Depth";
+                }
+                MG_CORE_ASSERT_MSG(false, "Unknown texture type");
+                return {};
+            };
+
             out << YAML::Key << "ModelRendererComponent";
             out << YAML::BeginMap;
             {
@@ -298,6 +314,43 @@ namespace mango
                     }
                     out << YAML::EndMap;
                 }
+
+                out << YAML::Key << "Material" << YAML::Value;
+                out << YAML::BeginMap;
+                {
+                    auto material = mrc.model.getMesh().material;
+
+                    out << YAML::Key << "Vec3Map" << YAML::Value;
+                    out << YAML::BeginMap;
+                    {
+                        for (auto& [propertyName, vec3Value] : material.getVec3Map())
+                        {
+                            out << YAML::Key << propertyName << YAML::Value << vec3Value;
+                        }
+                    }
+                    out << YAML::EndMap;
+
+                    out << YAML::Key << "FloatMap" << YAML::Value;
+                    out << YAML::BeginMap;
+                    {
+                        for (auto& [propertyName, floatValue] : material.getFloatMap())
+                        {
+                            out << YAML::Key << propertyName << YAML::Value << floatValue;
+                        }
+                    }
+                    out << YAML::EndMap;
+
+                    out << YAML::Key << "Textures" << YAML::Value;
+                    out << YAML::BeginMap;
+                    {
+                        for (auto& [textureType, texture] : material.getTexturesMap())
+                        {
+                            out << YAML::Key << materialTextureTypeToString(textureType) << YAML::Value << texture->getFilename();
+                        }
+                    }
+                    out << YAML::EndMap;
+                }
+                out << YAML::EndMap;
             }
             out << YAML::EndMap;
         }
@@ -537,6 +590,18 @@ namespace mango
                         return ModelRendererComponent::RenderQueue::RQ_OPAQUE;
                     };
 
+                    auto stringToMaterialTextureType = [](const std::string& s) -> Material::TextureType
+                    {
+                        if (s == "Diffuse")  return Material::TextureType::DIFFUSE;
+                        if (s == "Specular") return Material::TextureType::SPECULAR;
+                        if (s == "Normal")   return Material::TextureType::NORMAL;
+                        if (s == "Emission") return Material::TextureType::EMISSION;
+                        if (s == "Depth")    return Material::TextureType::DEPTH;
+
+                        MG_CORE_ASSERT_MSG(false, "Unknown texture type");
+                        return Material::TextureType::DIFFUSE;
+                    };
+
                     auto modelType = stringToModelType(modelRendererComponent["ModelType"].as<std::string>());
                     auto renderQueue = stringToRenderQueue(modelRendererComponent["RenderQueue"].as<std::string>());
 
@@ -564,6 +629,48 @@ namespace mango
                         model.setPrimitiveProperties(modelType, pp);
 
                         deserializedEntity.addComponent<ModelRendererComponent>(model, renderQueue);
+                    }
+
+                    auto material = modelRendererComponent["Material"];
+                    if (material)
+                    {
+                        auto& mrc          = deserializedEntity.getComponent<ModelRendererComponent>();
+                        auto& meshMaterial = mrc.model.getMesh().material;
+
+                        auto vec3Map = material["Vec3Map"];
+                        if (vec3Map)
+                        {   
+                            for (auto it = vec3Map.begin(); it != vec3Map.end(); ++it)
+                            {
+                                meshMaterial.addVector3(it->first.as<std::string>(), it->second.as<glm::vec3>());
+                            }
+                        }
+
+                        auto floatMap = material["FloatMap"];
+                        if (floatMap)
+                        {
+                            for (auto it = floatMap.begin(); it != floatMap.end(); ++it)
+                            {
+                                meshMaterial.addFloat(it->first.as<std::string>(), it->second.as<float>());
+                            }
+                        }
+
+                        auto texturesMap = material["Textures"];
+                        if (texturesMap)
+                        {
+                            for (auto it = texturesMap.begin(); it != texturesMap.end(); ++it)
+                            {
+                                auto textureFilename = it->second.as<std::string>();
+
+                                if (!textureFilename.empty())
+                                {
+                                    auto textureType = stringToMaterialTextureType(it->first.as<std::string>());
+                                    auto texture = AssetManager::getTexture2D(textureFilename);
+
+                                    meshMaterial.addTexture(textureType, texture);
+                                }
+                            }
+                        }
                     }
                 }
 
