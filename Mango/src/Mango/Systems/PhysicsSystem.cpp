@@ -224,11 +224,10 @@ namespace mango
         
         // We simulate the physics world in discrete time steps. 60 Hz is a good rate to update the physics system.
         // If you take larger steps than 1 / 60th of a second you need to do multiple collision steps in order to keep the simulation stable. Do 1 collision step per 1 / 60th of a second (round up).
-        const float c_deltaTime      = 1.0f / 60.0f;
-        const int   c_collisionSteps = 1;
+        int collisionSteps = glm::max((1.0f / dt) / 60.0f + 0.5f, 1.0f);
 
         // Step the physics world
-        m_physicsSystem->Update(c_deltaTime, c_collisionSteps, m_tempAllocator, m_jobSystem);
+        m_physicsSystem->Update(dt, collisionSteps, m_tempAllocator, m_jobSystem);
 
         JPH::BodyInterface& bodyInterface = m_physicsSystem->GetBodyInterface();
 

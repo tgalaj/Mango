@@ -111,19 +111,19 @@ namespace mango
         Services::provide(m_eventBus);
 
         // Add core systems - do not forget to configure them!        
-        // TODO: Rename to high freq. systems ???
         m_systems.add(new SceneGraphSystem());
         m_systems.add(new AudioSystem());
         m_systems.configure();
+
+        // Physics is handled separately
+        m_physicsSystem = new PhysicsSystem();
+        m_physicsSystem->onInit();
 
         // Create Rendering and ImGui systems
         // renderingSystem and m_imGuiSystem will be deleted by m_renderingSystems
         RenderingSystem* renderingSystem = new RenderingSystem();
                          m_imGuiSystem   = new ImGuiSystem();
-                         m_physicsSystem = new PhysicsSystem();
 
-        // TODO: Rename to low freq. systems ???
-        m_renderingSystems.add(m_physicsSystem);
         m_renderingSystems.add(renderingSystem);
         m_renderingSystems.add(m_imGuiSystem);
         m_renderingSystems.configure();
@@ -183,11 +183,14 @@ namespace mango
 
         double lastTime        = Timer::getTime();
         double unprocessedTime = 0.0;
+        double physicsFreq     = 0.0;
 
         double startTime  = 0.0;
         double passedTime = 0.0;
 
         bool shouldRender = false;
+
+        double physicsDeltaTime = glm::max(m_physicsDeltaTime, m_frameTime);
 
         while (m_isRunning)
         {
@@ -207,6 +210,7 @@ namespace mango
                 shouldRender = true;
 
                 unprocessedTime -= m_frameTime;
+                physicsFreq     += m_frameTime;
 
                 if (m_window->isCloseRequested())
                 {
@@ -215,6 +219,13 @@ namespace mango
 
                 m_systems.updateAll(m_frameTime);
                 Input::update();
+
+                if (physicsFreq >= physicsDeltaTime)
+                {   
+                    MG_PROFILE_ZONE_NAMED_N(zone2, "Game Loop Physics Update", true);
+                    m_physicsSystem->onUpdate(physicsDeltaTime);
+                    physicsFreq = 0.0f;
+                }
 
                 if (frameCounter >= 1.0)
                 {
@@ -225,7 +236,7 @@ namespace mango
 
             if (shouldRender)
             {
-                MG_PROFILE_ZONE_NAMED_N(zone2, "Game Loop Render", true);
+                MG_PROFILE_ZONE_NAMED_N(zone3, "Game Loop Render", true);
                 m_renderingSystems.updateAll(m_frameTime);
 
                 m_imGuiSystem->being();

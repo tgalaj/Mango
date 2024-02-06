@@ -61,6 +61,7 @@ namespace mango
         PhysicsSystem * m_physicsSystem;
 
         double       m_frameTime;
+        double       m_physicsDeltaTime = 1.0 / 60.0;
         unsigned int m_fps;
         unsigned int m_fpsToReturn;
         bool         m_isRunning;
