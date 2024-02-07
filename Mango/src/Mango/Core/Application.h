@@ -42,7 +42,8 @@ namespace mango
         EventBus    * const getEventBus()    const { return m_eventBus; }
         ImGuiSystem * const getImGuiSystem() const { return m_imGuiSystem; }
 
-        unsigned int getFPS() const;
+        /** Returns time in ms needed to render one frame. */
+        double getFramerate() const;
 
         void start();
         void stop();
@@ -60,11 +61,10 @@ namespace mango
         ImGuiSystem   * m_imGuiSystem;
         PhysicsSystem * m_physicsSystem;
 
-        double       m_frameTime;
-        double       m_physicsDeltaTime = 1.0 / 60.0;
-        unsigned int m_fps;
-        unsigned int m_fpsToReturn;
-        bool         m_isRunning;
+        double m_frameTime;
+        double m_physicsDeltaTime = 1.0 / 60.0;
+        double m_framerate        = 0;
+        bool   m_isRunning        = false;
     };
 
     // Client must define this function

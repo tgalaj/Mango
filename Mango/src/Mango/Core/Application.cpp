@@ -19,10 +19,7 @@
 namespace mango
 {
     Application::Application(const ApplicationSettings& appSettings)
-        : m_frameTime   (1.0 / appSettings.maxFramerate),
-          m_fps         (0),
-          m_fpsToReturn (0),
-          m_isRunning   (false)
+        : m_frameTime (1.0 / appSettings.maxFramerate)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -147,9 +144,9 @@ namespace mango
         system->onInit();
     }
 
-    unsigned int Application::getFPS() const
+    double Application::getFramerate() const
     {
-        return m_fpsToReturn;
+        return m_framerate;
     }
 
     void Application::start()
@@ -229,6 +226,7 @@ namespace mango
 
                 if (frameCounter >= 1.0)
                 {
+                    m_framerate  = 1000.0 / (double)frames;
                     frames       = 0;
                     frameCounter = 0;
                 }

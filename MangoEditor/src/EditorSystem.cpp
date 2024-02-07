@@ -467,7 +467,7 @@ namespace mango
         {
             CVarSystem::get()->drawImguiEditor();
         }
-        ImGui::End();
+        ImGui::End(); // CVars Editor
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
         ImGui::Begin("Viewport");
@@ -552,10 +552,20 @@ namespace mango
                 }
             }
         }
-        ImGui::End();
+        ImGui::End(); // Viewport
         ImGui::PopStyleVar();
 
         m_sceneHierarchyPanel.draw();
+
+        ImGui::Begin("Stats");
+        {
+            auto stats = Services::renderer()->getStatistics();
+            ImGui::Text("%s\nDriver: %s\nGLSL Version: %s\n\n", stats.rendererName.c_str(),
+                                                                stats.driverVersion.c_str(), 
+                                                                stats.glslVersion.c_str());
+            ImGui::Text("Frame Rate: %.3f ms/frame (%.1f FPS)", Services::application()->getFramerate(), 1000.0f / Services::application()->getFramerate());
+        }
+        ImGui::End(); // Stats
 
         ImGui::End(); // Mango Editor
     }

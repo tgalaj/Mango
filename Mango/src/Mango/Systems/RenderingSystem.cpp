@@ -25,6 +25,11 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderingSystem::onInit");
 
+        m_statistics.vendorName    = (const char*)glGetString(GL_VENDOR);
+        m_statistics.rendererName  = (const char*)glGetString(GL_RENDERER);
+        m_statistics.driverVersion = (const char*)glGetString(GL_VERSION);
+        m_statistics.glslVersion   = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+
         MG_CORE_ASSERT_MSG(Services::application()              != nullptr, "application can't be nullptr!");
         MG_CORE_ASSERT_MSG(Services::application()->getWindow() != nullptr, "window can't be nullptr!");
         MG_CORE_ASSERT_MSG(Services::eventBus()                 != nullptr, "eventBus can't be nullptr!");

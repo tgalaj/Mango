@@ -22,6 +22,14 @@ namespace mango
 
     enum class RenderingMode { EDITOR, GAME };
 
+    struct RendererStatistics
+    {
+        std::string vendorName    = "";
+        std::string rendererName  = "";
+        std::string driverVersion = "";
+        std::string glslVersion   = "";
+    };
+
     class RenderingSystem : public System
     {
     public:
@@ -48,6 +56,8 @@ namespace mango
 
         Camera& getCamera() const;
         glm::vec3 getCameraPosition() const { return m_cameraPosition; }
+
+        RendererStatistics getStatistics() const { return m_statistics; }
 
     public:
         glm::vec3 sceneAmbientColor{};
@@ -122,6 +132,8 @@ namespace mango
         std::shared_ptr<RenderTarget> m_omniShadowMap;
 
         std::shared_ptr<Skybox> m_skybox;
+
+        RendererStatistics m_statistics = {};
 
         RenderingMode m_mode           = RenderingMode::GAME;
         glm::vec3     m_cameraPosition = {};
