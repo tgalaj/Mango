@@ -97,7 +97,10 @@ namespace mango
         bool opened     = ImGui::TreeNodeEx((void*)(uint64_t)(entity.getUUID()), flags, tag.c_str());
         bool isSelected = flags & ImGuiTreeNodeFlags_Selected;
 
-        if (ImGui::IsItemClicked())
+        // Mark the entity as selected:
+        // - on mouse click
+        // - when tree is traversed with the keyboard arrow keys (isHovered && isFocused)
+        if (ImGui::IsItemClicked() || (ImGui::IsItemHovered() && ImGui::IsItemFocused()))
         {
             m_selectedEntity = entity;
         }
