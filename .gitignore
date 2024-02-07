@@ -36,3 +36,4 @@ CMakeSettings.json
 
 [Bb]uild*/
 MangoTestAssets/
+Mango/src/Mango/Core/RootDir.h
