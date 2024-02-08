@@ -16,7 +16,7 @@ namespace mango
 
         void init();
         
-        void createGBuffer();
+        void createGBuffer(int width, int height);
         void clearGBuffer();
 
         void bindGBuffer();

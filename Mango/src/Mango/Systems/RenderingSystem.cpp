@@ -4,6 +4,7 @@
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Rendering/BloomPS.h"
 #include "Mango/Rendering/DeferredRendering.h"
+#include "Mango/Rendering/Picking.h"
 #include "Mango/Rendering/SSAO.h"
 #include "Mango/Rendering/ShaderGlobals.h"
 #include "Mango/Scene/Components.h"
@@ -99,7 +100,10 @@ namespace mango
         m_lightBoundingCone = Model();
         m_lightBoundingCone.genCone(1.1f, 1.1f, 12, 1);
 
-        DEBUG_WINDOW_WIDTH = GLuint(m_mainWindow->getWidth() / 5.0f);
+        int width  = m_mainWindow->getWidth();
+        int height = m_mainWindow->getHeight();
+
+        DEBUG_WINDOW_WIDTH = GLuint(width / 5.0f);
         sceneAmbientColor = glm::vec3(0.18f);
 
         m_hdrFilter = std::make_shared<PostprocessEffect>();
@@ -110,23 +114,26 @@ namespace mango
 
         m_deferredRendering = std::make_shared<DeferredRendering>();
         m_deferredRendering->init();
-        m_deferredRendering->createGBuffer();
+        m_deferredRendering->createGBuffer(width, height);
 
         m_gbufferShader = AssetManager::getShader("GBuffer");
 
         m_bloomFilter = std::make_shared<BloomPS>();
         m_bloomFilter->init("Bloom_PS", "Bloom_PS.frag");
-        m_bloomFilter->create();
+        m_bloomFilter->create(width, height);
 
         m_ssao = std::make_shared<SSAO>();
         m_ssao->init("SSAO_PS", "SSAO.frag");
-        m_ssao->create();
+        m_ssao->create(width, height);
+
+        m_picking = std::make_shared<Picking>();
+        m_picking->init(width, height);
 
         m_mainRenderTarget = std::make_shared<RenderTarget>();
-        m_mainRenderTarget->create(m_mainWindow->getWidth(), m_mainWindow->getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
+        m_mainRenderTarget->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
 
         m_helperRenderTarget = std::make_shared<RenderTarget>();
-        m_helperRenderTarget->create(m_mainWindow->getWidth(), m_mainWindow->getHeight(), RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
+        m_helperRenderTarget->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
 
         m_dirShadowMap = std::make_shared<RenderTarget>();
         m_dirShadowMap->create(2048, 2048, RenderTarget::DepthInternalFormat::DEPTH24);
@@ -256,6 +263,8 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderingSystem::resize");
 
+        m_mainFramebufferSize = { width, height };
+
         m_mainRenderTarget->clear();
         m_helperRenderTarget->clear();
         m_deferredRendering->clearGBuffer();
@@ -264,9 +273,48 @@ namespace mango
 
         m_mainRenderTarget->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
         m_helperRenderTarget->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
-        m_deferredRendering->createGBuffer();
-        m_bloomFilter->create();
-        m_ssao->create();
+        m_deferredRendering->createGBuffer(width, height);
+        m_bloomFilter->create(width, height);
+        m_ssao->create(width, height);
+        m_picking->resize(width, height);
+
+        DEBUG_WINDOW_WIDTH = GLuint(width / 5.0f);
+
+        if (m_camera)
+        {
+            m_camera->resize(width, height);
+        }
+    }
+
+    int RenderingSystem::getSelectedEntityID(int mouseX, int mouseY)
+    {
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_SCISSOR_TEST);
+        glClear(GL_DEPTH_BUFFER_BIT);
+
+        m_picking->bindFramebuffer();
+        m_picking->setPickingRegion(mouseX, mouseY);
+
+        auto pickingShader = m_picking->getShader();
+        pickingShader->bind();
+
+        auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, ModelRendererComponent>();
+        for (auto entity : view)
+        {
+            auto [tc, mrc] = view.get<TransformComponent, ModelRendererComponent>(entity);
+
+            pickingShader->updateGlobalUniforms(tc);
+            int id = (int)entity;
+            pickingShader->setUniform("objectID", (int)id);
+            mrc.model.render(*pickingShader);
+        }
+        glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_SCISSOR_TEST);
+
+        m_picking->setPickingRegion(0, 0, m_mainRenderTarget->getWidth(), m_mainRenderTarget->getHeight());
+
+        return m_picking->getPickedID();
     }
 
     uint32_t RenderingSystem::getOutputOffscreenTextureID() const

@@ -17,7 +17,7 @@ namespace mango
 
         void init(const std::string & filterName, const std::string & fragmentShaderFilename) override;
 
-        void create();
+        void create(int width, int height);
         void clear();
 
         void bindSSAOTexture(GLuint unit);

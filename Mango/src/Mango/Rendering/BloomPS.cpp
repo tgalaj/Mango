@@ -2,19 +2,13 @@
 
 #include "BloomPS.h"
 #include "Mango/Core/AssetManager.h"
-#include "Mango/Core/Services.h"
-#include "Mango/Window/Window.h"
 
 namespace mango
 {
-    void BloomPS::create()
+    void BloomPS::create(int width, int height)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("BloomPS::create");
-
-        auto window = Services::application()->getWindow();
-        int  width  = window->getWidth();
-        int  height = window->getHeight();
 
         m_brightnessBuffer = std::make_shared<RenderTarget>();
         m_brightnessBuffer->create(width, height, RenderTarget::ColorInternalFormat::RGB16F, RenderTarget::DepthInternalFormat::NoDepth);

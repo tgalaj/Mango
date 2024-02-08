@@ -44,6 +44,8 @@ namespace mango
 
         void setView(const glm::mat4& view) { m_view = view; }
 
+        void resize(int width, int height) { m_aspectRatio = (float)width / (float)height; recalculateProjection(); }
+
     private:
         void recalculateProjection();
 

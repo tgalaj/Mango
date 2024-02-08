@@ -2,8 +2,6 @@
 
 #include "DeferredRendering.h"
 #include "Mango/Core/AssetManager.h"
-#include "Mango/Core/Services.h"
-#include "Mango/Window/Window.h"
 
 namespace mango
 {
@@ -16,7 +14,7 @@ namespace mango
         m_postprocess->link();
     }
 
-    void DeferredRendering::createGBuffer()
+    void DeferredRendering::createGBuffer(int width, int height)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("DeferredRendering::createGBuffer");
@@ -27,10 +25,8 @@ namespace mango
         mrtEntries[GLuint(GBufferPropertyName::ALBEDO_SPECULAR)] = RenderTarget::MRTEntry(RenderTarget::AttachmentType::Color, RenderTarget::ColorInternalFormat::RGBA8);
         mrtEntries[GLuint(GBufferPropertyName::DEPTH)]           = RenderTarget::MRTEntry(RenderTarget::AttachmentType::Depth, RenderTarget::ColorInternalFormat::NoColor, RenderTarget::DepthInternalFormat::DEPTH32F);
 
-        auto window = Services::application()->getWindow();
-
         m_gbuffer = std::make_shared<RenderTarget>();
-        m_gbuffer->createMRT(mrtEntries, window->getWidth(), window->getHeight());
+        m_gbuffer->createMRT(mrtEntries, width, height);
     }
 
     void DeferredRendering::clearGBuffer()

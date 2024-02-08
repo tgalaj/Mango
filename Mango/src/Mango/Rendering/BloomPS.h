@@ -12,7 +12,7 @@ namespace mango
 
         BloomPS() = default;
 
-        void create();
+        void create(int width, int height);
         void clear();
 
         void bindBrightnessTexture(GLuint unit);

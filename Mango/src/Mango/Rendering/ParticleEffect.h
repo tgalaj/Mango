@@ -10,8 +10,6 @@ namespace mango
     class ParticleEffect
     {
     public:
-        friend class Renderer;
-
         ParticleEffect(GLuint maxParticles);
         ~ParticleEffect();
 
@@ -19,6 +17,7 @@ namespace mango
         bool      simulate;
 
         void reset();
+        void render(CameraComponent * cam);
 
     private:
         GLfloat * m_initPositions;
@@ -33,6 +32,5 @@ namespace mango
 
         enum { POSITIONS, VELOCITIES };
 
-        void render(CameraComponent * cam);
     };
 }

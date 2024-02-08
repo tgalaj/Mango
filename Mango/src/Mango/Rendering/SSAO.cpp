@@ -21,6 +21,7 @@ namespace mango
     SSAO::~SSAO()
     {
         cleanGLdata();
+        clear();
     }
 
     void SSAO::init(const std::string & filterName, const std::string & fragmentShaderFilename)
@@ -33,13 +34,9 @@ namespace mango
         genRandomRotationVectors(4, 4); // Generates 4x4 texture with random rotation vectors
     }
 
-    void SSAO::create()
+    void SSAO::create(int width, int height)
     {
         MG_PROFILE_ZONE_SCOPED;
-
-        auto window = Services::application()->getWindow();
-        int  width  = window->getWidth();
-        int  height = window->getHeight();
 
         m_ssaoBuffer = std::make_shared<RenderTarget>();
         m_ssaoBuffer->create(width, height, RenderTarget::ColorInternalFormat::R8, RenderTarget::DepthInternalFormat::NoDepth, RenderTarget::RenderTargetType::Tex2D, false);

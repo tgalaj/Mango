@@ -98,6 +98,11 @@ namespace mango
 
         glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
         {
+            if (width <= 0 || height <= 0)
+            {
+                return;
+            }
+
             Window& data = *(Window*)glfwGetWindowUserPointer(window);
 
             data.m_windowSize.x = width;
@@ -106,7 +111,7 @@ namespace mango
             glfwGetFramebufferSize(window, &data.m_viewportSize.x, &data.m_viewportSize.y);
             glViewport(0, 0, data.m_viewportSize.x, data.m_viewportSize.y);
 
-            MG_CORE_ASSERT_MSG(Services::application()                   != nullptr, "applicaiton can't be nullptr!");
+            MG_CORE_ASSERT_MSG(Services::application()                   != nullptr, "application can't be nullptr!");
             MG_CORE_ASSERT_MSG(Services::application()->getImGuiSystem() != nullptr, "imGuiSystem can't be nullptr!");
             Services::application()->getImGuiSystem()->updateWindowSize(float(width), float(height));
 

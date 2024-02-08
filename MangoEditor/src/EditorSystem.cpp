@@ -393,6 +393,16 @@ namespace mango
     
     void EditorSystem::onGui()
     {    
+        // Resize the main FBO based not on the window, but based on the Viewport panel !!
+
+        // Resize
+        if (glm::uvec2 mainFramebufferSize = Services::renderer()->getMainFramebufferSize();
+            m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f && // zero sized framebuffer is invalid
+            (mainFramebufferSize.x != m_viewportSize.x || mainFramebufferSize.y != m_viewportSize.y))
+        {
+            Services::renderer()->resize(m_viewportSize.x, m_viewportSize.y);
+        }
+
         static bool dockspaceOpen = true;
         static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 
@@ -566,6 +576,24 @@ namespace mango
             ImGui::Text("Frame Rate: %.3f ms/frame (%.1f FPS)", Services::application()->getFramerate(), 1000.0f / Services::application()->getFramerate());
         }
         ImGui::End(); // Stats
+
+        // Mouse Entity picking
+        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGuizmo::IsOver())
+        {
+            auto mousePos  = Input::getMousePosition();
+                 mousePos -= m_viewportBounds[0];
+
+            auto viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
+                 mousePos.y   = viewportSize.y - mousePos.y;
+
+            if (mousePos.x >= 0 && mousePos.y >= 0 && mousePos.x < (int)viewportSize.x && mousePos.y < (int)viewportSize.y)
+            {
+                int    selectedID     = Services::renderer()->getSelectedEntityID(mousePos.x, mousePos.y);
+                Entity selectedEntity = selectedID == -1 ? Entity() : Entity((entt::entity)selectedID, m_mainScene.get());
+
+                m_sceneHierarchyPanel.setSelectedEntity(selectedEntity);
+            }
+        }
 
         ImGui::End(); // Mango Editor
     }

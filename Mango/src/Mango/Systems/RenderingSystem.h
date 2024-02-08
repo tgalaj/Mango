@@ -13,6 +13,7 @@ namespace mango
     class RenderTarget;
     class Shader;
     class BloomPS;
+    class Picking;
     class SSAO;
     class DeferredRendering;
     class ModelRendererComponent;
@@ -49,6 +50,8 @@ namespace mango
         void setSkybox(const std::shared_ptr<Skybox> & skybox);
         void resize(unsigned width, unsigned height);
 
+        int getSelectedEntityID(int mouseX, int mouseY);
+
         void setOutputToOffscreenTexture(bool enabled) { m_outputToOffscreenTexture = enabled; }
         uint32_t getOutputOffscreenTextureID() const;
 
@@ -58,6 +61,7 @@ namespace mango
         glm::vec3 getCameraPosition() const { return m_cameraPosition; }
 
         RendererStatistics getStatistics() const { return m_statistics; }
+        glm::uvec2 getMainFramebufferSize() const { return m_mainFramebufferSize; }
 
     public:
         glm::vec3 sceneAmbientColor{};
@@ -124,6 +128,7 @@ namespace mango
         std::shared_ptr<DeferredRendering> m_deferredRendering;
         std::shared_ptr<BloomPS> m_bloomFilter;
         std::shared_ptr<SSAO> m_ssao;
+        std::shared_ptr<Picking> m_picking;
 
         std::shared_ptr<RenderTarget> m_mainRenderTarget;
         std::shared_ptr<RenderTarget> m_helperRenderTarget;
@@ -132,6 +137,8 @@ namespace mango
         std::shared_ptr<RenderTarget> m_omniShadowMap;
 
         std::shared_ptr<Skybox> m_skybox;
+
+        glm::uvec2 m_mainFramebufferSize = {};
 
         RendererStatistics m_statistics = {};
 
