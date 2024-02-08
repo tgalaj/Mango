@@ -565,7 +565,8 @@ namespace mango
         ImGui::End(); // Viewport
         ImGui::PopStyleVar();
 
-        m_sceneHierarchyPanel.draw();
+        m_sceneHierarchyPanel.onGui();
+        m_assetsBrowserPanel.onGui();
 
         ImGui::Begin("Stats");
         {

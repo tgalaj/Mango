@@ -24,7 +24,7 @@ namespace mango
         m_selectedEntity = {};
     }
 
-    void SceneHierarchyPanel::draw()
+    void SceneHierarchyPanel::onGui()
     {
         ImGui::Begin("Hierarchy Panel");
         {

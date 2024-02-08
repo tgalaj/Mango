@@ -1,6 +1,7 @@
 #pragma once
 #include "Mango.h"
 #include "EditorCamera.h"
+#include "Panels/AssetsBrowserPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 
 namespace mango
@@ -51,6 +52,7 @@ namespace mango
         GizmoType m_gizmoType = GizmoType::NONE;
         GizmoMode m_gizmoMode = GizmoMode::LOCAL;
 
+        AssetsBrowserPanel m_assetsBrowserPanel;
         SceneHierarchyPanel m_sceneHierarchyPanel;
 
         EditorCamera m_editorCamera;

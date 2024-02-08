@@ -12,7 +12,7 @@ namespace mango
         SceneHierarchyPanel(const std::shared_ptr<Scene>& scene);
         
         void setScene(const std::shared_ptr<Scene>& scene);
-        void draw();
+        void onGui();
 
         Entity getSelectedEntity() const;
         void setSelectedEntity(Entity entity);
