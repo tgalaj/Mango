@@ -1,6 +1,7 @@
 #include "SceneHierarchyPanel.h"
 
 #include "Mango/Core/AssetManager.h"
+#include "Mango/Core/VFI.h"
 #include "Mango/Scene/Components.h"
 
 #include <imgui.h>
@@ -670,15 +671,34 @@ namespace mango
             {
                 std::string textureName = "##" + Material::m_textureUniformsMap[textureType];
                 ImGui::InputText(textureName.c_str(), &texture->getFilename());
+
+                /** Drag drop target */
+                bool loadDroppedTexture = false;
+                std::string textureFilename = texture->getFilename();
+                if (ImGui::BeginDragDropTarget())
+                {
+                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MG_ASSETS_BROWSER_ITEM"))
+                    {
+                        const auto* path = (const wchar_t*)payload->Data;
+
+                        auto searchPath    = VFI::getSearchPath();
+                        auto basePath      = searchPath[searchPath.size() - 2]; // TODO: should be project's path !!
+                        auto relativePath  = std::filesystem::relative(std::filesystem::path(path), basePath);
+
+                        textureFilename    = relativePath.filename().string();
+                        loadDroppedTexture = true;
+                    }
+                    ImGui::EndDragDropTarget();
+                }
                 ImGui::SameLine();
                 ImGui::PushItemWidth(-1);
 
-                if (ImGui::Button("Load"))
+                if (ImGui::Button("Load") || loadDroppedTexture)
                 {
-                    if(texture->getFilename().empty()) return;
+                    if (textureFilename.empty()) return;
 
                     bool isSrgb = (textureType == Material::TextureType::DIFFUSE) || (textureType == Material::TextureType::SPECULAR);
-                    texture = AssetManager::createTexture2D(texture->getFilename(), isSrgb);
+                    texture = AssetManager::createTexture2D(textureFilename, isSrgb);
                 }
                 ImGui::PopItemWidth();
             }
