@@ -1,0 +1,4004 @@
+Scene: Editor Scene
+Entities:
+  - Entity: 5487060263569828135
+    TagComponent:
+      Tag: SpotLight
+    TransformComponent:
+      Position: [1.5, 5, 1.5]
+      Rotation: [-45, 45, 45]
+      Orientation: [0.732537746, -0.461939812, 0.191341713, 0.461939812]
+      Scale: [1, 1, 1]
+    SpotLightComponent:
+      Color: [1, 0.807843149, 0.980392158]
+      Intensity: 1000
+      CutOffAngle: 30.0000019
+      Attenuation:
+        Constant: 0
+        Linear: 0
+        Quadratic: 1
+      ShadowNearPlane: 0.00100000005
+      ShadowFarPlane: 100
+      CastsShadows: true
+  - Entity: 4337264035932335588
+    TagComponent:
+      Tag: PointLight3
+    TransformComponent:
+      Position: [0, 1.20000005, -8]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLightComponent:
+      Color: [1, 1, 0]
+      Intensity: 200
+      Attenuation:
+        Constant: 3
+        Linear: 4
+        Quadratic: 10
+      ShadowNearPlane: 0.00100000005
+      ShadowFarPlane: 100
+      CastsShadows: true
+  - Entity: 5389541730345326660
+    TagComponent:
+      Tag: PointLight2
+    TransformComponent:
+      Position: [0, 1.20000005, 8]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLightComponent:
+      Color: [0, 0, 1]
+      Intensity: 200
+      Attenuation:
+        Constant: 3
+        Linear: 4
+        Quadratic: 10
+      ShadowNearPlane: 0.00100000005
+      ShadowFarPlane: 100
+      CastsShadows: true
+  - Entity: 988158238704221612
+    TagComponent:
+      Tag: PointLight1
+    TransformComponent:
+      Position: [8, 1.20000005, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLightComponent:
+      Color: [0, 1, 0]
+      Intensity: 200
+      Attenuation:
+        Constant: 3
+        Linear: 4
+        Quadratic: 10
+      ShadowNearPlane: 0.00100000005
+      ShadowFarPlane: 100
+      CastsShadows: true
+  - Entity: 17692237946478534315
+    TagComponent:
+      Tag: PointLight0
+    TransformComponent:
+      Position: [-8, 1.20000005, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLightComponent:
+      Color: [1, 0, 0]
+      Intensity: 200
+      Attenuation:
+        Constant: 3
+        Linear: 4
+        Quadratic: 10
+      ShadowNearPlane: 0.00100000005
+      ShadowFarPlane: 100
+      CastsShadows: true
+  - Entity: 9978701052028562599
+    TagComponent:
+      Tag: DirectionalLight
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [-45, 180, 0]
+      Orientation: [-4.03840552e-08, 1.67276255e-08, 0.923879504, 0.382683456]
+      Scale: [1, 1, 1]
+    DirectionalLightComponent:
+      Color: [1, 1, 1]
+      Intensity: 4
+      Size: 200
+      CastsShadows: true
+  - Entity: 16862520530112818645
+    TagComponent:
+      Tag: Sphere100
+    TransformComponent:
+      Position: [6.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 6859638008103601745
+    TagComponent:
+      Tag: Sphere99
+    TransformComponent:
+      Position: [6.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 3579664453956657522
+    TagComponent:
+      Tag: Sphere98
+    TransformComponent:
+      Position: [6.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 12422668948845969921
+    TagComponent:
+      Tag: Sphere97
+    TransformComponent:
+      Position: [6.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 15337183678763695072
+    TagComponent:
+      Tag: Sphere96
+    TransformComponent:
+      Position: [6.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 1200294243523954711
+    TagComponent:
+      Tag: Sphere95
+    TransformComponent:
+      Position: [6.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 7525606406900360863
+    TagComponent:
+      Tag: Sphere94
+    TransformComponent:
+      Position: [6.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 15652266381632240136
+    TagComponent:
+      Tag: Sphere93
+    TransformComponent:
+      Position: [6.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 3000527566222727871
+    TagComponent:
+      Tag: Sphere92
+    TransformComponent:
+      Position: [6.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 13013851130573210150
+    TagComponent:
+      Tag: Sphere91
+    TransformComponent:
+      Position: [6.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 15323390604799899373
+    TagComponent:
+      Tag: Sphere90
+    TransformComponent:
+      Position: [5.25, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 5998101058442398041
+    TagComponent:
+      Tag: Sphere89
+    TransformComponent:
+      Position: [5.25, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 13351530784443243194
+    TagComponent:
+      Tag: Sphere88
+    TransformComponent:
+      Position: [5.25, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 12751443859402346144
+    TagComponent:
+      Tag: Sphere87
+    TransformComponent:
+      Position: [5.25, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 11481867909210033553
+    TagComponent:
+      Tag: Sphere86
+    TransformComponent:
+      Position: [5.25, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 13459832352958739658
+    TagComponent:
+      Tag: Sphere85
+    TransformComponent:
+      Position: [5.25, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 7353100586675335730
+    TagComponent:
+      Tag: Sphere84
+    TransformComponent:
+      Position: [5.25, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 13271669570565481481
+    TagComponent:
+      Tag: Sphere83
+    TransformComponent:
+      Position: [5.25, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 2640199229012299808
+    TagComponent:
+      Tag: Sphere82
+    TransformComponent:
+      Position: [5.25, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 976895023361957806
+    TagComponent:
+      Tag: Sphere81
+    TransformComponent:
+      Position: [5.25, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 9821527585939166002
+    TagComponent:
+      Tag: Sphere80
+    TransformComponent:
+      Position: [3.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 17088881515627371048
+    TagComponent:
+      Tag: Sphere79
+    TransformComponent:
+      Position: [3.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 286394077046297121
+    TagComponent:
+      Tag: Sphere78
+    TransformComponent:
+      Position: [3.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 8848078698828572579
+    TagComponent:
+      Tag: Sphere77
+    TransformComponent:
+      Position: [3.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 10745176783154887974
+    TagComponent:
+      Tag: Sphere76
+    TransformComponent:
+      Position: [3.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 704410853211190519
+    TagComponent:
+      Tag: Sphere75
+    TransformComponent:
+      Position: [3.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 10365503160704299259
+    TagComponent:
+      Tag: Sphere74
+    TransformComponent:
+      Position: [3.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 14962546846897002899
+    TagComponent:
+      Tag: Sphere73
+    TransformComponent:
+      Position: [3.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 2289577400344829356
+    TagComponent:
+      Tag: Sphere72
+    TransformComponent:
+      Position: [3.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 5398668300831420015
+    TagComponent:
+      Tag: Sphere71
+    TransformComponent:
+      Position: [3.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 13954119947406613660
+    TagComponent:
+      Tag: Sphere70
+    TransformComponent:
+      Position: [2.25, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 15235989334594102338
+    TagComponent:
+      Tag: Sphere69
+    TransformComponent:
+      Position: [2.25, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 10623790420308569538
+    TagComponent:
+      Tag: Sphere68
+    TransformComponent:
+      Position: [2.25, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 3171857553025032277
+    TagComponent:
+      Tag: Sphere67
+    TransformComponent:
+      Position: [2.25, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 14760965010143122651
+    TagComponent:
+      Tag: Sphere66
+    TransformComponent:
+      Position: [2.25, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 6985029626125896279
+    TagComponent:
+      Tag: Sphere65
+    TransformComponent:
+      Position: [2.25, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 16520790534389117267
+    TagComponent:
+      Tag: Sphere64
+    TransformComponent:
+      Position: [2.25, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 3498692115183445079
+    TagComponent:
+      Tag: Sphere63
+    TransformComponent:
+      Position: [2.25, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 13782554822904622025
+    TagComponent:
+      Tag: Sphere62
+    TransformComponent:
+      Position: [2.25, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 4134534906784814945
+    TagComponent:
+      Tag: Sphere61
+    TransformComponent:
+      Position: [2.25, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 1051070450498157671
+    TagComponent:
+      Tag: Sphere60
+    TransformComponent:
+      Position: [0.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 17134642130866169977
+    TagComponent:
+      Tag: Sphere59
+    TransformComponent:
+      Position: [0.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 7303710125022471153
+    TagComponent:
+      Tag: Sphere58
+    TransformComponent:
+      Position: [0.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 5426681932734518730
+    TagComponent:
+      Tag: Sphere57
+    TransformComponent:
+      Position: [0.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 9841236816849577932
+    TagComponent:
+      Tag: Sphere56
+    TransformComponent:
+      Position: [0.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 14581447889273755732
+    TagComponent:
+      Tag: Sphere55
+    TransformComponent:
+      Position: [0.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 10555833983893712129
+    TagComponent:
+      Tag: Sphere54
+    TransformComponent:
+      Position: [0.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 5341212331319301864
+    TagComponent:
+      Tag: Sphere53
+    TransformComponent:
+      Position: [0.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 4131667839999011733
+    TagComponent:
+      Tag: Sphere52
+    TransformComponent:
+      Position: [0.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 6940143745638131665
+    TagComponent:
+      Tag: Sphere51
+    TransformComponent:
+      Position: [0.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 9217178196950509614
+    TagComponent:
+      Tag: Sphere50
+    TransformComponent:
+      Position: [-0.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 15251591220534194653
+    TagComponent:
+      Tag: Sphere49
+    TransformComponent:
+      Position: [-0.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 1569603925741953168
+    TagComponent:
+      Tag: Sphere48
+    TransformComponent:
+      Position: [-0.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 5974839541179198003
+    TagComponent:
+      Tag: Sphere47
+    TransformComponent:
+      Position: [-0.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 4565223934224985740
+    TagComponent:
+      Tag: Sphere46
+    TransformComponent:
+      Position: [-0.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 13234386741083238122
+    TagComponent:
+      Tag: Sphere45
+    TransformComponent:
+      Position: [-0.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 1792945095057413505
+    TagComponent:
+      Tag: Sphere44
+    TransformComponent:
+      Position: [-0.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 13232881008500260896
+    TagComponent:
+      Tag: Sphere43
+    TransformComponent:
+      Position: [-0.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 14649743330602793055
+    TagComponent:
+      Tag: Sphere42
+    TransformComponent:
+      Position: [-0.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 2403825093284316823
+    TagComponent:
+      Tag: Sphere41
+    TransformComponent:
+      Position: [-0.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 201782257228352726
+    TagComponent:
+      Tag: Sphere40
+    TransformComponent:
+      Position: [-2.25, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 3265363513421683346
+    TagComponent:
+      Tag: Sphere39
+    TransformComponent:
+      Position: [-2.25, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 6973780846606719765
+    TagComponent:
+      Tag: Sphere38
+    TransformComponent:
+      Position: [-2.25, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 1320075668102775110
+    TagComponent:
+      Tag: Sphere37
+    TransformComponent:
+      Position: [-2.25, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 7030824052045196654
+    TagComponent:
+      Tag: Sphere36
+    TransformComponent:
+      Position: [-2.25, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 5712298265200870618
+    TagComponent:
+      Tag: Sphere35
+    TransformComponent:
+      Position: [-2.25, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 16244937114848535900
+    TagComponent:
+      Tag: Sphere34
+    TransformComponent:
+      Position: [-2.25, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 3384127584019713661
+    TagComponent:
+      Tag: Sphere33
+    TransformComponent:
+      Position: [-2.25, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 9736476539595041512
+    TagComponent:
+      Tag: Sphere32
+    TransformComponent:
+      Position: [-2.25, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 10862230368416219440
+    TagComponent:
+      Tag: Sphere31
+    TransformComponent:
+      Position: [-2.25, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 16721271351396835318
+    TagComponent:
+      Tag: Sphere30
+    TransformComponent:
+      Position: [-3.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 12949602321558124238
+    TagComponent:
+      Tag: Sphere29
+    TransformComponent:
+      Position: [-3.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 4408119626299231060
+    TagComponent:
+      Tag: Sphere28
+    TransformComponent:
+      Position: [-3.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 17037762161769827050
+    TagComponent:
+      Tag: Sphere27
+    TransformComponent:
+      Position: [-3.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 12868998687068809493
+    TagComponent:
+      Tag: Sphere26
+    TransformComponent:
+      Position: [-3.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 10530483478595378276
+    TagComponent:
+      Tag: Sphere25
+    TransformComponent:
+      Position: [-3.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 9599350702585656766
+    TagComponent:
+      Tag: Sphere24
+    TransformComponent:
+      Position: [-3.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 17960554914123136979
+    TagComponent:
+      Tag: Sphere23
+    TransformComponent:
+      Position: [-3.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 8821841955418525303
+    TagComponent:
+      Tag: Sphere22
+    TransformComponent:
+      Position: [-3.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 3058799880470306326
+    TagComponent:
+      Tag: Sphere21
+    TransformComponent:
+      Position: [-3.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 4498436696216694453
+    TagComponent:
+      Tag: Sphere20
+    TransformComponent:
+      Position: [-5.25, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 4340713108014528228
+    TagComponent:
+      Tag: Sphere19
+    TransformComponent:
+      Position: [-5.25, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 10926457513010333127
+    TagComponent:
+      Tag: Sphere18
+    TransformComponent:
+      Position: [-5.25, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 10757364482939473473
+    TagComponent:
+      Tag: Sphere17
+    TransformComponent:
+      Position: [-5.25, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 16686014324147906202
+    TagComponent:
+      Tag: Sphere16
+    TransformComponent:
+      Position: [-5.25, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 12227277725809493965
+    TagComponent:
+      Tag: Sphere15
+    TransformComponent:
+      Position: [-5.25, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 11408503994989783798
+    TagComponent:
+      Tag: Sphere14
+    TransformComponent:
+      Position: [-5.25, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 11671442778966402670
+    TagComponent:
+      Tag: Sphere13
+    TransformComponent:
+      Position: [-5.25, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 13735284262449851137
+    TagComponent:
+      Tag: Sphere12
+    TransformComponent:
+      Position: [-5.25, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 10153331463532912809
+    TagComponent:
+      Tag: Sphere11
+    TransformComponent:
+      Position: [-5.25, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 9825814273749619782
+    TagComponent:
+      Tag: Sphere10
+    TransformComponent:
+      Position: [-6.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 10262825881191266706
+    TagComponent:
+      Tag: Sphere9
+    TransformComponent:
+      Position: [-6.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 6306268124273854442
+    TagComponent:
+      Tag: Sphere8
+    TransformComponent:
+      Position: [-6.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 3598824535561447419
+    TagComponent:
+      Tag: Sphere7
+    TransformComponent:
+      Position: [-6.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 8337716067396609212
+    TagComponent:
+      Tag: Sphere6
+    TransformComponent:
+      Position: [-6.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 1804045259674012861
+    TagComponent:
+      Tag: Sphere5
+    TransformComponent:
+      Position: [-6.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 12114491906091288795
+    TagComponent:
+      Tag: Sphere4
+    TransformComponent:
+      Position: [-6.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 13223229348760336672
+    TagComponent:
+      Tag: Sphere3
+    TransformComponent:
+      Position: [-6.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 8533246304034151977
+    TagComponent:
+      Tag: Sphere2
+    TransformComponent:
+      Position: [-6.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 16713692793718992072
+    TagComponent:
+      Tag: Sphere1
+    TransformComponent:
+      Position: [-6.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 1686053646622165947
+    TagComponent:
+      Tag: Static sphere
+    TransformComponent:
+      Position: [5, 3, -12.5]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 11646755083782198621
+    TagComponent:
+      Tag: Bouncing Sphere
+    TransformComponent:
+      Position: [5, 1.60504782, -9.91700745]
+      Rotation: [-61.0391273, -0, 0]
+      Orientation: [-0.861455798, 0.507832527, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+    ModelRendererComponent:
+      ModelType: Sphere
+      RenderQueue: StaticEnvMapping
+      PrimitiveProperties:
+        Width: 1
+        Height: 1
+        Radius: 0.5
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 24
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: ""
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.100000001
+      Restitution: 0.699999988
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    SphereColliderComponent:
+      Offset: [0, 0, 0]
+      Radius: 0.5
+  - Entity: 6481889402276690126
+    TagComponent:
+      Tag: Plane2
+    TransformComponent:
+      Position: [5, 0.5, -11.5]
+      Rotation: [0.5, 0, 0]
+      Orientation: [0.999990582, 0.00436330959, 0, 0]
+      Scale: [1, 1, 1]
+    ModelRendererComponent:
+      ModelType: Quad
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 5
+        Height: 5
+        Radius: 1
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 10
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: textures/bricks2.jpg
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+    RigidBody3DComponent:
+      MotionType: Static
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: false
+    BoxCollider3DComponent:
+      Offset: [0, -0.100000001, 0]
+      Extent: [2.5, 0.100000001, 2.5]
+  - Entity: 3971596364542165089
+    TagComponent:
+      Tag: Plane1
+    TransformComponent:
+      Position: [5, 3, -14]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [1, 1, 1]
+    ModelRendererComponent:
+      ModelType: Quad
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 5
+        Height: 5
+        Radius: 1
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 10
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: textures/bricks2.jpg
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 2344081024176737181
+    TagComponent:
+      Tag: Window2
+    TransformComponent:
+      Position: [5, 1.20000005, 9]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+    ModelRendererComponent:
+      ModelType: Quad
+      RenderQueue: Alpha
+      PrimitiveProperties:
+        Width: 5
+        Height: 5
+        Radius: 1
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 10
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: textures/window.png
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 14698580140790533630
+    TagComponent:
+      Tag: Window3
+    TransformComponent:
+      Position: [3, 1.20000005, 13]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+    ModelRendererComponent:
+      ModelType: Quad
+      RenderQueue: Alpha
+      PrimitiveProperties:
+        Width: 5
+        Height: 5
+        Radius: 1
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 10
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: textures/window.png
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 3968618321492465029
+    TagComponent:
+      Tag: Window1
+    TransformComponent:
+      Position: [0, 1.20000005, 9]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [0.50999999, 0.50999999, 0.50999999]
+    ModelRendererComponent:
+      ModelType: Quad
+      RenderQueue: Alpha
+      PrimitiveProperties:
+        Width: 5
+        Height: 5
+        Radius: 1
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 10
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: textures/window.png
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 14350191654305910497
+    TagComponent:
+      Tag: Grass
+    TransformComponent:
+      Position: [-5, 1.20000005, 9]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+    ModelRendererComponent:
+      ModelType: Quad
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 5
+        Height: 5
+        Radius: 1
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 10
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.100000001
+        Textures:
+          Diffuse: textures/grass.png
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 11658804719518502570
+    TagComponent:
+      Tag: Parallax brickwall
+    TransformComponent:
+      Position: [-5, 2, -9]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [1, 1, 1]
+    ModelRendererComponent:
+      ModelType: Quad
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 5
+        Height: 5
+        Radius: 1
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 10
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: textures/bricks2.jpg
+          Specular: ""
+          Normal: textures/bricks2_normal.jpg
+          Emission: ""
+          Depth: textures/bricks2_disp.jpg
+  - Entity: 6245424466263215914
+    TagComponent:
+      Tag: Brickwall
+    TransformComponent:
+      Position: [0, 2, -9]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [1, 1, 1]
+    ModelRendererComponent:
+      ModelType: Quad
+      RenderQueue: Opaque
+      PrimitiveProperties:
+        Width: 5
+        Height: 5
+        Radius: 1
+        Size: 1
+        InnerRadius: 1
+        OuterRadius: 2
+        Slices: 10
+        Stacks: 10
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: textures/brickwall.dds
+          Specular: ""
+          Normal: textures/brickwall_normal.jpg
+          Emission: ""
+          Depth: ""
+  - Entity: 17900940024229315057
+    TagComponent:
+      Tag: Sponza
+    TransformComponent:
+      Position: [-1.5, 0, 10]
+      Rotation: [0, -90, 0]
+      Orientation: [0.707106829, 0, -0.707106829, 0]
+      Scale: [6, 6, 6]
+    ModelRendererComponent:
+      ModelType: Model3D
+      RenderQueue: Opaque
+      Filename: models/sponza/Sponza.gltf
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: models/sponza/5061699253647017043.png
+          Specular: ""
+          Normal: models/sponza/8773302468495022225.jpg
+          Emission: ""
+          Depth: ""
+  - Entity: 1286834057250797984
+    TagComponent:
+      Tag: Damaged Helmet
+    TransformComponent:
+      Position: [3, 2.5, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelRendererComponent:
+      ModelType: Model3D
+      RenderQueue: Opaque
+      Filename: models/damaged_helmet/DamagedHelmet.gltf
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: models/damaged_helmet/Default_albedo.jpg
+          Specular: ""
+          Normal: models/damaged_helmet/Default_normal.jpg
+          Emission: ""
+          Depth: ""
+  - Entity: 13033815788340601378
+    TagComponent:
+      Tag: Zen3c
+    TransformComponent:
+      Position: [-3, -2.29999995, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.0179999992, 0.0179999992, 0.0179999992]
+    ModelRendererComponent:
+      ModelType: Model3D
+      RenderQueue: Opaque
+      Filename: models/Zen3C/Zen3C.X
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: models/Zen3C/Zen3C_Spine_D.jpg
+          Specular: ""
+          Normal: ""
+          Emission: ""
+          Depth: ""
+  - Entity: 6470235468526548085
+    TagComponent:
+      Tag: Cyborg
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelRendererComponent:
+      ModelType: Model3D
+      RenderQueue: Opaque
+      Filename: models/cyborg/cyborg.obj
+      Material:
+        Vec3Map:
+          {}
+        FloatMap:
+          specular_power: 20
+          specular_intensity: 5
+          m_depth_scale: 0.0149999997
+          alpha_cutoff: 0.200000003
+        Textures:
+          Diffuse: models/cyborg/cyborg_diffuse.png
+          Specular: models/cyborg/cyborg_specular.png
+          Normal: models/cyborg/cyborg_normal.png
+          Emission: ""
+          Depth: ""
+  - Entity: 15397865544153027824
+    TagComponent:
+      Tag: MainCamera2
+    TransformComponent:
+      Position: [0, 4, -30]
+      Rotation: [180, -5.00895612e-06, 180]
+      Orientation: [-4.37113883e-08, 0, 1, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      ProjectionType: Perspective
+      PerspectiveFOV: 45
+      PerspectiveNear: 0.100000001
+      PerspectiveFar: 1000
+      OrthographicSize: 10
+      OrthographicNear: 0.00999999978
+      OrthographicFar: 1000
+      IsPrimary: false
+  - Entity: 13638223157527602847
+    TagComponent:
+      Tag: MainCamera
+    TransformComponent:
+      Position: [0, 4, 30]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      ProjectionType: Perspective
+      PerspectiveFOV: 45
+      PerspectiveNear: 0.100000001
+      PerspectiveFar: 1000
+      OrthographicSize: 10
+      OrthographicNear: 0.00999999978
+      OrthographicFar: 1000
+      IsPrimary: true

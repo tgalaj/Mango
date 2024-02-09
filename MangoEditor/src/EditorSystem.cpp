@@ -507,6 +507,18 @@ namespace mango
 
             ImGui::Image((ImTextureID)outputTextureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
 
+            /** Drag drop target */
+            if (ImGui::BeginDragDropTarget())
+            {
+                // TODO: consider moving payload type to a shared file (make a define or static const)
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MG_ASSETS_BROWSER_ITEM"))
+                {
+                    const auto* path = (const wchar_t*)payload->Data;
+                    openScene(path);
+                }
+                ImGui::EndDragDropTarget();
+            }
+
             /** ImGuizmo */
             Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
             if (selectedEntity && m_gizmoType != GizmoType::NONE)
@@ -579,7 +591,7 @@ namespace mango
         ImGui::End(); // Stats
 
         // Mouse Entity picking
-        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGuizmo::IsOver())
+        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGuizmo::IsOver() && m_viewportHovered)
         {
             auto mousePos  = Input::getMousePosition();
                  mousePos -= m_viewportBounds[0];
@@ -595,7 +607,7 @@ namespace mango
                 m_sceneHierarchyPanel.setSelectedEntity(selectedEntity);
             }
         }
-
+        ImGui::ShowDemoWindow();
         ImGui::End(); // Mango Editor
     }
 
@@ -620,6 +632,12 @@ namespace mango
 
     void EditorSystem::openScene(const std::filesystem::path& path)
     {
+        if (path.extension().string() != MG_SCENE_EXTENSION)
+        {
+            MG_WARN("Could not load {0} - not a scene file", path.filename().string());
+            return;
+        }
+
         m_editorScenePath = path;
         m_mainScene       = SceneSerializer::deserialize(m_editorScenePath);
         Services::sceneManager()->setActiveScene(m_mainScene);

@@ -280,7 +280,7 @@ namespace mango
 
         const auto tintColor = glm::clamp(color, 0.0f, 1.0f);
 
-        window->DrawList->AddImage(reinterpret_cast<void*>(pTexture->m_id), { from.x, from.y }, { to.x, to.y }, { 0.0f, 0.0f }, { 1.0f, 1.0f }, ImGui::GetColorU32({ tintColor.r, tintColor.g, tintColor.b, tintColor.a }));
+        window->DrawList->AddImage((ImTextureID)pTexture->getRendererID(), { from.x, from.y }, { to.x, to.y }, { 0.0f, 0.0f }, { 1.0f, 1.0f }, ImGui::GetColorU32({ tintColor.r, tintColor.g, tintColor.b, tintColor.a }));
     }
     
     void ImGuiSystem::imageRounded(std::shared_ptr<Texture> pTexture, const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color, float rounding, uint32_t roundingCornersFlags)
@@ -290,7 +290,7 @@ namespace mango
 
         const auto tintColor = glm::clamp(color, 0.0f, 1.0f);
 
-        window->DrawList->AddImageRounded(reinterpret_cast<void*>(pTexture->m_id), { from.x, from.y }, { to.x, to.y }, { 0.0f, 0.0f }, { 1.0f, 1.0f }, ImGui::GetColorU32({ tintColor.r, tintColor.g, tintColor.b, tintColor.a }), rounding, roundingCornersFlags);
+        window->DrawList->AddImageRounded((ImTextureID)pTexture->getRendererID(), { from.x, from.y }, { to.x, to.y }, { 0.0f, 0.0f }, { 1.0f, 1.0f }, ImGui::GetColorU32({ tintColor.r, tintColor.g, tintColor.b, tintColor.a }), rounding, roundingCornersFlags);
     }
 
     void ImGuiSystem::setDarkThemeColors()

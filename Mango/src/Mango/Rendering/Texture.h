@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 #include <string>
 
 #include "glad/glad.h"
@@ -146,6 +147,7 @@ namespace mango
 
         TextureDescriptor getDescriptor() const { return m_descriptor; }
         std::string&      getFilename()         { return m_filename;   }
+        uint32_t          getRendererID() const { return m_id;         }
 
         static uint8_t calcMaxMipMapsLevels(uint32_t width, uint32_t height, uint32_t depth)
         {
@@ -170,9 +172,5 @@ namespace mango
         std::string       m_filename   {};
         TextureDescriptor m_descriptor {};
         GLuint            m_id         {};
-
-    private:
-        friend class AssetManager;
-        friend class ImGuiSystem;
     };
 }

@@ -215,7 +215,7 @@ namespace mango
         }
         else
         {
-            MG_CORE_WARN("Could not find file {}.", filename);
+            MG_CORE_WARN("Could not find file {}", filename);
         }
 
         return std::filesystem::path(dir + "/" + filename);

@@ -23,6 +23,7 @@ namespace mango
             VFI::addToSearchPath(rootDir / "MangoTestAssets");
             VFI::addToSearchPath(rootDir / "MangoSandbox/assets");
             VFI::addToSearchPath(rootDir / "MangoEditor/assets");
+            VFI::addToSearchPath(rootDir / "MangoEditor/resources");
 
             MG_TRACE("Search path:");
             for (auto const& p : VFI::getSearchPath())

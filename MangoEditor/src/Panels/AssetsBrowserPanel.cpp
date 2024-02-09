@@ -11,8 +11,14 @@ namespace mango
     {
         auto searchPath = VFI::getSearchPath();
         
-        m_basePath    = searchPath[searchPath.size() - 1];
+        m_basePath    = searchPath[searchPath.size() - 2];
         m_currentPath = m_basePath;
+
+        m_folderTexture = std::make_shared<Texture>();
+        m_folderTexture->createTexture2d("icons/folder.png", false, 8);
+
+        m_fileTexture = std::make_shared<Texture>();
+        m_fileTexture->createTexture2d("icons/file.png", false, 8);
     }
 
     void AssetsBrowserPanel::onGui()
@@ -27,29 +33,65 @@ namespace mango
             }
         }
 
-        for (auto& directoryIterator : std::filesystem::directory_iterator(m_currentPath))
+        if (ImGui::IsWindowHovered() && (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_LeftCtrl)))
         {
-            auto directoryPath = directoryIterator.path();
-            auto relativePath  = std::filesystem::relative(directoryPath, m_basePath / "..");
-
-            if (directoryIterator.is_directory())
-            {
-                auto dirname = relativePath.filename();
-                if (ImGui::Button(dirname.string().c_str()))
-                {
-                    m_currentPath /= dirname;
-                }
-            }
-            else
-            {
-                auto filename = relativePath.filename();
-                if (ImGui::Button(filename.string().c_str()))
-                {
-                    
-                }
-            }
+            thumbnailSize += ImGui::GetIO().MouseWheel * 2.0f;
+            thumbnailSize  = std::clamp(thumbnailSize, 32.0f, 256.0f);
         }
 
+        float cellSize     = thumbnailSize + thumbnailPadding;
+        float panelWidth   = ImGui::GetContentRegionAvail().x;
+        auto  columnsCount = (int)(panelWidth / cellSize);
+
+        if (ImGui::BeginTable("Thumbnails", columnsCount))
+        {
+            for (auto& directoryIterator : std::filesystem::directory_iterator(m_currentPath))
+            {
+                ImGui::TableNextColumn();
+                const auto& path           = directoryIterator.path();
+                std::string filenameString = path.filename().string();
+
+                ImGui::PushID(filenameString.c_str());
+                ImGui::PushStyleColor(ImGuiCol_Button, { 0, 0, 0, 0});
+                
+                ImGui::ImageButton(directoryIterator.is_directory() ?
+                                   (ImTextureID)m_folderTexture->getRendererID() : 
+                                   (ImTextureID)m_fileTexture->getRendererID(),
+                                   { thumbnailSize, thumbnailSize });
+
+                if (ImGui::BeginDragDropSource())
+                {
+                    std::filesystem::path relativePath(path);
+                    const wchar_t* itemPath = relativePath.c_str();
+
+                    // TODO: consider moving payload type to a shared file (make a define or static const)
+                    ImGui::SetDragDropPayload("MG_ASSETS_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
+                    ImGui::EndDragDropSource();
+                }
+
+                ImGui::PopStyleColor();
+
+                if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+                {
+                    if (directoryIterator.is_directory())
+                    {
+                        m_currentPath /= filenameString;
+                    }
+                    else
+                    {
+                        system(("start " + path.string() + " &").c_str());
+                    }
+                }
+
+                ImGui::TextWrapped(filenameString.c_str());
+                ImGui::Spacing();
+
+                ImGui::PopID();
+            }
+            ImGui::EndTable();
+        }
+
+        // TODO: status bar
         ImGui::End();
     }
 }
