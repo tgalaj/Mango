@@ -19,10 +19,12 @@ namespace mango
 
     struct ApplicationSettings
     {
-        uint32_t                   windowWidth;
-        uint32_t                   windowHeight;
-        std::string                windowTitle;
-        double                     maxFramerate;
+        uint32_t                   windowWidth   = 1920;
+        uint32_t                   windowHeight  = 1080;
+        std::string                windowTitle   = "Unnamed";
+        double                     maxFramerate  = 200.0f;
+        bool                       fullscreen    = false;
+
         ApplicationCommandLineArgs commandLineArgs;
     };
 

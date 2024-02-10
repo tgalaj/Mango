@@ -51,7 +51,7 @@ namespace mango
         // Init window
         m_window = std::make_shared<Window>(appSettings.windowWidth, appSettings.windowHeight, appSettings.windowTitle);
     
-        if (optResult["fullscreen"].as<bool>())
+        if (optResult["fullscreen"].as<bool>() || appSettings.fullscreen)
         {
             m_window->setFullscreen(true);
         }
