@@ -4,9 +4,10 @@
 #include "Mango/Math/Math.h"
 #include "Mango/Scene/SceneSerializer.h"
 
-#include "glm/gtc/type_ptr.hpp"
-#include "ImGuizmo.h"
-#include "portable-file-dialogs.h"
+#include <glm/gtc/type_ptr.hpp>
+#include <imgui.h>
+#include <ImGuizmo.h>
+#include <portable-file-dialogs.h>
 
 namespace
 {
@@ -48,6 +49,18 @@ namespace mango
 
     void EditorSystem::onInit()
     {
+        m_playIcon = std::make_shared<Texture>();
+        m_playIcon->createTexture2d("icons/play.png", false, 8);
+
+        m_stopIcon = std::make_shared<Texture>();
+        m_stopIcon->createTexture2d("icons/stop.png", false, 8);
+
+        m_pauseIcon = std::make_shared<Texture>();
+        m_pauseIcon->createTexture2d("icons/pause.png", false, 8);
+
+        m_stepIcon = std::make_shared<Texture>();
+        m_stepIcon->createTexture2d("icons/step.png", false, 8);
+
         m_mainScene = Services::sceneManager()->createScene("Editor Scene");
         Services::sceneManager()->setActiveScene(m_mainScene);
 
@@ -295,100 +308,105 @@ namespace mango
 
     void EditorSystem::onUpdate(float dt)
     {
-        bool ctrl  = Input::getKey(KeyCode::LeftControl) || Input::getKey(KeyCode::RightControl);
-        bool shift = Input::getKey(KeyCode::LeftShift)   || Input::getKey(KeyCode::RightShift);
-
-        if (Input::getKeyDown(KeyCode::N))
+        if (SceneState::Edit == m_sceneState)
         {
-            if (ctrl)
-            {
-                newScene();
-                return;
-            }
-        }
+            bool ctrl  = Input::getKey(KeyCode::LeftControl) || Input::getKey(KeyCode::RightControl);
+            bool shift = Input::getKey(KeyCode::LeftShift)   || Input::getKey(KeyCode::RightShift);
 
-        if (Input::getKeyDown(KeyCode::O))
-        {
-            if (ctrl)
+            if (Input::getKeyDown(KeyCode::N))
             {
-                openScene();
-                return;
-            }
-        }
-
-        if (Input::getKeyDown(KeyCode::S))
-        {
-            if (ctrl)
-            {
-                if (shift)
+                if (ctrl)
                 {
-                    saveSceneAs();
+                    newScene();
                     return;
                 }
+            }
+
+            if (Input::getKeyDown(KeyCode::O))
+            {
+                if (ctrl)
+                {
+                    openScene();
+                    return;
+                }
+            }
+
+            if (Input::getKeyDown(KeyCode::S))
+            {
+                if (ctrl)
+                {
+                    if (shift)
+                    {
+                        saveSceneAs();
+                        return;
+                    }
                 
-                saveScene();
-                return;
+                    saveScene();
+                    return;
+                }
+            }
+
+            if (Input::getKeyDown(KeyCode::Alpha1))
+            {
+                m_gizmoType = GizmoType::TRANSLATE;
+            }
+
+            if (Input::getKeyDown(KeyCode::Alpha2))
+            {
+                m_gizmoType = GizmoType::ROTATE;
+            }
+
+            if (Input::getKeyDown(KeyCode::Alpha3))
+            {
+                m_gizmoType = GizmoType::SCALE;
+            }
+
+            if (Input::getKeyDown(KeyCode::Alpha0))
+            {
+                m_gizmoType = GizmoType::NONE;
+            }
+
+            if (Input::getKeyDown(KeyCode::Alpha4))
+            {
+                m_gizmoMode = m_gizmoMode == GizmoMode::LOCAL ? GizmoMode::WORLD : GizmoMode::LOCAL;
+            }
+
+            /** TODO: BELOW TO BE REMOVED */
+            static bool isDebugRender = false;
+    
+            if (Input::getKeyDown(KeyCode::Escape) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::BACK))
+            {
+                Services::application()->stop();
+            }
+
+            if (Input::getKeyDown(KeyCode::H) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::Y))
+            {
+                isDebugRender = !isDebugRender;
+                RenderingSystem::DEBUG_RENDERING = isDebugRender;
+            }
+
+            static bool fullscreen = Services::application()->getWindow()->isFullscreen();
+            if (Input::getKeyDown(KeyCode::F11))
+            {
+                fullscreen = !fullscreen;
+                Services::application()->getWindow()->setFullscreen(fullscreen);
+            }
+
+            m_editorCamera.onUpdate(dt);
+        }
+        else if (SceneState::Play == m_sceneState)
+        {
+            static bool shouldMoveLights = false;
+            if (Input::getKeyDown(KeyCode::Space) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::X))
+            {
+                shouldMoveLights = !shouldMoveLights;
+            }
+
+            if (shouldMoveLights)
+            {
+                moveLights(dt);
             }
         }
-
-        if (Input::getKeyDown(KeyCode::Alpha1))
-        {
-            m_gizmoType = GizmoType::TRANSLATE;
-        }
-
-        if (Input::getKeyDown(KeyCode::Alpha2))
-        {
-            m_gizmoType = GizmoType::ROTATE;
-        }
-
-        if (Input::getKeyDown(KeyCode::Alpha3))
-        {
-            m_gizmoType = GizmoType::SCALE;
-        }
-
-        if (Input::getKeyDown(KeyCode::Alpha0))
-        {
-            m_gizmoType = GizmoType::NONE;
-        }
-
-        if (Input::getKeyDown(KeyCode::Alpha4))
-        {
-            m_gizmoMode = m_gizmoMode == GizmoMode::LOCAL ? GizmoMode::WORLD : GizmoMode::LOCAL;
-        }
-
-        /** TODO: BELOW TO BE REMOVED */
-        static bool isDebugRender = false;
-    
-        if (Input::getKeyDown(KeyCode::Escape) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::BACK))
-        {
-            Services::application()->stop();
-        }
-
-        if (Input::getKeyDown(KeyCode::H) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::Y))
-        {
-            isDebugRender = !isDebugRender;
-            RenderingSystem::DEBUG_RENDERING = isDebugRender;
-        }
-
-        static bool fullscreen = Services::application()->getWindow()->isFullscreen();
-        if (Input::getKeyDown(KeyCode::F11))
-        {
-            fullscreen = !fullscreen;
-            Services::application()->getWindow()->setFullscreen(fullscreen);
-        }
-
-        static bool shouldMoveLights = false;
-        if (Input::getKeyDown(KeyCode::Space) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::X))
-        {
-            shouldMoveLights = !shouldMoveLights;
-        }
-
-        if (shouldMoveLights)
-        {
-            moveLights(dt);
-        }
-
-        m_editorCamera.onUpdate(dt);
     }
     
     void EditorSystem::onGui()
@@ -479,135 +497,13 @@ namespace mango
         }
         ImGui::End(); // CVars Editor
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
-        ImGui::Begin("Viewport");
-        {
-            Services::renderer()->setRenderingMode(RenderingMode::EDITOR, &m_editorCamera, m_editorCamera.getPosition());
-
-            auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
-            auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
-            auto viewportOffset    = ImGui::GetWindowPos();
-
-            m_viewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
-            m_viewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
-
-            m_viewportFocused = ImGui::IsWindowFocused();
-            m_viewportHovered = ImGui::IsWindowHovered();
-
-            if (m_viewportHovered)
-            {
-                ImGui::SetNextFrameWantCaptureKeyboard(false);
-                ImGui::SetNextFrameWantCaptureMouse(false);
-            }
-
-            ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-                   m_viewportSize    = { viewportPanelSize.x, viewportPanelSize.y };
-
-            uint32_t outputTextureID = Services::renderer()->getOutputOffscreenTextureID();
-
-            ImGui::Image((ImTextureID)outputTextureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
-
-            /** Drag drop target */
-            if (ImGui::BeginDragDropTarget())
-            {
-                // TODO: consider moving payload type to a shared file (make a define or static const)
-                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MG_ASSETS_BROWSER_ITEM"))
-                {
-                    const auto* path = (const wchar_t*)payload->Data;
-                    openScene(path);
-                }
-                ImGui::EndDragDropTarget();
-            }
-
-            /** ImGuizmo */
-            Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
-            if (selectedEntity && m_gizmoType != GizmoType::NONE)
-            {
-                ImGuizmo::SetOrthographic(false);
-                ImGuizmo::SetDrawlist();
-
-                ImGuizmo::SetRect(m_viewportBounds[0].x, m_viewportBounds[0].y, m_viewportBounds[1].x - m_viewportBounds[0].x, m_viewportBounds[1].y - m_viewportBounds[0].y);
-
-                // Camera
-                const glm::mat4& cameraView       = m_editorCamera.getView();
-                const glm::mat4& cameraProjection = m_editorCamera.getProjection();
-
-                // Entity transform
-                auto& tc = selectedEntity.getComponent<TransformComponent>();
-                glm::mat4 transform = tc.getWorldMatrix();
-
-                // Snapping
-                bool snap = Input::getKey(KeyCode::LeftControl);
-                float snapValue = 0.5f; // Snap to 0.5m for translation and scale
-
-                // Snap to 45 degrees for rotation
-                if (m_gizmoType == GizmoType::ROTATE)
-                {
-                    snapValue = 45.0f;
-                }
-                glm::vec3 snapValues = glm::vec3(snapValue);
-
-                ImGuizmo::Manipulate(glm::value_ptr(cameraView), 
-                                     glm::value_ptr(cameraProjection), 
-                                     getImGuizmoOp(m_gizmoType), 
-                                     getImGuizmoMode(m_gizmoMode), 
-                                     glm::value_ptr(transform),
-                                     nullptr /*deltaMatrix*/,
-                                     snap ? glm::value_ptr(snapValues) : nullptr);
-
-                if (ImGuizmo::IsUsing())
-                {
-                    glm::vec3 translation, rotation, scale;
-                    math::decompose(transform,
-                                    translation,
-                                    rotation,
-                                    scale);
-
-                    // Calculate delta rotation, to always add 
-                    // small portion of the rotation to avoid the gimbal lock
-                    glm::vec3 currentRotation = tc.getRotation();
-                    glm::vec3 deltaRotation   = rotation - currentRotation;
-
-                    tc.setPosition(translation);
-                    tc.setRotation(currentRotation + deltaRotation);
-                    tc.setScale(scale);
-                }
-            }
-        }
-        ImGui::End(); // Viewport
-        ImGui::PopStyleVar();
-
+        
+        onGuiViewport();
         m_sceneHierarchyPanel.onGui();
         m_assetsBrowserPanel.onGui();
+        onGuiToolbar();
+        onGuiStats();
 
-        ImGui::Begin("Stats");
-        {
-            auto stats = Services::renderer()->getStatistics();
-            ImGui::Text("%s\nDriver: %s\nGLSL Version: %s\n\n", stats.rendererName.c_str(),
-                                                                stats.driverVersion.c_str(), 
-                                                                stats.glslVersion.c_str());
-            ImGui::Text("Frame Rate: %.3f ms/frame (%.1f FPS)", Services::application()->getFramerate(), 1000.0f / Services::application()->getFramerate());
-        }
-        ImGui::End(); // Stats
-
-        // Mouse Entity picking
-        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGuizmo::IsOver() && m_viewportHovered)
-        {
-            auto mousePos  = Input::getMousePosition();
-                 mousePos -= m_viewportBounds[0];
-
-            auto viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
-                 mousePos.y   = viewportSize.y - mousePos.y;
-
-            if (mousePos.x >= 0 && mousePos.y >= 0 && mousePos.x < (int)viewportSize.x && mousePos.y < (int)viewportSize.y)
-            {
-                int    selectedID     = Services::renderer()->getSelectedEntityID(mousePos.x, mousePos.y);
-                Entity selectedEntity = selectedID == -1 ? Entity() : Entity((entt::entity)selectedID, m_mainScene.get());
-
-                m_sceneHierarchyPanel.setSelectedEntity(selectedEntity);
-            }
-        }
-        ImGui::ShowDemoWindow();
         ImGui::End(); // Mango Editor
     }
 
@@ -670,6 +566,262 @@ namespace mango
 
             SceneSerializer::serialize(m_mainScene, m_editorScenePath);
         }
+    }
+
+    void EditorSystem::onScenePlay()
+    {
+        m_sceneState = SceneState::Play;
+    }
+
+    void EditorSystem::onSceneStep()
+    {
+        m_sceneState = SceneState::Step;
+    }
+
+    void EditorSystem::onSceneStop()
+    {
+        m_sceneState = SceneState::Edit;
+    }
+
+    void EditorSystem::onScenePause()
+    {
+        
+    }
+
+    void EditorSystem::onGuiViewport()
+    {
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
+        ImGui::Begin("Viewport");
+        {
+            if (SceneState::Edit == m_sceneState)
+            {
+                Services::renderer()->setRenderingMode(RenderingMode::EDITOR, &m_editorCamera, m_editorCamera.getPosition());
+            }
+            else if (SceneState::Play == m_sceneState)
+            {
+                Services::renderer()->setRenderingMode(RenderingMode::GAME);
+            }
+
+            auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+            auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+            auto viewportOffset    = ImGui::GetWindowPos();
+
+            m_viewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+            m_viewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
+
+            m_viewportFocused = ImGui::IsWindowFocused();
+            m_viewportHovered = ImGui::IsWindowHovered();
+
+            if (m_viewportHovered)
+            {
+                ImGui::SetNextFrameWantCaptureKeyboard(false);
+                ImGui::SetNextFrameWantCaptureMouse(false);
+            }
+
+            ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+                   m_viewportSize    = { viewportPanelSize.x, viewportPanelSize.y };
+
+            uint32_t outputTextureID = Services::renderer()->getOutputOffscreenTextureID();
+
+            ImGui::Image((ImTextureID)outputTextureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
+
+            /** Drag drop target */
+            if (ImGui::BeginDragDropTarget())
+            {
+                // TODO: consider moving payload type to a shared file (make a define or static const)
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MG_ASSETS_BROWSER_ITEM"))
+                {
+                    const auto* path = (const wchar_t*)payload->Data;
+                    openScene(path);
+                }
+                ImGui::EndDragDropTarget();
+            }
+
+            if (SceneState::Edit == m_sceneState)
+            {
+                /** ImGuizmo */
+                Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
+                if (selectedEntity && m_gizmoType != GizmoType::NONE)
+                {
+                    ImGuizmo::SetOrthographic(false);
+                    ImGuizmo::SetDrawlist();
+
+                    ImGuizmo::SetRect(m_viewportBounds[0].x, m_viewportBounds[0].y, m_viewportBounds[1].x - m_viewportBounds[0].x, m_viewportBounds[1].y - m_viewportBounds[0].y);
+
+                    // Camera
+                    const glm::mat4& cameraView       = m_editorCamera.getView();
+                    const glm::mat4& cameraProjection = m_editorCamera.getProjection();
+
+                    // Entity transform
+                    auto& tc = selectedEntity.getComponent<TransformComponent>();
+                    glm::mat4 transform = tc.getWorldMatrix();
+
+                    // Snapping
+                    bool snap = Input::getKey(KeyCode::LeftControl);
+                    float snapValue = 0.5f; // Snap to 0.5m for translation and scale
+
+                    // Snap to 45 degrees for rotation
+                    if (m_gizmoType == GizmoType::ROTATE)
+                    {
+                        snapValue = 45.0f;
+                    }
+                    glm::vec3 snapValues = glm::vec3(snapValue);
+
+                    ImGuizmo::Manipulate(glm::value_ptr(cameraView), 
+                                         glm::value_ptr(cameraProjection), 
+                                         getImGuizmoOp(m_gizmoType), 
+                                         getImGuizmoMode(m_gizmoMode), 
+                                         glm::value_ptr(transform),
+                                         nullptr /*deltaMatrix*/,
+                                         snap ? glm::value_ptr(snapValues) : nullptr);
+
+                    if (ImGuizmo::IsUsing())
+                    {
+                        glm::vec3 translation, rotation, scale;
+                        math::decompose(transform,
+                                        translation,
+                                        rotation,
+                                        scale);
+
+                        // Calculate delta rotation, to always add 
+                        // small portion of the rotation to avoid the gimbal lock
+                        glm::vec3 currentRotation = tc.getRotation();
+                        glm::vec3 deltaRotation   = rotation - currentRotation;
+
+                        tc.setPosition(translation);
+                        tc.setRotation(currentRotation + deltaRotation);
+                        tc.setScale(scale);
+                    }
+                }
+
+                // Mouse Entity picking
+                if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGuizmo::IsOver() && m_viewportHovered)
+                {
+                    auto mousePos = Input::getMousePosition();
+                    mousePos -= m_viewportBounds[0];
+
+                    auto viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
+                    mousePos.y = viewportSize.y - mousePos.y;
+
+                    if (mousePos.x >= 0 && mousePos.y >= 0 && mousePos.x < (int)viewportSize.x && mousePos.y < (int)viewportSize.y)
+                    {
+                        int    selectedID = Services::renderer()->getSelectedEntityID(mousePos.x, mousePos.y);
+                        Entity selectedEntity = selectedID == -1 ? Entity() : Entity((entt::entity)selectedID, m_mainScene.get());
+
+                        m_sceneHierarchyPanel.setSelectedEntity(selectedEntity);
+                    }
+                }
+            }
+        }
+        ImGui::End(); // Viewport
+        ImGui::PopStyleVar();
+    }
+
+    void EditorSystem::onGuiToolbar()
+    {        
+        const ImVec2 iconSize   (32.0f, 32.0f);
+        const ImVec2 itemSpacing(2.0f, 5.0f);
+
+        beginDockingToolbar("SceneState", ImGuiAxis_X, iconSize);
+        {
+            auto toolbarWidth = ImGui::GetContentRegionAvail().x;
+
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing,  itemSpacing);
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
+
+            auto&       colors        = ImGui::GetStyle().Colors;
+            const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
+            const auto& buttonActive  = colors[ImGuiCol_ButtonActive];
+            ImGui::PushStyleColor(ImGuiCol_Button,        ImVec4(0, 0, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive,  ImVec4(buttonActive.x,  buttonActive.y,  buttonActive.z,  0.5f));
+
+            ImGui::SetCursorPosX((toolbarWidth - 3.0f * (iconSize.x + itemSpacing.x)) * 0.5f); // 3 - no. buttons to center
+            
+            auto playStopIcon = (SceneState::Edit == m_sceneState) ? m_playIcon : m_stopIcon;
+            if (ImGui::ImageButton("playStopButton", (ImTextureID)playStopIcon->getRendererID(), iconSize))
+            {
+                if (SceneState::Edit == m_sceneState)
+                {
+                    onScenePlay();
+                }
+                else if (SceneState::Play == m_sceneState)
+                {
+                    onSceneStop();
+                }
+            }
+            
+            ImGui::SameLine();
+            ImGui::ImageButton("pauseButton", (ImTextureID)m_pauseIcon->getRendererID(), iconSize);
+
+            ImGui::SameLine();
+            ImGui::ImageButton("stepButton", (ImTextureID)m_stepIcon->getRendererID(), iconSize);
+
+            ImGui::PopStyleColor(3);
+            ImGui::PopStyleVar(2);
+        }
+        endDockingToolbar();
+    }
+
+    void EditorSystem::onGuiStats()
+    {
+        ImGui::Begin("Stats");
+        {
+            auto stats = Services::renderer()->getStatistics();
+            ImGui::Text("%s\nDriver: %s\nGLSL Version: %s\n\n", stats.rendererName.c_str(),
+                        stats.driverVersion.c_str(),
+                        stats.glslVersion.c_str());
+            ImGui::Text("Frame Rate: %.3f ms/frame (%.1f FPS)", Services::application()->getFramerate(), 1000.0f / Services::application()->getFramerate());
+        }
+        ImGui::End(); // Stats
+    }
+
+        void EditorSystem::beginDockingToolbar(const char* name, ImGuiAxis toolbarAxis, const ImVec2& iconSize)
+    {
+        // 1. We request auto-sizing on one axis
+        // Note however this will only affect the toolbar when NOT docked.
+        ImVec2 requestedSize = (toolbarAxis == ImGuiAxis_X) ? ImVec2(-1.0f, 0.0f) : ImVec2(0.0f, -1.0f);
+        ImGui::SetNextWindowSize(requestedSize);
+
+        // 2. Specific docking options for toolbars.
+        // Currently they add some constraint we ideally wouldn't want, but this is simplifying our first implementation
+        ImGuiWindowClass window_class;
+        window_class.DockingAllowUnclassed     = true;
+        window_class.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoCloseButton;
+        window_class.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_HiddenTabBar; // ImGuiDockNodeFlags_NoTabBar // FIXME: Will need a working Undock widget for _NoTabBar to work
+        window_class.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoDockingSplit;
+        window_class.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoDockingOverMe;
+        window_class.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoDockingOverOther;
+        if (toolbarAxis == ImGuiAxis_X)
+            window_class.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoResizeY;
+        else
+            window_class.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoResizeX;
+
+        ImGui::SetNextWindowClass(&window_class);
+
+        // 3. Begin into the window
+        ImGui::Begin(name, NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
+
+        // 4. Overwrite node size
+        ImGuiDockNode* node = ImGui::GetWindowDockNode();
+        if (node != NULL)
+        {
+            // Overwrite size of the node
+                  ImGuiStyle& style                    = ImGui::GetStyle();
+            const ImGuiAxis   toolbarAxisPerp          = (ImGuiAxis)(toolbarAxis ^ 1);
+            const float       TOOLBAR_SIZE_WHEN_DOCKED = style.WindowPadding[toolbarAxisPerp] * 2.0f + iconSize[toolbarAxisPerp];
+
+            node->WantLockSizeOnce      = true;
+            node->Size[toolbarAxisPerp] = node->SizeRef[toolbarAxisPerp] = TOOLBAR_SIZE_WHEN_DOCKED;
+
+            if (node->ParentNode && node->ParentNode->SplitAxis != ImGuiAxis_None)
+                toolbarAxis = (ImGuiAxis)(node->ParentNode->SplitAxis ^ 1);
+        }
+    }
+
+    void EditorSystem::endDockingToolbar()
+    {
+        ImGui::End();
     }
 
     void EditorSystem::moveLights(float dt)

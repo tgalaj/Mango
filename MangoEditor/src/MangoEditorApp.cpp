@@ -48,6 +48,7 @@ namespace mango
         appSettings.windowTitle     = "Mango Editor";
         appSettings.maxFramerate    = 999.0;
         appSettings.commandLineArgs = args;
+        appSettings.maximized       = true;
 
         return new MangoEditorApp(appSettings);
     }

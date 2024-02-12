@@ -17,14 +17,14 @@ namespace mango
         m_pathStack.reserve(10);
         m_pathStack.push_back(m_currentPath.filename().string());
 
-        m_folderTexture = std::make_shared<Texture>();
-        m_folderTexture->createTexture2d("icons/folder.png", false, 8);
+        m_folderIcon = std::make_shared<Texture>();
+        m_folderIcon->createTexture2d("icons/folder.png", false, 8);
 
-        m_fileTexture = std::make_shared<Texture>();
-        m_fileTexture->createTexture2d("icons/file.png", false, 8);
+        m_fileIcon = std::make_shared<Texture>();
+        m_fileIcon->createTexture2d("icons/file.png", false, 8);
 
-        m_leftArrow = std::make_shared<Texture>();
-        m_leftArrow->createTexture2d("icons/left_arrow.png", false, 4);
+        m_returnIcon = std::make_shared<Texture>();
+        m_returnIcon->createTexture2d("icons/return.png", false, 8);
     }
 
     void AssetsBrowserPanel::onGui()
@@ -32,9 +32,11 @@ namespace mango
         ImGui::Begin("Assets Browser Panel");
 
         ImGui::PushStyleColor(ImGuiCol_Button, { 0, 0, 0, 0 });
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
         ImGui::BeginDisabled(m_currentPath == m_basePath);
         {
-            if (ImGui::ImageButton("backArrow", (ImTextureID)m_leftArrow->getRendererID(), {backButtonSize, backButtonSize}) ||
+            if (ImGui::ImageButton("backArrow", (ImTextureID)m_returnIcon->getRendererID(), { backButtonSize, backButtonSize }) ||
                 ImGui::IsMouseClicked(ImGuiMouseButton_Middle + 1))
             {
                 m_currentPath = m_currentPath.parent_path();
@@ -42,6 +44,7 @@ namespace mango
             }
         }
         ImGui::EndDisabled();
+        ImGui::PopStyleVar();
 
         for (uint32_t i = 0; i < m_pathStack.size(); ++i)
         {
@@ -93,8 +96,8 @@ namespace mango
                 
                 ImGui::ImageButton(filenameString.c_str(),
                                    directoryIterator.is_directory() ?
-                                   (ImTextureID)m_folderTexture->getRendererID() : 
-                                   (ImTextureID)m_fileTexture->getRendererID(),
+                                   (ImTextureID)m_folderIcon->getRendererID() : 
+                                   (ImTextureID)m_fileIcon->getRendererID(),
                                    { thumbnailSize, thumbnailSize });
 
                 if (ImGui::BeginDragDropSource())

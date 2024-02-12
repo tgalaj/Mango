@@ -22,8 +22,8 @@ namespace mango
         std::filesystem::path m_basePath;
         std::filesystem::path m_currentPath;
 
-        std::shared_ptr<Texture> m_folderTexture;
-        std::shared_ptr<Texture> m_fileTexture;
-        std::shared_ptr<Texture> m_leftArrow;
+        std::shared_ptr<Texture> m_folderIcon;
+        std::shared_ptr<Texture> m_fileIcon;
+        std::shared_ptr<Texture> m_returnIcon;
     };
 }

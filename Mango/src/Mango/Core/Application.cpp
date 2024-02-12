@@ -33,6 +33,7 @@ namespace mango
         options.add_options()
             ("w,width",      "Window width",          cxxopts::value<uint32_t>())
             ("h,height",     "Window height",         cxxopts::value<uint32_t>())
+            ("m,maximized",  "Open window maximized", cxxopts::value<bool>()->default_value("false")->implicit_value("true"))
             ("f,fullscreen", "Set fullscreen window", cxxopts::value<bool>()->default_value("false")->implicit_value("true"))
             ("setCVars",     "Set console variables", cxxopts::value<std::string>());
 
@@ -48,8 +49,14 @@ namespace mango
             const_cast<ApplicationSettings&>(appSettings).windowHeight = optResult["height"].as<uint32_t>();
         }
 
+        bool maximized = false;
+        if (optResult["maximized"].as<bool>() || appSettings.maximized)
+        {
+            maximized = true;
+        }
+
         // Init window
-        m_window = std::make_shared<Window>(appSettings.windowWidth, appSettings.windowHeight, appSettings.windowTitle);
+        m_window = std::make_shared<Window>(appSettings.windowWidth, appSettings.windowHeight, appSettings.windowTitle, maximized);
     
         if (optResult["fullscreen"].as<bool>() || appSettings.fullscreen)
         {

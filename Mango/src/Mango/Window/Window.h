@@ -19,7 +19,7 @@ namespace mango
     class Window final
     {
     public:
-        Window(uint32_t width, uint32_t height, const std::string& title);
+        Window(uint32_t width, uint32_t height, const std::string& title, bool maximized = false);
         ~Window();
 
         int  isCloseRequested();
@@ -42,7 +42,7 @@ namespace mango
         void setFullscreen(bool fullscreen);
 
     private:
-        void create(uint32_t width, uint32_t height, const std::string & title);
+        void create(uint32_t width, uint32_t height, const std::string & title, bool maximized = false);
 
     private:
         GLFWwindow  * m_window;

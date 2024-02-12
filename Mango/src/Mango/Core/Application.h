@@ -24,6 +24,7 @@ namespace mango
         std::string                windowTitle   = "Unnamed";
         double                     maxFramerate  = 200.0f;
         bool                       fullscreen    = false;
+        bool                       maximized     = false;
 
         ApplicationCommandLineArgs commandLineArgs;
     };

@@ -13,14 +13,14 @@
 
 namespace mango
 {
-    Window::Window(uint32_t width, uint32_t height, const std::string& title)
+    Window::Window(uint32_t width, uint32_t height, const std::string& title, bool maximized)
         : m_window      (nullptr),
           m_monitor     (nullptr),
           m_windowPos   (glm::ivec2(0)),
           m_windowSize  (glm::ivec2(0)),
           m_viewportSize(glm::ivec2(0))
     {
-        create(width, height, title);
+        create(width, height, title, maximized);
     }
 
     Window::~Window()
@@ -30,7 +30,7 @@ namespace mango
         glfwTerminate();
     }
 
-    void Window::create(uint32_t width, uint32_t height, const std::string & title)
+    void Window::create(uint32_t width, uint32_t height, const std::string & title, bool maximized)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -48,6 +48,7 @@ namespace mango
         glfwWindowHint(GLFW_OPENGL_PROFILE,        GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_SAMPLES,               4);
+        glfwWindowHint(GLFW_MAXIMIZED,             maximized);
 
         #ifdef _DEBUG
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT,  GL_TRUE);
