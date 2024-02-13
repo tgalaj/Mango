@@ -3,6 +3,7 @@
 #include "EditorSystem.h"
 #include "Mango/Math/Math.h"
 #include "Mango/Scene/SceneSerializer.h"
+#include "Mango/Systems/PhysicsSystem.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
@@ -51,6 +52,9 @@ namespace mango
     {
         m_playIcon = std::make_shared<Texture>();
         m_playIcon->createTexture2d("icons/play.png", false, 8);
+
+        m_simulateIcon = std::make_shared<Texture>();
+        m_simulateIcon->createTexture2d("icons/simulate.png", false, 8);
 
         m_stopIcon = std::make_shared<Texture>();
         m_stopIcon->createTexture2d("icons/stop.png", false, 8);
@@ -311,95 +315,98 @@ namespace mango
     {
         if (SceneState::Edit == m_sceneState)
         {
-            bool ctrl  = Input::getKey(KeyCode::LeftControl) || Input::getKey(KeyCode::RightControl);
-            bool shift = Input::getKey(KeyCode::LeftShift)   || Input::getKey(KeyCode::RightShift);
-
-            if (Input::getKeyDown(KeyCode::N))
+            if (!m_editorCamera.isUsing())
             {
-                if (ctrl)
-                {
-                    newScene();
-                    return;
-                }
-            }
+                bool ctrl  = Input::getKey(KeyCode::LeftControl) || Input::getKey(KeyCode::RightControl);
+                bool shift = Input::getKey(KeyCode::LeftShift)   || Input::getKey(KeyCode::RightShift);
 
-            if (Input::getKeyDown(KeyCode::O))
-            {
-                if (ctrl)
+                if (Input::getKeyDown(KeyCode::N))
                 {
-                    openScene();
-                    return;
-                }
-            }
-
-            if (Input::getKeyDown(KeyCode::S))
-            {
-                if (ctrl)
-                {
-                    if (shift)
+                    if (ctrl)
                     {
-                        saveSceneAs();
+                        newScene();
                         return;
                     }
-                
-                    saveScene();
-                    return;
                 }
-            }
 
-            if (Input::getKeyDown(KeyCode::D))
-            {
-                if (ctrl)
+                if (Input::getKeyDown(KeyCode::O))
                 {
-                    onDuplicateEntity();
-                    return;
+                    if (ctrl)
+                    {
+                        openScene();
+                        return;
+                    }
                 }
-            }
 
-            if (Input::getKeyDown(KeyCode::Alpha1))
-            {
-                m_gizmoType = GizmoType::TRANSLATE;
-            }
+                if (Input::getKeyDown(KeyCode::S))
+                {
+                    if (ctrl)
+                    {
+                        if (shift)
+                        {
+                            saveSceneAs();
+                            return;
+                        }
+                
+                        saveScene();
+                        return;
+                    }
+                }
 
-            if (Input::getKeyDown(KeyCode::Alpha2))
-            {
-                m_gizmoType = GizmoType::ROTATE;
-            }
+                if (Input::getKeyDown(KeyCode::D))
+                {
+                    if (ctrl)
+                    {
+                        onDuplicateEntity();
+                        return;
+                    }
+                }
 
-            if (Input::getKeyDown(KeyCode::Alpha3))
-            {
-                m_gizmoType = GizmoType::SCALE;
-            }
+                if (Input::getKeyDown(KeyCode::W))
+                {
+                    m_gizmoType = GizmoType::TRANSLATE;
+                }
 
-            if (Input::getKeyDown(KeyCode::Alpha0))
-            {
-                m_gizmoType = GizmoType::NONE;
-            }
+                if (Input::getKeyDown(KeyCode::E))
+                {
+                    m_gizmoType = GizmoType::ROTATE;
+                }
 
-            if (Input::getKeyDown(KeyCode::Alpha4))
-            {
-                m_gizmoMode = m_gizmoMode == GizmoMode::LOCAL ? GizmoMode::WORLD : GizmoMode::LOCAL;
-            }
+                if (Input::getKeyDown(KeyCode::R))
+                {
+                    m_gizmoType = GizmoType::SCALE;
+                }
 
-            /** TODO: BELOW TO BE REMOVED */
-            static bool isDebugRender = false;
+                if (Input::getKeyDown(KeyCode::Q))
+                {
+                    m_gizmoType = GizmoType::NONE;
+                }
+
+                if (Input::getKeyDown(KeyCode::T))
+                {
+                    m_gizmoMode = (m_gizmoMode == GizmoMode::LOCAL) ? GizmoMode::WORLD : GizmoMode::LOCAL;
+                }
+
+                /** TODO: BELOW TO BE REMOVED */
+                static bool isDebugRender = false;
     
-            if (Input::getKeyDown(KeyCode::Escape) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::BACK))
-            {
-                Services::application()->stop();
-            }
+                if (Input::getKeyDown(KeyCode::Escape) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::BACK))
+                {
+                    Services::application()->stop();
+                }
 
-            if (Input::getKeyDown(KeyCode::H) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::Y))
-            {
-                isDebugRender = !isDebugRender;
-                RenderingSystem::DEBUG_RENDERING = isDebugRender;
-            }
+                if (Input::getKeyDown(KeyCode::H) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::Y))
+                {
+                    isDebugRender = !isDebugRender;
+                    RenderingSystem::DEBUG_RENDERING = isDebugRender;
+                }
 
-            static bool fullscreen = Services::application()->getWindow()->isFullscreen();
-            if (Input::getKeyDown(KeyCode::F11))
-            {
-                fullscreen = !fullscreen;
-                Services::application()->getWindow()->setFullscreen(fullscreen);
+                static bool fullscreen = Services::application()->getWindow()->isFullscreen();
+                if (Input::getKeyDown(KeyCode::F11))
+                {
+                    fullscreen = !fullscreen;
+                    Services::application()->getWindow()->setFullscreen(fullscreen);
+                }
             }
 
             m_editorCamera.onUpdate(dt);
@@ -513,6 +520,7 @@ namespace mango
         m_assetsBrowserPanel.onGui();
         onGuiToolbar();
         onGuiStats();
+        onGuiRenderingSettings();
 
         ImGui::End(); // Mango Editor
     }
@@ -603,11 +611,12 @@ namespace mango
         m_activeScene = Scene::copy(m_editorScene);
         m_sceneHierarchyPanel.setScene(m_activeScene);
         Services::sceneManager()->setActiveScene(m_activeScene);
+        Services::application()->getPhysicsSystem()->start();
     }
 
-    void EditorSystem::onSceneStep()
+    void EditorSystem::onSceneSimulate()
     {
-        m_sceneState = SceneState::Step;
+        m_sceneState = SceneState::Simulate;
     }
 
     void EditorSystem::onSceneStop()
@@ -616,6 +625,7 @@ namespace mango
         m_activeScene = m_editorScene;
         m_sceneHierarchyPanel.setScene(m_activeScene);
         Services::sceneManager()->setActiveScene(m_activeScene);
+        Services::application()->getPhysicsSystem()->stop();
     }
 
     void EditorSystem::onScenePause()
@@ -787,7 +797,7 @@ namespace mango
             }
             
             ImGui::SameLine();
-            ImGui::ImageButton("pauseButton", (ImTextureID)m_pauseIcon->getRendererID(), iconSize);
+            ImGui::ImageButton("simulateButton", (ImTextureID)m_simulateIcon->getRendererID(), iconSize);
 
             ImGui::SameLine();
             ImGui::ImageButton("stepButton", (ImTextureID)m_stepIcon->getRendererID(), iconSize);
@@ -811,7 +821,16 @@ namespace mango
         ImGui::End(); // Stats
     }
 
-        void EditorSystem::beginDockingToolbar(const char* name, ImGuiAxis toolbarAxis, const ImVec2& iconSize)
+    void EditorSystem::onGuiRenderingSettings()
+    {
+        ImGui::Begin("Rendering Settings");
+        {
+            ImGui::Checkbox("Visualize lights", &RenderingSystem::DEBUG_RENDERING);
+        }
+        ImGui::End();
+    }
+
+    void EditorSystem::beginDockingToolbar(const char* name, ImGuiAxis toolbarAxis, const ImVec2& iconSize)
     {
         // 1. We request auto-sizing on one axis
         // Note however this will only affect the toolbar when NOT docked.

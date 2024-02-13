@@ -42,8 +42,9 @@ namespace mango
 
         const std::shared_ptr<Window> getWindow() const { return m_window; }
 
-        EventBus    * const getEventBus()    const { return m_eventBus; }
-        ImGuiSystem * const getImGuiSystem() const { return m_imGuiSystem; }
+        EventBus      * const getEventBus()      const { return m_eventBus;      }
+        ImGuiSystem   * const getImGuiSystem()   const { return m_imGuiSystem;   }
+        PhysicsSystem * const getPhysicsSystem() const { return m_physicsSystem; }
 
         /** Returns time in ms needed to render one frame. */
         double getFramerate() const;

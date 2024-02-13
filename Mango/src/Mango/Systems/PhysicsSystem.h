@@ -183,9 +183,15 @@ namespace mango
         virtual ~PhysicsSystem() = default;
 
         void onInit()           override;
-        void onInitBodies();
         void onDestroy()        override;
         void onUpdate(float dt) override;
+
+        void start();
+        void stop();
+
+    private:
+        void onInitBodies();
+        void onDestroyBodies();
 
     private:
         // This is the max amount of rigid bodies that you can add to the physics system. If you try to add more you'll get an error.
@@ -226,5 +232,12 @@ namespace mango
         JPH::JobSystemThreadPool* m_jobSystem;
 
         std::shared_ptr<Scene> m_scene;
+
+        enum class PhysicsSystemState
+        {
+            Running = 0, Stopped = 1
+        };
+
+        PhysicsSystemState m_physicsSystemState = PhysicsSystemState::Stopped;
     };
 }

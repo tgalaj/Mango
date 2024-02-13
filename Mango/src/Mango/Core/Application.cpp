@@ -164,8 +164,6 @@ namespace mango
             return;
         }
 
-        MG_CORE_ASSERT_MSG(m_physicsSystem, "Mango::PhysicsSystem has be initialized at this point!");
-        m_physicsSystem->onInitBodies();
         run();
     }
 

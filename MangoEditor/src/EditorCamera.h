@@ -29,6 +29,8 @@ namespace mango
         glm::vec3 getPosition() const { return m_position; }
         void setPosition(const glm::vec3& position) { m_position = position; updateView(); }
 
+        bool isUsing() const { return m_isMouseMove; }
+
     private:
         void move(const glm::vec3& dir, float amount);
         void updateView();

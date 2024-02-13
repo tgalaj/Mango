@@ -186,7 +186,7 @@ namespace mango
             if (DEBUG_RENDERING)
             {
                 renderDebugLightsBoundingBoxes(m_activeScene);
-                //renderDebug();
+                renderDebug();
             }
         }
     }
@@ -493,7 +493,7 @@ namespace mango
         glEnable(GL_DEPTH_TEST);
         glDepthMask(GL_TRUE);
 
-        if (DEBUG_RENDERING)
+        if (DEBUG_RENDERING && m_mode == RenderingMode::EDITOR)
         {
             renderDebugLightsBoundingBoxes(scene);
         }

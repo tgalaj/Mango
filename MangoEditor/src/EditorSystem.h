@@ -39,13 +39,14 @@ namespace mango
         void saveSceneAs();
 
         void onScenePlay();
-        void onSceneStep();
+        void onSceneSimulate();
         void onSceneStop();
         void onScenePause();
 
         void onGuiViewport();
         void onGuiToolbar();
         void onGuiStats();
+        void onGuiRenderingSettings();
 
         void beginDockingToolbar(const char* name, ImGuiAxis toolbarAxis, const ImVec2& iconSize);
         void endDockingToolbar();
@@ -60,6 +61,7 @@ namespace mango
         std::shared_ptr<Scene> m_editorScene;
 
         std::shared_ptr<Texture> m_playIcon;
+        std::shared_ptr<Texture> m_simulateIcon;
         std::shared_ptr<Texture> m_stopIcon;
         std::shared_ptr<Texture> m_pauseIcon;
         std::shared_ptr<Texture> m_stepIcon;
@@ -71,7 +73,7 @@ namespace mango
 
         enum class SceneState
         {
-            Edit = 0, Play = 1, Step = 2
+            Edit = 0, Play = 1, Simulate = 2
         };
         SceneState m_sceneState = SceneState::Edit;
 
