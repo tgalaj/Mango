@@ -89,13 +89,13 @@ namespace mango
 
     void SceneHierarchyPanel::drawEntityNode(Entity entity)
     {
-        auto& tag = entity.getComponent<TagComponent>().tag;
+        auto& name = entity.getComponent<TagComponent>().name;
 
         ImGuiTreeNodeFlags flags  = ((m_selectedEntity == entity) ? ImGuiTreeNodeFlags_Selected : 0);
                            flags |= ImGuiTreeNodeFlags_OpenOnArrow;
                            flags |= ImGuiTreeNodeFlags_OpenOnDoubleClick;
                            flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
-        bool opened     = ImGui::TreeNodeEx((void*)(uint64_t)(entity.getUUID()), flags, tag.c_str());
+        bool opened     = ImGui::TreeNodeEx((void*)(uint64_t)(entity.getUUID()), flags, name.c_str());
         bool isSelected = flags & ImGuiTreeNodeFlags_Selected;
 
         // Mark the entity as selected:
@@ -128,7 +128,7 @@ namespace mango
             ImGuiTreeNodeFlags flags  = ImGuiTreeNodeFlags_OpenOnArrow;
                                flags |= ImGuiTreeNodeFlags_OpenOnDoubleClick;
                                flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
-            bool opened = ImGui::TreeNodeEx((void*)34564574566, flags, tag.c_str());
+            bool opened = ImGui::TreeNodeEx((void*)34564574566, flags, name.c_str());
 
             if (opened)
             {
@@ -298,15 +298,15 @@ namespace mango
     {
         if (entity.hasComponent<TagComponent>())
         {
-            auto& tag = entity.getComponent<TagComponent>().tag;
+            auto& name = entity.getComponent<TagComponent>().name;
 
             char buffer[256];
             memset(buffer, 0, sizeof(buffer));
-            strcpy_s(buffer, sizeof(buffer), tag.c_str());
+            strcpy_s(buffer, sizeof(buffer), name.c_str());
 
-            if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
+            if (ImGui::InputText("##Name", buffer, sizeof(buffer)))
             {
-                tag = std::string(buffer);
+                name = std::string(buffer);
             }
         }
 

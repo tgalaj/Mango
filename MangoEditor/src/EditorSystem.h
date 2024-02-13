@@ -50,11 +50,14 @@ namespace mango
         void beginDockingToolbar(const char* name, ImGuiAxis toolbarAxis, const ImVec2& iconSize);
         void endDockingToolbar();
 
+        void onDuplicateEntity();
+
         void moveLights(float dt);
 
     private:
         std::filesystem::path  m_editorScenePath;
-        std::shared_ptr<Scene> m_mainScene;
+        std::shared_ptr<Scene> m_activeScene;
+        std::shared_ptr<Scene> m_editorScene;
 
         std::shared_ptr<Texture> m_playIcon;
         std::shared_ptr<Texture> m_stopIcon;

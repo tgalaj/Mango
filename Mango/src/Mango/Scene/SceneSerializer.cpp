@@ -126,8 +126,8 @@ namespace mango
             out << YAML::Key << "TagComponent";
             out << YAML::BeginMap;
             {
-                auto& tag = entity.getComponent<TagComponent>().tag;
-                out << YAML::Key << "Tag" << YAML::Value << tag;
+                auto& name = entity.getComponent<TagComponent>().name;
+                out << YAML::Key << "Name" << YAML::Value << name;
             }
             out << YAML::EndMap;
         }
@@ -472,7 +472,7 @@ namespace mango
                 auto tagComponent = entity["TagComponent"];
                 if (tagComponent)
                 {
-                    entityName = tagComponent["Tag"].as<std::string>();
+                    entityName = tagComponent["Name"].as<std::string>();
                 }
                 MG_CORE_TRACE("\tDeserializing entity with ID = {}, name = {}", uuid, entityName);
 

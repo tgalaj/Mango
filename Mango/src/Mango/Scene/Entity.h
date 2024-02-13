@@ -19,10 +19,12 @@ namespace mango
         template <typename T, typename... Args>
         T& addOrReplaceComponent(Args&&... args)
         {
-            Services::eventBus()->emit(ComponentRemovedEvent<T>(getComponent<T>(), *this));
-            
+            if (hasComponent<T>())
+            {
+                Services::eventBus()->emit(ComponentRemovedEvent<T>(getComponent<T>(), *this));
+            }
             T& component = m_scene->m_registry.emplace_or_replace<T>(m_entityHandle, std::forward<Args>(args)...);
-            
+
             Services::eventBus()->emit(ComponentAddedEvent<T>(component, *this));
 
             return component;
@@ -61,8 +63,6 @@ namespace mango
             m_scene->m_registry.remove<T>(m_entityHandle);
         }
 
-        UUID getUUID();
-
         operator bool()         const { return m_entityHandle != entt::null; }
         operator entt::entity() const { return m_entityHandle; }
         operator uint32_t()     const { return uint32_t(m_entityHandle); }
@@ -92,6 +92,8 @@ namespace mango
         void setScale(float x, float y, float z);
         void setScale(float uniformScale);
 
+        UUID getUUID();
+        const std::string& getName();
         glm::vec3 getPosition();
         glm::vec3 getScale();
         /** Returns rotation in radians. */

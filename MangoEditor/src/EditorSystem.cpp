@@ -61,10 +61,11 @@ namespace mango
         m_stepIcon = std::make_shared<Texture>();
         m_stepIcon->createTexture2d("icons/step.png", false, 8);
 
-        m_mainScene = Services::sceneManager()->createScene("Editor Scene");
-        Services::sceneManager()->setActiveScene(m_mainScene);
+        m_editorScene = Services::sceneManager()->createScene("Editor Scene");
+        m_activeScene = m_editorScene;
+        Services::sceneManager()->setActiveScene(m_activeScene);
 
-        m_sceneHierarchyPanel.setScene(m_mainScene);
+        m_sceneHierarchyPanel.setScene(m_activeScene);
 
         m_editorCamera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
         m_editorCamera.setPosition(glm::vec3(0.0f, 4.0f, 30.0f));
@@ -85,11 +86,11 @@ namespace mango
             }
         });
 
-        auto camera1 = m_mainScene->createEntity("MainCamera");
+        auto camera1 = m_activeScene->createEntity("MainCamera");
         camera1.addComponent<CameraComponent>().camera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
         camera1.setPosition(0, 4, 30);
 
-        auto camera2 = m_mainScene->createEntity("MainCamera2");
+        auto camera2 = m_activeScene->createEntity("MainCamera2");
         auto& cc2 = camera2.addComponent<CameraComponent>();
         cc2.camera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
         cc2.isPrimary = false;
@@ -135,28 +136,28 @@ namespace mango
         auto grassTex            = AssetManager::createTexture2D("textures/grass.png");
         auto openglLogo          = AssetManager::createTexture2D("textures/opengl.png");
 
-        auto cyborg = m_mainScene->createEntity("Cyborg");
+        auto cyborg = m_activeScene->createEntity("Cyborg");
         cyborg.addComponent<ModelRendererComponent>(cyborgModel);
         cyborg.setPosition(0.0f, 0.0f, 0.0f);
         cyborg.setScale(1.0f);
 
-        auto zen3c = m_mainScene->createEntity("Zen3c");
+        auto zen3c = m_activeScene->createEntity("Zen3c");
         zen3c.addComponent<ModelRendererComponent>(zen3cModel);
         zen3c.setPosition(-3.0f, -2.3f, 0.0f);
         zen3c.setScale(0.018f);
 
-        auto damagedHelmet = m_mainScene->createEntity("Damaged Helmet");
+        auto damagedHelmet = m_activeScene->createEntity("Damaged Helmet");
         damagedHelmet.addComponent<ModelRendererComponent>(damagedHelmetModel);
         damagedHelmet.setPosition(3.0f, 2.5f, 0.0f);
         damagedHelmet.setScale(1.0f);
 
-        auto sponza = m_mainScene->createEntity("Sponza");
+        auto sponza = m_activeScene->createEntity("Sponza");
         sponza.addComponent<ModelRendererComponent>(sponzaModel);
         sponza.setPosition(-1.5f, 0.0f, 10.0f);
         sponza.setRotation(0.0f, -90.0f, 0.0f);
         sponza.setScale(6.0f);
 
-        auto wall = m_mainScene->createEntity("Brickwall");
+        auto wall = m_activeScene->createEntity("Brickwall");
         wall.addComponent<ModelRendererComponent>(wallModel);
         wall.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, brickwallTex);
         wall.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::NORMAL, brickwallNormalTex);
@@ -164,7 +165,7 @@ namespace mango
         wall.setRotation(90.0f, 0.0f, 0.0f);
         wall.setPosition(0, 2.0, -9);
 
-        auto wall2 = m_mainScene->createEntity("Parallax brickwall");
+        auto wall2 = m_activeScene->createEntity("Parallax brickwall");
         wall2.addComponent<ModelRendererComponent>(wallModel);
         wall2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
         wall2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::NORMAL, bricks2Normal);
@@ -172,7 +173,7 @@ namespace mango
         wall2.setRotation(90.0f, 0.0f, 0.0f);
         wall2.setPosition(-5, 2.0, -9);
 
-        auto grass = m_mainScene->createEntity("Grass");
+        auto grass = m_activeScene->createEntity("Grass");
         grass.addComponent<ModelRendererComponent>(wallModel);
         grass.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, grassTex);
         grass.getComponent<ModelRendererComponent>().model.getMesh().material.addFloat("alpha_cutoff", 0.1f);
@@ -180,34 +181,34 @@ namespace mango
         grass.setPosition(-5, 1.2, 9);
         grass.setScale(0.5);
 
-        auto window1 = m_mainScene->createEntity("Window1");
+        auto window1 = m_activeScene->createEntity("Window1");
         window1.addComponent<ModelRendererComponent>(wallModel, ModelRendererComponent::RenderQueue::RQ_ALPHA);
         window1.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, windowTex);
         window1.setRotation(90.0f, 0.0f, 0.0f);
         window1.setPosition(0, 1.2, 9);
         window1.setScale(0.51);
 
-        auto window3 = m_mainScene->createEntity("Window3");
+        auto window3 = m_activeScene->createEntity("Window3");
         window3.addComponent<ModelRendererComponent>(wallModel, ModelRendererComponent::RenderQueue::RQ_ALPHA);
         window3.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, windowTex);
         window3.setRotation(90.0f, 0.0f, 0.0f);
         window3.setPosition(3, 1.2, 13);
         window3.setScale(0.5);
 
-        auto window2 = m_mainScene->createEntity("Window2");
+        auto window2 = m_activeScene->createEntity("Window2");
         window2.addComponent<ModelRendererComponent>(wallModel, ModelRendererComponent::RenderQueue::RQ_ALPHA);
         window2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, windowTex);
         window2.setRotation(90.0f, 0.0f, 0.0f);
         window2.setPosition(5, 1.2, 9);
         window2.setScale(0.5);
 
-        auto plane1 = m_mainScene->createEntity("Plane1");
+        auto plane1 = m_activeScene->createEntity("Plane1");
         plane1.addComponent<ModelRendererComponent>(wallModel);
         plane1.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
         plane1.setRotation(90.0f, 0.0f, 0.0f);
         plane1.setPosition(5, 3.0, -14);
 
-        auto plane2 = m_mainScene->createEntity("Plane2");
+        auto plane2 = m_activeScene->createEntity("Plane2");
         plane2.addComponent<ModelRendererComponent>(wallModel);
         plane2.getComponent<ModelRendererComponent>().model.getMesh().material.addTexture(Material::TextureType::DIFFUSE, bricks2);
         plane2.setRotation(0.5f, 0.0f, 0.0f);
@@ -215,7 +216,7 @@ namespace mango
         plane2.addComponent<BoxCollider3DComponent>(glm::vec3(2.5f, 0.1f, 2.5f), glm::vec3(0.0f, -0.1f, 0.0f));
         plane2.addComponent<RigidBody3DComponent>();
 
-        auto sphere1 = m_mainScene->createEntity("Bouncing Sphere");
+        auto sphere1 = m_activeScene->createEntity("Bouncing Sphere");
         sphere1.addComponent<ModelRendererComponent>(sphereModel, ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC);
         sphere1.setPosition(5, 20, -11.5);
         sphere1.setScale(0.5f);
@@ -228,7 +229,7 @@ namespace mango
               rb3dSphere1.linearDamping        = 0.05f;
               rb3dSphere1.restitution          = 0.7f;
     
-        auto sphere2 = m_mainScene->createEntity("Static sphere");
+        auto sphere2 = m_activeScene->createEntity("Static sphere");
         sphere2.addComponent<ModelRendererComponent>(sphereModel);
         sphere2.setPosition(5, 3, -12.5);
         sphere2.setScale(0.5f);
@@ -242,7 +243,7 @@ namespace mango
 
             for(int j = 0; j < numObjects; ++j)
             {
-                auto object = m_mainScene->createEntity("Sphere" + std::to_string(int(i * numObjects + j + 1)));
+                auto object = m_activeScene->createEntity("Sphere" + std::to_string(int(i * numObjects + j + 1)));
                 object.addComponent<ModelRendererComponent>(sphereModel);
                 object.setScale(0.75f);
             
@@ -258,7 +259,7 @@ namespace mango
         }
 
         /* Lights */
-        auto dirLight = m_mainScene->createEntity("DirectionalLight");
+        auto dirLight = m_activeScene->createEntity("DirectionalLight");
         dirLight.addComponent<DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f, true);
         dirLight.setRotation(-45.0f, 180.0f, 0.0f);
 
@@ -281,7 +282,7 @@ namespace mango
 
         for (int i = 0; i < 4; ++i)
         {
-            auto pointLight = m_mainScene->createEntity("PointLight" + std::to_string(i));
+            auto pointLight = m_activeScene->createEntity("PointLight" + std::to_string(i));
             pointLight.addComponent<PointLightComponent>(true);
             pointLight.getComponent<PointLightComponent>().setAttenuation(3.0f, 4.0f, 10.0f);
             pointLight.getComponent<PointLightComponent>().color = colors[i];
@@ -292,7 +293,7 @@ namespace mango
             //    pointLight.getComponent<TransformComponent>()->addChild(nanobot.getComponent<TransformComponent>());
         }
 
-        auto spotLight = m_mainScene->createEntity("SpotLight");
+        auto spotLight = m_activeScene->createEntity("SpotLight");
         spotLight.addComponent<SpotLightComponent>();
         spotLight.getComponent<SpotLightComponent>().color = glm::vec3(255, 206, 250) / 255.0f;
         spotLight.getComponent<SpotLightComponent>().intensity = 1000.0f;
@@ -342,6 +343,15 @@ namespace mango
                     }
                 
                     saveScene();
+                    return;
+                }
+            }
+
+            if (Input::getKeyDown(KeyCode::D))
+            {
+                if (ctrl)
+                {
+                    onDuplicateEntity();
                     return;
                 }
             }
@@ -509,9 +519,9 @@ namespace mango
 
     void EditorSystem::newScene()
     {
-        m_mainScene = Services::sceneManager()->createScene("New Scene");
-        Services::sceneManager()->setActiveScene(m_mainScene);
-        m_sceneHierarchyPanel.setScene(m_mainScene);
+        m_activeScene = Services::sceneManager()->createScene("New Scene");
+        Services::sceneManager()->setActiveScene(m_activeScene);
+        m_sceneHierarchyPanel.setScene(m_activeScene);
 
         m_editorScenePath = std::filesystem::path();
     }
@@ -528,6 +538,22 @@ namespace mango
 
     void EditorSystem::openScene(const std::filesystem::path& path)
     {
+        if (SceneState::Edit != m_sceneState)
+        {
+            auto choice = pfd::message("Warning!", 
+                                       "Are you sure you want to open a new scene while the current scene is playing?", 
+                                       pfd::choice::ok_cancel, 
+                                       pfd::icon::warning);
+            switch (choice.result())
+            {
+                case pfd::button::ok:
+                    onSceneStop();
+                    break;
+                case pfd::button::cancel:
+                    return;
+            }
+        }
+
         if (path.extension().string() != MG_SCENE_EXTENSION)
         {
             MG_WARN("Could not load {0} - not a scene file", path.filename().string());
@@ -535,16 +561,18 @@ namespace mango
         }
 
         m_editorScenePath = path;
-        m_mainScene       = SceneSerializer::deserialize(m_editorScenePath);
-        Services::sceneManager()->setActiveScene(m_mainScene);
-        m_sceneHierarchyPanel.setScene(m_mainScene);
+        m_editorScene     = SceneSerializer::deserialize(m_editorScenePath);
+        m_activeScene     = m_editorScene;
+
+        Services::sceneManager()->setActiveScene(m_activeScene);
+        m_sceneHierarchyPanel.setScene(m_activeScene);
     }
 
     void EditorSystem::saveScene()
     {
         if (!m_editorScenePath.empty())
         {
-            SceneSerializer::serialize(m_mainScene, m_editorScenePath);
+            SceneSerializer::serialize(m_activeScene, m_editorScenePath);
         }
         else
         {
@@ -564,13 +592,17 @@ namespace mango
                 m_editorScenePath += ".mango";
             }
 
-            SceneSerializer::serialize(m_mainScene, m_editorScenePath);
+            SceneSerializer::serialize(m_activeScene, m_editorScenePath);
         }
     }
 
     void EditorSystem::onScenePlay()
     {
         m_sceneState = SceneState::Play;
+
+        m_activeScene = Scene::copy(m_editorScene);
+        m_sceneHierarchyPanel.setScene(m_activeScene);
+        Services::sceneManager()->setActiveScene(m_activeScene);
     }
 
     void EditorSystem::onSceneStep()
@@ -581,6 +613,9 @@ namespace mango
     void EditorSystem::onSceneStop()
     {
         m_sceneState = SceneState::Edit;
+        m_activeScene = m_editorScene;
+        m_sceneHierarchyPanel.setScene(m_activeScene);
+        Services::sceneManager()->setActiveScene(m_activeScene);
     }
 
     void EditorSystem::onScenePause()
@@ -706,7 +741,7 @@ namespace mango
                     if (mousePos.x >= 0 && mousePos.y >= 0 && mousePos.x < (int)viewportSize.x && mousePos.y < (int)viewportSize.y)
                     {
                         int    selectedID = Services::renderer()->getSelectedEntityID(mousePos.x, mousePos.y);
-                        Entity selectedEntity = selectedID == -1 ? Entity() : Entity((entt::entity)selectedID, m_mainScene.get());
+                        Entity selectedEntity = selectedID == -1 ? Entity() : Entity((entt::entity)selectedID, m_activeScene.get());
 
                         m_sceneHierarchyPanel.setSelectedEntity(selectedEntity);
                     }
@@ -824,13 +859,27 @@ namespace mango
         ImGui::End();
     }
 
+    void EditorSystem::onDuplicateEntity()
+    {
+        if (SceneState::Edit != m_sceneState)
+        {
+            return;
+        }
+
+        Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
+        if (selectedEntity)
+        {
+            m_editorScene->duplicateEntity(selectedEntity);
+        }
+    }
+
     void EditorSystem::moveLights(float dt)
     {    
         static float acc = 0.0f;
         acc += dt / 6.0f;
     
         {
-            auto view = m_mainScene->getEntitiesWithComponent<TransformComponent, PointLightComponent>();
+            auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, PointLightComponent>();
             for (auto entity : view)
             {
                 auto [transform, pointLight] = view.get(entity);
@@ -850,7 +899,7 @@ namespace mango
         }
     
         {
-            auto view = m_mainScene->getEntitiesWithComponent<TransformComponent, SpotLightComponent>();
+            auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, SpotLightComponent>();
             for (auto entity : view)
             {
                 auto [transform, spotLight] = view.get(entity);

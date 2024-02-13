@@ -34,10 +34,10 @@ namespace mango
     struct TagComponent
     {
         TagComponent() = default;
-        TagComponent(const std::string& tag)
-            : tag(tag) {}
+        TagComponent(const std::string& name)
+            : name(name) {}
 
-        std::string tag;
+        std::string name;
     };
 
     struct ShadowInfo
@@ -59,15 +59,15 @@ namespace mango
         bool      m_castsShadows;
     };
 
-    struct BaseLightComponent
+    struct BaseLight
     {
     public:
-        BaseLightComponent(const glm::vec3& color, float intensity, bool castsShadows = false)
+        BaseLight(const glm::vec3& color, float intensity, bool castsShadows = false)
             : color         (color),
               intensity     (intensity),
               m_shadowInfo  (ShadowInfo(glm::mat4(1.0f), castsShadows)) {}
 
-        virtual ~BaseLightComponent() {}
+        virtual ~BaseLight() {}
 
         ShadowInfo getShadowInfo() const { return m_shadowInfo; }
 
@@ -84,18 +84,18 @@ namespace mango
         ShadowInfo m_shadowInfo;
     };
 
-    struct DirectionalLightComponent : public BaseLightComponent
+    struct DirectionalLightComponent : public BaseLight
     {
     public:
         DirectionalLightComponent(const glm::vec3 & color, float intensity, float size = 20.0f, bool castsShadows = false)
-            : BaseLightComponent(color, intensity),
+            : BaseLight(color, intensity),
               m_size            (size)
         {
             m_shadowInfo = ShadowInfo(glm::ortho(-m_size, m_size, -m_size, m_size, -m_size, m_size), castsShadows);
         }
 
         explicit DirectionalLightComponent()
-            : BaseLightComponent(glm::vec3(1.0f), 1.0f)
+            : BaseLight(glm::vec3(1.0f), 1.0f)
         {}
 
         void setSize(float size)
@@ -110,11 +110,11 @@ namespace mango
         float m_size = 20.0f;
     };
 
-    struct PointLightComponent : public BaseLightComponent
+    struct PointLightComponent : public BaseLight
     {
     public:
         PointLightComponent(bool castsShadows = false)
-            : BaseLightComponent(glm::vec3(1.0f), 1.0f),
+            : BaseLight(glm::vec3(1.0f), 1.0f),
               m_attenuation     (0.0, 0.0f, 1.0f)
         {
             calculateRange();
@@ -125,7 +125,7 @@ namespace mango
                                   float         intensity, 
                             const Attenuation & attenuation,
                                   bool          castsShadows = false)
-            : BaseLightComponent(color, intensity, castsShadows),
+            : BaseLight(color, intensity, castsShadows),
               m_attenuation     (attenuation)
         {
             calculateRange();

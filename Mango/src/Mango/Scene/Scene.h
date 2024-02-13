@@ -12,14 +12,17 @@ namespace mango
     class Scene
     {
     public:
-        Scene(const std::string& name);
+        Scene(const std::string& name = "New Scene");
         virtual ~Scene() = default;
+
+        static std::shared_ptr<Scene> copy(std::shared_ptr<Scene>& other);
 
         std::string& getName() { return m_name; };
         
         Entity createEntity(const std::string& name = "Entity");
         Entity createEntityWithUUID(UUID uuid, const std::string& name = "Entity");
 
+        void duplicateEntity(Entity entity);
         void destroyEntity(Entity entity);
 
         Entity getPrimaryCamera();

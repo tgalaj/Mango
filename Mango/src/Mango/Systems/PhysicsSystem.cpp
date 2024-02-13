@@ -160,7 +160,7 @@ namespace mango
             {
                 MG_CORE_WARN("Physics System: entity named [{}] does not have a collision shape assigned."
                              "Did you forget to add a collider component?", 
-                             entity.getComponent<TagComponent>().tag);
+                             entity.getComponent<TagComponent>().name);
                 continue;
             }
 

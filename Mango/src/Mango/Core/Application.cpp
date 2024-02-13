@@ -27,7 +27,8 @@ namespace mango
         CVarFloat CVarCameraRotationSpeed("camera.rotationSpeed", "rotation speed of the camera", 0.2f);
         CVarFloat CVarCameraMoveSpeed    ("camera.moveSpeed",     "movement speed of the camera", 10.0f);
 
-        // Parse command line args.
+        // Parse command line args. 
+        // TODO: replace with CLI11
         cxxopts::Options options(appSettings.windowTitle, "");
 
         options.add_options()

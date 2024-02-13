@@ -8,6 +8,11 @@ namespace mango
         return getComponent<IDComponent>().id;
     }
 
+    const std::string& Entity::getName()
+    {
+        return getComponent<TagComponent>().name;
+    }
+
     void Entity::setPosition(float x, float y, float z)
     {
         getComponent<TransformComponent>().setPosition(x, y, z);

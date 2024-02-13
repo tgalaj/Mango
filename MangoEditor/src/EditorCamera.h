@@ -9,7 +9,7 @@ namespace mango
     class EditorCamera : public Camera
     {
     public:
-        EditorCamera() = default;
+        EditorCamera();
         virtual ~EditorCamera() = default;
 
         void onUpdate(float dt);
@@ -27,10 +27,11 @@ namespace mango
         float gamePadRotationSensitivity = 0.1f;
 
         glm::vec3 getPosition() const { return m_position; }
-        void setPosition(const glm::vec3& position) { m_position = position; }
+        void setPosition(const glm::vec3& position) { m_position = position; updateView(); }
 
     private:
         void move(const glm::vec3& dir, float amount);
+        void updateView();
 
     private:
         glm::quat m_orientation          { 1.0f, 0.0f, 0.0f, 0.0f }; // identity quaternion
