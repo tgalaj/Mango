@@ -442,11 +442,6 @@ namespace mango
         Services::application()->getPhysicsSystem()->stop();
     }
 
-    void EditorSystem::onScenePause()
-    {
-        
-    }
-
     void EditorSystem::onGuiViewport()
     {
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
@@ -597,7 +592,7 @@ namespace mango
             ImGui::PushStyleColor(ImGuiCol_ButtonActive,  ImVec4(buttonActive.x,  buttonActive.y,  buttonActive.z,  0.5f));
 
             ImGui::SetCursorPosX((toolbarWidth - (float)middleIconsCount * (iconSize.x + itemSpacing.x)) * 0.5f);
-            
+
             auto playIcon = (SceneState::Play == m_sceneState) ? m_playPressedIcon : m_playIcon;
             if (ImGui::ImageButton("playButton", (ImTextureID)playIcon->getRendererID(), iconSize))
             {
@@ -625,13 +620,22 @@ namespace mango
                 }
             }
 
-            ImGui::SameLine();
-            ImGui::ImageButton("pauseButton", (ImTextureID)m_pauseIcon->getRendererID(), iconSize);
+            bool isPaused  = Services::application()->isPaused();
+            auto pauseIcon = isPaused ? m_pausePressedIcon : m_pauseIcon;
 
-            ImGui::BeginDisabled();
+            ImGui::SameLine();
+            if (ImGui::ImageButton("pauseButton", (ImTextureID)pauseIcon->getRendererID(), iconSize))
+            {
+                Services::application()->setPaused(!isPaused);
+            }
+
+            ImGui::BeginDisabled(!isPaused || SceneState::Edit == m_sceneState);
             {
                 ImGui::SameLine();
-                ImGui::ImageButton("stepButton", (ImTextureID)m_stepIcon->getRendererID(), iconSize);
+                if (ImGui::ImageButton("stepButton", (ImTextureID)m_stepIcon->getRendererID(), iconSize))
+                {
+                    Services::application()->step();
+                }
             }
             ImGui::EndDisabled();
 
@@ -727,39 +731,42 @@ namespace mango
 
     void EditorSystem::moveLights(float dt)
     {    
-        static float acc = 0.0f;
-        acc += dt / 6.0f;
-    
+        if (!Services::application()->isPaused())
         {
-            auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, PointLightComponent>();
-            for (auto entity : view)
+            static float acc = 0.0f;
+            acc += dt / 6.0f;
+    
             {
-                auto [transform, pointLight] = view.get(entity);
+                auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, PointLightComponent>();
+                for (auto entity : view)
+                {
+                    auto [transform, pointLight] = view.get(entity);
 
-                glm::vec3 delta = transform.getPosition() - glm::vec3(0.0f);
+                    glm::vec3 delta = transform.getPosition() - glm::vec3(0.0f);
 
-                float r = 8.0f * glm::abs(glm::sin(acc));
-                float currentAngle = atan2(delta.z, delta.x);
+                    float r = 8.0f * glm::abs(glm::sin(acc));
+                    float currentAngle = atan2(delta.z, delta.x);
 
-                auto position = transform.getPosition();
-                position.x = r * glm::cos(currentAngle + dt);
-                position.y = r * (glm::cos(2.0f * (currentAngle + dt)) * 0.5f + 0.5f) * 0.5f;
-                position.z = r * glm::sin(currentAngle + dt);
+                    auto position = transform.getPosition();
+                    position.x = r * glm::cos(currentAngle + dt);
+                    position.y = r * (glm::cos(2.0f * (currentAngle + dt)) * 0.5f + 0.5f) * 0.5f;
+                    position.z = r * glm::sin(currentAngle + dt);
 
-                transform.setPosition(position);
+                    transform.setPosition(position);
+                }
             }
-        }
     
-        {
-            auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, SpotLightComponent>();
-            for (auto entity : view)
             {
-                auto [transform, spotLight] = view.get(entity);
+                auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, SpotLightComponent>();
+                for (auto entity : view)
+                {
+                    auto [transform, spotLight] = view.get(entity);
 
-                glm::quat previousOrientation = transform.getOrientation();
+                    glm::quat previousOrientation = transform.getOrientation();
 
-                transform.setRotation(0.0f, 16.667f * dt, 0.0f);
-                transform.setRotation(previousOrientation * transform.getOrientation());
+                    transform.setRotation(0.0f, 16.667f * dt, 0.0f);
+                    transform.setRotation(previousOrientation * transform.getOrientation());
+                }
             }
         }
     }

@@ -148,7 +148,7 @@ namespace mango
     void Application::addSystem(System* system)
     {
         MG_PROFILE_ZONE_SCOPED;
-        m_systems.add(system);
+        m_externalSystems.add(system);
         system->onInit();
     }
 
@@ -175,6 +175,11 @@ namespace mango
         }
 
         m_isRunning = false;
+    }
+
+    void Application::step(int frames /*= 1*/)
+    {
+        m_stepFrames = frames;
     }
 
     void Application::run()
@@ -220,14 +225,23 @@ namespace mango
                     stop();
                 }
 
-                m_systems.updateAll(m_frameTime);
+                if (!m_isPaused || m_stepFrames > 0)
+                {
+                    m_systems.updateAll(m_frameTime);
+                }
+
+                m_externalSystems.updateAll(m_frameTime);
                 Input::update();
 
                 if (physicsFreq >= physicsDeltaTime)
                 {   
                     MG_PROFILE_ZONE_NAMED_N(zone2, "Game Loop Physics Update", true);
-                    m_physicsSystem->onUpdate(physicsDeltaTime);
-                    physicsFreq = 0.0f;
+                    if (!m_isPaused || m_stepFrames-- > 0)
+                    {
+                        m_physicsSystem->onUpdate(physicsDeltaTime);
+                        MG_CORE_TRACE("PhysicsDeltaTime {}", physicsDeltaTime);
+                        physicsFreq = 0.0f;
+                    }
                 }
 
                 if (frameCounter >= 1.0)
@@ -246,6 +260,10 @@ namespace mango
                 m_imGuiSystem->being();
                 {
                     for (auto& system : m_systems)
+                    {
+                        system->onGui();
+                    }
+                    for (auto& system : m_externalSystems)
                     {
                         system->onGui();
                     }

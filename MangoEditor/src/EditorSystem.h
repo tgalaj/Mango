@@ -41,7 +41,6 @@ namespace mango
         void onScenePlay();
         void onSceneSimulate();
         void onSceneStop();
-        void onScenePause();
 
         void onGuiViewport();
         void onGuiToolbar();
