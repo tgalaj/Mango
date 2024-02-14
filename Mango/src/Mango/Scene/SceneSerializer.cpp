@@ -313,46 +313,46 @@ namespace mango
                         out << YAML::Key << "Stacks"      << YAML::Value << pp.stacks;
                     }
                     out << YAML::EndMap;
-                }
 
-                out << YAML::Key << "Material" << YAML::Value;
-                out << YAML::BeginMap;
-                {
-                    auto material = mrc.model.getMesh().material;
-
-                    out << YAML::Key << "Vec3Map" << YAML::Value;
+                    out << YAML::Key << "Material" << YAML::Value;
                     out << YAML::BeginMap;
                     {
-                        for (auto& [propertyName, vec3Value] : material.getVec3Map())
-                        {
-                            out << YAML::Key << propertyName << YAML::Value << vec3Value;
-                        }
-                    }
-                    out << YAML::EndMap;
+                        auto material = mrc.model.getMesh().material;
 
-                    out << YAML::Key << "FloatMap" << YAML::Value;
-                    out << YAML::BeginMap;
-                    {
-                        for (auto& [propertyName, floatValue] : material.getFloatMap())
+                        out << YAML::Key << "Vec3Map" << YAML::Value;
+                        out << YAML::BeginMap;
                         {
-                            out << YAML::Key << propertyName << YAML::Value << floatValue;
+                            for (auto& [propertyName, vec3Value] : material.getVec3Map())
+                            {
+                                out << YAML::Key << propertyName << YAML::Value << vec3Value;
+                            }
                         }
-                    }
-                    out << YAML::EndMap;
+                        out << YAML::EndMap;
 
-                    out << YAML::Key << "Textures" << YAML::Value;
-                    out << YAML::BeginMap;
-                    {
-                        for (auto& [textureType, texture] : material.getTexturesMap())
+                        out << YAML::Key << "FloatMap" << YAML::Value;
+                        out << YAML::BeginMap;
                         {
-                            out << YAML::Key << materialTextureTypeToString(textureType) << YAML::Value << texture->getFilename();
+                            for (auto& [propertyName, floatValue] : material.getFloatMap())
+                            {
+                                out << YAML::Key << propertyName << YAML::Value << floatValue;
+                            }
                         }
+                        out << YAML::EndMap;
+
+                        out << YAML::Key << "Textures" << YAML::Value;
+                        out << YAML::BeginMap;
+                        {
+                            for (auto& [textureType, texture] : material.getTexturesMap())
+                            {
+                                out << YAML::Key << materialTextureTypeToString(textureType) << YAML::Value << texture->getFilename();
+                            }
+                        }
+                        out << YAML::EndMap;
                     }
                     out << YAML::EndMap;
                 }
                 out << YAML::EndMap;
             }
-            out << YAML::EndMap;
         }
 
         if (entity.hasComponent<RigidBody3DComponent>())
@@ -629,45 +629,45 @@ namespace mango
                         model.setPrimitiveProperties(modelType, pp);
 
                         deserializedEntity.addComponent<ModelRendererComponent>(model, renderQueue);
-                    }
 
-                    auto material = modelRendererComponent["Material"];
-                    if (material)
-                    {
-                        auto& mrc          = deserializedEntity.getComponent<ModelRendererComponent>();
-                        auto& meshMaterial = mrc.model.getMesh().material;
-
-                        auto vec3Map = material["Vec3Map"];
-                        if (vec3Map)
-                        {   
-                            for (auto it = vec3Map.begin(); it != vec3Map.end(); ++it)
-                            {
-                                meshMaterial.addVector3(it->first.as<std::string>(), it->second.as<glm::vec3>());
-                            }
-                        }
-
-                        auto floatMap = material["FloatMap"];
-                        if (floatMap)
+                        auto material = modelRendererComponent["Material"];
+                        if (material)
                         {
-                            for (auto it = floatMap.begin(); it != floatMap.end(); ++it)
-                            {
-                                meshMaterial.addFloat(it->first.as<std::string>(), it->second.as<float>());
-                            }
-                        }
+                            auto& mrc          = deserializedEntity.getComponent<ModelRendererComponent>();
+                            auto& meshMaterial = mrc.model.getMesh().material;
 
-                        auto texturesMap = material["Textures"];
-                        if (texturesMap)
-                        {
-                            for (auto it = texturesMap.begin(); it != texturesMap.end(); ++it)
-                            {
-                                auto textureFilename = it->second.as<std::string>();
-
-                                if (!textureFilename.empty())
+                            auto vec3Map = material["Vec3Map"];
+                            if (vec3Map)
+                            {   
+                                for (auto it = vec3Map.begin(); it != vec3Map.end(); ++it)
                                 {
-                                    auto textureType = stringToMaterialTextureType(it->first.as<std::string>());
-                                    auto texture = AssetManager::getTexture2D(textureFilename);
+                                    meshMaterial.addVector3(it->first.as<std::string>(), it->second.as<glm::vec3>());
+                                }
+                            }
 
-                                    meshMaterial.addTexture(textureType, texture);
+                            auto floatMap = material["FloatMap"];
+                            if (floatMap)
+                            {
+                                for (auto it = floatMap.begin(); it != floatMap.end(); ++it)
+                                {
+                                    meshMaterial.addFloat(it->first.as<std::string>(), it->second.as<float>());
+                                }
+                            }
+
+                            auto texturesMap = material["Textures"];
+                            if (texturesMap)
+                            {
+                                for (auto it = texturesMap.begin(); it != texturesMap.end(); ++it)
+                                {
+                                    auto textureFilename = it->second.as<std::string>();
+
+                                    if (!textureFilename.empty())
+                                    {
+                                        auto textureType = stringToMaterialTextureType(it->first.as<std::string>());
+                                        auto texture = AssetManager::createTexture2D(textureFilename, (textureType == Material::TextureType::DIFFUSE) ? true : false);
+
+                                        meshMaterial.addTexture(textureType, texture);
+                                    }
                                 }
                             }
                         }

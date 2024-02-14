@@ -14,8 +14,7 @@
 namespace mango
 {
     SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene>& scene)
-        : m_scene(scene),
-          m_selectedEntity{}
+        : m_scene(scene)
     {
     }
 
@@ -318,20 +317,14 @@ namespace mango
 
         if (ImGui::BeginPopup("AddComponent"))
         {
-            bool shouldClosePopup = false;
-
-            // TODO: add missing components
-            shouldClosePopup |= !displayAddComponentEntry<CameraComponent>("Camera");
-            shouldClosePopup |= !displayAddComponentEntry<DirectionalLightComponent>("Directional Light");
-            shouldClosePopup |= !displayAddComponentEntry<PointLightComponent>("Point Light");
-            shouldClosePopup |= !displayAddComponentEntry<SpotLightComponent>("Spot Light");
-            shouldClosePopup |= !displayAddComponentEntry<ModelRendererComponent>("Model Renderer");
-            shouldClosePopup |= !displayAddComponentEntry<RigidBody3DComponent>("Rigidbody 3D");
-            shouldClosePopup |= !displayAddComponentEntry<BoxCollider3DComponent>("Box Collider 3D");
-            shouldClosePopup |= !displayAddComponentEntry<SphereColliderComponent>("Sphere Collider");
-
-            //if (shouldClosePopup)
-            //    ImGui::CloseCurrentPopup();
+            displayAddComponentEntry<CameraComponent>("Camera");
+            displayAddComponentEntry<DirectionalLightComponent>("Directional Light");
+            displayAddComponentEntry<PointLightComponent>("Point Light");
+            displayAddComponentEntry<SpotLightComponent>("Spot Light");
+            displayAddComponentEntry<ModelRendererComponent>("Model Renderer");
+            displayAddComponentEntry<RigidBody3DComponent>("Rigidbody 3D");
+            displayAddComponentEntry<BoxCollider3DComponent>("Box Collider 3D");
+            displayAddComponentEntry<SphereColliderComponent>("Sphere Collider");
 
             ImGui::EndPopup();
         }

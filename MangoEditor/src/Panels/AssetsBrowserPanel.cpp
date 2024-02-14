@@ -31,6 +31,18 @@ namespace mango
     {
         ImGui::Begin("Assets Browser Panel");
 
+        #ifdef _WIN32
+        if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
+        {
+            if (ImGui::MenuItem("Open Folder in File Explorer"))
+            {
+                auto command = "explorer " + m_currentPath.make_preferred().string();
+                system(command.c_str());
+            }
+            ImGui::EndPopup();
+        }
+        #endif
+
         ImGui::PushStyleColor(ImGuiCol_Button, { 0, 0, 0, 0 });
 
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));

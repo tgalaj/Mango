@@ -1,8 +1,8 @@
-Scene: Editor Scene
+Scene: Empty Scene
 Entities:
-  - Entity: 5487060263569828135
+  - Entity: 15278254887496824896
     TagComponent:
-      Tag: SpotLight
+      Name: SpotLight
     TransformComponent:
       Position: [1.5, 5, 1.5]
       Rotation: [-45, 45, 45]
@@ -19,9 +19,9 @@ Entities:
       ShadowNearPlane: 0.00100000005
       ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 4337264035932335588
+  - Entity: 9172117833673256028
     TagComponent:
-      Tag: PointLight3
+      Name: PointLight3
     TransformComponent:
       Position: [0, 1.20000005, -8]
       Rotation: [0, 0, 0]
@@ -37,9 +37,9 @@ Entities:
       ShadowNearPlane: 0.00100000005
       ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 5389541730345326660
+  - Entity: 16384783789565030002
     TagComponent:
-      Tag: PointLight2
+      Name: PointLight2
     TransformComponent:
       Position: [0, 1.20000005, 8]
       Rotation: [0, 0, 0]
@@ -55,9 +55,9 @@ Entities:
       ShadowNearPlane: 0.00100000005
       ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 988158238704221612
+  - Entity: 2489159111637342798
     TagComponent:
-      Tag: PointLight1
+      Name: PointLight1
     TransformComponent:
       Position: [8, 1.20000005, 0]
       Rotation: [0, 0, 0]
@@ -73,9 +73,9 @@ Entities:
       ShadowNearPlane: 0.00100000005
       ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 17692237946478534315
+  - Entity: 7896433477745392549
     TagComponent:
-      Tag: PointLight0
+      Name: PointLight0
     TransformComponent:
       Position: [-8, 1.20000005, 0]
       Rotation: [0, 0, 0]
@@ -91,9 +91,9 @@ Entities:
       ShadowNearPlane: 0.00100000005
       ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 9978701052028562599
+  - Entity: 5602717450256692461
     TagComponent:
-      Tag: DirectionalLight
+      Name: DirectionalLight
     TransformComponent:
       Position: [0, 0, 0]
       Rotation: [-45, 180, 0]
@@ -104,9 +104,9 @@ Entities:
       Intensity: 4
       Size: 200
       CastsShadows: true
-  - Entity: 16862520530112818645
+  - Entity: 1594328496800050947
     TagComponent:
-      Tag: Sphere100
+      Name: Sphere100
     TransformComponent:
       Position: [6.75, 0.5, 6.75]
       Rotation: [0, 0, 0]
@@ -138,9 +138,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 6859638008103601745
+  - Entity: 4492541721007409803
     TagComponent:
-      Tag: Sphere99
+      Name: Sphere99
     TransformComponent:
       Position: [6.75, 0.5, 5.25]
       Rotation: [0, 0, 0]
@@ -172,9 +172,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 3579664453956657522
+  - Entity: 8012094023301355460
     TagComponent:
-      Tag: Sphere98
+      Name: Sphere98
     TransformComponent:
       Position: [6.75, 0.5, 3.75]
       Rotation: [0, 0, 0]
@@ -206,9 +206,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 12422668948845969921
+  - Entity: 7376346383028198980
     TagComponent:
-      Tag: Sphere97
+      Name: Sphere97
     TransformComponent:
       Position: [6.75, 0.5, 2.25]
       Rotation: [0, 0, 0]
@@ -240,9 +240,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 15337183678763695072
+  - Entity: 17038505204937614722
     TagComponent:
-      Tag: Sphere96
+      Name: Sphere96
     TransformComponent:
       Position: [6.75, 0.5, 0.75]
       Rotation: [0, 0, 0]
@@ -274,9 +274,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 1200294243523954711
+  - Entity: 17885750251484905878
     TagComponent:
-      Tag: Sphere95
+      Name: Sphere95
     TransformComponent:
       Position: [6.75, 0.5, -0.75]
       Rotation: [0, 0, 0]
@@ -308,9 +308,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 7525606406900360863
+  - Entity: 162380702930119120
     TagComponent:
-      Tag: Sphere94
+      Name: Sphere94
     TransformComponent:
       Position: [6.75, 0.5, -2.25]
       Rotation: [0, 0, 0]
@@ -342,9 +342,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 15652266381632240136
+  - Entity: 12704121705459257783
     TagComponent:
-      Tag: Sphere93
+      Name: Sphere93
     TransformComponent:
       Position: [6.75, 0.5, -3.75]
       Rotation: [0, 0, 0]
@@ -376,9 +376,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 3000527566222727871
+  - Entity: 1757238470970544378
     TagComponent:
-      Tag: Sphere92
+      Name: Sphere92
     TransformComponent:
       Position: [6.75, 0.5, -5.25]
       Rotation: [0, 0, 0]
@@ -410,9 +410,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 13013851130573210150
+  - Entity: 11927055739382412664
     TagComponent:
-      Tag: Sphere91
+      Name: Sphere91
     TransformComponent:
       Position: [6.75, 0.5, -6.75]
       Rotation: [0, 0, 0]
@@ -444,9 +444,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 15323390604799899373
+  - Entity: 3145857734093504698
     TagComponent:
-      Tag: Sphere90
+      Name: Sphere90
     TransformComponent:
       Position: [5.25, 0.5, 6.75]
       Rotation: [0, 0, 0]
@@ -478,9 +478,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 5998101058442398041
+  - Entity: 13323876888846687303
     TagComponent:
-      Tag: Sphere89
+      Name: Sphere89
     TransformComponent:
       Position: [5.25, 0.5, 5.25]
       Rotation: [0, 0, 0]
@@ -512,9 +512,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 13351530784443243194
+  - Entity: 12602513202095360491
     TagComponent:
-      Tag: Sphere88
+      Name: Sphere88
     TransformComponent:
       Position: [5.25, 0.5, 3.75]
       Rotation: [0, 0, 0]
@@ -546,9 +546,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 12751443859402346144
+  - Entity: 2093236921646620328
     TagComponent:
-      Tag: Sphere87
+      Name: Sphere87
     TransformComponent:
       Position: [5.25, 0.5, 2.25]
       Rotation: [0, 0, 0]
@@ -580,9 +580,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 11481867909210033553
+  - Entity: 16902669373072335654
     TagComponent:
-      Tag: Sphere86
+      Name: Sphere86
     TransformComponent:
       Position: [5.25, 0.5, 0.75]
       Rotation: [0, 0, 0]
@@ -614,9 +614,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 13459832352958739658
+  - Entity: 6586808401295663682
     TagComponent:
-      Tag: Sphere85
+      Name: Sphere85
     TransformComponent:
       Position: [5.25, 0.5, -0.75]
       Rotation: [0, 0, 0]
@@ -648,9 +648,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 7353100586675335730
+  - Entity: 16833172836456119293
     TagComponent:
-      Tag: Sphere84
+      Name: Sphere84
     TransformComponent:
       Position: [5.25, 0.5, -2.25]
       Rotation: [0, 0, 0]
@@ -682,9 +682,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 13271669570565481481
+  - Entity: 5499631252451845714
     TagComponent:
-      Tag: Sphere83
+      Name: Sphere83
     TransformComponent:
       Position: [5.25, 0.5, -3.75]
       Rotation: [0, 0, 0]
@@ -716,9 +716,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 2640199229012299808
+  - Entity: 15787567762488511926
     TagComponent:
-      Tag: Sphere82
+      Name: Sphere82
     TransformComponent:
       Position: [5.25, 0.5, -5.25]
       Rotation: [0, 0, 0]
@@ -750,9 +750,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 976895023361957806
+  - Entity: 8748523649653768656
     TagComponent:
-      Tag: Sphere81
+      Name: Sphere81
     TransformComponent:
       Position: [5.25, 0.5, -6.75]
       Rotation: [0, 0, 0]
@@ -784,9 +784,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 9821527585939166002
+  - Entity: 14537297079584706260
     TagComponent:
-      Tag: Sphere80
+      Name: Sphere80
     TransformComponent:
       Position: [3.75, 0.5, 6.75]
       Rotation: [0, 0, 0]
@@ -818,9 +818,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 17088881515627371048
+  - Entity: 10296723777785311731
     TagComponent:
-      Tag: Sphere79
+      Name: Sphere79
     TransformComponent:
       Position: [3.75, 0.5, 5.25]
       Rotation: [0, 0, 0]
@@ -852,9 +852,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 286394077046297121
+  - Entity: 15256041916201537804
     TagComponent:
-      Tag: Sphere78
+      Name: Sphere78
     TransformComponent:
       Position: [3.75, 0.5, 3.75]
       Rotation: [0, 0, 0]
@@ -886,9 +886,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 8848078698828572579
+  - Entity: 6454017056637436392
     TagComponent:
-      Tag: Sphere77
+      Name: Sphere77
     TransformComponent:
       Position: [3.75, 0.5, 2.25]
       Rotation: [0, 0, 0]
@@ -920,9 +920,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 10745176783154887974
+  - Entity: 13741983989997935719
     TagComponent:
-      Tag: Sphere76
+      Name: Sphere76
     TransformComponent:
       Position: [3.75, 0.5, 0.75]
       Rotation: [0, 0, 0]
@@ -954,9 +954,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 704410853211190519
+  - Entity: 6381427890663902618
     TagComponent:
-      Tag: Sphere75
+      Name: Sphere75
     TransformComponent:
       Position: [3.75, 0.5, -0.75]
       Rotation: [0, 0, 0]
@@ -988,9 +988,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 10365503160704299259
+  - Entity: 7981551099425364743
     TagComponent:
-      Tag: Sphere74
+      Name: Sphere74
     TransformComponent:
       Position: [3.75, 0.5, -2.25]
       Rotation: [0, 0, 0]
@@ -1022,9 +1022,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 14962546846897002899
+  - Entity: 3984637631905403393
     TagComponent:
-      Tag: Sphere73
+      Name: Sphere73
     TransformComponent:
       Position: [3.75, 0.5, -3.75]
       Rotation: [0, 0, 0]
@@ -1056,9 +1056,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 2289577400344829356
+  - Entity: 7544711257320784835
     TagComponent:
-      Tag: Sphere72
+      Name: Sphere72
     TransformComponent:
       Position: [3.75, 0.5, -5.25]
       Rotation: [0, 0, 0]
@@ -1090,9 +1090,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 5398668300831420015
+  - Entity: 8674579542238639341
     TagComponent:
-      Tag: Sphere71
+      Name: Sphere71
     TransformComponent:
       Position: [3.75, 0.5, -6.75]
       Rotation: [0, 0, 0]
@@ -1124,9 +1124,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 13954119947406613660
+  - Entity: 6119141150607733541
     TagComponent:
-      Tag: Sphere70
+      Name: Sphere70
     TransformComponent:
       Position: [2.25, 0.5, 6.75]
       Rotation: [0, 0, 0]
@@ -1158,9 +1158,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 15235989334594102338
+  - Entity: 15771687722015183979
     TagComponent:
-      Tag: Sphere69
+      Name: Sphere69
     TransformComponent:
       Position: [2.25, 0.5, 5.25]
       Rotation: [0, 0, 0]
@@ -1192,9 +1192,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 10623790420308569538
+  - Entity: 2765076252221679962
     TagComponent:
-      Tag: Sphere68
+      Name: Sphere68
     TransformComponent:
       Position: [2.25, 0.5, 3.75]
       Rotation: [0, 0, 0]
@@ -1226,9 +1226,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 3171857553025032277
+  - Entity: 6378320088310287356
     TagComponent:
-      Tag: Sphere67
+      Name: Sphere67
     TransformComponent:
       Position: [2.25, 0.5, 2.25]
       Rotation: [0, 0, 0]
@@ -1260,9 +1260,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 14760965010143122651
+  - Entity: 10734833994743845907
     TagComponent:
-      Tag: Sphere66
+      Name: Sphere66
     TransformComponent:
       Position: [2.25, 0.5, 0.75]
       Rotation: [0, 0, 0]
@@ -1294,9 +1294,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 6985029626125896279
+  - Entity: 15267768598088640358
     TagComponent:
-      Tag: Sphere65
+      Name: Sphere65
     TransformComponent:
       Position: [2.25, 0.5, -0.75]
       Rotation: [0, 0, 0]
@@ -1328,9 +1328,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 16520790534389117267
+  - Entity: 12158159673698541404
     TagComponent:
-      Tag: Sphere64
+      Name: Sphere64
     TransformComponent:
       Position: [2.25, 0.5, -2.25]
       Rotation: [0, 0, 0]
@@ -1362,9 +1362,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 3498692115183445079
+  - Entity: 14601232797491526199
     TagComponent:
-      Tag: Sphere63
+      Name: Sphere63
     TransformComponent:
       Position: [2.25, 0.5, -3.75]
       Rotation: [0, 0, 0]
@@ -1396,9 +1396,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 13782554822904622025
+  - Entity: 10317628143971088426
     TagComponent:
-      Tag: Sphere62
+      Name: Sphere62
     TransformComponent:
       Position: [2.25, 0.5, -5.25]
       Rotation: [0, 0, 0]
@@ -1430,9 +1430,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 4134534906784814945
+  - Entity: 9684739563644733251
     TagComponent:
-      Tag: Sphere61
+      Name: Sphere61
     TransformComponent:
       Position: [2.25, 0.5, -6.75]
       Rotation: [0, 0, 0]
@@ -1464,9 +1464,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 1051070450498157671
+  - Entity: 4364739748001901440
     TagComponent:
-      Tag: Sphere60
+      Name: Sphere60
     TransformComponent:
       Position: [0.75, 0.5, 6.75]
       Rotation: [0, 0, 0]
@@ -1498,9 +1498,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 17134642130866169977
+  - Entity: 6129859579936181596
     TagComponent:
-      Tag: Sphere59
+      Name: Sphere59
     TransformComponent:
       Position: [0.75, 0.5, 5.25]
       Rotation: [0, 0, 0]
@@ -1532,9 +1532,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 7303710125022471153
+  - Entity: 18423597994075765862
     TagComponent:
-      Tag: Sphere58
+      Name: Sphere58
     TransformComponent:
       Position: [0.75, 0.5, 3.75]
       Rotation: [0, 0, 0]
@@ -1566,9 +1566,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 5426681932734518730
+  - Entity: 6573503152154971994
     TagComponent:
-      Tag: Sphere57
+      Name: Sphere57
     TransformComponent:
       Position: [0.75, 0.5, 2.25]
       Rotation: [0, 0, 0]
@@ -1600,9 +1600,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 9841236816849577932
+  - Entity: 16726886782633856866
     TagComponent:
-      Tag: Sphere56
+      Name: Sphere56
     TransformComponent:
       Position: [0.75, 0.5, 0.75]
       Rotation: [0, 0, 0]
@@ -1634,9 +1634,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 14581447889273755732
+  - Entity: 11866425925738125842
     TagComponent:
-      Tag: Sphere55
+      Name: Sphere55
     TransformComponent:
       Position: [0.75, 0.5, -0.75]
       Rotation: [0, 0, 0]
@@ -1668,9 +1668,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 10555833983893712129
+  - Entity: 1933197884749202273
     TagComponent:
-      Tag: Sphere54
+      Name: Sphere54
     TransformComponent:
       Position: [0.75, 0.5, -2.25]
       Rotation: [0, 0, 0]
@@ -1702,9 +1702,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 5341212331319301864
+  - Entity: 13207026729253362885
     TagComponent:
-      Tag: Sphere53
+      Name: Sphere53
     TransformComponent:
       Position: [0.75, 0.5, -3.75]
       Rotation: [0, 0, 0]
@@ -1736,9 +1736,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 4131667839999011733
+  - Entity: 16460136737362269817
     TagComponent:
-      Tag: Sphere52
+      Name: Sphere52
     TransformComponent:
       Position: [0.75, 0.5, -5.25]
       Rotation: [0, 0, 0]
@@ -1770,9 +1770,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 6940143745638131665
+  - Entity: 14929653843380010304
     TagComponent:
-      Tag: Sphere51
+      Name: Sphere51
     TransformComponent:
       Position: [0.75, 0.5, -6.75]
       Rotation: [0, 0, 0]
@@ -1804,9 +1804,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 9217178196950509614
+  - Entity: 977995046225029581
     TagComponent:
-      Tag: Sphere50
+      Name: Sphere50
     TransformComponent:
       Position: [-0.75, 0.5, 6.75]
       Rotation: [0, 0, 0]
@@ -1838,9 +1838,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 15251591220534194653
+  - Entity: 2928669977140179735
     TagComponent:
-      Tag: Sphere49
+      Name: Sphere49
     TransformComponent:
       Position: [-0.75, 0.5, 5.25]
       Rotation: [0, 0, 0]
@@ -1872,9 +1872,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 1569603925741953168
+  - Entity: 2586541764948100578
     TagComponent:
-      Tag: Sphere48
+      Name: Sphere48
     TransformComponent:
       Position: [-0.75, 0.5, 3.75]
       Rotation: [0, 0, 0]
@@ -1906,9 +1906,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 5974839541179198003
+  - Entity: 13904612977682970661
     TagComponent:
-      Tag: Sphere47
+      Name: Sphere47
     TransformComponent:
       Position: [-0.75, 0.5, 2.25]
       Rotation: [0, 0, 0]
@@ -1940,9 +1940,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 4565223934224985740
+  - Entity: 4329499188614982196
     TagComponent:
-      Tag: Sphere46
+      Name: Sphere46
     TransformComponent:
       Position: [-0.75, 0.5, 0.75]
       Rotation: [0, 0, 0]
@@ -1974,9 +1974,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 13234386741083238122
+  - Entity: 6800795915590825271
     TagComponent:
-      Tag: Sphere45
+      Name: Sphere45
     TransformComponent:
       Position: [-0.75, 0.5, -0.75]
       Rotation: [0, 0, 0]
@@ -2008,9 +2008,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 1792945095057413505
+  - Entity: 13415007898262250951
     TagComponent:
-      Tag: Sphere44
+      Name: Sphere44
     TransformComponent:
       Position: [-0.75, 0.5, -2.25]
       Rotation: [0, 0, 0]
@@ -2042,9 +2042,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 13232881008500260896
+  - Entity: 7527618011131436920
     TagComponent:
-      Tag: Sphere43
+      Name: Sphere43
     TransformComponent:
       Position: [-0.75, 0.5, -3.75]
       Rotation: [0, 0, 0]
@@ -2076,9 +2076,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 14649743330602793055
+  - Entity: 6507836991049516770
     TagComponent:
-      Tag: Sphere42
+      Name: Sphere42
     TransformComponent:
       Position: [-0.75, 0.5, -5.25]
       Rotation: [0, 0, 0]
@@ -2110,9 +2110,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 2403825093284316823
+  - Entity: 11502663281193553222
     TagComponent:
-      Tag: Sphere41
+      Name: Sphere41
     TransformComponent:
       Position: [-0.75, 0.5, -6.75]
       Rotation: [0, 0, 0]
@@ -2144,9 +2144,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 201782257228352726
+  - Entity: 8275989573273168350
     TagComponent:
-      Tag: Sphere40
+      Name: Sphere40
     TransformComponent:
       Position: [-2.25, 0.5, 6.75]
       Rotation: [0, 0, 0]
@@ -2178,9 +2178,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 3265363513421683346
+  - Entity: 6447250506008820319
     TagComponent:
-      Tag: Sphere39
+      Name: Sphere39
     TransformComponent:
       Position: [-2.25, 0.5, 5.25]
       Rotation: [0, 0, 0]
@@ -2212,9 +2212,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 6973780846606719765
+  - Entity: 12269125962556319595
     TagComponent:
-      Tag: Sphere38
+      Name: Sphere38
     TransformComponent:
       Position: [-2.25, 0.5, 3.75]
       Rotation: [0, 0, 0]
@@ -2246,9 +2246,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 1320075668102775110
+  - Entity: 936093491203149671
     TagComponent:
-      Tag: Sphere37
+      Name: Sphere37
     TransformComponent:
       Position: [-2.25, 0.5, 2.25]
       Rotation: [0, 0, 0]
@@ -2280,9 +2280,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 7030824052045196654
+  - Entity: 13055917875868608618
     TagComponent:
-      Tag: Sphere36
+      Name: Sphere36
     TransformComponent:
       Position: [-2.25, 0.5, 0.75]
       Rotation: [0, 0, 0]
@@ -2314,9 +2314,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 5712298265200870618
+  - Entity: 3490737795635346801
     TagComponent:
-      Tag: Sphere35
+      Name: Sphere35
     TransformComponent:
       Position: [-2.25, 0.5, -0.75]
       Rotation: [0, 0, 0]
@@ -2348,9 +2348,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 16244937114848535900
+  - Entity: 10817046718434237358
     TagComponent:
-      Tag: Sphere34
+      Name: Sphere34
     TransformComponent:
       Position: [-2.25, 0.5, -2.25]
       Rotation: [0, 0, 0]
@@ -2382,9 +2382,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 3384127584019713661
+  - Entity: 9365062472097369566
     TagComponent:
-      Tag: Sphere33
+      Name: Sphere33
     TransformComponent:
       Position: [-2.25, 0.5, -3.75]
       Rotation: [0, 0, 0]
@@ -2416,9 +2416,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 9736476539595041512
+  - Entity: 13949422495635407403
     TagComponent:
-      Tag: Sphere32
+      Name: Sphere32
     TransformComponent:
       Position: [-2.25, 0.5, -5.25]
       Rotation: [0, 0, 0]
@@ -2450,9 +2450,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 10862230368416219440
+  - Entity: 18259169216169308476
     TagComponent:
-      Tag: Sphere31
+      Name: Sphere31
     TransformComponent:
       Position: [-2.25, 0.5, -6.75]
       Rotation: [0, 0, 0]
@@ -2484,9 +2484,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 16721271351396835318
+  - Entity: 2550095448415143648
     TagComponent:
-      Tag: Sphere30
+      Name: Sphere30
     TransformComponent:
       Position: [-3.75, 0.5, 6.75]
       Rotation: [0, 0, 0]
@@ -2518,9 +2518,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 12949602321558124238
+  - Entity: 4101826748978025126
     TagComponent:
-      Tag: Sphere29
+      Name: Sphere29
     TransformComponent:
       Position: [-3.75, 0.5, 5.25]
       Rotation: [0, 0, 0]
@@ -2552,9 +2552,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 4408119626299231060
+  - Entity: 3173697865325315218
     TagComponent:
-      Tag: Sphere28
+      Name: Sphere28
     TransformComponent:
       Position: [-3.75, 0.5, 3.75]
       Rotation: [0, 0, 0]
@@ -2586,9 +2586,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 17037762161769827050
+  - Entity: 10713336474310903987
     TagComponent:
-      Tag: Sphere27
+      Name: Sphere27
     TransformComponent:
       Position: [-3.75, 0.5, 2.25]
       Rotation: [0, 0, 0]
@@ -2620,9 +2620,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 12868998687068809493
+  - Entity: 15906726587786782865
     TagComponent:
-      Tag: Sphere26
+      Name: Sphere26
     TransformComponent:
       Position: [-3.75, 0.5, 0.75]
       Rotation: [0, 0, 0]
@@ -2654,9 +2654,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 10530483478595378276
+  - Entity: 6101687805565286883
     TagComponent:
-      Tag: Sphere25
+      Name: Sphere25
     TransformComponent:
       Position: [-3.75, 0.5, -0.75]
       Rotation: [0, 0, 0]
@@ -2688,9 +2688,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 9599350702585656766
+  - Entity: 13743749510357277503
     TagComponent:
-      Tag: Sphere24
+      Name: Sphere24
     TransformComponent:
       Position: [-3.75, 0.5, -2.25]
       Rotation: [0, 0, 0]
@@ -2722,9 +2722,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 17960554914123136979
+  - Entity: 4094606699154518249
     TagComponent:
-      Tag: Sphere23
+      Name: Sphere23
     TransformComponent:
       Position: [-3.75, 0.5, -3.75]
       Rotation: [0, 0, 0]
@@ -2756,9 +2756,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 8821841955418525303
+  - Entity: 6339249559290273252
     TagComponent:
-      Tag: Sphere22
+      Name: Sphere22
     TransformComponent:
       Position: [-3.75, 0.5, -5.25]
       Rotation: [0, 0, 0]
@@ -2790,9 +2790,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 3058799880470306326
+  - Entity: 9889084006531712080
     TagComponent:
-      Tag: Sphere21
+      Name: Sphere21
     TransformComponent:
       Position: [-3.75, 0.5, -6.75]
       Rotation: [0, 0, 0]
@@ -2824,9 +2824,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 4498436696216694453
+  - Entity: 2899787704517586779
     TagComponent:
-      Tag: Sphere20
+      Name: Sphere20
     TransformComponent:
       Position: [-5.25, 0.5, 6.75]
       Rotation: [0, 0, 0]
@@ -2858,9 +2858,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 4340713108014528228
+  - Entity: 14197365067188650047
     TagComponent:
-      Tag: Sphere19
+      Name: Sphere19
     TransformComponent:
       Position: [-5.25, 0.5, 5.25]
       Rotation: [0, 0, 0]
@@ -2892,9 +2892,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 10926457513010333127
+  - Entity: 11126506496976047051
     TagComponent:
-      Tag: Sphere18
+      Name: Sphere18
     TransformComponent:
       Position: [-5.25, 0.5, 3.75]
       Rotation: [0, 0, 0]
@@ -2926,9 +2926,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 10757364482939473473
+  - Entity: 6293635452410700604
     TagComponent:
-      Tag: Sphere17
+      Name: Sphere17
     TransformComponent:
       Position: [-5.25, 0.5, 2.25]
       Rotation: [0, 0, 0]
@@ -2960,9 +2960,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 16686014324147906202
+  - Entity: 15080091419906678088
     TagComponent:
-      Tag: Sphere16
+      Name: Sphere16
     TransformComponent:
       Position: [-5.25, 0.5, 0.75]
       Rotation: [0, 0, 0]
@@ -2994,9 +2994,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 12227277725809493965
+  - Entity: 13131635985350179097
     TagComponent:
-      Tag: Sphere15
+      Name: Sphere15
     TransformComponent:
       Position: [-5.25, 0.5, -0.75]
       Rotation: [0, 0, 0]
@@ -3028,9 +3028,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 11408503994989783798
+  - Entity: 17988240087481833937
     TagComponent:
-      Tag: Sphere14
+      Name: Sphere14
     TransformComponent:
       Position: [-5.25, 0.5, -2.25]
       Rotation: [0, 0, 0]
@@ -3062,9 +3062,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 11671442778966402670
+  - Entity: 729728260526631153
     TagComponent:
-      Tag: Sphere13
+      Name: Sphere13
     TransformComponent:
       Position: [-5.25, 0.5, -3.75]
       Rotation: [0, 0, 0]
@@ -3096,9 +3096,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 13735284262449851137
+  - Entity: 14683488683065415993
     TagComponent:
-      Tag: Sphere12
+      Name: Sphere12
     TransformComponent:
       Position: [-5.25, 0.5, -5.25]
       Rotation: [0, 0, 0]
@@ -3130,9 +3130,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 10153331463532912809
+  - Entity: 7079986660608779886
     TagComponent:
-      Tag: Sphere11
+      Name: Sphere11
     TransformComponent:
       Position: [-5.25, 0.5, -6.75]
       Rotation: [0, 0, 0]
@@ -3164,9 +3164,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 9825814273749619782
+  - Entity: 13801855723109307049
     TagComponent:
-      Tag: Sphere10
+      Name: Sphere10
     TransformComponent:
       Position: [-6.75, 0.5, 6.75]
       Rotation: [0, 0, 0]
@@ -3198,9 +3198,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 10262825881191266706
+  - Entity: 16061775798208286134
     TagComponent:
-      Tag: Sphere9
+      Name: Sphere9
     TransformComponent:
       Position: [-6.75, 0.5, 5.25]
       Rotation: [0, 0, 0]
@@ -3232,9 +3232,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 6306268124273854442
+  - Entity: 8146341826417869721
     TagComponent:
-      Tag: Sphere8
+      Name: Sphere8
     TransformComponent:
       Position: [-6.75, 0.5, 3.75]
       Rotation: [0, 0, 0]
@@ -3266,9 +3266,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 3598824535561447419
+  - Entity: 9810781925456396545
     TagComponent:
-      Tag: Sphere7
+      Name: Sphere7
     TransformComponent:
       Position: [-6.75, 0.5, 2.25]
       Rotation: [0, 0, 0]
@@ -3300,9 +3300,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 8337716067396609212
+  - Entity: 14457785712698851891
     TagComponent:
-      Tag: Sphere6
+      Name: Sphere6
     TransformComponent:
       Position: [-6.75, 0.5, 0.75]
       Rotation: [0, 0, 0]
@@ -3334,9 +3334,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 1804045259674012861
+  - Entity: 10761740816646104950
     TagComponent:
-      Tag: Sphere5
+      Name: Sphere5
     TransformComponent:
       Position: [-6.75, 0.5, -0.75]
       Rotation: [0, 0, 0]
@@ -3368,9 +3368,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 12114491906091288795
+  - Entity: 14205255464635240080
     TagComponent:
-      Tag: Sphere4
+      Name: Sphere4
     TransformComponent:
       Position: [-6.75, 0.5, -2.25]
       Rotation: [0, 0, 0]
@@ -3402,9 +3402,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 13223229348760336672
+  - Entity: 16136348054863406217
     TagComponent:
-      Tag: Sphere3
+      Name: Sphere3
     TransformComponent:
       Position: [-6.75, 0.5, -3.75]
       Rotation: [0, 0, 0]
@@ -3436,9 +3436,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 8533246304034151977
+  - Entity: 4563888075481206594
     TagComponent:
-      Tag: Sphere2
+      Name: Sphere2
     TransformComponent:
       Position: [-6.75, 0.5, -5.25]
       Rotation: [0, 0, 0]
@@ -3470,9 +3470,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 16713692793718992072
+  - Entity: 14285931729928369875
     TagComponent:
-      Tag: Sphere1
+      Name: Sphere1
     TransformComponent:
       Position: [-6.75, 0.5, -6.75]
       Rotation: [0, 0, 0]
@@ -3504,9 +3504,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 1686053646622165947
+  - Entity: 17190985804816813471
     TagComponent:
-      Tag: Static sphere
+      Name: Static sphere
     TransformComponent:
       Position: [5, 3, -12.5]
       Rotation: [0, 0, 0]
@@ -3538,13 +3538,13 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 11646755083782198621
+  - Entity: 15738969085254225147
     TagComponent:
-      Tag: Bouncing Sphere
+      Name: Bouncing Sphere
     TransformComponent:
-      Position: [5, 1.60504782, -9.91700745]
-      Rotation: [-61.0391273, -0, 0]
-      Orientation: [-0.861455798, 0.507832527, 0, 0]
+      Position: [5, 20, -11.5]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
       Scale: [0.5, 0.5, 0.5]
     ModelRendererComponent:
       ModelType: Sphere
@@ -3582,9 +3582,9 @@ Entities:
     SphereColliderComponent:
       Offset: [0, 0, 0]
       Radius: 0.5
-  - Entity: 6481889402276690126
+  - Entity: 9903886652572850313
     TagComponent:
-      Tag: Plane2
+      Name: Plane2
     TransformComponent:
       Position: [5, 0.5, -11.5]
       Rotation: [0.5, 0, 0]
@@ -3626,9 +3626,9 @@ Entities:
     BoxCollider3DComponent:
       Offset: [0, -0.100000001, 0]
       Extent: [2.5, 0.100000001, 2.5]
-  - Entity: 3971596364542165089
+  - Entity: 2807870569249607345
     TagComponent:
-      Tag: Plane1
+      Name: Plane1
     TransformComponent:
       Position: [5, 3, -14]
       Rotation: [90, 0, 0]
@@ -3660,9 +3660,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 2344081024176737181
+  - Entity: 6536434627344129299
     TagComponent:
-      Tag: Window2
+      Name: Window2
     TransformComponent:
       Position: [5, 1.20000005, 9]
       Rotation: [90, 0, 0]
@@ -3694,9 +3694,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 14698580140790533630
+  - Entity: 5056547083097102576
     TagComponent:
-      Tag: Window3
+      Name: Window3
     TransformComponent:
       Position: [3, 1.20000005, 13]
       Rotation: [90, 0, 0]
@@ -3728,9 +3728,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 3968618321492465029
+  - Entity: 118069270075470675
     TagComponent:
-      Tag: Window1
+      Name: Window1
     TransformComponent:
       Position: [0, 1.20000005, 9]
       Rotation: [90, 0, 0]
@@ -3762,9 +3762,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 14350191654305910497
+  - Entity: 5993086776684584297
     TagComponent:
-      Tag: Grass
+      Name: Grass
     TransformComponent:
       Position: [-5, 1.20000005, 9]
       Rotation: [90, 0, 0]
@@ -3796,9 +3796,9 @@ Entities:
           Normal: ""
           Emission: ""
           Depth: ""
-  - Entity: 11658804719518502570
+  - Entity: 16759840074140586571
     TagComponent:
-      Tag: Parallax brickwall
+      Name: Parallax brickwall
     TransformComponent:
       Position: [-5, 2, -9]
       Rotation: [90, 0, 0]
@@ -3830,9 +3830,9 @@ Entities:
           Normal: textures/bricks2_normal.jpg
           Emission: ""
           Depth: textures/bricks2_disp.jpg
-  - Entity: 6245424466263215914
+  - Entity: 16413750899432710136
     TagComponent:
-      Tag: Brickwall
+      Name: Brickwall
     TransformComponent:
       Position: [0, 2, -9]
       Rotation: [90, 0, 0]
@@ -3864,9 +3864,9 @@ Entities:
           Normal: textures/brickwall_normal.jpg
           Emission: ""
           Depth: ""
-  - Entity: 17900940024229315057
+  - Entity: 248924288714783836
     TagComponent:
-      Tag: Sponza
+      Name: Sponza
     TransformComponent:
       Position: [-1.5, 0, 10]
       Rotation: [0, -90, 0]
@@ -3876,23 +3876,9 @@ Entities:
       ModelType: Model3D
       RenderQueue: Opaque
       Filename: models/sponza/Sponza.gltf
-      Material:
-        Vec3Map:
-          {}
-        FloatMap:
-          specular_power: 20
-          specular_intensity: 5
-          m_depth_scale: 0.0149999997
-          alpha_cutoff: 0.200000003
-        Textures:
-          Diffuse: models/sponza/5061699253647017043.png
-          Specular: ""
-          Normal: models/sponza/8773302468495022225.jpg
-          Emission: ""
-          Depth: ""
-  - Entity: 1286834057250797984
+  - Entity: 11889019994622046249
     TagComponent:
-      Tag: Damaged Helmet
+      Name: Damaged Helmet
     TransformComponent:
       Position: [3, 2.5, 0]
       Rotation: [0, 0, 0]
@@ -3902,23 +3888,9 @@ Entities:
       ModelType: Model3D
       RenderQueue: Opaque
       Filename: models/damaged_helmet/DamagedHelmet.gltf
-      Material:
-        Vec3Map:
-          {}
-        FloatMap:
-          specular_power: 20
-          specular_intensity: 5
-          m_depth_scale: 0.0149999997
-          alpha_cutoff: 0.200000003
-        Textures:
-          Diffuse: models/damaged_helmet/Default_albedo.jpg
-          Specular: ""
-          Normal: models/damaged_helmet/Default_normal.jpg
-          Emission: ""
-          Depth: ""
-  - Entity: 13033815788340601378
+  - Entity: 10304229456837892661
     TagComponent:
-      Tag: Zen3c
+      Name: Zen3c
     TransformComponent:
       Position: [-3, -2.29999995, 0]
       Rotation: [0, 0, 0]
@@ -3928,23 +3900,9 @@ Entities:
       ModelType: Model3D
       RenderQueue: Opaque
       Filename: models/Zen3C/Zen3C.X
-      Material:
-        Vec3Map:
-          {}
-        FloatMap:
-          specular_power: 20
-          specular_intensity: 5
-          m_depth_scale: 0.0149999997
-          alpha_cutoff: 0.200000003
-        Textures:
-          Diffuse: models/Zen3C/Zen3C_Spine_D.jpg
-          Specular: ""
-          Normal: ""
-          Emission: ""
-          Depth: ""
-  - Entity: 6470235468526548085
+  - Entity: 5966048461744262128
     TagComponent:
-      Tag: Cyborg
+      Name: Cyborg
     TransformComponent:
       Position: [0, 0, 0]
       Rotation: [0, 0, 0]
@@ -3954,23 +3912,9 @@ Entities:
       ModelType: Model3D
       RenderQueue: Opaque
       Filename: models/cyborg/cyborg.obj
-      Material:
-        Vec3Map:
-          {}
-        FloatMap:
-          specular_power: 20
-          specular_intensity: 5
-          m_depth_scale: 0.0149999997
-          alpha_cutoff: 0.200000003
-        Textures:
-          Diffuse: models/cyborg/cyborg_diffuse.png
-          Specular: models/cyborg/cyborg_specular.png
-          Normal: models/cyborg/cyborg_normal.png
-          Emission: ""
-          Depth: ""
-  - Entity: 15397865544153027824
+  - Entity: 16461328817627321412
     TagComponent:
-      Tag: MainCamera2
+      Name: MainCamera2
     TransformComponent:
       Position: [0, 4, -30]
       Rotation: [180, -5.00895612e-06, 180]
@@ -3985,9 +3929,9 @@ Entities:
       OrthographicNear: 0.00999999978
       OrthographicFar: 1000
       IsPrimary: false
-  - Entity: 13638223157527602847
+  - Entity: 18340374480350007512
     TagComponent:
-      Tag: MainCamera
+      Name: MainCamera
     TransformComponent:
       Position: [0, 4, 30]
       Rotation: [0, 0, 0]
