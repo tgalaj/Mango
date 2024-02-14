@@ -61,9 +61,11 @@ namespace mango
         std::shared_ptr<Scene> m_editorScene;
 
         std::shared_ptr<Texture> m_playIcon;
+        std::shared_ptr<Texture> m_playPressedIcon;
         std::shared_ptr<Texture> m_simulateIcon;
-        std::shared_ptr<Texture> m_stopIcon;
+        std::shared_ptr<Texture> m_simulatePressedIcon;
         std::shared_ptr<Texture> m_pauseIcon;
+        std::shared_ptr<Texture> m_pausePressedIcon;
         std::shared_ptr<Texture> m_stepIcon;
 
         bool      m_viewportFocused   = false, 

@@ -53,14 +53,20 @@ namespace mango
         m_playIcon = std::make_shared<Texture>();
         m_playIcon->createTexture2d("icons/play.png", false, 8);
 
+        m_playPressedIcon = std::make_shared<Texture>();
+        m_playPressedIcon->createTexture2d("icons/playPressed.png", false, 8);
+
         m_simulateIcon = std::make_shared<Texture>();
         m_simulateIcon->createTexture2d("icons/simulate.png", false, 8);
 
-        m_stopIcon = std::make_shared<Texture>();
-        m_stopIcon->createTexture2d("icons/stop.png", false, 8);
+        m_simulatePressedIcon = std::make_shared<Texture>();
+        m_simulatePressedIcon->createTexture2d("icons/simulatePressed.png", false, 8);
 
         m_pauseIcon = std::make_shared<Texture>();
         m_pauseIcon->createTexture2d("icons/pause.png", false, 8);
+
+        m_pausePressedIcon = std::make_shared<Texture>();
+        m_pausePressedIcon->createTexture2d("icons/pausePressed.png", false, 8);
 
         m_stepIcon = std::make_shared<Texture>();
         m_stepIcon->createTexture2d("icons/step.png", false, 8);
@@ -113,7 +119,7 @@ namespace mango
 
     void EditorSystem::onUpdate(float dt)
     {
-        if (SceneState::Edit == m_sceneState)
+        if (SceneState::Edit == m_sceneState || SceneState::Simulate == m_sceneState)
         {
             if (!m_editorCamera.isUsing())
             {
@@ -227,9 +233,8 @@ namespace mango
     }
     
     void EditorSystem::onGui()
-    {    
+    {
         // Resize the main FBO based not on the window, but based on the Viewport panel !!
-
         // Resize
         if (glm::uvec2 mainFramebufferSize = Services::renderer()->getMainFramebufferSize();
             m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f && // zero sized framebuffer is invalid
@@ -406,6 +411,8 @@ namespace mango
 
     void EditorSystem::onScenePlay()
     {
+        if (SceneState::Simulate == m_sceneState) onSceneStop();
+
         m_sceneState = SceneState::Play;
 
         m_activeScene = Scene::copy(m_editorScene);
@@ -416,7 +423,14 @@ namespace mango
 
     void EditorSystem::onSceneSimulate()
     {
+        if (SceneState::Play == m_sceneState) onSceneStop();
+
         m_sceneState = SceneState::Simulate;
+
+        m_activeScene = Scene::copy(m_editorScene);
+        m_sceneHierarchyPanel.setScene(m_activeScene);
+        Services::sceneManager()->setActiveScene(m_activeScene);
+        Services::application()->getPhysicsSystem()->start();
     }
 
     void EditorSystem::onSceneStop()
@@ -438,7 +452,7 @@ namespace mango
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
         ImGui::Begin("Viewport");
         {
-            if (SceneState::Edit == m_sceneState)
+            if (SceneState::Edit == m_sceneState || SceneState::Simulate == m_sceneState)
             {
                 Services::renderer()->setRenderingMode(RenderingMode::EDITOR, &m_editorCamera, m_editorCamera.getPosition());
             }
@@ -482,7 +496,7 @@ namespace mango
                 ImGui::EndDragDropTarget();
             }
 
-            if (SceneState::Edit == m_sceneState)
+            if (SceneState::Edit == m_sceneState || SceneState::Simulate == m_sceneState)
             {
                 /** ImGuizmo */
                 Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
@@ -564,8 +578,9 @@ namespace mango
 
     void EditorSystem::onGuiToolbar()
     {        
-        const ImVec2 iconSize   (32.0f, 32.0f);
-        const ImVec2 itemSpacing(2.0f, 5.0f);
+        constexpr ImVec2 iconSize    (48.0f, 48.0f);
+        constexpr ImVec2 itemSpacing (0.0f, 5.0f);
+        constexpr int    middleIconsCount = 4;
 
         beginDockingToolbar("SceneState", ImGuiAxis_X, iconSize);
         {
@@ -581,26 +596,44 @@ namespace mango
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive,  ImVec4(buttonActive.x,  buttonActive.y,  buttonActive.z,  0.5f));
 
-            ImGui::SetCursorPosX((toolbarWidth - 3.0f * (iconSize.x + itemSpacing.x)) * 0.5f); // 3 - no. buttons to center
+            ImGui::SetCursorPosX((toolbarWidth - (float)middleIconsCount * (iconSize.x + itemSpacing.x)) * 0.5f);
             
-            auto playStopIcon = (SceneState::Edit == m_sceneState) ? m_playIcon : m_stopIcon;
-            if (ImGui::ImageButton("playStopButton", (ImTextureID)playStopIcon->getRendererID(), iconSize))
+            auto playIcon = (SceneState::Play == m_sceneState) ? m_playPressedIcon : m_playIcon;
+            if (ImGui::ImageButton("playButton", (ImTextureID)playIcon->getRendererID(), iconSize))
             {
-                if (SceneState::Edit == m_sceneState)
-                {
-                    onScenePlay();
-                }
-                else if (SceneState::Play == m_sceneState)
+                if (SceneState::Play == m_sceneState)
                 {
                     onSceneStop();
+                }
+                else
+                {
+                    onScenePlay();
                 }
             }
             
             ImGui::SameLine();
-            ImGui::ImageButton("simulateButton", (ImTextureID)m_simulateIcon->getRendererID(), iconSize);
+            auto simulateIcon = (SceneState::Simulate == m_sceneState) ? m_simulatePressedIcon : m_simulateIcon;
+            if (ImGui::ImageButton("simulateButton", (ImTextureID)simulateIcon->getRendererID(), iconSize))
+            {
+                if (SceneState::Simulate == m_sceneState)
+                {
+                    onSceneStop();
+                }
+                else
+                {
+                    onSceneSimulate();
+                }
+            }
 
             ImGui::SameLine();
-            ImGui::ImageButton("stepButton", (ImTextureID)m_stepIcon->getRendererID(), iconSize);
+            ImGui::ImageButton("pauseButton", (ImTextureID)m_pauseIcon->getRendererID(), iconSize);
+
+            ImGui::BeginDisabled();
+            {
+                ImGui::SameLine();
+                ImGui::ImageButton("stepButton", (ImTextureID)m_stepIcon->getRendererID(), iconSize);
+            }
+            ImGui::EndDisabled();
 
             ImGui::PopStyleColor(3);
             ImGui::PopStyleVar(2);

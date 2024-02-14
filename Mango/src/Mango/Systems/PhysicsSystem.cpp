@@ -256,7 +256,7 @@ namespace mango
                 // Create the rigid body
                 rb3d.runtimeBody = bodyInterface.CreateBody(bodySettings);
                 bodyInterface.AddBody(static_cast<JPH::Body*>(rb3d.runtimeBody)->GetID(),
-                                       rb3d.isInitiallyActivated ? JPH::EActivation::Activate : JPH::EActivation::DontActivate);
+                                      rb3d.isInitiallyActivated ? JPH::EActivation::Activate : JPH::EActivation::DontActivate);
             }
 
             // Optional step: Before starting the physics simulation you can optimize the broad phase. This improves collision detection performance (it's pointless here because we only have 2 bodies).
