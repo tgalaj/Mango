@@ -31,7 +31,7 @@ namespace mango
                 MG_TRACE("  - {}", p.string());
             }
 
-            addSystem(new EditorSystem());
+            addEditorSystem(new EditorSystem());
         }
 
         ~MangoEditorApp()

@@ -8,7 +8,6 @@ namespace mango
     class System
     {
     public:
-
         System(const std::string& name = "System");
         virtual ~System() = default;
 

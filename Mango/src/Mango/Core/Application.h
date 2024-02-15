@@ -38,7 +38,8 @@ namespace mango
         Application(const Application&)            = delete;
         Application& operator=(const Application&) = delete;
 
-        void addSystem(System* system);
+        void addRuntimeSystem(System* system);
+        void addEditorSystem (System* system);
 
         bool isRunning()        const { return m_isRunning; }
         bool isPaused()         const { return m_isPaused;  }
@@ -62,8 +63,8 @@ namespace mango
 
     private:
         std::shared_ptr<Window> m_window;
-        SystemManager  m_systems;
-        SystemManager  m_externalSystems;
+        SystemManager  m_runtimeSystems;
+        SystemManager  m_editorSystems;
         SystemManager  m_renderingSystems;
         
         SceneManager  * m_sceneManager;

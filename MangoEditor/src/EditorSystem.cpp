@@ -731,42 +731,39 @@ namespace mango
 
     void EditorSystem::moveLights(float dt)
     {    
-        if (!Services::application()->isPaused())
+        static float acc = 0.0f;
+        acc += dt / 6.0f;
+    
         {
-            static float acc = 0.0f;
-            acc += dt / 6.0f;
-    
+            auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, PointLightComponent>();
+            for (auto entity : view)
             {
-                auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, PointLightComponent>();
-                for (auto entity : view)
-                {
-                    auto [transform, pointLight] = view.get(entity);
+                auto [transform, pointLight] = view.get(entity);
 
-                    glm::vec3 delta = transform.getPosition() - glm::vec3(0.0f);
+                glm::vec3 delta = transform.getPosition() - glm::vec3(0.0f);
 
-                    float r = 8.0f * glm::abs(glm::sin(acc));
-                    float currentAngle = atan2(delta.z, delta.x);
+                float r = 8.0f * glm::abs(glm::sin(acc));
+                float currentAngle = atan2(delta.z, delta.x);
 
-                    auto position = transform.getPosition();
-                    position.x = r * glm::cos(currentAngle + dt);
-                    position.y = r * (glm::cos(2.0f * (currentAngle + dt)) * 0.5f + 0.5f) * 0.5f;
-                    position.z = r * glm::sin(currentAngle + dt);
+                auto position = transform.getPosition();
+                position.x = r * glm::cos(currentAngle + dt);
+                position.y = r * (glm::cos(2.0f * (currentAngle + dt)) * 0.5f + 0.5f) * 0.5f;
+                position.z = r * glm::sin(currentAngle + dt);
 
-                    transform.setPosition(position);
-                }
+                transform.setPosition(position);
             }
+        }
     
+        {
+            auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, SpotLightComponent>();
+            for (auto entity : view)
             {
-                auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, SpotLightComponent>();
-                for (auto entity : view)
-                {
-                    auto [transform, spotLight] = view.get(entity);
+                auto [transform, spotLight] = view.get(entity);
 
-                    glm::quat previousOrientation = transform.getOrientation();
+                glm::quat previousOrientation = transform.getOrientation();
 
-                    transform.setRotation(0.0f, 16.667f * dt, 0.0f);
-                    transform.setRotation(previousOrientation * transform.getOrientation());
-                }
+                transform.setRotation(0.0f, 16.667f * dt, 0.0f);
+                transform.setRotation(previousOrientation * transform.getOrientation());
             }
         }
     }

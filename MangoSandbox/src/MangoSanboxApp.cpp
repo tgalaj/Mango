@@ -27,7 +27,7 @@ public:
             MG_TRACE("  - {}", p.string());
         }
 
-        addSystem(new Sandbox());
+        addRuntimeSystem(new Sandbox());
     }
 
     ~MangoSandboxApp()

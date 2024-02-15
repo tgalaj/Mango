@@ -116,9 +116,9 @@ namespace mango
         Services::provide(m_eventBus);
 
         // Add core systems - do not forget to configure them!        
-        m_systems.add(new SceneGraphSystem());
-        m_systems.add(new AudioSystem());
-        m_systems.configure();
+        m_runtimeSystems.add(new SceneGraphSystem());
+        m_runtimeSystems.add(new AudioSystem());
+        m_runtimeSystems.configure();
 
         // Physics is handled separately
         m_physicsSystem = new PhysicsSystem();
@@ -145,10 +145,17 @@ namespace mango
         VFI::deinit();
     }
 
-    void Application::addSystem(System* system)
+    void Application::addRuntimeSystem(System* system)
     {
         MG_PROFILE_ZONE_SCOPED;
-        m_externalSystems.add(system);
+        m_runtimeSystems.add(system);
+        system->onInit();
+    }
+
+    void Application::addEditorSystem(System* system)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+        m_editorSystems.add(system);
         system->onInit();
     }
 
@@ -225,24 +232,23 @@ namespace mango
                     stop();
                 }
 
-                if (!m_isPaused || m_stepFrames > 0)
-                {
-                    m_systems.updateAll(m_frameTime);
-                }
-
-                m_externalSystems.updateAll(m_frameTime);
-                Input::update();
-
                 if (physicsFreq >= physicsDeltaTime)
-                {   
+                {
                     MG_PROFILE_ZONE_NAMED_N(zone2, "Game Loop Physics Update", true);
-                    if (!m_isPaused || m_stepFrames-- > 0)
+                    if (!m_isPaused || m_stepFrames > 0)
                     {
                         m_physicsSystem->onUpdate(physicsDeltaTime);
-                        MG_CORE_TRACE("PhysicsDeltaTime {}", physicsDeltaTime);
                         physicsFreq = 0.0f;
                     }
                 }
+
+                if (!m_isPaused || m_stepFrames-- > 0)
+                {
+                    m_runtimeSystems.updateAll(m_frameTime);
+                }
+
+                m_editorSystems.updateAll(m_frameTime);
+                Input::update();
 
                 if (frameCounter >= 1.0)
                 {
@@ -259,11 +265,11 @@ namespace mango
 
                 m_imGuiSystem->being();
                 {
-                    for (auto& system : m_systems)
+                    for (auto& system : m_runtimeSystems)
                     {
                         system->onGui();
                     }
-                    for (auto& system : m_externalSystems)
+                    for (auto& system : m_editorSystems)
                     {
                         system->onGui();
                     }
