@@ -8,13 +8,12 @@
 class MangoSandboxApp : public mango::Application
 {
 public:
-    MangoSandboxApp(const mango::ApplicationSettings& appSettings)
-        : Application(appSettings)
+    MangoSandboxApp(const mango::ApplicationConfiguration& appConfig)
+        : Application(appConfig)
     {
-        auto rootDir = std::filesystem::path(MG_ROOT_DIR);
+        auto rootDir       = std::filesystem::path(MG_ROOT_DIR);
         auto executableDir = mango::VFI::getExecutableDir();
 
-        // TODO: Add below search paths to config
         mango::VFI::setWriteDir(executableDir / "output");
 
         mango::VFI::addToSearchPath(executableDir);
@@ -38,12 +37,12 @@ public:
 
 mango::Application* mango::createApplication(mango::ApplicationCommandLineArgs args)
 {
-    mango::ApplicationSettings appSettings{};
-                               appSettings.windowWidth     = 1600;
-                               appSettings.windowHeight    = 800;
-                               appSettings.windowTitle     = "Mango Sandbox";
-                               appSettings.maxFramerate    = 999.0;
-                               appSettings.commandLineArgs = args;
+    mango::ApplicationConfiguration appConfig{};
+                                    appConfig.windowWidth     = 1600;
+                                    appConfig.windowHeight    = 800;
+                                    appConfig.windowTitle     = "Mango Sandbox";
+                                    appConfig.maxFramerate    = 999.0;
+                                    appConfig.commandLineArgs = args;
 
-    return new MangoSandboxApp(appSettings);
+    return new MangoSandboxApp(appConfig);
 }

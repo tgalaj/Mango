@@ -448,7 +448,7 @@ namespace mango
         }
         catch (YAML::ParserException e)
         {
-            MG_CORE_ERROR("Failed to load .mango file '{}'\n    {}", inFilepath.string(), e.what());
+            MG_CORE_ERROR("Failed to load scene file '{}'\n    {}", inFilepath.string(), e.what());
             return nullptr;
         }
 

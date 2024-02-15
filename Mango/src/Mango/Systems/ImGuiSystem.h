@@ -30,6 +30,8 @@ namespace mango
         void end();
         void updateWindowSize(float width, float height);
 
+        void addFont(const std::filesystem::path& path, float size, bool isDefault = false);
+
         void setDefaultIniSettingsFile(const std::string& filepath);
 
         // HUD rendering

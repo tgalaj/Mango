@@ -17,6 +17,7 @@
 #include "Mango/Math/Math.h"
 
 #include "Mango/Profiling/Instrumentation.h"
+#include "Mango/Project/Project.h"
 
 #include "Mango/Rendering/Camera/FreeCameraController.h"
 

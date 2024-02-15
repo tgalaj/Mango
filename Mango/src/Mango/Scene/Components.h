@@ -388,7 +388,7 @@ namespace mango
         float linearDamping  = 0.05f;
         float angularDamping = 0.05f;
 
-        bool isInitiallyActivated = false;
+        bool isInitiallyActivated = true;
 
     protected:
         void* runtimeBody = nullptr;

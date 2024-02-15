@@ -18,8 +18,9 @@
 
 namespace mango
 {
-    Application::Application(const ApplicationSettings& appSettings)
-        : m_frameTime (1.0 / appSettings.maxFramerate)
+    Application::Application(const ApplicationConfiguration& appSettings)
+        : m_config   (appSettings),
+          m_frameTime(1.0 / appSettings.maxFramerate)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -36,18 +37,19 @@ namespace mango
             ("h,height",     "Window height",         cxxopts::value<uint32_t>())
             ("m,maximized",  "Open window maximized", cxxopts::value<bool>()->default_value("false")->implicit_value("true"))
             ("f,fullscreen", "Set fullscreen window", cxxopts::value<bool>()->default_value("false")->implicit_value("true"))
+            ("p,project",    "Open project",          cxxopts::value<std::string>()->default_value(""))
             ("setCVars",     "Set console variables", cxxopts::value<std::string>());
 
         auto optResult = options.parse(appSettings.commandLineArgs.argsCount, appSettings.commandLineArgs.argsValues);
 
         if (optResult.count("width"))
         {
-            const_cast<ApplicationSettings&>(appSettings).windowWidth = optResult["width"].as<uint32_t>();
+            const_cast<ApplicationConfiguration&>(appSettings).windowWidth = optResult["width"].as<uint32_t>();
         }
 
         if (optResult.count("height"))
         {
-            const_cast<ApplicationSettings&>(appSettings).windowHeight = optResult["height"].as<uint32_t>();
+            const_cast<ApplicationConfiguration&>(appSettings).windowHeight = optResult["height"].as<uint32_t>();
         }
 
         bool maximized = false;
@@ -62,6 +64,13 @@ namespace mango
         if (optResult["fullscreen"].as<bool>() || appSettings.fullscreen)
         {
             m_window->setFullscreen(true);
+        }
+
+        // Set project path if specified in cmd line args
+        if (optResult.count("project"))
+        {
+            auto projectPath          = optResult["project"].as<std::string>();
+                 m_config.projectPath = projectPath;
         }
 
         // Parse CVars
@@ -164,23 +173,8 @@ namespace mango
         return m_framerate;
     }
 
-    void Application::start()
+    void Application::close()
     {
-        if (m_isRunning)
-        {
-            return;
-        }
-
-        run();
-    }
-
-    void Application::stop()
-    {
-        if (!m_isRunning)
-        {
-            return;
-        }
-
         m_isRunning = false;
     }
 
@@ -191,8 +185,6 @@ namespace mango
 
     void Application::run()
     {
-        m_isRunning = true;
-
         int    frames       = 0;
         double frameCounter = 0.0;
 
@@ -229,7 +221,7 @@ namespace mango
 
                 if (m_window->isCloseRequested())
                 {
-                    stop();
+                    close();
                 }
 
                 if (physicsFreq >= physicsDeltaTime)

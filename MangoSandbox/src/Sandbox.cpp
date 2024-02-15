@@ -256,7 +256,7 @@ void Sandbox::onUpdate(float dt)
     
     if (Input::getKeyUp(KeyCode::Escape) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::BACK))
     {
-        Services::application()->stop();
+        Services::application()->close();
     }
 
     if (Input::getKeyUp(KeyCode::H) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::Y))

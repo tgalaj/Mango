@@ -1,0 +1,4 @@
+Project:
+  Name: Sandbox
+  StartScene: scenes/Sandbox.mango
+  AssetDirectory: assets

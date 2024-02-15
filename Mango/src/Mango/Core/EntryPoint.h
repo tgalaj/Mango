@@ -6,7 +6,7 @@ extern mango::Application* mango::createApplication(ApplicationCommandLineArgs a
 int main(int argc, char** argv)
 {
     auto app = mango::createApplication({ argc, argv });
-    app->start();
+    app->run();
     delete app;
 
     return EXIT_SUCCESS;

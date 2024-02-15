@@ -1,7 +1,7 @@
 #pragma once
 #include "Mango.h"
 #include "EditorCamera.h"
-#include "Panels/AssetsBrowserPanel.h"
+#include "Panels/AssetBrowserPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 
 namespace mango
@@ -32,6 +32,11 @@ namespace mango
         void onGui() override;
 
     private:
+        void newProject();
+        bool openProject();
+        bool openProject(const std::filesystem::path& path);
+        void saveProject();
+
         void newScene();
         void openScene();
         void openScene(const std::filesystem::path& path);
@@ -81,7 +86,7 @@ namespace mango
         GizmoType m_gizmoType = GizmoType::NONE;
         GizmoMode m_gizmoMode = GizmoMode::LOCAL;
 
-        AssetsBrowserPanel m_assetsBrowserPanel;
+        std::unique_ptr<AssetBrowserPanel> m_assetsBrowserPanel;
         SceneHierarchyPanel m_sceneHierarchyPanel;
 
         EditorCamera m_editorCamera;

@@ -43,14 +43,6 @@ namespace mango
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-        // TODO: make VFI paths visible also here, so we can use VFI class to get filepaths
-        auto rootDir      = std::filesystem::path(MG_ROOT_DIR);
-        auto interRegular = rootDir / "MangoEditor/assets/fonts/inter/Inter-Regular.ttf";
-        auto interBold    = rootDir / "MangoEditor/assets/fonts/inter/Inter-Bold.ttf";
-        
-        io.Fonts->AddFontFromFileTTF(interBold.string().c_str(), 16.0f);
-        io.FontDefault = io.Fonts->AddFontFromFileTTF(interRegular.string().c_str(), 16.0f);
-
         // Setup Dear ImGui style
         ImGui::StyleColorsDark();
 
@@ -132,6 +124,23 @@ namespace mango
     void ImGuiSystem::updateWindowSize(float width, float height)
     {
         m_windowSize = glm::vec2(width, height);
+    }
+
+    void ImGuiSystem::addFont(const std::filesystem::path& path, float size, bool isDefault /*= false*/)
+    {
+        if (size <= 0.0f) size = 16.0f;
+
+        ImGuiIO& io = ImGui::GetIO();
+
+        if (isDefault)
+        {
+            io.FontDefault = io.Fonts->AddFontFromFileTTF(path.string().c_str(), size);
+        }
+        else
+        {
+            auto font = io.Fonts->AddFontFromFileTTF(path.string().c_str(), size);
+        }
+
     }
 
     void ImGuiSystem::setDefaultIniSettingsFile(const std::string& filename)

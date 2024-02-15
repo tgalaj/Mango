@@ -2,6 +2,8 @@
 
 #include "SystemManager.h"
 
+#include <filesystem>
+
 namespace mango
 {
     class EventBus;
@@ -17,7 +19,7 @@ namespace mango
         char** argsValues;
     };
 
-    struct ApplicationSettings
+    struct ApplicationConfiguration
     {
         uint32_t                   windowWidth   = 1920;
         uint32_t                   windowHeight  = 1080;
@@ -25,6 +27,7 @@ namespace mango
         double                     maxFramerate  = 200.0f;
         bool                       fullscreen    = false;
         bool                       maximized     = false;
+        std::filesystem::path      projectPath   = "";
 
         ApplicationCommandLineArgs commandLineArgs;
     };
@@ -32,7 +35,7 @@ namespace mango
     class Application
     {
     public:
-        Application(const ApplicationSettings& appSettings);
+        Application(const ApplicationConfiguration& appConfig);
         virtual ~Application();
 
         Application(const Application&)            = delete;
@@ -44,6 +47,7 @@ namespace mango
         bool isRunning()        const { return m_isRunning; }
         bool isPaused()         const { return m_isPaused;  }
 
+        const ApplicationConfiguration& getConfig() const { return m_config; }
         const std::shared_ptr<Window> getWindow() const { return m_window; }
 
         EventBus      * const getEventBus()      const { return m_eventBus;      }
@@ -53,15 +57,14 @@ namespace mango
         /** Returns time in ms needed to render one frame. */
         double getFramerate() const;
 
-        void start();
-        void stop();
+        void run();
+        void close();
         void step(int frames = 1);
         void setPaused(bool paused) { m_isPaused = paused; }
 
     private:
-        void run();
+        ApplicationConfiguration m_config;
 
-    private:
         std::shared_ptr<Window> m_window;
         SystemManager  m_runtimeSystems;
         SystemManager  m_editorSystems;
@@ -76,7 +79,7 @@ namespace mango
         double m_physicsDeltaTime = 1.0 / 60.0;
         double m_framerate        = 0;
         int    m_stepFrames       = 0;
-        bool   m_isRunning        = false;
+        bool   m_isRunning        = true;
         bool   m_isPaused         = false;
     };
 

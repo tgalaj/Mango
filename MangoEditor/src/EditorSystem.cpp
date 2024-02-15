@@ -2,6 +2,7 @@
 
 #include "EditorSystem.h"
 #include "Mango/Math/Math.h"
+#include "Mango/Project/ProjectSerializer.h"
 #include "Mango/Scene/SceneSerializer.h"
 #include "Mango/Systems/PhysicsSystem.h"
 
@@ -9,6 +10,7 @@
 #include <imgui.h>
 #include <ImGuizmo.h>
 #include <portable-file-dialogs.h>
+#include <strutil.h>
 
 namespace
 {
@@ -50,6 +52,27 @@ namespace mango
 
     void EditorSystem::onInit()
     {
+        auto appConfig = Services::application()->getConfig();
+        if (!appConfig.projectPath.empty())
+        {
+            if (!openProject(appConfig.projectPath))
+            {
+                Services::application()->close();
+            }
+        }
+        else
+        {
+            if (!openProject())
+            {
+                Services::application()->close();
+            }
+        }
+
+        // Setup font
+        Services::application()->getImGuiSystem()->addFont(VFI::getFilepath("fonts/inter/Inter-Bold.ttf"),    16.0f); 
+        Services::application()->getImGuiSystem()->addFont(VFI::getFilepath("fonts/inter/Inter-Regular.ttf"), 16.0f, true);
+
+        // Load icons
         m_playIcon = std::make_shared<Texture>();
         m_playIcon->createTexture2d("icons/play.png", false, 8);
 
@@ -70,12 +93,6 @@ namespace mango
 
         m_stepIcon = std::make_shared<Texture>();
         m_stepIcon->createTexture2d("icons/step.png", false, 8);
-
-        m_editorScene = Services::sceneManager()->createScene("Empty Scene");
-        m_activeScene = m_editorScene;
-        Services::sceneManager()->setActiveScene(m_activeScene);
-
-        m_sceneHierarchyPanel.setScene(m_activeScene);
 
         m_editorCamera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
         m_editorCamera.setPosition(glm::vec3(0.0f, 4.0f, 30.0f));
@@ -192,27 +209,6 @@ namespace mango
                 {
                     m_gizmoMode = (m_gizmoMode == GizmoMode::LOCAL) ? GizmoMode::WORLD : GizmoMode::LOCAL;
                 }
-
-                /** TODO: BELOW TO BE REMOVED */
-                static bool isDebugRender = false;
-    
-                if (Input::getKeyDown(KeyCode::Escape) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::BACK))
-                {
-                    Services::application()->stop();
-                }
-
-                if (Input::getKeyDown(KeyCode::H) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::Y))
-                {
-                    isDebugRender = !isDebugRender;
-                    RenderingSystem::DEBUG_RENDERING = isDebugRender;
-                }
-
-                static bool fullscreen = Services::application()->getWindow()->isFullscreen();
-                if (Input::getKeyDown(KeyCode::F11))
-                {
-                    fullscreen = !fullscreen;
-                    Services::application()->getWindow()->setFullscreen(fullscreen);
-                }
             }
 
             m_editorCamera.onUpdate(dt);
@@ -295,6 +291,8 @@ namespace mango
                     openScene();
                 }
 
+                ImGui::Separator();
+
                 if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
                 {
                     saveScene();
@@ -307,7 +305,24 @@ namespace mango
 
                 ImGui::Separator();
 
-                if (ImGui::MenuItem("Exit")) Services::application()->stop();
+                if (ImGui::MenuItem("New Project..."))
+                {
+                    newProject();
+                }
+
+                if (ImGui::MenuItem("Open Project..."))
+                {
+                    openProject();
+                }
+
+                if (ImGui::MenuItem("Save Project"))
+                {
+                    saveProject();
+                }
+
+                ImGui::Separator();
+
+                if (ImGui::MenuItem("Exit")) Services::application()->close();
                 ImGui::EndMenu();
             }
             ImGui::EndMenuBar();
@@ -322,7 +337,7 @@ namespace mango
         
         onGuiViewport();
         m_sceneHierarchyPanel.onGui();
-        m_assetsBrowserPanel.onGui();
+        m_assetsBrowserPanel->onGui();
         onGuiToolbar();
         onGuiStats();
         onGuiRenderingSettings();
@@ -330,9 +345,51 @@ namespace mango
         ImGui::End(); // Mango Editor
     }
 
+    void EditorSystem::newProject()
+    {
+        // Project::createNew(); // TODO: specify project path, name from GUI
+        MG_WARN("void EditorSystem::newProject() NOT yet implemented!");
+    }
+
+    bool EditorSystem::openProject(const std::filesystem::path& path)
+    {
+        if (Project::load(path))
+        {
+            // Populate VFI search path
+            VFI::addToSearchPath(Project::getProjectDirectory());
+            VFI::addToSearchPath(Project::getAssetDirectory());
+
+            // Open start scene
+            openScene(Project::getActive()->getConfig().startScene);
+            m_assetsBrowserPanel = std::make_unique<AssetBrowserPanel>();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    bool EditorSystem::openProject()
+    {
+        auto file = pfd::open_file("", "", { "Mango Project (*" MG_PROJECT_EXTENSION ")", "*" MG_PROJECT_EXTENSION }, false);
+
+        if (file.result().empty()) return false;
+    
+        return openProject(file.result()[0]);
+    }
+
+    void EditorSystem::saveProject()
+    {
+        auto projectName      = Project::getActive()->getConfig().name + MG_PROJECT_EXTENSION;
+        auto projectDirectory = Project::getProjectDirectory();
+
+        Project::saveActive(projectDirectory / projectName);
+    }
+
     void EditorSystem::newScene()
     {
-        m_activeScene = Services::sceneManager()->createScene("New Scene");
+        m_editorScene = Services::sceneManager()->createScene("New Scene");
+        m_activeScene = m_editorScene;
         Services::sceneManager()->setActiveScene(m_activeScene);
         m_sceneHierarchyPanel.setScene(m_activeScene);
 
@@ -341,11 +398,18 @@ namespace mango
 
     void EditorSystem::openScene()
     {
-        auto file = pfd::open_file("", "." /*TODO: project path here*/, { "Mango Scene (*" MG_SCENE_EXTENSION ")", "*" MG_SCENE_EXTENSION }, false);
+        auto file = pfd::open_file("", Project::getProjectDirectory().string(), {"Mango Scene (*" MG_SCENE_EXTENSION ")", "*" MG_SCENE_EXTENSION}, false);
         
         if (!file.result().empty())
         {
-            openScene(file.result()[0]);
+            // Check relative path; if the scene file is not in a child directory of project path
+            // don't load this scene file.
+            auto relativeFilepath = std::filesystem::relative(file.result()[0], Project::getAssetDirectory());
+
+            if (!relativeFilepath.empty())
+            {
+                openScene(relativeFilepath);
+            }
         }
     }
 
@@ -373,7 +437,11 @@ namespace mango
             return;
         }
 
-        m_editorScenePath = path;
+        // VFI under the hood only accepts forward slashes only
+        auto pathString = path.string();
+        strutil::replace_all(pathString, "\\", "/");
+
+        m_editorScenePath = VFI::getFilepath(pathString).make_preferred();
         m_editorScene     = SceneSerializer::deserialize(m_editorScenePath);
         m_activeScene     = m_editorScene;
 
