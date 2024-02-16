@@ -35,14 +35,17 @@ namespace mango
 
         static std::shared_ptr<Project> getActive() { return s_activeProject; }
 
-        static std::shared_ptr<Project> createNew();
-        static std::shared_ptr<Project> load(const std::filesystem::path& path);
-        static bool saveActive(const std::filesystem::path& path);
+        static std::shared_ptr<Project> createNew(const std::string& name, const std::filesystem::path& path);
+        static std::shared_ptr<Project> load(const std::filesystem::path& filepath);
+        static bool saveActive(const std::filesystem::path& filepath);
 
     private:
         ProjectConfig m_config;
         std::filesystem::path m_projectDirectory;
 
         inline static std::shared_ptr<Project> s_activeProject;
+
+    private:
+        friend class ProjectSerializer;
     };
 }

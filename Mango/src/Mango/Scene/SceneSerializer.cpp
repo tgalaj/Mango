@@ -5,7 +5,7 @@
 #include "Mango/Core/AssetManager.h"
 
 #include <yaml-cpp/yaml.h>
-
+#include <strutil.h>
 #include <fstream>
 
 namespace YAML {
@@ -409,7 +409,7 @@ namespace mango
 
         out << YAML::EndMap; // Entity
     }
-
+    
     bool SceneSerializer::serialize(const std::shared_ptr<Scene>& scene, const std::filesystem::path& outFilepath)
     {
         YAML::Emitter out;
@@ -429,11 +429,18 @@ namespace mango
         out << YAML::EndSeq;
         out << YAML::EndMap;
 
-        std::ofstream fout(outFilepath);
+        auto pathString = outFilepath.string();
+        strutil::replace_all(pathString, "\\", "/");
+
+        std::ofstream fout(pathString);
         if (fout.is_open())
         {
             fout << out.c_str();
             return true;
+        }
+        else
+        {
+            MG_CORE_ERROR("Can't save file {}", pathString);
         }
 
         return false;

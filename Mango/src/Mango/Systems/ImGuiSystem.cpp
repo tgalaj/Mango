@@ -41,7 +41,7 @@ namespace mango
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
         // Setup Dear ImGui style
         ImGui::StyleColorsDark();
@@ -50,7 +50,7 @@ namespace mango
         ImGuiStyle& style = ImGui::GetStyle();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
-            style.WindowRounding = 0.0f;
+            style.WindowRounding              = 0.0f;
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
         setDarkThemeColors();

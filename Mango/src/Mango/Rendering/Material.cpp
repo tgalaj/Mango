@@ -1,7 +1,7 @@
 #include "mgpch.h"
 
 #include "Material.h"
-#include "Mango/Core/AssetManager.h"
+#include "Mango/Systems/RenderingSystem.h"
 
 namespace mango
 {
@@ -23,11 +23,11 @@ namespace mango
 
         m_blendMode = BlendMode::NONE;
 
-        m_textureMap[TextureType::DIFFUSE]  = AssetManager::getTexture2D("default_diffuse");
-        m_textureMap[TextureType::SPECULAR] = AssetManager::getTexture2D("default_specular");
-        m_textureMap[TextureType::NORMAL]   = AssetManager::getTexture2D("default_normal");
-        m_textureMap[TextureType::EMISSION] = AssetManager::getTexture2D("default_emission");
-        m_textureMap[TextureType::DEPTH]    = AssetManager::getTexture2D("default_depth");
+        m_textureMap[TextureType::DIFFUSE]  = RenderingSystem::s_defaultTextures[TextureType::DIFFUSE];
+        m_textureMap[TextureType::SPECULAR] = RenderingSystem::s_defaultTextures[TextureType::SPECULAR];
+        m_textureMap[TextureType::NORMAL]   = RenderingSystem::s_defaultTextures[TextureType::NORMAL];
+        m_textureMap[TextureType::EMISSION] = RenderingSystem::s_defaultTextures[TextureType::EMISSION];
+        m_textureMap[TextureType::DEPTH]    = RenderingSystem::s_defaultTextures[TextureType::DEPTH];
     }
 
 

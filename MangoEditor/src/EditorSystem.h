@@ -51,6 +51,8 @@ namespace mango
         void onGuiToolbar();
         void onGuiStats();
         void onGuiRenderingSettings();
+        void onGuiProjectSettings();
+        void onGuiMangoHub();
 
         void beginDockingToolbar(const char* name, ImGuiAxis toolbarAxis, const ImVec2& iconSize);
         void endDockingToolbar();
@@ -90,5 +92,7 @@ namespace mango
         SceneHierarchyPanel m_sceneHierarchyPanel;
 
         EditorCamera m_editorCamera;
+
+        bool m_isMangoHubOpen = false;
     };
 }

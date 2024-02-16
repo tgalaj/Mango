@@ -18,7 +18,7 @@ namespace mango
 
     void VFI::deinit()
     {
-        MG_PROFILE_ZONE_SCOPED
+        MG_PROFILE_ZONE_SCOPED;
         MG_CORE_ASSERT_MSG(isInitialized, "VFI is not initialized!");
 
         PHYSFS_deinit();
@@ -27,7 +27,7 @@ namespace mango
 
     void VFI::setSaneConfig(const std::string& organization, const std::string& appName)
     {
-        MG_PROFILE_ZONE_SCOPED
+        MG_PROFILE_ZONE_SCOPED;
         setPrefWriteDir(organization, appName);
 
         auto writeDir = getWriteDir();
@@ -39,7 +39,7 @@ namespace mango
 
     bool VFI::addToSearchPath(const std::filesystem::path& path, SearchPathMode mode)
     {
-        MG_PROFILE_ZONE_SCOPED
+        MG_PROFILE_ZONE_SCOPED;
         MG_CORE_ASSERT_MSG(isInitialized, "VFI is not initialized!");
 
         bool ret = PHYSFS_mount(path.string().c_str(), nullptr, int32_t(mode));
@@ -54,16 +54,26 @@ namespace mango
         return ret;
     }
 
+    bool VFI::removeFromSearchPath(const std::filesystem::path& oldPath)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_CORE_ASSERT_MSG(isInitialized, "VFI is not initialized!");
+
+        int ret = PHYSFS_removeFromSearchPath(oldPath.string().c_str());
+
+        return (ret != 0) ? true : false;
+    }
+
     bool VFI::setPrefWriteDir(const std::string& organization, const std::string& appName)
     {
-        MG_PROFILE_ZONE_SCOPED
+        MG_PROFILE_ZONE_SCOPED;
         auto prefDir = PHYSFS_getPrefDir(organization.c_str(), appName.c_str());
         return PHYSFS_setWriteDir(prefDir);
     }
 
     bool VFI::setWriteDir(const std::filesystem::path& dir)
     {
-        MG_PROFILE_ZONE_SCOPED
+        MG_PROFILE_ZONE_SCOPED;
         auto writeDir = getWriteDir();
 
         if (writeDir == dir)
@@ -104,7 +114,7 @@ namespace mango
 
     std::filesystem::path VFI::getWriteDir()
     {
-        MG_PROFILE_ZONE_SCOPED
+        MG_PROFILE_ZONE_SCOPED;
         auto dir = PHYSFS_getWriteDir();
 
         if (dir == NULL)
@@ -119,7 +129,7 @@ namespace mango
 
     std::filesystem::path VFI::getExecutableDir()
     {
-        MG_PROFILE_ZONE_SCOPED
+        MG_PROFILE_ZONE_SCOPED;
         return std::filesystem::path(PHYSFS_getBaseDir());
     }
 
@@ -205,7 +215,7 @@ namespace mango
 
     std::filesystem::path VFI::getFilepath(const std::string& filename)
     {
-        MG_PROFILE_ZONE_SCOPED
+        MG_PROFILE_ZONE_SCOPED;
         auto realDir = PHYSFS_getRealDir(filename.c_str());
 
         std::string dir = "";

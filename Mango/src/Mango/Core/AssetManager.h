@@ -47,6 +47,8 @@ namespace mango
         static std::shared_ptr<Texture> getTexture2D(const std::string & textureName);
         static std::shared_ptr<Shader>  getShader   (const std::string & shaderName);
 
+        static void unload();
+
     private:
         AssetManager() {}
         ~AssetManager() {}

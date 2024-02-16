@@ -14,7 +14,9 @@ namespace mango
 {
     bool         RenderingSystem::DEBUG_RENDERING    = false;
     unsigned int RenderingSystem::DEBUG_WINDOW_WIDTH = 0;
-    
+
+    std::unordered_map<Material::TextureType, std::shared_ptr<Texture>> RenderingSystem::s_defaultTextures;
+
     RenderingSystem::RenderingSystem()
         : System("RenderingSystem")
     {
@@ -43,11 +45,17 @@ namespace mango
         Services::eventBus()->subscribe<ComponentRemovedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ActiveSceneChangedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
 
-        AssetManager::createTexture2D1x1("default_diffuse",  glm::uvec4(255, 255, 255, 255));
-        AssetManager::createTexture2D1x1("default_specular", glm::uvec4(0,   0,   0,   255));
-        AssetManager::createTexture2D1x1("default_normal",   glm::uvec4(128, 127, 254, 255));
-        AssetManager::createTexture2D1x1("default_emission", glm::uvec4(0,   0,   0,   255));
-        AssetManager::createTexture2D1x1("default_depth",    glm::uvec4(0,   0,   0,   255));
+        auto defaultDiffuse   = std::make_shared<Texture>(); defaultDiffuse ->createTexture2d1x1(glm::uvec4(255, 255, 255, 255));
+        auto defaultSpecular  = std::make_shared<Texture>(); defaultSpecular->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
+        auto defaultNormal    = std::make_shared<Texture>(); defaultNormal  ->createTexture2d1x1(glm::uvec4(128, 127, 254, 255));
+        auto defaultEmission  = std::make_shared<Texture>(); defaultEmission->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
+        auto defaultDepth     = std::make_shared<Texture>(); defaultDepth   ->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
+
+        s_defaultTextures[Material::TextureType::DIFFUSE]  = defaultDiffuse;
+        s_defaultTextures[Material::TextureType::SPECULAR] = defaultSpecular;
+        s_defaultTextures[Material::TextureType::NORMAL]   = defaultNormal;
+        s_defaultTextures[Material::TextureType::EMISSION] = defaultEmission;
+        s_defaultTextures[Material::TextureType::DEPTH]    = defaultDepth;
 
         m_opaqueQueue.reserve(50);
         m_alphaQueue.reserve(5);
@@ -151,7 +159,12 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderingSystem::onUpdate");
-        MG_CORE_ASSERT_MSG(m_activeScene != nullptr, "Active scene can't be nullptr!");
+
+        if (!m_activeScene)
+        {
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            return;
+        }
 
         glBindFramebuffer(GL_FRAMEBUFFER, m_outputToOffscreenTexture ? m_mainRenderTarget->m_fbo : 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

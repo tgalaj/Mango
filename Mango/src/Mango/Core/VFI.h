@@ -17,6 +17,7 @@ namespace mango
         static void setSaneConfig(const std::string& organization, const std::string& appName);
 
         static bool addToSearchPath(const std::filesystem::path & path, SearchPathMode mode = SearchPathMode::APPEND);
+        static bool removeFromSearchPath(const std::filesystem::path& oldPath);
         static bool setPrefWriteDir(const std::string & organization, const std::string & appName);
         static bool setWriteDir(const std::filesystem::path & dir);
 

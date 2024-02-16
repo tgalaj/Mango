@@ -69,6 +69,8 @@ namespace mango
         static bool         DEBUG_RENDERING;
         static unsigned int DEBUG_WINDOW_WIDTH;
 
+        static std::unordered_map<Material::TextureType, std::shared_ptr<Texture>> s_defaultTextures;
+
     private:
         static void initRenderingStates();
 

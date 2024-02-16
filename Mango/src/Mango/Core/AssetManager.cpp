@@ -232,4 +232,13 @@ namespace mango
 
         return nullptr;
     }
+
+    void AssetManager::unload()
+    {
+        m_loadedModels.clear();
+        m_loadedTextures.clear();
+        m_loadedShaders.clear();
+        m_loadedFonts.clear();
+    }
+
 }

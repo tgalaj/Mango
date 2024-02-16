@@ -17,8 +17,8 @@ namespace mango
             out << YAML::Key << "Project"  << YAML::Value;
             out << YAML::BeginMap;
             {
-                out << YAML::Key << "Name"  << YAML::Value << config.name;
-                out << YAML::Key << "StartScene"  << YAML::Value << config.startScene;
+                out << YAML::Key << "Name"            << YAML::Value << config.name;
+                out << YAML::Key << "StartScene"      << YAML::Value << config.startScene;
                 out << YAML::Key << "AssetDirectory"  << YAML::Value << config.assetDirectory.string();
             }
             out << YAML::EndMap;
@@ -53,7 +53,8 @@ namespace mango
         if (!projectNode)
             return nullptr;
 
-        auto project = Project::createNew();
+        Project::s_activeProject = std::make_shared<Project>();
+        auto project = Project::getActive();
         auto& config = project->getConfig();
 
         config.name           = projectNode["Name"].as<std::string>();

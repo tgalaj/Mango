@@ -1,4 +1,4 @@
-Scene: Empty Scene
+Scene: Sandbox
 Entities:
   - Entity: 15278254887496824896
     TagComponent:

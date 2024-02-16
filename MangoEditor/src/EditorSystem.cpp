@@ -1,6 +1,7 @@
 #define GLFW_INCLUDE_NONE 
 
 #include "EditorSystem.h"
+#include "Mango/ImGui/ImGuiUtils.h"
 #include "Mango/Math/Math.h"
 #include "Mango/Project/ProjectSerializer.h"
 #include "Mango/Scene/SceneSerializer.h"
@@ -62,14 +63,12 @@ namespace mango
         }
         else
         {
-            if (!openProject())
-            {
-                Services::application()->close();
-            }
+            m_isMangoHubOpen = true;
         }
 
         // Setup font
         Services::application()->getImGuiSystem()->addFont(VFI::getFilepath("fonts/inter/Inter-Bold.ttf"),    16.0f); 
+        Services::application()->getImGuiSystem()->addFont(VFI::getFilepath("fonts/inter/Inter-Regular.ttf"), 32.0f);
         Services::application()->getImGuiSystem()->addFont(VFI::getFilepath("fonts/inter/Inter-Regular.ttf"), 16.0f, true);
 
         // Load icons
@@ -113,21 +112,24 @@ namespace mango
             }
         });
 
-        /*auto skybox = std::make_shared<Skybox>("skyboxes/stormydays/",
-                                                       "stormydays_lf.tga",
-                                                       "stormydays_rt.tga",
-                                                       "stormydays_up.tga", 
-                                                       "stormydays_dn.tga", 
-                                                       "stormydays_ft.tga", 
-                                                       "stormydays_bk.tga" );*/
-        auto skybox = std::make_shared<Skybox>("skyboxes/cold/",
-                                                       "right.jpg",
-                                                       "left.jpg",
-                                                       "top.jpg", 
-                                                       "bottom.jpg", 
-                                                       "front.jpg", 
-                                                       "back.jpg" );
-        Services::renderer()->setSkybox(skybox);
+        if (Project::getActive())
+        {
+            /*auto skybox = std::make_shared<Skybox>("skyboxes/stormydays/",
+                                                           "stormydays_lf.tga",
+                                                           "stormydays_rt.tga",
+                                                           "stormydays_up.tga", 
+                                                           "stormydays_dn.tga", 
+                                                           "stormydays_ft.tga", 
+                                                           "stormydays_bk.tga" );*/
+            auto skybox = std::make_shared<Skybox>("skyboxes/cold/",
+                                                           "right.jpg",
+                                                           "left.jpg",
+                                                           "top.jpg", 
+                                                           "bottom.jpg", 
+                                                           "front.jpg", 
+                                                           "back.jpg" );
+            Services::renderer()->setSkybox(skybox);
+        }
     }
 
     void EditorSystem::onDestroy()
@@ -230,6 +232,10 @@ namespace mango
     
     void EditorSystem::onGui()
     {
+        if (m_isMangoHubOpen) onGuiMangoHub();
+
+        bool isActiveProject = Project::getActive() != nullptr;
+
         // Resize the main FBO based not on the window, but based on the Viewport panel !!
         // Resize
         if (glm::uvec2 mainFramebufferSize = Services::renderer()->getMainFramebufferSize();
@@ -281,24 +287,24 @@ namespace mango
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("New Scene", "Ctrl+N"))
+                if (ImGui::MenuItem("New Scene", "Ctrl+N", nullptr, isActiveProject))
                 {
                     newScene();
                 }
 
-                if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
+                if (ImGui::MenuItem("Open Scene", "Ctrl+O", nullptr, isActiveProject))
                 {
                     openScene();
                 }
 
                 ImGui::Separator();
 
-                if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
+                if (ImGui::MenuItem("Save Scene", "Ctrl+S", nullptr, isActiveProject))
                 {
                     saveScene();
                 }
 
-                if (ImGui::MenuItem("Save Scene As...", "Ctrl+Shift+S"))
+                if (ImGui::MenuItem("Save Scene As...", "Ctrl+Shift+S", nullptr, isActiveProject))
                 {
                     saveSceneAs();
                 }
@@ -312,10 +318,10 @@ namespace mango
 
                 if (ImGui::MenuItem("Open Project..."))
                 {
-                    openProject();
+                    m_isMangoHubOpen = true;
                 }
 
-                if (ImGui::MenuItem("Save Project"))
+                if (ImGui::MenuItem("Save Project", nullptr, nullptr, isActiveProject))
                 {
                     saveProject();
                 }
@@ -328,27 +334,29 @@ namespace mango
             ImGui::EndMenuBar();
         }
 
-        ImGui::Begin("CVars Editor");
+        if (isActiveProject)
         {
-            CVarSystem::get()->drawImguiEditor();
-        }
-        ImGui::End(); // CVars Editor
+            ImGui::Begin("CVars Editor");
+            {
+                CVarSystem::get()->drawImguiEditor();
+            }
+            ImGui::End(); // CVars Editor
 
-        
-        onGuiViewport();
-        m_sceneHierarchyPanel.onGui();
-        m_assetsBrowserPanel->onGui();
-        onGuiToolbar();
-        onGuiStats();
-        onGuiRenderingSettings();
+            onGuiViewport();
+            m_sceneHierarchyPanel.onGui();
+            m_assetsBrowserPanel->onGui();
+            onGuiToolbar();
+            onGuiStats();
+            onGuiRenderingSettings();
+            onGuiProjectSettings();
+        }
 
         ImGui::End(); // Mango Editor
     }
 
     void EditorSystem::newProject()
     {
-        // Project::createNew(); // TODO: specify project path, name from GUI
-        MG_WARN("void EditorSystem::newProject() NOT yet implemented!");
+        m_isMangoHubOpen = true;
     }
 
     bool EditorSystem::openProject(const std::filesystem::path& path)
@@ -358,6 +366,15 @@ namespace mango
             // Populate VFI search path
             VFI::addToSearchPath(Project::getProjectDirectory());
             VFI::addToSearchPath(Project::getAssetDirectory());
+
+            auto searchpath = VFI::getSearchPath();
+            for (auto& p : searchpath)
+            {
+                MG_TRACE(p);
+            }
+
+            // Unload previous resources
+            AssetManager::unload();
 
             // Open start scene
             openScene(Project::getActive()->getConfig().startScene);
@@ -731,6 +748,273 @@ namespace mango
         ImGui::Begin("Rendering Settings");
         {
             ImGui::Checkbox("Visualize lights", &RenderingSystem::DEBUG_RENDERING);
+        }
+        ImGui::End();
+    }
+
+    // NOTE(TG) Probably should this be a separate panel
+    void EditorSystem::onGuiProjectSettings()
+    {
+        static ImGuiWindowFlags flags = 0;
+        ImGui::Begin("Project Settings", nullptr, flags);
+        {
+            auto& config = Project::getActive()->getConfig();
+
+            if (ImGui::BeginTable("ProjectSettings", 2))
+            {
+                ImGui::TableSetupColumn("x", ImGuiTableColumnFlags_WidthFixed);
+                ImGui::TableSetupColumn("y", ImGuiTableColumnFlags_WidthStretch);
+
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
+                ImGui::Text("Name");
+                
+                ImGui::TableSetColumnIndex(1);
+                ImGui::BeginDisabled();
+                {
+                    ImGui::InputText("##ProjectName", config.name.data(), config.name.size());
+                }
+                ImGui::EndDisabled();
+
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
+                ImGui::Text("Asset Directory");
+
+                ImGui::TableSetColumnIndex(1);
+                ImGui::BeginDisabled();
+                {
+                    ImGui::InputText("##AssetDirectory", &config.assetDirectory.string()[0], config.assetDirectory.string().size());
+                }
+                ImGui::EndDisabled();
+
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
+                ImGui::Text("Startup Scene");
+
+                ImGui::TableSetColumnIndex(1);
+                std::string startSceneName = std::filesystem::path(config.startScene).string();
+                static char startSceneNameBuf[128];
+                startSceneName.copy(startSceneNameBuf, sizeof(startSceneNameBuf));
+
+                // NOTE(TG) What about the dropdown that lists all available scenes in a project?
+                if (ImGui::InputText("##StartupScene", startSceneNameBuf, sizeof(startSceneNameBuf)))
+                {
+                    flags |= ImGuiWindowFlags_UnsavedDocument;
+                    config.startScene = std::string(startSceneNameBuf);
+                }
+
+                ImGui::EndTable();
+            }
+
+            ImGui::Spacing();
+            ImGui::BeginDisabled(!(flags & ImGuiWindowFlags_UnsavedDocument));
+            {
+                if (ImGui::Utils::ButtonAligned("Save Project Settings"))
+                {
+                    saveProject();
+                    flags = 0;
+                }
+            }
+            ImGui::EndDisabled();
+        }
+        ImGui::End();
+    }
+
+    // NOTE(TG) Probably should be a separate panel
+    void EditorSystem::onGuiMangoHub()
+    {
+        ImGui::SetNextWindowSize({ 900, 350 });
+
+        auto flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
+        if (ImGui::Begin("Primitive Mango Hub", &m_isMangoHubOpen, flags))
+        {
+            ImGuiStyle& style          = ImGui::GetStyle();
+            ImGuiIO&    io             = ImGui::GetIO();
+            auto        boldFont       = io.Fonts->Fonts[0];
+            auto        bigRegularFont = io.Fonts->Fonts[1];
+            
+            ImVec4 errorMessageColor   = ImVec4(0.8392, 0.2706, 0.2039, 1.0);
+            ImVec4 warningMessageColor = ImVec4(0.9490, 0.8863, 0.3882, 1.0);
+
+            bool isError = false;
+
+            if (ImGui::BeginTable("ProjectSettings", 2, ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_SizingStretchSame))
+            {
+                ImGui::TableSetupColumn("x", ImGuiTableColumnFlags_WidthStretch);
+                ImGui::TableSetupColumn("y", ImGuiTableColumnFlags_WidthStretch);
+
+                // New project
+                ImGui::TableNextColumn();
+                ImGui::PushFont(bigRegularFont);
+                ImGui::Text("New Project");
+                ImGui::PopFont();
+                ImGui::Dummy({ 0, bigRegularFont->FontSize });
+
+                ImGui::Text("Project Name:");
+                ImGui::PushItemWidth(-1);
+                static char newProjectName[256];
+                ImGui::InputText("##NewProjectName", newProjectName, sizeof(newProjectName));
+                ImGui::PopItemWidth();
+
+                ImGui::Text("Path:");
+
+                auto        browseLabel      = "Browse";
+                float       browseButtonSize = ImGui::CalcTextSize(browseLabel).x + style.FramePadding.x * 2.0f * 2.0f; // additional times 2 due to same line and padding between widgets
+                float       availableWidth   = ImGui::GetContentRegionAvail().x;
+
+                static char newProjectPath[256];
+                ImGui::PushItemWidth(availableWidth - browseButtonSize);
+                ImGui::InputText("##NewProjectPath", newProjectPath, sizeof(newProjectPath));
+                ImGui::PopItemWidth();
+                
+                ImGui::SameLine();
+                
+                ImGui::PushID("newProjectBrowseButton");
+                if (ImGui::Button(browseLabel))
+                {
+                    auto folder = pfd::select_folder("Select New Project Directory", "");
+
+                    if (!folder.result().empty())
+                    {
+                        folder.result().copy(newProjectPath, sizeof(newProjectPath));
+                    }
+                }
+                ImGui::PopID();
+
+                ImGui::Spacing();
+                if (std::string(newProjectName).empty())
+                {
+                    const char* msg = "Project name can't be empty";
+                    ImGui::Utils::AlignWidget(msg);
+                    ImGui::PushFont(boldFont);
+                    ImGui::TextColored(errorMessageColor, msg);
+                    ImGui::PopFont();
+                    isError = true;
+                }
+                else if (!std::filesystem::exists(newProjectPath))
+                {
+                    const char* msg = "The specified path doesn't exist";
+                    ImGui::Utils::AlignWidget(msg);
+                    ImGui::PushFont(boldFont);
+                    ImGui::TextColored(errorMessageColor, msg);
+                    ImGui::PopFont();
+                    isError = true;
+                }
+                else if (!std::filesystem::is_directory(newProjectPath))
+                {
+                    const char* msg = "The specified path is not a directory";
+                    ImGui::Utils::AlignWidget(msg);
+                    ImGui::PushFont(boldFont);
+                    ImGui::TextColored(errorMessageColor, msg);
+                    ImGui::PopFont();
+                    isError = true;
+                }
+                else if (std::filesystem::exists(std::filesystem::path(newProjectPath) / newProjectName))
+                {
+                    const char* msg = "The project with the same name\nalready exists in this directory";
+                    ImGui::Utils::AlignWidget(msg);
+                    ImGui::PushFont(boldFont);
+                    ImGui::TextColored(errorMessageColor, msg);
+                    ImGui::PopFont();
+                    isError = true;
+                }
+                else
+                {
+                    ImGui::Text("");
+                }
+
+                ImGui::Dummy({ 0, io.FontDefault->FontSize });
+                ImGui::BeginDisabled(isError);
+                if (ImGui::Utils::ButtonAligned("Create & Open", 0.5f))
+                {
+                    auto newProject = Project::createNew(newProjectName, newProjectPath);
+                    auto projectFilepath = Project::getActive()->getConfig().name + MG_PROJECT_EXTENSION;
+                    if (openProject(std::filesystem::path(newProjectPath) / std::filesystem::path(newProjectName) / projectFilepath))
+                    {
+                        m_isMangoHubOpen = false;
+                    }
+
+                    memset(newProjectName, 0, sizeof(newProjectName));
+                    memset(newProjectPath, 0, sizeof(newProjectPath));
+                }
+                ImGui::EndDisabled();
+
+                // Open project
+                isError = false;
+
+                ImGui::TableNextColumn();
+                ImGui::PushFont(bigRegularFont);
+                ImGui::Text("Open Project");
+                ImGui::PopFont();
+                ImGui::Dummy({ 0, bigRegularFont->FontSize });
+
+                ImGui::Text("Path:");
+
+                availableWidth = ImGui::GetContentRegionAvail().x;
+
+                static char openProjectPath[256];
+                ImGui::PushItemWidth(availableWidth - browseButtonSize);
+                ImGui::InputText("##OpenProjectPath", openProjectPath, sizeof(openProjectPath));
+                ImGui::PopItemWidth();
+
+                ImGui::SameLine();
+
+                ImGui::PushID("openProjectBrowseButton");
+                if (ImGui::Button(browseLabel))
+                {
+                    auto file = pfd::open_file("", "", { "Mango Project (*" MG_PROJECT_EXTENSION ")", "*" MG_PROJECT_EXTENSION }, false);
+
+                    if (!file.result().empty())
+                    {
+                        file.result()[0].copy(openProjectPath, sizeof(openProjectPath));
+                    }
+                }
+                ImGui::PopID();
+
+                ImGui::Spacing();
+                if (!std::filesystem::exists(openProjectPath))
+                {
+                    const char* msg = "The specified project doesn't exist";
+                    ImGui::Utils::AlignWidget(msg);
+                    ImGui::PushFont(boldFont);
+                    ImGui::TextColored(errorMessageColor, msg);
+                    ImGui::PopFont();
+                    isError = true;
+                }
+                else if (std::filesystem::is_directory(openProjectPath) || 
+                         std::filesystem::path(openProjectPath).extension() != MG_PROJECT_EXTENSION)
+                {
+                    const char* msg = "The specified path is not a Mango project file";
+                    ImGui::Utils::AlignWidget(msg);
+                    ImGui::PushFont(boldFont);
+                    ImGui::TextColored(errorMessageColor, msg);
+                    ImGui::PopFont();
+                    isError = true;
+                }
+                else
+                {
+                    ImGui::Text("");
+                }
+
+                ImGui::Dummy({ 0, io.FontDefault->FontSize });
+                ImGui::BeginDisabled(isError);
+                if (ImGui::Utils::ButtonAligned("Open Project", 0.5f))
+                {
+                    if (openProject(openProjectPath))
+                    {
+                        m_isMangoHubOpen = false;
+                    }
+                    memset(openProjectPath, 0, sizeof(openProjectPath));
+                }
+                ImGui::EndDisabled();
+
+                // Fill the window with empty space to the bottom
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
+                ImGui::Dummy({ 0, ImGui::GetContentRegionAvail().y });
+
+                ImGui::EndTable();
+            }
         }
         ImGui::End();
     }

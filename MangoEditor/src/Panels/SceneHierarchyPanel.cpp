@@ -204,8 +204,8 @@ namespace mango
 
     static bool customDragFloat3(const std::string& label, glm::vec3& values, float defaultValue = 0.0f, float columnWidth = 80.0f)
     {
-        ImGuiIO& io = ImGui::GetIO();
-        auto boldFont = io.Fonts->Fonts[0];
+        ImGuiIO& io       = ImGui::GetIO();
+        auto     boldFont = io.Fonts->Fonts[0];
 
         bool ret = false;
 
