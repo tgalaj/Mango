@@ -420,4 +420,15 @@ namespace mango
         glm::vec3 offset     = { 0.0f, 0.0f, 0.0f };
         glm::vec3 halfExtent = { 0.5f, 0.5f, 0.5f };
     };
+
+    // Components Registry
+    template<typename... Component>
+    struct ComponentsGroup
+    {
+    };
+
+    // Except: IDComponent, TagComponent which are special case components
+    using ComponentsRegistry = ComponentsGroup<DirectionalLightComponent, PointLightComponent, SpotLightComponent, 
+                                               CameraComponent, ModelRendererComponent, TransformComponent, 
+                                               RigidBody3DComponent, SphereColliderComponent, BoxCollider3DComponent>;
 }

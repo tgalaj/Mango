@@ -10,30 +10,49 @@ namespace mango
     {
     }
 
-    template<typename Component>
-    static void copyComponent(entt::registry& dst, const entt::registry& src, const std::unordered_map<UUID, entt::entity>& enttMap)
+    template<typename... Component>
+    static void copyComponent(      entt::registry&                         dst, 
+                              const entt::registry&                         src, 
+                              const std::unordered_map<UUID, entt::entity>& enttMap)
     {
-        auto view = src.view<Component>();
-        for (auto e : view)
+        ([&]()
         {
-            UUID uuid = src.get<IDComponent>(e).id;
+            auto view = src.view<Component>();
+            for (auto srcEntity : view)
+            {
+                entt::entity dstEntity = enttMap.at(src.get<IDComponent>(srcEntity).id);
 
-            MG_CORE_ASSERT(enttMap.find(uuid) != enttMap.end());
-
-            entt::entity dstEnttID = enttMap.at(uuid);
-
-            auto& component = src.get<Component>(e);
-            dst.emplace_or_replace<Component>(dstEnttID, component);
-        }
+                auto& srcComponent = src.get<Component>(srcEntity);
+                dst.emplace_or_replace<Component>(dstEntity, srcComponent);
+            }
+        }(), ...);
     }
 
-    template<typename Component>
+    template<typename... Component>
+    static void copyComponent(ComponentsGroup<Component...>, 
+                                    entt::registry&                         dst, 
+                              const entt::registry&                         src, 
+                              const std::unordered_map<UUID, entt::entity>& enttMap)
+    {
+        copyComponent<Component...>(dst, src, enttMap);
+    }
+
+    template<typename... Component>
     static void copyComponentIfExists(Entity dst, Entity src)
     {
-        if (src.hasComponent<Component>())
+        ([&]()
         {
-            dst.addOrReplaceComponent<Component>(src.getComponent<Component>());
-        }
+            if (src.hasComponent<Component>())
+            {
+                dst.addOrReplaceComponent<Component>(src.getComponent<Component>());
+            }
+        }(), ...);
+    }
+
+    template<typename... Component>
+    static void copyComponentIfExists(ComponentsGroup<Component...>, Entity dst, Entity src)
+    {
+        copyComponentIfExists<Component...>(dst, src);
     }
 
     std::shared_ptr<Scene> Scene::copy(std::shared_ptr<Scene>& other)
@@ -50,24 +69,15 @@ namespace mango
         auto idView = srcSceneRegistry.view<IDComponent>();
         for (auto e : idView)
         {
-            UUID uuid = srcSceneRegistry.get<IDComponent>(e).id;
+                  UUID  uuid = srcSceneRegistry.get<IDComponent>(e).id;
             const auto& name = srcSceneRegistry.get<TagComponent>(e).name;
 
-            Entity newEntity = newScene->createEntityWithUUID(uuid, name);
-            enttMap[uuid] = (entt::entity)newEntity;
+            Entity newEntity     = newScene->createEntityWithUUID(uuid, name);
+                   enttMap[uuid] = (entt::entity)newEntity;
         }
 
-        // Find entity with ID 
         // Copy components (except ID and Tag components)
-        copyComponent<DirectionalLightComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        copyComponent<PointLightComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        copyComponent<SpotLightComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        copyComponent<CameraComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        copyComponent<ModelRendererComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        copyComponent<TransformComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        copyComponent<RigidBody3DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        copyComponent<SphereColliderComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
-        copyComponent<BoxCollider3DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+        copyComponent(ComponentsRegistry{}, dstSceneRegistry, srcSceneRegistry, enttMap);
 
         return newScene;
     }
@@ -92,19 +102,14 @@ namespace mango
         return entity;
     }
 
-    void Scene::duplicateEntity(Entity entity)
+    Entity Scene::duplicateEntity(Entity entity)
     {
         Entity newEntity = createEntity(entity.getName());
 
-        copyComponentIfExists<DirectionalLightComponent>(newEntity, entity);
-        copyComponentIfExists<PointLightComponent>(newEntity, entity);
-        copyComponentIfExists<SpotLightComponent>(newEntity, entity);
-        copyComponentIfExists<CameraComponent>(newEntity, entity);
-        copyComponentIfExists<ModelRendererComponent>(newEntity, entity);
-        copyComponentIfExists<TransformComponent>(newEntity, entity);
-        copyComponentIfExists<RigidBody3DComponent>(newEntity, entity);
-        copyComponentIfExists<SphereColliderComponent>(newEntity, entity);
-        copyComponentIfExists<BoxCollider3DComponent>(newEntity, entity);
+        copyComponentIfExists(ComponentsRegistry{}, newEntity, entity);
+
+
+        return newEntity;
     }
 
     void Scene::destroyEntity(Entity entity)

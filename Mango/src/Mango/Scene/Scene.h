@@ -22,7 +22,7 @@ namespace mango
         Entity createEntity(const std::string& name = "Entity");
         Entity createEntityWithUUID(UUID uuid, const std::string& name = "Entity");
 
-        void duplicateEntity(Entity entity);
+        Entity duplicateEntity(Entity entity);
         void destroyEntity(Entity entity);
 
         Entity getPrimaryCamera();

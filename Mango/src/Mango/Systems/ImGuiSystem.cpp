@@ -41,7 +41,7 @@ namespace mango
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+        //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
         // Setup Dear ImGui style
         ImGui::StyleColorsDark();
@@ -107,11 +107,13 @@ namespace mango
         MG_PROFILE_GL_ZONE("ImGuiSystem::end");
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glViewport(0, 0, GLsizei(m_windowSize.x), GLsizei(m_windowSize.y));
+        //glViewport(0, 0, GLsizei(m_windowSize.x), GLsizei(m_windowSize.y));
+        ImGuiIO& io = ImGui::GetIO();
+        io.DisplaySize = ImVec2(Services::application()->getWindow()->getWidth(), Services::application()->getWindow()->getHeight());
+
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        ImGuiIO& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
             GLFWwindow* backup_current_context = glfwGetCurrentContext();

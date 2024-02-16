@@ -252,8 +252,8 @@ namespace mango
         // because it would be confusing to have two docking targets within each others.
         ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
         const ImGuiViewport* viewport = ImGui::GetMainViewport();
-        ImGui::SetNextWindowPos(viewport->WorkPos);
-        ImGui::SetNextWindowSize(viewport->WorkSize);
+        ImGui::SetNextWindowPos(viewport->Pos);
+        ImGui::SetNextWindowSize(viewport->Size);
         ImGui::SetNextWindowViewport(viewport->ID);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -540,7 +540,7 @@ namespace mango
             {
                 Services::renderer()->setRenderingMode(RenderingMode::GAME);
             }
-
+            
             auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
             auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
             auto viewportOffset    = ImGui::GetWindowPos();
@@ -567,7 +567,7 @@ namespace mango
             /** Drag drop target */
             if (ImGui::BeginDragDropTarget())
             {
-                // TODO: consider moving payload type to a shared file (make a define or static const)
+                // TODO(TG): consider moving payload type to a shared file (make a define or static const)
                 if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MG_ASSETS_BROWSER_ITEM"))
                 {
                     const auto* path = (const wchar_t*)payload->Data;
@@ -636,16 +636,16 @@ namespace mango
                 // Mouse Entity picking
                 if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGuizmo::IsOver() && m_viewportHovered)
                 {
-                    auto mousePos = Input::getMousePosition();
-                    mousePos -= m_viewportBounds[0];
+                    auto mousePos  = Input::getMousePosition();
+                         mousePos -= m_viewportBounds[0];
 
                     auto viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
-                    mousePos.y = viewportSize.y - mousePos.y;
+                         mousePos.y   = viewportSize.y - mousePos.y;
 
                     if (mousePos.x >= 0 && mousePos.y >= 0 && mousePos.x < (int)viewportSize.x && mousePos.y < (int)viewportSize.y)
                     {
-                        int    selectedID = Services::renderer()->getSelectedEntityID(mousePos.x, mousePos.y);
-                        Entity selectedEntity = selectedID == -1 ? Entity() : Entity((entt::entity)selectedID, m_activeScene.get());
+                        int    selectedID     = Services::renderer()->getSelectedEntityID(mousePos.x, mousePos.y);
+                        Entity selectedEntity = (selectedID == -1) ? Entity() : Entity((entt::entity)selectedID, m_activeScene.get());
 
                         m_sceneHierarchyPanel.setSelectedEntity(selectedEntity);
                     }
@@ -1077,7 +1077,8 @@ namespace mango
         Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
         if (selectedEntity)
         {
-            m_editorScene->duplicateEntity(selectedEntity);
+            Entity newEntity = m_editorScene->duplicateEntity(selectedEntity);
+            m_sceneHierarchyPanel.setSelectedEntity(newEntity);
         }
     }
 
