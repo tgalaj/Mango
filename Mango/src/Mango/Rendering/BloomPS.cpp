@@ -10,10 +10,10 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("BloomPS::create");
 
-        m_brightnessBuffer = std::make_shared<RenderTarget>();
+        m_brightnessBuffer = createRef<RenderTarget>();
         m_brightnessBuffer->create(width, height, RenderTarget::ColorInternalFormat::RGB16F, RenderTarget::DepthInternalFormat::NoDepth);
 
-        m_blurredBuffer = std::make_shared<RenderTarget>();
+        m_blurredBuffer = createRef<RenderTarget>();
         m_blurredBuffer->create(width, height, RenderTarget::ColorInternalFormat::RGB16F, RenderTarget::DepthInternalFormat::NoDepth);
     }
 
@@ -42,7 +42,7 @@ namespace mango
         m_blurredBuffer->bindTexture(unit, 0);
     }
 
-    void BloomPS::extractBrightness(const std::shared_ptr<RenderTarget> & hdrRenderTarget, float threshold /*= 1.0f*/)
+    void BloomPS::extractBrightness(const ref<RenderTarget> & hdrRenderTarget, float threshold /*= 1.0f*/)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("BloomPS::extractBrightness");

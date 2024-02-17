@@ -26,6 +26,6 @@ namespace mango
         void bindGBufferTextures();
 
     private:
-        std::shared_ptr<RenderTarget> m_gbuffer;
+        ref<RenderTarget> m_gbuffer;
     };
 }

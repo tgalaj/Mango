@@ -16,7 +16,7 @@ namespace mango
         virtual void render() const;
 
     protected:
-        std::shared_ptr<Shader> m_postprocess;
+        ref<Shader> m_postprocess;
         GLuint m_dummyVao;
     };
 }

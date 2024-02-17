@@ -231,7 +231,7 @@ namespace mango
         JPH::TempAllocatorImpl*   m_tempAllocator;
         JPH::JobSystemThreadPool* m_jobSystem;
 
-        std::shared_ptr<Scene> m_scene;
+        ref<Scene> m_scene;
 
         enum class PhysicsSystemState
         {

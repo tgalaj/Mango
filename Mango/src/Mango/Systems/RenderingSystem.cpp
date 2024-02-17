@@ -15,7 +15,7 @@ namespace mango
     bool         RenderingSystem::DEBUG_RENDERING    = false;
     unsigned int RenderingSystem::DEBUG_WINDOW_WIDTH = 0;
 
-    std::unordered_map<Material::TextureType, std::shared_ptr<Texture>> RenderingSystem::s_defaultTextures;
+    std::unordered_map<Material::TextureType, ref<Texture>> RenderingSystem::s_defaultTextures;
 
     RenderingSystem::RenderingSystem()
         : System("RenderingSystem")
@@ -45,11 +45,11 @@ namespace mango
         Services::eventBus()->subscribe<ComponentRemovedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ActiveSceneChangedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
 
-        auto defaultDiffuse   = std::make_shared<Texture>(); defaultDiffuse ->createTexture2d1x1(glm::uvec4(255, 255, 255, 255));
-        auto defaultSpecular  = std::make_shared<Texture>(); defaultSpecular->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
-        auto defaultNormal    = std::make_shared<Texture>(); defaultNormal  ->createTexture2d1x1(glm::uvec4(128, 127, 254, 255));
-        auto defaultEmission  = std::make_shared<Texture>(); defaultEmission->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
-        auto defaultDepth     = std::make_shared<Texture>(); defaultDepth   ->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
+        auto defaultDiffuse   = createRef<Texture>(); defaultDiffuse ->createTexture2d1x1(glm::uvec4(255, 255, 255, 255));
+        auto defaultSpecular  = createRef<Texture>(); defaultSpecular->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
+        auto defaultNormal    = createRef<Texture>(); defaultNormal  ->createTexture2d1x1(glm::uvec4(128, 127, 254, 255));
+        auto defaultEmission  = createRef<Texture>(); defaultEmission->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
+        auto defaultDepth     = createRef<Texture>(); defaultDepth   ->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
 
         s_defaultTextures[Material::TextureType::DIFFUSE]  = defaultDiffuse;
         s_defaultTextures[Material::TextureType::SPECULAR] = defaultSpecular;
@@ -114,42 +114,42 @@ namespace mango
         DEBUG_WINDOW_WIDTH = GLuint(width / 5.0f);
         sceneAmbientColor = glm::vec3(0.18f);
 
-        m_hdrFilter = std::make_shared<PostprocessEffect>();
+        m_hdrFilter = createRef<PostprocessEffect>();
         m_hdrFilter->init("HDR_PS", "HDR_PS.frag");
 
-        m_fxaaFilter = std::make_shared<PostprocessEffect>();
+        m_fxaaFilter = createRef<PostprocessEffect>();
         m_fxaaFilter->init("FXAA_PS", "FXAA_PS.frag");
 
-        m_deferredRendering = std::make_shared<DeferredRendering>();
+        m_deferredRendering = createRef<DeferredRendering>();
         m_deferredRendering->init();
         m_deferredRendering->createGBuffer(width, height);
 
         m_gbufferShader = AssetManager::getShader("GBuffer");
 
-        m_bloomFilter = std::make_shared<BloomPS>();
+        m_bloomFilter = createRef<BloomPS>();
         m_bloomFilter->init("Bloom_PS", "Bloom_PS.frag");
         m_bloomFilter->create(width, height);
 
-        m_ssao = std::make_shared<SSAO>();
+        m_ssao = createRef<SSAO>();
         m_ssao->init("SSAO_PS", "SSAO.frag");
         m_ssao->create(width, height);
 
-        m_picking = std::make_shared<Picking>();
+        m_picking = createRef<Picking>();
         m_picking->init(width, height);
 
-        m_mainRenderTarget = std::make_shared<RenderTarget>();
+        m_mainRenderTarget = createRef<RenderTarget>();
         m_mainRenderTarget->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
 
-        m_helperRenderTarget = std::make_shared<RenderTarget>();
+        m_helperRenderTarget = createRef<RenderTarget>();
         m_helperRenderTarget->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
 
-        m_dirShadowMap = std::make_shared<RenderTarget>();
+        m_dirShadowMap = createRef<RenderTarget>();
         m_dirShadowMap->create(2048, 2048, RenderTarget::DepthInternalFormat::DEPTH24);
 
-        m_spotShadowMap = std::make_shared<RenderTarget>();
+        m_spotShadowMap = createRef<RenderTarget>();
         m_spotShadowMap->create(1024, 1024, RenderTarget::DepthInternalFormat::DEPTH24);
 
-        m_omniShadowMap = std::make_shared<RenderTarget>();
+        m_omniShadowMap = createRef<RenderTarget>();
         m_omniShadowMap->create(512, 512, RenderTarget::DepthInternalFormat::DEPTH24, RenderTarget::RenderTargetType::TexCube);
 
         initRenderingStates();
@@ -266,7 +266,7 @@ namespace mango
         }
     }
 
-    void RenderingSystem::setSkybox(const std::shared_ptr<Skybox>& skybox)
+    void RenderingSystem::setSkybox(const ref<Skybox>& skybox)
     {
         m_skybox = skybox;
     }
@@ -387,9 +387,9 @@ namespace mango
         m_mainRenderTarget->bind();
     }
 
-    void RenderingSystem::applyPostprocess(std::shared_ptr<PostprocessEffect> & effect, 
-                                           std::shared_ptr<RenderTarget>      * src, 
-                                           std::shared_ptr<RenderTarget>      * dst)
+    void RenderingSystem::applyPostprocess(ref<PostprocessEffect> & effect, 
+                                           ref<RenderTarget>      * src, 
+                                           ref<RenderTarget>      * dst)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderingSystem::applyPostprocess");
@@ -632,7 +632,7 @@ namespace mango
         glEnable(GL_BLEND);
     }
 
-    void RenderingSystem::renderOpaque(const std::shared_ptr<Shader> & shader)
+    void RenderingSystem::renderOpaque(const ref<Shader> & shader)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderingSystem::renderOpaque");
@@ -647,7 +647,7 @@ namespace mango
         }
     }
 
-    void RenderingSystem::renderAlpha(const std::shared_ptr<Shader>& shader)
+    void RenderingSystem::renderAlpha(const ref<Shader>& shader)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderingSystem::renderAlpha");
@@ -662,7 +662,7 @@ namespace mango
         }
     }
 
-    void RenderingSystem::renderEnviroMappingStatic(const std::shared_ptr<Shader>& shader)
+    void RenderingSystem::renderEnviroMappingStatic(const ref<Shader>& shader)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderingSystem::renderEnviroMappingStatic");
@@ -677,7 +677,7 @@ namespace mango
         }
     }
 
-    void RenderingSystem::renderDynamicEnviroMapping(const std::shared_ptr<Shader>& shader)
+    void RenderingSystem::renderDynamicEnviroMapping(const ref<Shader>& shader)
     {
 
     }

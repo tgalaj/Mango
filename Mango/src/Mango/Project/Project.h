@@ -33,17 +33,17 @@ namespace mango
 
         ProjectConfig& getConfig() { return s_activeProject->m_config; }
 
-        static std::shared_ptr<Project> getActive() { return s_activeProject; }
+        static ref<Project> getActive() { return s_activeProject; }
 
-        static std::shared_ptr<Project> createNew(const std::string& name, const std::filesystem::path& path);
-        static std::shared_ptr<Project> load(const std::filesystem::path& filepath);
+        static ref<Project> createNew(const std::string& name, const std::filesystem::path& path);
+        static ref<Project> load(const std::filesystem::path& filepath);
         static bool saveActive(const std::filesystem::path& filepath);
 
     private:
         ProjectConfig m_config;
         std::filesystem::path m_projectDirectory;
 
-        inline static std::shared_ptr<Project> s_activeProject;
+        inline static ref<Project> s_activeProject;
 
     private:
         friend class ProjectSerializer;

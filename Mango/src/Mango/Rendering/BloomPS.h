@@ -18,11 +18,11 @@ namespace mango
         void bindBrightnessTexture(GLuint unit);
         void bindBlurredTexture   (GLuint unit);
 
-        void extractBrightness(const std::shared_ptr<RenderTarget> & hdrRenderTarget, float threshold = 1.0f);
+        void extractBrightness(const ref<RenderTarget> & hdrRenderTarget, float threshold = 1.0f);
         void blurGaussian(uint32_t iterations = 5);
 
     private:
-        std::shared_ptr<RenderTarget> m_brightnessBuffer;
-        std::shared_ptr<RenderTarget> m_blurredBuffer;
+        ref<RenderTarget> m_brightnessBuffer;
+        ref<RenderTarget> m_blurredBuffer;
     };
 }

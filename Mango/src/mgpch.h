@@ -15,9 +15,8 @@
 #include <utility>
 #include <vector>
 
-#include "Mango/Core/Assertions.h"
+#include "Mango/Core/Base.h"
 #include "Mango/Core/CVars.h"
-#include "Mango/Core/Log.h"
 #include "Mango/Core/RootDir.h"
 #include "Mango/Core/VFI.h"
 #include "Mango/Events/Event.h"

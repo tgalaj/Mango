@@ -23,7 +23,7 @@ namespace mango
         void bindSSAOTexture(GLuint unit);
         void bindBlurredSSAOTexture(GLuint unit);
 
-        void computeSSAO(const std::shared_ptr<mango::DeferredRendering> & gbuffer, const glm::mat4 & view, const glm::mat4 & projection);
+        void computeSSAO(const ref<DeferredRendering> & gbuffer, const glm::mat4 & view, const glm::mat4 & projection);
         void blurSSAO();
 
         void setKernelSize(unsigned kernelSize) { m_kernelSize = kernelSize; genKernel(); }
@@ -38,8 +38,8 @@ namespace mango
 
         std::vector<glm::vec3> m_kernel;
 
-        std::shared_ptr<RenderTarget> m_ssaoBuffer;
-        std::shared_ptr<RenderTarget> m_blurredBuffer;
+        ref<RenderTarget> m_ssaoBuffer;
+        ref<RenderTarget> m_blurredBuffer;
 
         GLuint m_noiseTextureID;
         GLint m_kernelSize;

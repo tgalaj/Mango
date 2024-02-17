@@ -48,7 +48,7 @@ namespace mango
         bool isPaused()         const { return m_isPaused;  }
 
         const ApplicationConfiguration& getConfig() const { return m_config; }
-        const std::shared_ptr<Window> getWindow() const { return m_window; }
+        const ref<Window> getWindow() const { return m_window; }
 
         EventBus      * const getEventBus()      const { return m_eventBus;      }
         ImGuiSystem   * const getImGuiSystem()   const { return m_imGuiSystem;   }
@@ -65,7 +65,7 @@ namespace mango
     private:
         ApplicationConfiguration m_config;
 
-        std::shared_ptr<Window> m_window;
+        ref<Window> m_window;
         SystemManager  m_runtimeSystems;
         SystemManager  m_editorSystems;
         SystemManager  m_renderingSystems;

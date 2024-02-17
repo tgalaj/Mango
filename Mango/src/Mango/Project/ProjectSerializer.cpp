@@ -7,7 +7,7 @@
 
 namespace mango
 {
-    bool ProjectSerializer::serialize(const std::shared_ptr<Project>& project, const std::filesystem::path& outFilepath)
+    bool ProjectSerializer::serialize(const ref<Project>& project, const std::filesystem::path& outFilepath)
     {
         const auto& config = project->getConfig();
 
@@ -35,7 +35,7 @@ namespace mango
         return false;
     }
 
-    std::shared_ptr<mango::Project> ProjectSerializer::deserialize(const std::filesystem::path& inFilepath)
+    ref<mango::Project> ProjectSerializer::deserialize(const std::filesystem::path& inFilepath)
     {
         YAML::Node data;
         try
@@ -53,7 +53,7 @@ namespace mango
         if (!projectNode)
             return nullptr;
 
-        Project::s_activeProject = std::make_shared<Project>();
+        Project::s_activeProject = createRef<Project>();
         auto project = Project::getActive();
         auto& config = project->getConfig();
 

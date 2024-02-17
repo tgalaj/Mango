@@ -47,7 +47,7 @@ namespace mango
         void receive(const ComponentRemovedEvent<ModelRendererComponent> & event);
         void receive(const ActiveSceneChangedEvent                       & event);
 
-        void setSkybox(const std::shared_ptr<Skybox> & skybox);
+        void setSkybox(const ref<Skybox> & skybox);
         void resize(unsigned width, unsigned height);
 
         int getSelectedEntityID(int mouseX, int mouseY);
@@ -69,7 +69,7 @@ namespace mango
         static bool         DEBUG_RENDERING;
         static unsigned int DEBUG_WINDOW_WIDTH;
 
-        static std::unordered_map<Material::TextureType, std::shared_ptr<Texture>> s_defaultTextures;
+        static std::unordered_map<Material::TextureType, ref<Texture>> s_defaultTextures;
 
     private:
         static void initRenderingStates();
@@ -79,17 +79,17 @@ namespace mango
 
         void bindMainRenderTarget();
 
-        void applyPostprocess(std::shared_ptr<PostprocessEffect>& effect, std::shared_ptr<RenderTarget>* src, std::shared_ptr<RenderTarget>* dst);
+        void applyPostprocess(ref<PostprocessEffect>& effect, ref<RenderTarget>* src, ref<RenderTarget>* dst);
 
         void renderForward(Scene* scene);
         void renderDeferred(Scene* scene);
         void renderDebug();
         void renderDebugLightsBoundingBoxes(Scene* scene);
 
-        void renderOpaque(const std::shared_ptr<Shader>& shader);
-        void renderAlpha(const std::shared_ptr<Shader>& shader);
-        void renderEnviroMappingStatic(const std::shared_ptr<Shader>& shader);
-        void renderDynamicEnviroMapping(const std::shared_ptr<Shader>& shader);
+        void renderOpaque(const ref<Shader>& shader);
+        void renderAlpha(const ref<Shader>& shader);
+        void renderEnviroMappingStatic(const ref<Shader>& shader);
+        void renderDynamicEnviroMapping(const ref<Shader>& shader);
         void renderLightsForward(Scene* scene);
         void renderLightsDeferred(Scene* scene);
 
@@ -105,40 +105,40 @@ namespace mango
         std::vector<Entity> m_enviroStaticQueue;
         std::vector<Entity> m_enviroDynamicQueue;
 
-        std::shared_ptr<Shader> m_forwardAmbient;
-        std::shared_ptr<Shader> m_forwardDirectional;
-        std::shared_ptr<Shader> m_forwardPoint;
-        std::shared_ptr<Shader> m_forwardSpot;
-        std::shared_ptr<Shader> m_shadowMapGenerator;
-        std::shared_ptr<Shader> m_omniShadowMapGenerator;
-        std::shared_ptr<Shader> m_blendingShader;
-        std::shared_ptr<Shader> m_enviroMappingShader;
-        std::shared_ptr<Shader> m_debugRendering;
+        ref<Shader> m_forwardAmbient;
+        ref<Shader> m_forwardDirectional;
+        ref<Shader> m_forwardPoint;
+        ref<Shader> m_forwardSpot;
+        ref<Shader> m_shadowMapGenerator;
+        ref<Shader> m_omniShadowMapGenerator;
+        ref<Shader> m_blendingShader;
+        ref<Shader> m_enviroMappingShader;
+        ref<Shader> m_debugRendering;
 
-        std::shared_ptr<Shader> m_gbufferShader;
-        std::shared_ptr<Shader> m_deferredDirectional;
-        std::shared_ptr<Shader> m_deferredPoint;
-        std::shared_ptr<Shader> m_deferredSpot;
+        ref<Shader> m_gbufferShader;
+        ref<Shader> m_deferredDirectional;
+        ref<Shader> m_deferredPoint;
+        ref<Shader> m_deferredSpot;
 
-        std::shared_ptr<Shader> m_boundingboxShader;
-        std::shared_ptr<Shader> m_nullShader;
+        ref<Shader> m_boundingboxShader;
+        ref<Shader> m_nullShader;
         Model m_lightBoundingSphere;
         Model m_lightBoundingCone;
 
-        std::shared_ptr<PostprocessEffect> m_hdrFilter;
-        std::shared_ptr<PostprocessEffect> m_fxaaFilter;
-        std::shared_ptr<DeferredRendering> m_deferredRendering;
-        std::shared_ptr<BloomPS> m_bloomFilter;
-        std::shared_ptr<SSAO> m_ssao;
-        std::shared_ptr<Picking> m_picking;
+        ref<PostprocessEffect> m_hdrFilter;
+        ref<PostprocessEffect> m_fxaaFilter;
+        ref<DeferredRendering> m_deferredRendering;
+        ref<BloomPS>           m_bloomFilter;
+        ref<SSAO>              m_ssao;
+        ref<Picking>           m_picking;
 
-        std::shared_ptr<RenderTarget> m_mainRenderTarget;
-        std::shared_ptr<RenderTarget> m_helperRenderTarget;
-        std::shared_ptr<RenderTarget> m_dirShadowMap;
-        std::shared_ptr<RenderTarget> m_spotShadowMap;
-        std::shared_ptr<RenderTarget> m_omniShadowMap;
+        ref<RenderTarget> m_mainRenderTarget;
+        ref<RenderTarget> m_helperRenderTarget;
+        ref<RenderTarget> m_dirShadowMap;
+        ref<RenderTarget> m_spotShadowMap;
+        ref<RenderTarget> m_omniShadowMap;
 
-        std::shared_ptr<Skybox> m_skybox;
+        ref<Skybox> m_skybox;
 
         glm::uvec2 m_mainFramebufferSize = {};
 

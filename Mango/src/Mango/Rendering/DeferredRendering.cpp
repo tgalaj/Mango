@@ -25,7 +25,7 @@ namespace mango
         mrtEntries[GLuint(GBufferPropertyName::ALBEDO_SPECULAR)] = RenderTarget::MRTEntry(RenderTarget::AttachmentType::Color, RenderTarget::ColorInternalFormat::RGBA8);
         mrtEntries[GLuint(GBufferPropertyName::DEPTH)]           = RenderTarget::MRTEntry(RenderTarget::AttachmentType::Depth, RenderTarget::ColorInternalFormat::NoColor, RenderTarget::DepthInternalFormat::DEPTH32F);
 
-        m_gbuffer = std::make_shared<RenderTarget>();
+        m_gbuffer = createRef<RenderTarget>();
         m_gbuffer->createMRT(mrtEntries, width, height);
     }
 

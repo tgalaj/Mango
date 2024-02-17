@@ -38,10 +38,10 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        m_ssaoBuffer = std::make_shared<RenderTarget>();
+        m_ssaoBuffer = createRef<RenderTarget>();
         m_ssaoBuffer->create(width, height, RenderTarget::ColorInternalFormat::R8, RenderTarget::DepthInternalFormat::NoDepth, RenderTarget::RenderTargetType::Tex2D, false);
 
-        m_blurredBuffer = std::make_shared<RenderTarget>();
+        m_blurredBuffer = createRef<RenderTarget>();
         m_blurredBuffer->create(width, height, RenderTarget::ColorInternalFormat::R8, RenderTarget::DepthInternalFormat::NoDepth, RenderTarget::RenderTargetType::Tex2D, false);
     }
 
@@ -67,7 +67,7 @@ namespace mango
         m_blurredBuffer->bindTexture(unit, 0);
     }
 
-    void SSAO::computeSSAO(const std::shared_ptr<mango::DeferredRendering> & gbuffer, const glm::mat4 & view, const glm::mat4 & projection)
+    void SSAO::computeSSAO(const ref<DeferredRendering> & gbuffer, const glm::mat4 & view, const glm::mat4 & projection)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("SSAO::computeSSAO");

@@ -410,7 +410,7 @@ namespace mango
         out << YAML::EndMap; // Entity
     }
     
-    bool SceneSerializer::serialize(const std::shared_ptr<Scene>& scene, const std::filesystem::path& outFilepath)
+    bool SceneSerializer::serialize(const ref<Scene>& scene, const std::filesystem::path& outFilepath)
     {
         YAML::Emitter out;
         out << YAML::BeginMap;
@@ -446,7 +446,7 @@ namespace mango
         return false;
     }
 
-    std::shared_ptr<Scene> SceneSerializer::deserialize(const std::filesystem::path& inFilepath)
+    ref<Scene> SceneSerializer::deserialize(const std::filesystem::path& inFilepath)
     {
         YAML::Node data;
         try
@@ -464,7 +464,7 @@ namespace mango
             return nullptr;
 
         std::string sceneName = data["Scene"].as<std::string>();
-        auto scene = std::make_shared<Scene>(sceneName);
+        auto scene = createRef<Scene>(sceneName);
 
         MG_CORE_TRACE("Deserializing scene '{}'", sceneName);
 

@@ -38,8 +38,8 @@ namespace mango
         GLuint m_vao;
         GLuint m_vbo;
 
-        std::shared_ptr<Shader>  m_skyboxShader;
-        std::shared_ptr<Texture> m_cubeMapTexture;
+        ref<Shader>  m_skyboxShader;
+        ref<Texture> m_cubeMapTexture;
     };
 }
 

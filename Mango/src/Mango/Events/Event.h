@@ -73,7 +73,7 @@ namespace mango
         {
             auto  handle   = nextHandle();
             auto& handlers = m_subscribers[typeid(EventType)];
-            auto  handler  = std::make_shared<EventHandlerWrapper<EventType>>(fn, handle);
+            auto  handler  = createRef<EventHandlerWrapper<EventType>>(fn, handle);
             handlers.emplace_back(handler);
 
             return handle;
@@ -100,7 +100,7 @@ namespace mango
         }
 
     private:
-        std::unordered_map<std::type_index, std::vector<std::shared_ptr<EventHandlerBase>>> m_subscribers;
+        std::unordered_map<std::type_index, std::vector<ref<EventHandlerBase>>> m_subscribers;
 
         inline static EventHandle nextHandle()
         {

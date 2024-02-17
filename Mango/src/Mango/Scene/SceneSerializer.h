@@ -14,7 +14,7 @@ namespace mango
         SceneSerializer() = delete;
         ~SceneSerializer() = delete;
 
-        static bool                   serialize  (const std::shared_ptr<Scene>& scene, const std::filesystem::path& outFilepath);
-        static std::shared_ptr<Scene> deserialize(const std::filesystem::path& inFilepath);
+        static bool       serialize  (const ref<Scene>& scene, const std::filesystem::path& outFilepath);
+        static ref<Scene> deserialize(const std::filesystem::path& inFilepath);
     };
 }

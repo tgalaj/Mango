@@ -6,7 +6,7 @@
 
 namespace mango
 {
-    std::shared_ptr<spdlog::logger> Log::s_coreLogger = nullptr;
+    std::shared_ptr<spdlog::logger> Log::s_coreLogger        = nullptr;
     std::shared_ptr<spdlog::logger> Log::s_applicationLogger = nullptr;
 
     void Log::init()

@@ -1,10 +1,9 @@
 #pragma once
 
 #include "Mango/Core/Application.h"
-#include "Mango/Core/Assertions.h"
 #include "Mango/Core/AssetManager.h"
+#include "Mango/Core/Base.h"
 #include "Mango/Core/CVars.h"
-#include "Mango/Core/Log.h"
 #include "Mango/Core/RootDir.h"
 #include "Mango/Core/Services.h"
 #include "Mango/Core/System.h"

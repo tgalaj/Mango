@@ -13,12 +13,12 @@
 
 namespace mango
 {
-    SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene>& scene)
+    SceneHierarchyPanel::SceneHierarchyPanel(const ref<Scene>& scene)
         : m_scene(scene)
     {
     }
 
-    void SceneHierarchyPanel::setScene(const std::shared_ptr<Scene>& scene)
+    void SceneHierarchyPanel::setScene(const ref<Scene>& scene)
     {
         m_scene          = scene;
         m_selectedEntity = {};

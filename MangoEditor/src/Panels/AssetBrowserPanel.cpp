@@ -16,13 +16,13 @@ namespace mango
         m_pathStack.reserve(10);
         m_pathStack.push_back(m_currentPath.filename().string());
 
-        m_folderIcon = std::make_shared<Texture>();
+        m_folderIcon = createRef<Texture>();
         m_folderIcon->createTexture2d("icons/folder.png", false, 8);
 
-        m_fileIcon = std::make_shared<Texture>();
+        m_fileIcon = createRef<Texture>();
         m_fileIcon->createTexture2d("icons/file.png", false, 8);
 
-        m_returnIcon = std::make_shared<Texture>();
+        m_returnIcon = createRef<Texture>();
         m_returnIcon->createTexture2d("icons/return.png", false, 8);
     }
 

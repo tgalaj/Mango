@@ -15,7 +15,7 @@ namespace mango
         Scene(const std::string& name = "New Scene");
         virtual ~Scene() = default;
 
-        static std::shared_ptr<Scene> copy(std::shared_ptr<Scene>& other);
+        static ref<Scene> copy(ref<Scene>& other);
 
         std::string& getName() { return m_name; };
         

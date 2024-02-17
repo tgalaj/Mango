@@ -9,10 +9,10 @@ namespace mango
     class ProjectSerializer
     {
     public:
-        ProjectSerializer() = delete;
+        ProjectSerializer()  = delete;
         ~ProjectSerializer() = delete;
 
-        static bool                     serialize(const std::shared_ptr<Project>& project, const std::filesystem::path& outFilepath);
-        static std::shared_ptr<Project> deserialize(const std::filesystem::path& inFilepath);
+        static bool         serialize(const ref<Project>& project, const std::filesystem::path& outFilepath);
+        static ref<Project> deserialize(const std::filesystem::path& inFilepath);
     };
 }

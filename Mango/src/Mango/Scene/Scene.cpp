@@ -55,9 +55,9 @@ namespace mango
         copyComponentIfExists<Component...>(dst, src);
     }
 
-    std::shared_ptr<Scene> Scene::copy(std::shared_ptr<Scene>& other)
+    ref<Scene> Scene::copy(ref<Scene>& other)
     {
-        std::shared_ptr<Scene> newScene = std::make_shared<Scene>();
+        ref<Scene> newScene = createRef<Scene>();
 
         newScene->m_name = other->m_name;
 

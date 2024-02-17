@@ -9,7 +9,7 @@
 
 namespace mango
 {
-    std::shared_ptr<mango::Project> Project::createNew(const std::string& name, const std::filesystem::path& path)
+    ref<Project> Project::createNew(const std::string& name, const std::filesystem::path& path)
     {
         if (s_activeProject)
         {
@@ -17,7 +17,7 @@ namespace mango
             VFI::removeFromSearchPath(getAssetDirectory());
         }
         
-        s_activeProject = std::make_shared<Project>();
+        s_activeProject = createRef<Project>();
         
         s_activeProject->m_projectDirectory = path / name;
 
@@ -41,7 +41,7 @@ namespace mango
         return s_activeProject;
     }
 
-    std::shared_ptr<mango::Project> Project::load(const std::filesystem::path& filepath)
+    ref<Project> Project::load(const std::filesystem::path& filepath)
     {
         if (s_activeProject)
         {

@@ -50,7 +50,7 @@ namespace mango
         Material material;
 
     private:
-        std::shared_ptr<MeshData> m_meshData;
+        ref<MeshData> m_meshData;
 
         enum { VERTEX_DATA, INDEX };
     };

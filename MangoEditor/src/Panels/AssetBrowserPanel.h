@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Mango/Core/Base.h"
 #include "Mango/Rendering/Texture.h"
 
 #include <filesystem>
@@ -22,8 +23,8 @@ namespace mango
         std::filesystem::path m_basePath;
         std::filesystem::path m_currentPath;
 
-        std::shared_ptr<Texture> m_folderIcon;
-        std::shared_ptr<Texture> m_fileIcon;
-        std::shared_ptr<Texture> m_returnIcon;
+        ref<Texture> m_folderIcon;
+        ref<Texture> m_fileIcon;
+        ref<Texture> m_returnIcon;
     };
 }

@@ -72,25 +72,25 @@ namespace mango
         Services::application()->getImGuiSystem()->addFont(VFI::getFilepath("fonts/inter/Inter-Regular.ttf"), 16.0f, true);
 
         // Load icons
-        m_playIcon = std::make_shared<Texture>();
+        m_playIcon = createRef<Texture>();
         m_playIcon->createTexture2d("icons/play.png", false, 8);
 
-        m_playPressedIcon = std::make_shared<Texture>();
+        m_playPressedIcon = createRef<Texture>();
         m_playPressedIcon->createTexture2d("icons/playPressed.png", false, 8);
 
-        m_simulateIcon = std::make_shared<Texture>();
+        m_simulateIcon = createRef<Texture>();
         m_simulateIcon->createTexture2d("icons/simulate.png", false, 8);
 
-        m_simulatePressedIcon = std::make_shared<Texture>();
+        m_simulatePressedIcon = createRef<Texture>();
         m_simulatePressedIcon->createTexture2d("icons/simulatePressed.png", false, 8);
 
-        m_pauseIcon = std::make_shared<Texture>();
+        m_pauseIcon = createRef<Texture>();
         m_pauseIcon->createTexture2d("icons/pause.png", false, 8);
 
-        m_pausePressedIcon = std::make_shared<Texture>();
+        m_pausePressedIcon = createRef<Texture>();
         m_pausePressedIcon->createTexture2d("icons/pausePressed.png", false, 8);
 
-        m_stepIcon = std::make_shared<Texture>();
+        m_stepIcon = createRef<Texture>();
         m_stepIcon->createTexture2d("icons/step.png", false, 8);
 
         m_editorCamera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
@@ -114,20 +114,20 @@ namespace mango
 
         if (Project::getActive())
         {
-            /*auto skybox = std::make_shared<Skybox>("skyboxes/stormydays/",
-                                                           "stormydays_lf.tga",
-                                                           "stormydays_rt.tga",
-                                                           "stormydays_up.tga", 
-                                                           "stormydays_dn.tga", 
-                                                           "stormydays_ft.tga", 
-                                                           "stormydays_bk.tga" );*/
-            auto skybox = std::make_shared<Skybox>("skyboxes/cold/",
-                                                           "right.jpg",
-                                                           "left.jpg",
-                                                           "top.jpg", 
-                                                           "bottom.jpg", 
-                                                           "front.jpg", 
-                                                           "back.jpg" );
+            /*auto skybox = createRef<Skybox>("skyboxes/stormydays/",
+                                              "stormydays_lf.tga",
+                                              "stormydays_rt.tga",
+                                              "stormydays_up.tga", 
+                                              "stormydays_dn.tga", 
+                                              "stormydays_ft.tga", 
+                                              "stormydays_bk.tga" );*/
+            auto skybox = createRef<Skybox>("skyboxes/cold/",
+                                            "right.jpg",
+                                            "left.jpg",
+                                            "top.jpg", 
+                                            "bottom.jpg", 
+                                            "front.jpg", 
+                                            "back.jpg" );
             Services::renderer()->setSkybox(skybox);
         }
     }
@@ -378,7 +378,7 @@ namespace mango
 
             // Open start scene
             openScene(Project::getActive()->getConfig().startScene);
-            m_assetsBrowserPanel = std::make_unique<AssetBrowserPanel>();
+            m_assetsBrowserPanel = createScope<AssetBrowserPanel>();
 
             return true;
         }

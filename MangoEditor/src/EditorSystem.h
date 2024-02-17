@@ -63,16 +63,16 @@ namespace mango
 
     private:
         std::filesystem::path  m_editorScenePath;
-        std::shared_ptr<Scene> m_activeScene;
-        std::shared_ptr<Scene> m_editorScene;
+        ref<Scene> m_activeScene;
+        ref<Scene> m_editorScene;
 
-        std::shared_ptr<Texture> m_playIcon;
-        std::shared_ptr<Texture> m_playPressedIcon;
-        std::shared_ptr<Texture> m_simulateIcon;
-        std::shared_ptr<Texture> m_simulatePressedIcon;
-        std::shared_ptr<Texture> m_pauseIcon;
-        std::shared_ptr<Texture> m_pausePressedIcon;
-        std::shared_ptr<Texture> m_stepIcon;
+        ref<Texture> m_playIcon;
+        ref<Texture> m_playPressedIcon;
+        ref<Texture> m_simulateIcon;
+        ref<Texture> m_simulatePressedIcon;
+        ref<Texture> m_pauseIcon;
+        ref<Texture> m_pausePressedIcon;
+        ref<Texture> m_stepIcon;
 
         bool      m_viewportFocused   = false, 
                   m_viewportHovered   = false;
@@ -88,7 +88,7 @@ namespace mango
         GizmoType m_gizmoType = GizmoType::NONE;
         GizmoMode m_gizmoMode = GizmoMode::LOCAL;
 
-        std::unique_ptr<AssetBrowserPanel> m_assetsBrowserPanel;
+        scope<AssetBrowserPanel> m_assetsBrowserPanel;
         SceneHierarchyPanel m_sceneHierarchyPanel;
 
         EditorCamera m_editorCamera;

@@ -12,20 +12,20 @@ namespace mango
     public:
         virtual ~SceneManager() = default;
 
-        std::shared_ptr<Scene>& createScene(const std::string& name);
-        std::shared_ptr<Scene> loadScene(const std::filesystem::path& filepath);
+        ref<Scene>& createScene(const std::string& name);
+        ref<Scene> loadScene(const std::filesystem::path& filepath);
 
-        void setActiveScene(const std::shared_ptr<Scene>& scene);
+        void setActiveScene(const ref<Scene>& scene);
         void setActiveScene(const std::string& name);
 
-        std::shared_ptr<Scene>& getActiveScene();
+        ref<Scene>& getActiveScene();
 
     private:
         SceneManager() = default;
 
     private:
-        std::vector<std::shared_ptr<Scene>> m_scenes; 
-        std::shared_ptr<Scene> m_activeScene = nullptr;
+        std::vector<ref<Scene>> m_scenes; 
+        ref<Scene>              m_activeScene = nullptr;
 
     private:
         friend class Application;

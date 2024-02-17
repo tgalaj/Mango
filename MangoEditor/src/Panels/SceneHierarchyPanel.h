@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Mango/Core/Base.h"
 #include "Mango/Scene/Entity.h"
 #include "Mango/Scene/Scene.h"
 
@@ -9,9 +10,9 @@ namespace mango
     {
     public:
         SceneHierarchyPanel() = default;
-        SceneHierarchyPanel(const std::shared_ptr<Scene>& scene);
+        SceneHierarchyPanel(const ref<Scene>& scene);
         
-        void setScene(const std::shared_ptr<Scene>& scene);
+        void setScene(const ref<Scene>& scene);
         void onGui();
 
         Entity getSelectedEntity() const;
@@ -25,7 +26,7 @@ namespace mango
         void drawComponents(Entity entity);
 
     private:
-        std::shared_ptr<Scene> m_scene;
+        ref<Scene> m_scene;
         Entity m_selectedEntity;
     };
 }

@@ -35,7 +35,7 @@ namespace mango
     {
     }
 
-    void Material::addTexture(TextureType textureType, const std::shared_ptr<Texture> & texture)
+    void Material::addTexture(TextureType textureType, const ref<Texture> & texture)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -56,7 +56,7 @@ namespace mango
         m_floatMap[uniformName] = value;
     }
 
-    std::shared_ptr<Texture> Material::getTexture(TextureType textureType)
+    ref<Texture> Material::getTexture(TextureType textureType)
     {
         MG_PROFILE_ZONE_SCOPED;
 

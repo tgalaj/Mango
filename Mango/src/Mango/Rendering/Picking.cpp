@@ -31,7 +31,7 @@ namespace mango
 
     void Picking::resize(int width, int height)
     {
-        m_pickingBuffer = std::make_shared<RenderTarget>();
+        m_pickingBuffer = createRef<RenderTarget>();
         m_pickingBuffer->create(width, height, RenderTarget::DepthInternalFormat::DEPTH24, RenderTarget::RenderTargetType::Tex2D, false);
     }
 
@@ -41,7 +41,7 @@ namespace mango
         glScissor(x, y, width, height);
     }
 
-    std::shared_ptr<Shader> Picking::getShader() const
+    ref<Shader> Picking::getShader() const
     {
         return m_pickingShader;
     }

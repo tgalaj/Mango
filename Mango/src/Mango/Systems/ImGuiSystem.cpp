@@ -185,7 +185,7 @@ namespace mango
         ImGui::PopStyleVar(2);
     }
 
-    float ImGuiSystem::text(const std::shared_ptr<Font> & font, const std::string& text, const glm::vec2 & position, float size, const glm::vec4 & color /*= glm::vec4(1.0f)*/, bool center /*= false*/, bool textShadow /*= false*/)
+    float ImGuiSystem::text(const ref<Font> & font, const std::string& text, const glm::vec2 & position, float size, const glm::vec4 & color /*= glm::vec4(1.0f)*/, bool center /*= false*/, bool textShadow /*= false*/)
     {
         MG_PROFILE_ZONE_SCOPED;
         ImGuiWindow* window = ImGui::GetCurrentWindow();
@@ -284,7 +284,7 @@ namespace mango
         window->DrawList->AddRectFilled({ from.x, from.y }, { to.x, to.y }, ImGui::GetColorU32({ rectColor.r, rectColor.g, rectColor.b, rectColor.a }), rounding, roundingCornersFlags);
     }
 
-    void ImGuiSystem::image(std::shared_ptr<Texture> pTexture, const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color)
+    void ImGuiSystem::image(ref<Texture> pTexture, const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color)
     {
         MG_PROFILE_ZONE_SCOPED;
         ImGuiWindow* window = ImGui::GetCurrentWindow();
@@ -294,7 +294,7 @@ namespace mango
         window->DrawList->AddImage((ImTextureID)pTexture->getRendererID(), { from.x, from.y }, { to.x, to.y }, { 0.0f, 0.0f }, { 1.0f, 1.0f }, ImGui::GetColorU32({ tintColor.r, tintColor.g, tintColor.b, tintColor.a }));
     }
     
-    void ImGuiSystem::imageRounded(std::shared_ptr<Texture> pTexture, const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color, float rounding, uint32_t roundingCornersFlags)
+    void ImGuiSystem::imageRounded(ref<Texture> pTexture, const glm::vec2& from, const glm::vec2& to,  const glm::vec4& color, float rounding, uint32_t roundingCornersFlags)
     {
         MG_PROFILE_ZONE_SCOPED;
         ImGuiWindow* window = ImGui::GetCurrentWindow();

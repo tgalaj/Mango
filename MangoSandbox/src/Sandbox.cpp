@@ -38,24 +38,24 @@ void Sandbox::onInit()
     m_camera2.setPosition(0, 4, -30);
     m_camera2.setOrientation({ 0, 1, 0 }, glm::radians(180.0f));
 
-    m_freeCameraController = std::make_shared<FreeCameraController>();
+    m_freeCameraController = createRef<FreeCameraController>();
 
     auto font = AssetManager::createFont("Droid48", "fonts/Roboto-Regular.ttf", 48.0f);
 
-    /*auto skybox = std::make_shared<Skybox>("skyboxes/stormydays/",
-                                                   "stormydays_lf.tga",
-                                                   "stormydays_rt.tga",
-                                                   "stormydays_up.tga", 
-                                                   "stormydays_dn.tga", 
-                                                   "stormydays_ft.tga", 
-                                                   "stormydays_bk.tga" );*/
-    auto skybox = std::make_shared<Skybox>("skyboxes/cold/",
-                                                   "right.jpg",
-                                                   "left.jpg",
-                                                   "top.jpg", 
-                                                   "bottom.jpg", 
-                                                   "front.jpg", 
-                                                   "back.jpg" );
+    /*auto skybox = createRef<Skybox>("skyboxes/stormydays/",
+                                      "stormydays_lf.tga",
+                                      "stormydays_rt.tga",
+                                      "stormydays_up.tga", 
+                                      "stormydays_dn.tga", 
+                                      "stormydays_ft.tga", 
+                                      "stormydays_bk.tga" );*/
+    auto skybox = createRef<Skybox>("skyboxes/cold/",
+                                    "right.jpg",
+                                    "left.jpg",
+                                    "top.jpg", 
+                                    "bottom.jpg", 
+                                    "front.jpg", 
+                                    "back.jpg" );
     Services::renderer()->setSkybox(skybox);
 
     auto sphereModel = AssetManager::createModel();

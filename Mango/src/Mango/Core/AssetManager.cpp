@@ -4,11 +4,11 @@
 namespace mango
 {
     std::unordered_map<std::string, Model>                    AssetManager::m_loadedModels;
-    std::unordered_map<std::string, std::shared_ptr<Texture>> AssetManager::m_loadedTextures;
-    std::unordered_map<std::string, std::shared_ptr<Shader>>  AssetManager::m_loadedShaders;
-    std::unordered_map<std::string, std::shared_ptr<Font>>    AssetManager::m_loadedFonts;
+    std::unordered_map<std::string, ref<Texture>> AssetManager::m_loadedTextures;
+    std::unordered_map<std::string, ref<Shader>>  AssetManager::m_loadedShaders;
+    std::unordered_map<std::string, ref<Font>>    AssetManager::m_loadedFonts;
 
-    std::shared_ptr<Font> AssetManager::createFont(const std::string & fontNname, const std::string& filename, GLuint fontHeight)
+    ref<Font> AssetManager::createFont(const std::string & fontNname, const std::string& filename, GLuint fontHeight)
     {
         MG_PROFILE_ZONE_SCOPED;
         if (m_loadedFonts.count(fontNname))
@@ -16,13 +16,13 @@ namespace mango
             return m_loadedFonts[fontNname];
         }
 
-        auto font = std::make_shared<Font>(filename, fontHeight);
+        auto font = createRef<Font>(filename, fontHeight);
         m_loadedFonts[fontNname] = font;
 
         return font;
     }
 
-    std::shared_ptr<Texture> AssetManager::createTexture2D(const std::string & filename, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
+    ref<Texture> AssetManager::createTexture2D(const std::string & filename, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -33,7 +33,7 @@ namespace mango
 
         auto extension = std::filesystem::path(filename).extension();
 
-        auto texture2D = std::make_shared<Texture>();
+        auto texture2D = createRef<Texture>();
 
         if (extension == ".dds")
         {
@@ -48,7 +48,7 @@ namespace mango
         return texture2D;
     }
 
-    std::shared_ptr<Texture> AssetManager::createTexture2D1x1(const std::string& textureName, const glm::uvec4& color)
+    ref<Texture> AssetManager::createTexture2D1x1(const std::string& textureName, const glm::uvec4& color)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -57,14 +57,14 @@ namespace mango
             return m_loadedTextures[textureName];
         }
 
-        auto texture2D = std::make_shared<Texture>();
+        auto texture2D = createRef<Texture>();
         texture2D->createTexture2d1x1(color);
         m_loadedTextures[textureName] = texture2D;
 
         return texture2D;
     }
 
-    std::shared_ptr<Texture> AssetManager::createCubeMapTexture(const std::string* filenames, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
+    ref<Texture> AssetManager::createCubeMapTexture(const std::string* filenames, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -76,7 +76,7 @@ namespace mango
             return m_loadedTextures[filepathString];
         }
 
-        auto textureCube = std::make_shared<Texture>();
+        auto textureCube = createRef<Texture>();
         textureCube->createTextureCubeMap(filenames, isSrgb, numMipmaps);
         m_loadedTextures[filepathString] = textureCube;
 
@@ -106,8 +106,8 @@ namespace mango
         return model;
     }
 
-    std::shared_ptr<Shader> AssetManager::createShader(const std::string & shaderName,
-                                                       const std::string & computeShaderFilename)
+    ref<Shader> AssetManager::createShader(const std::string & shaderName,
+                                           const std::string & computeShaderFilename)
     {
         MG_PROFILE_ZONE_SCOPED;
         if (m_loadedShaders.count(shaderName))
@@ -115,15 +115,15 @@ namespace mango
             return m_loadedShaders[shaderName];
         }
 
-        auto shader = std::make_shared<Shader>(computeShaderFilename);
+        auto shader = createRef<Shader>(computeShaderFilename);
         m_loadedShaders[shaderName] = shader;
 
         return shader;
     }
 
-    std::shared_ptr<Shader> AssetManager::createShader(const std::string & shaderName, 
-                                                       const std::string & vertexShaderFilename, 
-                                                       const std::string & fragmentShaderFilename)
+    ref<Shader> AssetManager::createShader(const std::string & shaderName, 
+                                           const std::string & vertexShaderFilename, 
+                                           const std::string & fragmentShaderFilename)
     {
         MG_PROFILE_ZONE_SCOPED;
         if (m_loadedShaders.count(shaderName))
@@ -131,16 +131,16 @@ namespace mango
             return m_loadedShaders[shaderName];
         }
 
-        auto shader = std::make_shared<Shader>(vertexShaderFilename, fragmentShaderFilename);
+        auto shader = createRef<Shader>(vertexShaderFilename, fragmentShaderFilename);
         m_loadedShaders[shaderName] = shader;
 
         return shader;
     }
 
-    std::shared_ptr<Shader> AssetManager::createShader(const std::string & shaderName, 
-                                                       const std::string & vertexShaderFilename, 
-                                                       const std::string & fragmentShaderFilename,
-                                                       const std::string & geometryShaderFilename)
+    ref<Shader> AssetManager::createShader(const std::string & shaderName, 
+                                           const std::string & vertexShaderFilename, 
+                                           const std::string & fragmentShaderFilename,
+                                           const std::string & geometryShaderFilename)
     {
         MG_PROFILE_ZONE_SCOPED;
         if (m_loadedShaders.count(shaderName))
@@ -148,19 +148,19 @@ namespace mango
             return m_loadedShaders[shaderName];
         }
 
-        auto shader = std::make_shared<Shader>(vertexShaderFilename, 
-                                               fragmentShaderFilename, 
-                                               geometryShaderFilename);
+        auto shader = createRef<Shader>(vertexShaderFilename, 
+                                        fragmentShaderFilename, 
+                                        geometryShaderFilename);
         m_loadedShaders[shaderName] = shader;
 
         return shader;
     }
 
-    std::shared_ptr<Shader> AssetManager::createShader(const std::string & shaderName,
-                                                       const std::string & vertexShaderFilename,
-                                                       const std::string & fragmentShaderFilename, 
-                                                       const std::string & tessellationControlShaderFilename, 
-                                                       const std::string & tessellationEvaluationShaderFilename)
+    ref<Shader> AssetManager::createShader(const std::string & shaderName,
+                                           const std::string & vertexShaderFilename,
+                                           const std::string & fragmentShaderFilename, 
+                                           const std::string & tessellationControlShaderFilename, 
+                                           const std::string & tessellationEvaluationShaderFilename)
     {
         MG_PROFILE_ZONE_SCOPED;
         if (m_loadedShaders.count(shaderName))
@@ -168,21 +168,21 @@ namespace mango
             return m_loadedShaders[shaderName];
         }
 
-        auto shader = std::make_shared<Shader>(vertexShaderFilename,
-                                               fragmentShaderFilename,
-                                               tessellationControlShaderFilename,
-                                               tessellationEvaluationShaderFilename);
+        auto shader = createRef<Shader>(vertexShaderFilename,
+                                        fragmentShaderFilename,
+                                        tessellationControlShaderFilename,
+                                        tessellationEvaluationShaderFilename);
         m_loadedShaders[shaderName] = shader;
 
         return shader;
     }
 
-    std::shared_ptr<Shader> AssetManager::createShader(const std::string & shaderName, 
-                                                       const std::string & vertexShaderFilename, 
-                                                       const std::string & fragmentShaderFilename, 
-                                                       const std::string & geometryShaderFilename, 
-                                                       const std::string & tessellationControlShaderFilename, 
-                                                       const std::string & tessellationEvaluationShaderFilename)
+    ref<Shader> AssetManager::createShader(const std::string & shaderName, 
+                                           const std::string & vertexShaderFilename, 
+                                           const std::string & fragmentShaderFilename, 
+                                           const std::string & geometryShaderFilename, 
+                                           const std::string & tessellationControlShaderFilename, 
+                                           const std::string & tessellationEvaluationShaderFilename)
     {
         MG_PROFILE_ZONE_SCOPED;
         if (m_loadedShaders.count(shaderName))
@@ -190,17 +190,17 @@ namespace mango
             return m_loadedShaders[shaderName];
         }
 
-        auto shader = std::make_shared<Shader>(vertexShaderFilename,
-                                               fragmentShaderFilename,
-                                               geometryShaderFilename,
-                                               tessellationControlShaderFilename,
-                                               tessellationEvaluationShaderFilename);
+        auto shader = createRef<Shader>(vertexShaderFilename,
+                                        fragmentShaderFilename,
+                                        geometryShaderFilename,
+                                        tessellationControlShaderFilename,
+                                        tessellationEvaluationShaderFilename);
         m_loadedShaders[shaderName] = shader;
 
         return shader;
     }
 
-    std::shared_ptr<Font> AssetManager::getFont(const std::string& fontName)
+    ref<Font> AssetManager::getFont(const std::string& fontName)
     {
         MG_PROFILE_ZONE_SCOPED;
         if (m_loadedFonts.count(fontName))
@@ -211,7 +211,7 @@ namespace mango
         return nullptr;
     }
 
-    std::shared_ptr<Texture> AssetManager::getTexture2D(const std::string& textureName)
+    ref<Texture> AssetManager::getTexture2D(const std::string& textureName)
     {
         MG_PROFILE_ZONE_SCOPED;
         if (m_loadedTextures.count(textureName))
@@ -222,7 +222,7 @@ namespace mango
         return nullptr;
     }
 
-    std::shared_ptr<Shader> AssetManager::getShader(const std::string& shaderName)
+    ref<Shader> AssetManager::getShader(const std::string& shaderName)
     {
         MG_PROFILE_ZONE_SCOPED;
         if (m_loadedShaders.count(shaderName))

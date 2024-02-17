@@ -37,7 +37,7 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Mesh::setBuffers");
 
-        m_meshData = std::make_shared<MeshData>();
+        m_meshData = createRef<MeshData>();
         m_meshData->indicesCount = buffers.indices.size();
 
         /* Set up buffer objects */

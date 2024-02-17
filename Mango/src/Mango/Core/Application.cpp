@@ -59,7 +59,7 @@ namespace mango
         }
 
         // Init window
-        m_window = std::make_shared<Window>(appSettings.windowWidth, appSettings.windowHeight, appSettings.windowTitle, maximized);
+        m_window = createRef<Window>(appSettings.windowWidth, appSettings.windowHeight, appSettings.windowTitle, maximized);
     
         if (optResult["fullscreen"].as<bool>() || appSettings.fullscreen)
         {
