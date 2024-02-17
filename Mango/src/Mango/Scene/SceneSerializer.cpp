@@ -5,7 +5,6 @@
 #include "Mango/Core/AssetManager.h"
 
 #include <yaml-cpp/yaml.h>
-#include <strutil.h>
 #include <fstream>
 
 namespace YAML {
@@ -429,10 +428,7 @@ namespace mango
         out << YAML::EndSeq;
         out << YAML::EndMap;
 
-        auto pathString = outFilepath.string();
-        strutil::replace_all(pathString, "\\", "/");
-
-        std::ofstream fout(pathString);
+        std::ofstream fout(outFilepath);
         if (fout.is_open())
         {
             fout << out.c_str();
@@ -440,7 +436,7 @@ namespace mango
         }
         else
         {
-            MG_CORE_ERROR("Can't save file {}", pathString);
+            MG_CORE_ERROR("Can't save file {}", outFilepath);
         }
 
         return false;

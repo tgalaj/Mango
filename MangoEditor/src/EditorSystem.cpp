@@ -11,7 +11,6 @@
 #include <imgui.h>
 #include <ImGuizmo.h>
 #include <portable-file-dialogs.h>
-#include <strutil.h>
 
 namespace
 {
@@ -68,7 +67,7 @@ namespace mango
 
         // Setup font
         ImGuiSystem::addFont("InterBold16", "fonts/inter/Inter-Bold.ttf",    16.0f); 
-        ImGuiSystem::addFont("Inter32",     "fonts/inter/Inter-Regular.ttf", 32.0f);
+        ImGuiSystem::addFont("Inter24",     "fonts/inter/Inter-Regular.ttf", 24.0f);
         ImGuiSystem::addFont("Inter16",     "fonts/inter/Inter-Regular.ttf", 16.0f, true);
 
         // Load icons
@@ -454,9 +453,7 @@ namespace mango
             return;
         }
 
-        // VFI under the hood only accepts forward slashes only
         auto pathString = path.string();
-        strutil::replace_all(pathString, "\\", "/");
 
         m_editorScenePath = VFI::getFilepath(pathString).make_preferred();
         m_editorScene     = SceneSerializer::deserialize(m_editorScenePath);
@@ -823,7 +820,8 @@ namespace mango
     // NOTE(TG) Probably should be a separate panel
     void EditorSystem::onGuiMangoHub()
     {
-        ImGui::SetNextWindowSize({ 900, 350 });
+        float dpiScale = Services::application()->getWindow()->getDpiScale().x;
+        ImGui::SetNextWindowSize({ 900 * dpiScale, 350 * dpiScale });
 
         auto flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
         if (ImGui::Begin("Primitive Mango Hub", &m_isMangoHubOpen, flags))
@@ -831,7 +829,7 @@ namespace mango
             ImGuiStyle& style          = ImGui::GetStyle();
             ImGuiIO&    io             = ImGui::GetIO();
             auto        boldFont       = ImGuiSystem::getFont("InterBold16");
-            auto        bigRegularFont = ImGuiSystem::getFont("Inter32");
+            auto        bigRegularFont = ImGuiSystem::getFont("Inter24");
             
             MG_ASSERT(boldFont);
             MG_ASSERT(bigRegularFont);

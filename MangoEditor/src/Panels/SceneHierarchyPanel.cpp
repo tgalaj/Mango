@@ -2,13 +2,15 @@
 
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Core/VFI.h"
+#include "Mango/Project/Project.h"
 #include "Mango/Scene/Components.h"
 #include "Mango/Systems/ImGuiSystem.h"
 
+#include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
-#include <glm/gtc/type_ptr.hpp>
+#include <strutil.h>
 
 #include <type_traits>
 
@@ -677,11 +679,11 @@ namespace mango
                     {
                         const auto* path = (const wchar_t*)payload->Data;
 
-                        auto searchPath    = VFI::getSearchPath();
-                        auto basePath      = searchPath[searchPath.size() - 2]; // TODO: should be project's path !!
+                        auto basePath      = Project::getAssetDirectory();
                         auto relativePath  = std::filesystem::relative(std::filesystem::path(path), basePath);
 
-                        textureFilename    = relativePath.filename().string();
+                        textureFilename    = std::filesystem::path(path).string();
+
                         loadDroppedTexture = true;
                     }
                     ImGui::EndDragDropTarget();

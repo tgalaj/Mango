@@ -1,6 +1,8 @@
 #include "mgpch.h"
 #include "physfs.h"
 
+#include <strutil.h>
+
 namespace mango
 {
     bool VFI::isInitialized = false;
@@ -216,7 +218,10 @@ namespace mango
     std::filesystem::path VFI::getFilepath(const std::string& filename)
     {
         MG_PROFILE_ZONE_SCOPED;
-        auto realDir = PHYSFS_getRealDir(filename.c_str());
+        auto fname = filename;
+        strutil::replace_all(fname, "\\", "/");
+
+        auto realDir = PHYSFS_getRealDir(fname.c_str());
 
         std::string dir = "";
         if (realDir != NULL)
@@ -225,9 +230,9 @@ namespace mango
         }
         else
         {
-            MG_CORE_WARN("Could not find file {}", filename);
+            MG_CORE_WARN("Could not find file {}", fname);
         }
 
-        return std::filesystem::path(dir + "/" + filename);
+        return std::filesystem::path(dir + "/" + fname);
     }
 }
