@@ -67,9 +67,9 @@ namespace mango
         }
 
         // Setup font
-        Services::application()->getImGuiSystem()->addFont(VFI::getFilepath("fonts/inter/Inter-Bold.ttf"),    16.0f); 
-        Services::application()->getImGuiSystem()->addFont(VFI::getFilepath("fonts/inter/Inter-Regular.ttf"), 32.0f);
-        Services::application()->getImGuiSystem()->addFont(VFI::getFilepath("fonts/inter/Inter-Regular.ttf"), 16.0f, true);
+        ImGuiSystem::addFont("InterBold16", "fonts/inter/Inter-Bold.ttf",    16.0f); 
+        ImGuiSystem::addFont("Inter32",     "fonts/inter/Inter-Regular.ttf", 32.0f);
+        ImGuiSystem::addFont("Inter16",     "fonts/inter/Inter-Regular.ttf", 16.0f, true);
 
         // Load icons
         m_playIcon = createRef<Texture>();
@@ -830,9 +830,12 @@ namespace mango
         {
             ImGuiStyle& style          = ImGui::GetStyle();
             ImGuiIO&    io             = ImGui::GetIO();
-            auto        boldFont       = io.Fonts->Fonts[0];
-            auto        bigRegularFont = io.Fonts->Fonts[1];
+            auto        boldFont       = ImGuiSystem::getFont("InterBold16");
+            auto        bigRegularFont = ImGuiSystem::getFont("Inter32");
             
+            MG_ASSERT(boldFont);
+            MG_ASSERT(bigRegularFont);
+
             ImVec4 errorMessageColor   = ImVec4(0.8392, 0.2706, 0.2039, 1.0);
             ImVec4 warningMessageColor = ImVec4(0.9490, 0.8863, 0.3882, 1.0);
 

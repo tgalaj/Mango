@@ -15,7 +15,8 @@
 
 namespace mango
 {
-    glm::vec2 ImGuiSystem::m_windowSize = glm::vec2(0.0f);
+    glm::vec2                                ImGuiSystem::m_windowSize = glm::vec2(0.0f);
+    std::unordered_map<std::string, ImFont*> ImGuiSystem::s_ImFonts;
 
     ImGuiSystem::ImGuiSystem()
         : System("ImGuiSystem")
@@ -128,21 +129,29 @@ namespace mango
         m_windowSize = glm::vec2(width, height);
     }
 
-    void ImGuiSystem::addFont(const std::filesystem::path& path, float size, bool isDefault /*= false*/)
+    void ImGuiSystem::addFont(const std::string& name, const std::string& path, float size, bool isDefault /*= false*/)
     {
+        float dpiScale = Services::application()->getWindow()->getDpiScale().x;
+
         if (size <= 0.0f) size = 16.0f;
+
+        size = std::floorf(size * dpiScale);
 
         ImGuiIO& io = ImGui::GetIO();
 
         if (isDefault)
         {
-            io.FontDefault = io.Fonts->AddFontFromFileTTF(path.string().c_str(), size);
+            io.FontDefault  = io.Fonts->AddFontFromFileTTF(VFI::getFilepath(path).string().c_str(), size);
+            s_ImFonts[name] = io.FontDefault;
         }
         else
         {
-            auto font = io.Fonts->AddFontFromFileTTF(path.string().c_str(), size);
+            auto font       = io.Fonts->AddFontFromFileTTF(VFI::getFilepath(path).string().c_str(), size);
+            s_ImFonts[name] = font;
         }
 
+        ImGuiStyle& style = ImGui::GetStyle();
+        style.ScaleAllSizes(dpiScale);
     }
 
     void ImGuiSystem::setDefaultIniSettingsFile(const std::string& filename)

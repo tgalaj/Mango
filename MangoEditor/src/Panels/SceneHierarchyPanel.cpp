@@ -3,6 +3,7 @@
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Core/VFI.h"
 #include "Mango/Scene/Components.h"
+#include "Mango/Systems/ImGuiSystem.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -205,7 +206,9 @@ namespace mango
     static bool customDragFloat3(const std::string& label, glm::vec3& values, float defaultValue = 0.0f, float columnWidth = 80.0f)
     {
         ImGuiIO& io       = ImGui::GetIO();
-        auto     boldFont = io.Fonts->Fonts[0];
+        auto     boldFont = ImGuiSystem::getFont("InterBold16");
+
+        MG_ASSERT(boldFont);
 
         bool ret = false;
 
