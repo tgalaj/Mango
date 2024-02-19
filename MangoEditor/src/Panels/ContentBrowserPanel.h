@@ -7,10 +7,10 @@
 
 namespace mango
 {
-    class AssetBrowserPanel
+    class ContentBrowserPanel
     {
     public:
-        AssetBrowserPanel();
+        ContentBrowserPanel();
 
         void onGui();
 

@@ -377,7 +377,7 @@ namespace mango
 
             // Open start scene
             openScene(Project::getActive()->getConfig().startScene);
-            m_assetsBrowserPanel = createScope<AssetBrowserPanel>();
+            m_assetsBrowserPanel = createScope<ContentBrowserPanel>();
 
             return true;
         }
@@ -565,7 +565,7 @@ namespace mango
             if (ImGui::BeginDragDropTarget())
             {
                 // TODO(TG): consider moving payload type to a shared file (make a define or static const)
-                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MG_ASSETS_BROWSER_ITEM"))
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MG_CONTENT_BROWSER_ITEM"))
                 {
                     const auto* path = (const wchar_t*)payload->Data;
                     openScene(path);

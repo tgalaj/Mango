@@ -1,4 +1,4 @@
-#include "AssetBrowserPanel.h"
+#include "ContentBrowserPanel.h"
 
 #include "Mango/Core/VFI.h"
 #include "Mango/Project/Project.h"
@@ -8,7 +8,7 @@
 namespace mango
 {
 
-    AssetBrowserPanel::AssetBrowserPanel()
+    ContentBrowserPanel::ContentBrowserPanel()
     {        
         m_basePath    = Project::getAssetDirectory();
         m_currentPath = m_basePath;
@@ -26,9 +26,9 @@ namespace mango
         m_returnIcon->createTexture2d("icons/return.png", false, 8);
     }
 
-    void AssetBrowserPanel::onGui()
+    void ContentBrowserPanel::onGui()
     {
-        ImGui::Begin("Assets Browser Panel");
+        ImGui::Begin("Content Browser");
 
         #ifdef _WIN32
         if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
@@ -93,7 +93,7 @@ namespace mango
 
         float cellSize     = thumbnailSize + thumbnailPadding;
         float panelWidth   = ImGui::GetContentRegionAvail().x;
-        auto  columnsCount = (int)(panelWidth / cellSize);
+        auto  columnsCount = glm::max((int)(panelWidth / cellSize), 1);
 
         if (ImGui::BeginTable("Thumbnails", columnsCount))
         {
@@ -117,7 +117,7 @@ namespace mango
                     const wchar_t* itemPath = relativePath.c_str();
 
                     // TODO: consider moving payload type to a shared file (make a define or static const)
-                    ImGui::SetDragDropPayload("MG_ASSETS_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
+                    ImGui::SetDragDropPayload("MG_CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
                     ImGui::EndDragDropSource();
                 }
 

@@ -29,7 +29,7 @@ namespace mango
 
     void SceneHierarchyPanel::onGui()
     {
-        ImGui::Begin("Hierarchy Panel");
+        ImGui::Begin("Scene Hierarchy");
         {
             if (m_scene)
             {
@@ -675,7 +675,7 @@ namespace mango
                 std::string textureFilename = texture->getFilename();
                 if (ImGui::BeginDragDropTarget())
                 {
-                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MG_ASSETS_BROWSER_ITEM"))
+                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MG_CONTENT_BROWSER_ITEM"))
                     {
                         const auto* path = (const wchar_t*)payload->Data;
 
