@@ -3,7 +3,10 @@
 #include "Mango/Core/VFI.h"
 #include "Mango/Project/Project.h"
 
+#define IMGUI_DEFINE_MATH_OPERATORS
+#define IMGUI_DEFINE_MATH_OPERATORS_IMPLEMENTED
 #include <imgui.h>
+#include <imgui_internal.h>
 
 namespace mango
 {
@@ -29,18 +32,6 @@ namespace mango
     void ContentBrowserPanel::onGui()
     {
         ImGui::Begin("Content Browser");
-
-        #ifdef _WIN32
-        if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
-        {
-            if (ImGui::MenuItem("Open Folder in File Explorer"))
-            {
-                auto command = "explorer " + m_currentPath.make_preferred().string();
-                system(command.c_str());
-            }
-            ImGui::EndPopup();
-        }
-        #endif
 
         ImGui::PushStyleColor(ImGuiCol_Button, { 0, 0, 0, 0 });
 
@@ -95,6 +86,7 @@ namespace mango
         float panelWidth   = ImGui::GetContentRegionAvail().x;
         auto  columnsCount = glm::max((int)(panelWidth / cellSize), 1);
 
+        bool itemPopupOpened = false;
         if (ImGui::BeginTable("Thumbnails", columnsCount))
         {
             for (auto& directoryIterator : std::filesystem::directory_iterator(m_currentPath))
@@ -102,14 +94,14 @@ namespace mango
                 ImGui::TableNextColumn();
                 const auto& path           = directoryIterator.path();
                 std::string filenameString = path.filename().string();
+                bool isDirectory           = directoryIterator.is_directory();
 
                 ImGui::PushStyleColor(ImGuiCol_Button, { 0, 0, 0, 0});
-                
-                ImGui::ImageButton(filenameString.c_str(),
-                                   directoryIterator.is_directory() ?
-                                   (ImTextureID)m_folderIcon->getRendererID() : 
-                                   (ImTextureID)m_fileIcon->getRendererID(),
-                                   { thumbnailSize, thumbnailSize });
+                contentBrowserButton(filenameString.c_str(), 
+                                     isDirectory ?
+                                     (ImTextureID)m_folderIcon->getRendererID() : 
+                                     (ImTextureID)m_fileIcon->getRendererID(),
+                                     path == m_currentRenameEntry);
 
                 if (ImGui::BeginDragDropSource())
                 {
@@ -118,6 +110,7 @@ namespace mango
 
                     // TODO: consider moving payload type to a shared file (make a define or static const)
                     ImGui::SetDragDropPayload("MG_CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
+                    ImGui::Text(relativePath.filename().string().c_str());
                     ImGui::EndDragDropSource();
                 }
 
@@ -125,33 +118,154 @@ namespace mango
 
                 if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
                 {
-                    if (directoryIterator.is_directory())
+                    if (isDirectory)
                     {
                         m_currentPath /= filenameString;
                         m_pathStack.push_back(filenameString);
                     }
                     else
                     {
-                        #ifdef _WIN32
-                        system(("start " + path.string() + " &").c_str());
-                        #endif
-
-                        // Didn't test on Linux and MacOS, might work...
-                        #ifdef __linux__
-                        system(("xdg-open " + path.string() + " &").c_str());
-                        #endif
-
-                        #ifdef __APPLE__
-                        system(("open " + path.string() + " &").c_str());
-                        #endif
+                        cmdOpenExternally(path);
                     }
                 }
+                else if (ImGui::IsMouseClicked(ImGuiMouseButton_Right) && ImGui::IsItemHovered())
+                {
+                    ImGui::OpenPopup(filenameString.c_str());
+                }
 
-                ImGui::TextWrapped(filenameString.c_str());
-                ImGui::Spacing();
+                if (ImGui::BeginPopup(filenameString.c_str()))
+                {
+                    itemPopupOpened = true;
+                    
+                    if (ImGui::MenuItem("Rename"))
+                    {
+                        m_currentRenameEntry = path;
+                    }
+
+                    if (ImGui::MenuItem("Delete"))
+                    {
+                        cmdDelete(path);
+                    }
+
+                    ImGui::Separator();
+                    if (ImGui::MenuItem("Show In Explorer"))
+                    {
+                        auto pathToOpen = m_currentPath / filenameString;
+                        cmdShowInExplorer(isDirectory ? pathToOpen : pathToOpen.parent_path());
+                    }
+                    if (!isDirectory)
+                    {
+                        if (ImGui::MenuItem("Open Externally"))
+                        {
+                            cmdOpenExternally(path);
+                        }
+                    }
+
+                    ImGui::EndPopup();
+                }
             }
             ImGui::EndTable();
         }
+
+        #ifdef _WIN32
+        if (!itemPopupOpened && ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
+        {
+            if (ImGui::MenuItem("Show in Explorer"))
+            {
+                cmdShowInExplorer(m_currentPath);
+            }
+            ImGui::EndPopup();
+        }
+        #endif
+
         ImGui::End();
     }
+
+    bool ContentBrowserPanel::contentBrowserButton(const char* label, void* textureID, bool rename)
+    {
+              ImGuiStyle& style            = ImGui::GetStyle();
+        const ImVec2      padding          = style.FramePadding;
+        const ImVec2      wrappedLabelSize = ImGui::CalcTextSize(label, 0, false, thumbnailSize);
+
+        if (rename) ImGui::BeginGroup();
+        ImGui::InvisibleButton(label, { thumbnailSize, thumbnailSize + wrappedLabelSize.y });
+
+        if (!ImGui::IsItemVisible()) // Skip rendering as ImDrawList elements are not clipped.
+            return false;
+
+        const ImVec2 p0      = ImGui::GetItemRectMin();
+        const ImVec2 p1      = ImGui::GetItemRectMax();
+        const ImVec2 p0image = { p0.x, p0.y - padding.y };
+        const ImVec2 p1image = { p1.x, p1.y - wrappedLabelSize.y - padding.y } ;
+
+        float textAlignedPosX = p0.x + glm::max((p1.x - p0.x) - wrappedLabelSize.x, 0.0f) * 0.5f;
+
+        const ImVec2      textPos  = ImVec2(textAlignedPosX, p1image.y);
+              ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+              bool held    = ImGui::IsItemActive();
+              bool hovered = ImGui::IsItemHovered();
+              ImGuiID id   = ImGui::GetItemID();
+        const ImU32 col    = ImGui::GetColorU32((held && hovered) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Button);
+
+        ImGui::RenderNavHighlight(ImRect(p0, p1), id);
+        ImGui::RenderFrame(p0, p1, col, true, glm::clamp((float)glm::min(padding.x, padding.y), 0.0f, style.FrameRounding));
+        
+        drawList->AddImage(textureID, p0image, p1image);
+
+        if (!rename) 
+            drawList->AddText(ImGui::GetDefaultFont(), ImGui::GetFontSize(), textPos, IM_COL32_WHITE, label, 0, thumbnailSize);
+        else
+        {   
+            static char buffer[256];
+            memset(buffer, 0, sizeof(buffer));
+            std::string s = label;
+            s.copy(buffer, sizeof(buffer));
+
+            ImGui::SetNextItemWidth(thumbnailSize);
+            ImGui::SetKeyboardFocusHere(0);
+            ImGui::SetCursorScreenPos({textPos.x - padding.x, textPos.y});
+            if (ImGui::InputText("##rename", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+            {
+                std::string newName(buffer);
+
+                std::filesystem::rename(m_currentRenameEntry, m_currentRenameEntry.parent_path() / newName);
+                m_currentRenameEntry = "";
+            }
+
+            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) || ImGui::IsMouseClicked(ImGuiMouseButton_Middle) || ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+            {
+                m_currentRenameEntry = "";
+            }
+            ImGui::EndGroup();
+        }
+    }
+
+    void ContentBrowserPanel::cmdShowInExplorer(std::filesystem::path path)
+    {
+        auto command = "explorer " + path.make_preferred().string();
+        system(command.c_str());
+    }
+
+    void ContentBrowserPanel::cmdOpenExternally(std::filesystem::path path)
+    {
+        #ifdef _WIN32
+        system(("start " + path.string() + " &").c_str());
+        #endif
+
+        // Didn't test on Linux and MacOS, might work...
+        #ifdef __linux__
+        system(("xdg-open " + path.string() + " &").c_str());
+        #endif
+
+        #ifdef __APPLE__
+        system(("open " + path.string() + " &").c_str());
+        #endif
+    }
+
+    void ContentBrowserPanel::cmdDelete(std::filesystem::path path)
+    {
+        std::filesystem::remove_all(path);
+    }
+
 }
