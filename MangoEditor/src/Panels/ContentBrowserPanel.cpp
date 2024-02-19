@@ -224,7 +224,7 @@ namespace mango
 
             ImGui::SetNextItemWidth(thumbnailSize);
             ImGui::SetKeyboardFocusHere(0);
-            ImGui::SetCursorScreenPos({textPos.x - padding.x, textPos.y});
+            ImGui::SetCursorScreenPos(textPos - padding);
             if (ImGui::InputText("##rename", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
             {
                 std::string newName(buffer);
