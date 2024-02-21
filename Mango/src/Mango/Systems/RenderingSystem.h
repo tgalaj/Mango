@@ -2,7 +2,7 @@
 #include "Mango/Core/System.h"
 #include "Mango/Events/EntityEvents.h"
 #include "Mango/Events/SceneEvents.h"
-#include "Mango/Rendering/Model.h"
+#include "Mango/Rendering/AnimatedMesh.h"
 #include "Mango/Rendering/Skybox.h"
 #include "Mango/Scene/Entity.h"
 
@@ -16,7 +16,7 @@ namespace mango
     class Picking;
     class SSAO;
     class DeferredRendering;
-    class ModelRendererComponent;
+    class StaticMeshComponent;
     class TransformComponent;
     class Camera;
     class Window;
@@ -42,9 +42,9 @@ namespace mango
         void onDestroy();
 
         void receive(const EntityRemovedEvent                            & event);
-        void receive(const ComponentAddedEvent<ModelRendererComponent>   & event);
-        void receive(const ComponentReplacedEvent<ModelRendererComponent>& event);
-        void receive(const ComponentRemovedEvent<ModelRendererComponent> & event);
+        void receive(const ComponentAddedEvent<StaticMeshComponent>   & event);
+        void receive(const ComponentReplacedEvent<StaticMeshComponent>& event);
+        void receive(const ComponentRemovedEvent<StaticMeshComponent> & event);
         void receive(const ActiveSceneChangedEvent                       & event);
 
         void setSkybox(const ref<Skybox> & skybox);
@@ -86,20 +86,22 @@ namespace mango
         void renderDebug();
         void renderDebugLightsBoundingBoxes(Scene* scene);
 
-        void renderOpaque(const ref<Shader>& shader);
-        void renderAlpha(const ref<Shader>& shader);
-        void renderEnviroMappingStatic(const ref<Shader>& shader);
-        void renderDynamicEnviroMapping(const ref<Shader>& shader);
+        void renderOpaque(ref<Shader>& shader);
+        void renderAlpha(ref<Shader>& shader);
+        void renderEnviroMappingStatic(ref<Shader>& shader);
+        void renderDynamicEnviroMapping(ref<Shader>& shader);
         void renderLightsForward(Scene* scene);
         void renderLightsDeferred(Scene* scene);
 
         void sortAlpha();
-        void addEntityToRenderQueue     (Entity entity, ModelRendererComponent::RenderQueue renderQueue);
-        void removeEntityFromRenderQueue(Entity entity, ModelRendererComponent::RenderQueue renderQueue);
+        void addEntityToRenderQueue     (Entity entity, Material::RenderQueue renderQueue);
+        void removeEntityFromRenderQueue(Entity entity, Material::RenderQueue renderQueue);
 
     private:
         enum TextureMaps { SHADOW_MAP = 5 }; //TODO: move to Material class
 
+        // TODO(TG): these should be te vectors of Submeshes* instead of entities
+        // NOTE(TG): leaving as is for now, as the renderer will be reworked from the ground
         std::vector<Entity> m_opaqueQueue;
         std::vector<Entity> m_alphaQueue;
         std::vector<Entity> m_enviroStaticQueue;
@@ -122,8 +124,8 @@ namespace mango
 
         ref<Shader> m_boundingboxShader;
         ref<Shader> m_nullShader;
-        Model m_lightBoundingSphere;
-        Model m_lightBoundingCone;
+        StaticMesh m_lightBoundingSphere;
+        StaticMesh m_lightBoundingCone;
 
         ref<PostprocessEffect> m_hdrFilter;
         ref<PostprocessEffect> m_fxaaFilter;

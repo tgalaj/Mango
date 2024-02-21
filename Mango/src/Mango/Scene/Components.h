@@ -2,7 +2,7 @@
 
 #include "Mango/Core/UUID.h"
 #include "Mango/Rendering/Attenuation.h"
-#include "Mango/Rendering/Model.h"
+#include "Mango/Rendering/AnimatedMesh.h"
 #include "Mango/Rendering/Camera/Camera.h"
 
 #ifndef GLM_ENABLE_EXPERIMENTAL
@@ -210,27 +210,31 @@ namespace mango
         bool isPrimary = true;
     };
 
-    struct ModelRendererComponent
+    struct StaticMeshComponent
     {
     public:
-        enum class RenderQueue { RQ_OPAQUE, RQ_ALPHA, RQ_ENVIRO_MAPPING_STATIC, RQ_ENVIRO_MAPPING_DYNAMIC };
-
-        ModelRendererComponent()
-            : m_renderQueue(RenderQueue::RQ_OPAQUE)
+        StaticMeshComponent()
         {}
 
-        explicit ModelRendererComponent(const Model& model, RenderQueue renderQueue = RenderQueue::RQ_OPAQUE)
-            : model(model),
-              m_renderQueue(renderQueue)
-        {}
-
-        RenderQueue getRenderQueue() const { return m_renderQueue; }
+        explicit StaticMeshComponent(const ref<StaticMesh>& staticMesh)
+            : staticMesh(staticMesh) {}
 
     public:
-        Model model;
+        ref<StaticMesh> staticMesh;
+    };
 
-    private:
-        RenderQueue m_renderQueue;
+    struct AnimatedMeshComponent
+    {
+    public:
+        AnimatedMeshComponent()
+        {}
+
+        explicit AnimatedMeshComponent(const ref<AnimatedMesh>& animatedMesh)
+            : animatedMesh(animatedMesh)
+        {}
+
+    public:
+        ref<AnimatedMesh> animatedMesh;
     };
 
     struct TransformComponent
@@ -429,6 +433,6 @@ namespace mango
 
     // Except: IDComponent, TagComponent which are special case components
     using ComponentsRegistry = ComponentsGroup<DirectionalLightComponent, PointLightComponent, SpotLightComponent, 
-                                               CameraComponent, ModelRendererComponent, TransformComponent, 
+                                               CameraComponent, StaticMeshComponent, AnimatedMeshComponent, TransformComponent, 
                                                RigidBody3DComponent, SphereColliderComponent, BoxCollider3DComponent>;
 }

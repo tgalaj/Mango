@@ -239,33 +239,36 @@ namespace mango
             out << YAML::EndMap;
         }
 
-        if (entity.hasComponent<ModelRendererComponent>())
+        if (entity.hasComponent<StaticMeshComponent>())
         {
-            auto modelTypeToString = [](Model::ModelType type) -> std::string
+            auto modelTypeToString = [](StaticMesh::MeshType type) -> std::string
             {
                 switch (type)
                 {
-                    case Model::ModelType::Model3D:  return "Model3D";
-                    case Model::ModelType::Cone:     return "Cone";
-                    case Model::ModelType::Cube:     return "Cube";
-                    case Model::ModelType::Cylinder: return "Cylinder";
-                    case Model::ModelType::Plane:    return "Plane";
-                    case Model::ModelType::Sphere:   return "Sphere";
-                    case Model::ModelType::Torus:    return "Torus";
-                    case Model::ModelType::Quad:     return "Quad";
+                    case StaticMesh::MeshType::StaticMesh:   return "StaticMesh";
+                    case StaticMesh::MeshType::AnimatedMesh: return "AnimatedMesh";
+                    case StaticMesh::MeshType::Cone:         return "Cone";
+                    case StaticMesh::MeshType::Cube:         return "Cube";
+                    case StaticMesh::MeshType::Cylinder:     return "Cylinder";
+                    case StaticMesh::MeshType::Plane:        return "Plane";
+                    case StaticMesh::MeshType::PQTorusKnot:  return "PQTorusKnot";
+                    case StaticMesh::MeshType::Sphere:       return "Sphere";
+                    case StaticMesh::MeshType::Torus:        return "Torus";
+                    case StaticMesh::MeshType::TrefoilKnot:  return "TrefoilKnot";
+                    case StaticMesh::MeshType::Quad:         return "Quad";
                 }
                 MG_CORE_ASSERT_MSG(false, "Unknown model type");
                 return {};
             };
 
-            auto renderQueueToString = [](ModelRendererComponent::RenderQueue queue) -> std::string
+            auto renderQueueToString = [](Material::RenderQueue queue) -> std::string
             {
                 switch (queue)
                 {
-                    case ModelRendererComponent::RenderQueue::RQ_OPAQUE:                 return "Opaque";
-                    case ModelRendererComponent::RenderQueue::RQ_ALPHA:                  return "Alpha";
-                    case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:  return "StaticEnvMapping";
-                    case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC: return "DynamicEnvMapping";
+                    case Material::RenderQueue::RQ_OPAQUE:                 return "Opaque";
+                    case Material::RenderQueue::RQ_TRANSPARENT:            return "Transparent";
+                    case Material::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:  return "StaticEnvMapping";
+                    case Material::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC: return "DynamicEnvMapping";
                 }
                 MG_CORE_ASSERT_MSG(false, "Unknown render queue type");
                 return {};
@@ -275,33 +278,32 @@ namespace mango
             {
                 switch (type)
                 {
-                    case Material::TextureType::DIFFUSE:  return "Diffuse";
-                    case Material::TextureType::SPECULAR: return "Specular";
-                    case Material::TextureType::NORMAL:   return "Normal";
-                    case Material::TextureType::EMISSION: return "Emission";
-                    case Material::TextureType::DEPTH:    return "Depth";
+                    case Material::TextureType::DIFFUSE:      return "Diffuse";
+                    case Material::TextureType::SPECULAR:     return "Specular";
+                    case Material::TextureType::NORMAL:       return "Normal";
+                    case Material::TextureType::EMISSION:     return "Emission";
+                    case Material::TextureType::DISPLACEMENT: return "Displacement";
                 }
                 MG_CORE_ASSERT_MSG(false, "Unknown texture type");
                 return {};
             };
 
-            out << YAML::Key << "ModelRendererComponent";
+            out << YAML::Key << "StaticMeshComponent";
             out << YAML::BeginMap;
             {
-                auto& mrc = entity.getComponent<ModelRendererComponent>();
-                out << YAML::Key << "ModelType"   << YAML::Value << modelTypeToString(mrc.model.getModelType());
-                out << YAML::Key << "RenderQueue" << YAML::Value << renderQueueToString(mrc.getRenderQueue());
+                auto& mrc = entity.getComponent<StaticMeshComponent>();
+                out << YAML::Key << "MeshType"    << YAML::Value << modelTypeToString(mrc.staticMesh->getMeshType());
                 
-                if (mrc.model.getModelType() == Model::ModelType::Model3D)
+                if (mrc.staticMesh->getMeshType() == StaticMesh::MeshType::StaticMesh)
                 {
-                    out << YAML::Key << "Filename"  << YAML::Value << mrc.model.m_filename;
+                    out << YAML::Key << "Filename"  << YAML::Value << mrc.staticMesh->m_filename;
                 }
                 else
                 {
                     out << YAML::Key << "PrimitiveProperties" << YAML::Value;
                     out << YAML::BeginMap;
                     {
-                        auto pp = mrc.model.getPrimitiveProperties();
+                        auto pp = mrc.staticMesh->getPrimitiveProperties();
                         out << YAML::Key << "Width"       << YAML::Value << pp.width;
                         out << YAML::Key << "Height"      << YAML::Value << pp.height;
                         out << YAML::Key << "Radius"      << YAML::Value << pp.radius;
@@ -310,18 +312,20 @@ namespace mango
                         out << YAML::Key << "OuterRadius" << YAML::Value << pp.outerRadius;
                         out << YAML::Key << "Slices"      << YAML::Value << pp.slices;
                         out << YAML::Key << "Stacks"      << YAML::Value << pp.stacks;
+                        out << YAML::Key << "P"           << YAML::Value << pp.p;
+                        out << YAML::Key << "Q"           << YAML::Value << pp.q;
                     }
                     out << YAML::EndMap;
 
                     out << YAML::Key << "Material" << YAML::Value;
                     out << YAML::BeginMap;
                     {
-                        auto material = mrc.model.getMesh().material;
+                        auto material = mrc.staticMesh->getSubmesh().material;
 
                         out << YAML::Key << "Vec3Map" << YAML::Value;
                         out << YAML::BeginMap;
                         {
-                            for (auto& [propertyName, vec3Value] : material.getVec3Map())
+                            for (auto& [propertyName, vec3Value] : material->getVec3Map())
                             {
                                 out << YAML::Key << propertyName << YAML::Value << vec3Value;
                             }
@@ -331,7 +335,7 @@ namespace mango
                         out << YAML::Key << "FloatMap" << YAML::Value;
                         out << YAML::BeginMap;
                         {
-                            for (auto& [propertyName, floatValue] : material.getFloatMap())
+                            for (auto& [propertyName, floatValue] : material->getFloatMap())
                             {
                                 out << YAML::Key << propertyName << YAML::Value << floatValue;
                             }
@@ -341,7 +345,7 @@ namespace mango
                         out << YAML::Key << "Textures" << YAML::Value;
                         out << YAML::BeginMap;
                         {
-                            for (auto& [textureType, texture] : material.getTexturesMap())
+                            for (auto& [textureType, texture] : material->getTexturesMap())
                             {
                                 out << YAML::Key << materialTextureTypeToString(textureType) << YAML::Value << texture->getFilename();
                             }
@@ -567,39 +571,42 @@ namespace mango
                 auto modelRendererComponent = entity["ModelRendererComponent"];
                 if (modelRendererComponent)
                 {
-                    auto stringToModelType = [](const std::string& s) -> Model::ModelType
+                    auto stringToModelType = [](const std::string& s) -> StaticMesh::MeshType
                     {
-                        if (s == "Model3D")  return Model::ModelType::Model3D;
-                        if (s == "Cone")     return Model::ModelType::Cone;
-                        if (s == "Cube")     return Model::ModelType::Cube;
-                        if (s == "Cylinder") return Model::ModelType::Cylinder;
-                        if (s == "Plane")    return Model::ModelType::Plane;
-                        if (s == "Sphere")   return Model::ModelType::Sphere;
-                        if (s == "Torus")    return Model::ModelType::Torus;
-                        if (s == "Quad")     return Model::ModelType::Quad;
+                        if (s == "StaticMesh")   return StaticMesh::MeshType::StaticMesh;
+                        if (s == "AnimatedMesh") return StaticMesh::MeshType::AnimatedMesh;
+                        if (s == "Cone")         return StaticMesh::MeshType::Cone;
+                        if (s == "Cube")         return StaticMesh::MeshType::Cube;
+                        if (s == "Cylinder")     return StaticMesh::MeshType::Cylinder;
+                        if (s == "Plane")        return StaticMesh::MeshType::Plane;
+                        if (s == "PQTorusKnot")  return StaticMesh::MeshType::PQTorusKnot;
+                        if (s == "Sphere")       return StaticMesh::MeshType::Sphere;
+                        if (s == "Torus")        return StaticMesh::MeshType::Torus;
+                        if (s == "TrefoilKnot")  return StaticMesh::MeshType::TrefoilKnot;
+                        if (s == "Quad")         return StaticMesh::MeshType::Quad;
 
                         MG_CORE_ASSERT_MSG(false, "Unknown model type");
-                        return Model::ModelType::Cube;
+                        return StaticMesh::MeshType::Cube;
                     };
 
-                    auto stringToRenderQueue = [](const std::string& s) -> ModelRendererComponent::RenderQueue
+                    auto stringToRenderQueue = [](const std::string& s) -> Material::RenderQueue
                     {
-                        if (s == "Opaque")            return ModelRendererComponent::RenderQueue::RQ_OPAQUE;
-                        if (s == "Alpha")             return ModelRendererComponent::RenderQueue::RQ_ALPHA;
-                        if (s == "StaticEnvMapping")  return ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC;
-                        if (s == "DynamicEnvMapping") return ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC;
+                        if (s == "Opaque")            return Material::RenderQueue::RQ_OPAQUE;
+                        if (s == "Transparent")       return Material::RenderQueue::RQ_TRANSPARENT;
+                        if (s == "StaticEnvMapping")  return Material::RenderQueue::RQ_ENVIRO_MAPPING_STATIC;
+                        if (s == "DynamicEnvMapping") return Material::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC;
 
                         MG_CORE_ASSERT_MSG(false, "Unknown render queue");
-                        return ModelRendererComponent::RenderQueue::RQ_OPAQUE;
+                        return Material::RenderQueue::RQ_OPAQUE;
                     };
 
                     auto stringToMaterialTextureType = [](const std::string& s) -> Material::TextureType
                     {
-                        if (s == "Diffuse")  return Material::TextureType::DIFFUSE;
-                        if (s == "Specular") return Material::TextureType::SPECULAR;
-                        if (s == "Normal")   return Material::TextureType::NORMAL;
-                        if (s == "Emission") return Material::TextureType::EMISSION;
-                        if (s == "Depth")    return Material::TextureType::DEPTH;
+                        if (s == "Diffuse")      return Material::TextureType::DIFFUSE;
+                        if (s == "Specular")     return Material::TextureType::SPECULAR;
+                        if (s == "Normal")       return Material::TextureType::NORMAL;
+                        if (s == "Emission")     return Material::TextureType::EMISSION;
+                        if (s == "Displacement") return Material::TextureType::DISPLACEMENT;
 
                         MG_CORE_ASSERT_MSG(false, "Unknown texture type");
                         return Material::TextureType::DIFFUSE;
@@ -608,16 +615,16 @@ namespace mango
                     auto modelType = stringToModelType(modelRendererComponent["ModelType"].as<std::string>());
                     auto renderQueue = stringToRenderQueue(modelRendererComponent["RenderQueue"].as<std::string>());
 
-                    if (modelType == Model::ModelType::Model3D)
+                    if (modelType == StaticMesh::MeshType::StaticMesh)
                     {
-                        auto filename = modelRendererComponent["Filename"].as<std::string>();
-                        Model model(filename);
+                        auto filename   = modelRendererComponent["Filename"].as<std::string>();
+                        auto staticMesh = AssetManager::createStaticMesh(filename);
 
-                        deserializedEntity.addComponent<ModelRendererComponent>(model, renderQueue);
+                        deserializedEntity.addComponent<StaticMeshComponent>(staticMesh);
                     }
                     else
                     {
-                        Model model("");
+                        ref<StaticMesh> staticMesh = createRef<StaticMesh>();
                         auto  primitiveProperties = modelRendererComponent["PrimitiveProperties"];
 
                         PrimitiveProperties pp;
@@ -629,22 +636,22 @@ namespace mango
                         pp.outerRadius = primitiveProperties["OuterRadius"].as<float>();
                         pp.slices      = primitiveProperties["Slices"].as<int32_t>();
                         pp.stacks      = primitiveProperties["Stacks"].as<int32_t>();
-                        model.setPrimitiveProperties(modelType, pp);
+                        staticMesh->setPrimitiveProperties(modelType, pp);
 
-                        deserializedEntity.addComponent<ModelRendererComponent>(model, renderQueue);
+                        deserializedEntity.addComponent<StaticMeshComponent>(staticMesh);
 
                         auto material = modelRendererComponent["Material"];
                         if (material)
                         {
-                            auto& mrc          = deserializedEntity.getComponent<ModelRendererComponent>();
-                            auto& meshMaterial = mrc.model.getMesh().material;
+                            auto& mrc          = deserializedEntity.getComponent<StaticMeshComponent>();
+                            auto& meshMaterial = mrc.staticMesh->getSubmesh().material;
 
                             auto vec3Map = material["Vec3Map"];
                             if (vec3Map)
                             {   
                                 for (auto it = vec3Map.begin(); it != vec3Map.end(); ++it)
                                 {
-                                    meshMaterial.addVector3(it->first.as<std::string>(), it->second.as<glm::vec3>());
+                                    meshMaterial->addVector3(it->first.as<std::string>(), it->second.as<glm::vec3>());
                                 }
                             }
 
@@ -653,7 +660,7 @@ namespace mango
                             {
                                 for (auto it = floatMap.begin(); it != floatMap.end(); ++it)
                                 {
-                                    meshMaterial.addFloat(it->first.as<std::string>(), it->second.as<float>());
+                                    meshMaterial->addFloat(it->first.as<std::string>(), it->second.as<float>());
                                 }
                             }
 
@@ -669,7 +676,7 @@ namespace mango
                                         auto textureType = stringToMaterialTextureType(it->first.as<std::string>());
                                         auto texture = AssetManager::createTexture2D(textureFilename, (textureType == Material::TextureType::DIFFUSE) ? true : false);
 
-                                        meshMaterial.addTexture(textureType, texture);
+                                        meshMaterial->addTexture(textureType, texture);
                                     }
                                 }
                             }

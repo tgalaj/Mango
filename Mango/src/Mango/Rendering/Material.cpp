@@ -5,29 +5,31 @@
 
 namespace mango
 {
-    std::unordered_map<Material::TextureType, std::string> Material::m_textureUniformsMap
-    {
-        { TextureType::DIFFUSE,  "diffuse_map"  },
-        { TextureType::SPECULAR, "specular_map" },
-        { TextureType::NORMAL,   "normal_map"   },
-        { TextureType::EMISSION, "emission_map" },
-        { TextureType::DEPTH,    "depth_map"    },
-    };
+    //std::unordered_map<Material::TextureType, std::string> Material::m_textureUniformsMap
+    //{
+    //    { TextureType::DIFFUSE,  "diffuse_map"  },
+    //    { TextureType::SPECULAR, "specular_map" },
+    //    { TextureType::NORMAL,   "normal_map"   },
+    //    { TextureType::EMISSION, "emission_map" },
+    //    { TextureType::DEPTH,    "depth_map"    },
+    //};
 
-    Material::Material()
+    Material::Material(const std::string& name) 
+        : name(name)
     {
         addFloat("specular_power",     20.0f);
         addFloat("specular_intensity", 5.0f);
         addFloat("m_depth_scale",      0.015f);
         addFloat("alpha_cutoff",       0.2f);
+        addFloat("alpha",              1.0f);
 
         m_blendMode = BlendMode::NONE;
 
-        m_textureMap[TextureType::DIFFUSE]  = RenderingSystem::s_defaultTextures[TextureType::DIFFUSE];
-        m_textureMap[TextureType::SPECULAR] = RenderingSystem::s_defaultTextures[TextureType::SPECULAR];
-        m_textureMap[TextureType::NORMAL]   = RenderingSystem::s_defaultTextures[TextureType::NORMAL];
-        m_textureMap[TextureType::EMISSION] = RenderingSystem::s_defaultTextures[TextureType::EMISSION];
-        m_textureMap[TextureType::DEPTH]    = RenderingSystem::s_defaultTextures[TextureType::DEPTH];
+        m_textureMap[TextureType::DIFFUSE]      = RenderingSystem::s_defaultTextures[TextureType::DIFFUSE];
+        m_textureMap[TextureType::SPECULAR]     = RenderingSystem::s_defaultTextures[TextureType::SPECULAR];
+        m_textureMap[TextureType::NORMAL]       = RenderingSystem::s_defaultTextures[TextureType::NORMAL];
+        m_textureMap[TextureType::EMISSION]     = RenderingSystem::s_defaultTextures[TextureType::EMISSION];
+        m_textureMap[TextureType::DISPLACEMENT] = RenderingSystem::s_defaultTextures[TextureType::DISPLACEMENT];
     }
 
 
@@ -56,11 +58,17 @@ namespace mango
         m_floatMap[uniformName] = value;
     }
 
+    void Material::addBool(const std::string& uniformName, bool value)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+        m_boolMap[uniformName] = value;
+    }
+
     ref<Texture> Material::getTexture(TextureType textureType)
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        if (m_textureMap.count(textureType))
+        if (m_textureMap.contains(textureType))
         {
             return m_textureMap[textureType];
         }
@@ -73,7 +81,7 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        if (m_vec3Map.count(uniformName))
+        if (m_vec3Map.contains(uniformName))
         {
             return m_vec3Map[uniformName];
         }
@@ -85,11 +93,24 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        if (m_floatMap.count(uniformName))
+        if (m_floatMap.contains(uniformName))
         {
             return m_floatMap[uniformName];
         }
 
         return 1.0f;
     }
+
+    bool Material::getBool(const std::string& uniformName)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        if (m_boolMap.contains(uniformName))
+        {
+            return m_boolMap[uniformName];
+        }
+
+        return false;
+    }
+
 }

@@ -1,8 +1,7 @@
 #include "mgpch.h"
 
 #include "Skybox.h"
-#include "Mesh.h"
-#include "Mango/Rendering/GeomPrimitive.h"
+#include "StaticMesh.h"
 
 namespace mango
 {

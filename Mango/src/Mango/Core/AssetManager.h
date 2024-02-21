@@ -2,7 +2,8 @@
 #include <unordered_map>
 
 #include "Mango/Rendering/Font.h"
-#include "Mango/Rendering/Model.h"
+#include "Mango/Rendering/Material.h"
+#include "Mango/Rendering/StaticMesh.h"
 #include "Mango/Rendering/Texture.h"
 
 namespace mango
@@ -10,13 +11,12 @@ namespace mango
     class AssetManager final
     {
     public:
-        static ref<Font>    createFont          (const std::string & fontName, const std::string& filename, GLuint fontHeight);
-        static ref<Texture> createTexture2D     (const std::string & filename, bool isSrgb = false, GLint numMipmaps = 1);
-        static ref<Texture> createTexture2D1x1  (const std::string & textureName, const glm::uvec4 & color);
-        static ref<Texture> createCubeMapTexture(const std::string * filenames, bool isSrgb = false, GLint numMipmaps = 1);
-
-        static Model createModel(const std::string & filename);
-        static Model createModel();
+        static ref<Font>       createFont          (const std::string& fontName, const std::string& filename, GLuint fontHeight);
+        static ref<Material>   createMaterial      (const std::string & materialName);
+        static ref<StaticMesh> createStaticMesh    (const std::string & filename);
+        static ref<Texture>    createTexture2D     (const std::string & filename, bool isSrgb = false, GLint numMipmaps = 1);
+        static ref<Texture>    createTexture2D1x1  (const std::string & textureName, const glm::uvec4 & color);
+        static ref<Texture>    createCubeMapTexture(const std::string * filenames, bool isSrgb = false, GLint numMipmaps = 1);
 
         static ref<Shader> createShader(const std::string & shaderName,
                                         const std::string & computeShaderFilename);
@@ -43,9 +43,11 @@ namespace mango
                                         const std::string & tessellationControlShaderFilename,
                                         const std::string & tessellationEvaluationShaderFilename);
 
-        static ref<Font>    getFont     (const std::string & fontName);
-        static ref<Texture> getTexture2D(const std::string & textureName);
-        static ref<Shader>  getShader   (const std::string & shaderName);
+        static ref<Font>       getFont      (const std::string & fontName);
+        static ref<Material>   getMaterial  (const std::string & materialName);
+        static ref<Shader>     getShader    (const std::string & shaderName);
+        static ref<StaticMesh> getStaticMesh(const std::string & staticMeshName);
+        static ref<Texture>    getTexture2D (const std::string & textureName);
 
         static void unload();
 
@@ -53,9 +55,10 @@ namespace mango
         AssetManager() {}
         ~AssetManager() {}
 
-        static std::unordered_map<std::string, Model>        m_loadedModels;
-        static std::unordered_map<std::string, ref<Texture>> m_loadedTextures;
-        static std::unordered_map<std::string, ref<Shader>>  m_loadedShaders;
-        static std::unordered_map<std::string, ref<Font>>    m_loadedFonts;
+        static std::unordered_map<std::string, ref<Font>>       m_loadedFonts;
+        static std::unordered_map<std::string, ref<Material>>   m_loadedMaterials;
+        static std::unordered_map<std::string, ref<Shader>>     m_loadedShaders;
+        static std::unordered_map<std::string, ref<StaticMesh>> m_loadedStaticMeshes;
+        static std::unordered_map<std::string, ref<Texture>>    m_loadedTextures;
     };
 }

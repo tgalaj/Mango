@@ -306,7 +306,7 @@ namespace mango
                     else
                     if (M_TEXTURE_DEPTH == uniformName)
                     {
-                        material.getTexture(Material::TextureType::DEPTH)->bind(GLuint(Material::TextureType::DEPTH));
+                        material.getTexture(Material::TextureType::DISPLACEMENT)->bind(GLuint(Material::TextureType::DISPLACEMENT));
                     }
                     break;
                 case GL_FLOAT_VEC3:
@@ -379,11 +379,7 @@ namespace mango
             m_uniformsLocations[uniformName] = uniformLocation;
             return true;
         }
-        else
-        {
-            MG_CORE_WARN("Can't find uniform {}", uniformName);
-            return false;
-        }
+        return false;
     }
 
     std::string Shader::loadFile(const std::filesystem::path& filepath) const
