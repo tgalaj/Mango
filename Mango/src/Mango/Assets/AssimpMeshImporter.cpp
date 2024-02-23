@@ -50,14 +50,14 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         mesh->m_submeshes.resize(scene->mNumMeshes);
 
-        Mesh::VertexData vertexData    = {};
+        Mesh::VertexData vertexData;
         uint32_t         verticesCount = 0;
         uint32_t         indicesCount  = 0;
 
         /* Count the number of vertices and indices. */
         for (uint32_t i = 0; i < mesh->m_submeshes.size(); ++i)
         {
-            mesh->m_submeshes[i].materialIndex = scene->mMeshes[i]->mMaterialIndex;
+            mesh->m_submeshes[i].materialIndex = scene->mNumMaterials > 0 ? scene->mMeshes[i]->mMaterialIndex : 0;
             mesh->m_submeshes[i].indicesCount  = scene->mMeshes[i]->mNumFaces * 3;
             mesh->m_submeshes[i].baseVertex    = verticesCount;
             mesh->m_submeshes[i].baseIndex     = indicesCount;

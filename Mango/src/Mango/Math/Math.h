@@ -31,10 +31,10 @@ namespace mango::math
     static vec3 right = {  1.0f, 0.0f, 0.0f };
     
     // Returns a unit vector with ones in all of its components.
-    static vec3 one = { 0.0f, 0.0f, 0.0f };
+    static vec3 one = { 1.0f, 1.0f, 1.0f };
 
     // Returns a unit vector with all of its components set to zero.
-    static vec3 zero = { 1.0f, 1.0f, 1.0f };
+    static vec3 zero = { 0.0f, 0.0f, 0.0f };
 
     // Returns the X unit vec3 (1, 0, 0).
     static vec3 unitX = { 1.0f, 0.0f, 0.0f };
