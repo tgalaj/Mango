@@ -1,7 +1,7 @@
 #include "mgpch.h"
 
 #include "Skybox.h"
-#include "StaticMesh.h"
+#include "Mesh.h"
 
 namespace mango
 {

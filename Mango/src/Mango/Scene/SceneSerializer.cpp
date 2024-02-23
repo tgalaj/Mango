@@ -241,25 +241,25 @@ namespace mango
 
         if (entity.hasComponent<StaticMeshComponent>())
         {
-            auto modelTypeToString = [](StaticMesh::MeshType type) -> std::string
-            {
-                switch (type)
-                {
-                    case StaticMesh::MeshType::StaticMesh:   return "StaticMesh";
-                    case StaticMesh::MeshType::AnimatedMesh: return "AnimatedMesh";
-                    case StaticMesh::MeshType::Cone:         return "Cone";
-                    case StaticMesh::MeshType::Cube:         return "Cube";
-                    case StaticMesh::MeshType::Cylinder:     return "Cylinder";
-                    case StaticMesh::MeshType::Plane:        return "Plane";
-                    case StaticMesh::MeshType::PQTorusKnot:  return "PQTorusKnot";
-                    case StaticMesh::MeshType::Sphere:       return "Sphere";
-                    case StaticMesh::MeshType::Torus:        return "Torus";
-                    case StaticMesh::MeshType::TrefoilKnot:  return "TrefoilKnot";
-                    case StaticMesh::MeshType::Quad:         return "Quad";
-                }
-                MG_CORE_ASSERT_MSG(false, "Unknown model type");
-                return {};
-            };
+            //auto modelTypeToString = [](Mesh::MeshType type) -> std::string
+            //{
+            //    switch (type)
+            //    {
+            //        case Mesh::MeshType::StaticMesh:   return "StaticMesh";
+            //        case Mesh::MeshType::AnimatedMesh: return "AnimatedMesh";
+            //        case Mesh::MeshType::Cone:         return "Cone";
+            //        case Mesh::MeshType::Cube:         return "Cube";
+            //        case Mesh::MeshType::Cylinder:     return "Cylinder";
+            //        case Mesh::MeshType::Plane:        return "Plane";
+            //        case Mesh::MeshType::PQTorusKnot:  return "PQTorusKnot";
+            //        case Mesh::MeshType::Sphere:       return "Sphere";
+            //        case Mesh::MeshType::Torus:        return "Torus";
+            //        case Mesh::MeshType::TrefoilKnot:  return "TrefoilKnot";
+            //        case Mesh::MeshType::Quad:         return "Quad";
+            //    }
+            //    MG_CORE_ASSERT_MSG(false, "Unknown model type");
+            //    return {};
+            //};
 
             auto renderQueueToString = [](Material::RenderQueue queue) -> std::string
             {
@@ -292,35 +292,36 @@ namespace mango
             out << YAML::BeginMap;
             {
                 auto& mrc = entity.getComponent<StaticMeshComponent>();
-                out << YAML::Key << "MeshType"    << YAML::Value << modelTypeToString(mrc.staticMesh->getMeshType());
+                /*out << YAML::Key << "MeshType"    << YAML::Value << modelTypeToString(mrc.staticMesh->getMeshType());*/
                 
-                if (mrc.staticMesh->getMeshType() == StaticMesh::MeshType::StaticMesh)
+                /*if (mrc.staticMesh->getMeshType() == Mesh::MeshType::StaticMesh)*/
                 {
-                    out << YAML::Key << "Filename"  << YAML::Value << mrc.staticMesh->m_filename;
+                    out << YAML::Key << "Filename"  << YAML::Value << mrc.mesh->getFilename();
                 }
-                else
+                //else
                 {
-                    out << YAML::Key << "PrimitiveProperties" << YAML::Value;
-                    out << YAML::BeginMap;
-                    {
-                        auto pp = mrc.staticMesh->getPrimitiveProperties();
-                        out << YAML::Key << "Width"       << YAML::Value << pp.width;
-                        out << YAML::Key << "Height"      << YAML::Value << pp.height;
-                        out << YAML::Key << "Radius"      << YAML::Value << pp.radius;
-                        out << YAML::Key << "Size"        << YAML::Value << pp.size;
-                        out << YAML::Key << "InnerRadius" << YAML::Value << pp.innerRadius;
-                        out << YAML::Key << "OuterRadius" << YAML::Value << pp.outerRadius;
-                        out << YAML::Key << "Slices"      << YAML::Value << pp.slices;
-                        out << YAML::Key << "Stacks"      << YAML::Value << pp.stacks;
-                        out << YAML::Key << "P"           << YAML::Value << pp.p;
-                        out << YAML::Key << "Q"           << YAML::Value << pp.q;
-                    }
-                    out << YAML::EndMap;
+                    //out << YAML::Key << "PrimitiveProperties" << YAML::Value;
+                    //out << YAML::BeginMap;
+                    //{
+                    //    auto pp = mrc.staticMesh->getPrimitiveProperties();
+                    //    out << YAML::Key << "Width"       << YAML::Value << pp.width;
+                    //    out << YAML::Key << "Height"      << YAML::Value << pp.height;
+                    //    out << YAML::Key << "Radius"      << YAML::Value << pp.radius;
+                    //    out << YAML::Key << "Size"        << YAML::Value << pp.size;
+                    //    out << YAML::Key << "InnerRadius" << YAML::Value << pp.innerRadius;
+                    //    out << YAML::Key << "OuterRadius" << YAML::Value << pp.outerRadius;
+                    //    out << YAML::Key << "Slices"      << YAML::Value << pp.slices;
+                    //    out << YAML::Key << "Stacks"      << YAML::Value << pp.stacks;
+                    //    out << YAML::Key << "P"           << YAML::Value << pp.p;
+                    //    out << YAML::Key << "Q"           << YAML::Value << pp.q;
+                    //}
+                    //out << YAML::EndMap;
 
                     out << YAML::Key << "Material" << YAML::Value;
-                    out << YAML::BeginMap;
+                    // TODO(TG): implement later
+                    /*out << YAML::BeginMap;
                     {
-                        auto material = mrc.staticMesh->getSubmesh().material;
+                        auto material = mrc.mesh->getSubmesh().material;
 
                         out << YAML::Key << "Vec3Map" << YAML::Value;
                         out << YAML::BeginMap;
@@ -352,7 +353,7 @@ namespace mango
                         }
                         out << YAML::EndMap;
                     }
-                    out << YAML::EndMap;
+                    out << YAML::EndMap;*/
                 }
                 out << YAML::EndMap;
             }
@@ -571,23 +572,23 @@ namespace mango
                 auto modelRendererComponent = entity["ModelRendererComponent"];
                 if (modelRendererComponent)
                 {
-                    auto stringToModelType = [](const std::string& s) -> StaticMesh::MeshType
-                    {
-                        if (s == "StaticMesh")   return StaticMesh::MeshType::StaticMesh;
-                        if (s == "AnimatedMesh") return StaticMesh::MeshType::AnimatedMesh;
-                        if (s == "Cone")         return StaticMesh::MeshType::Cone;
-                        if (s == "Cube")         return StaticMesh::MeshType::Cube;
-                        if (s == "Cylinder")     return StaticMesh::MeshType::Cylinder;
-                        if (s == "Plane")        return StaticMesh::MeshType::Plane;
-                        if (s == "PQTorusKnot")  return StaticMesh::MeshType::PQTorusKnot;
-                        if (s == "Sphere")       return StaticMesh::MeshType::Sphere;
-                        if (s == "Torus")        return StaticMesh::MeshType::Torus;
-                        if (s == "TrefoilKnot")  return StaticMesh::MeshType::TrefoilKnot;
-                        if (s == "Quad")         return StaticMesh::MeshType::Quad;
+                    //auto stringToModelType = [](const std::string& s) -> Mesh::MeshType
+                    //{
+                    //    if (s == "StaticMesh")   return Mesh::MeshType::StaticMesh;
+                    //    if (s == "AnimatedMesh") return Mesh::MeshType::AnimatedMesh;
+                    //    if (s == "Cone")         return Mesh::MeshType::Cone;
+                    //    if (s == "Cube")         return Mesh::MeshType::Cube;
+                    //    if (s == "Cylinder")     return Mesh::MeshType::Cylinder;
+                    //    if (s == "Plane")        return Mesh::MeshType::Plane;
+                    //    if (s == "PQTorusKnot")  return Mesh::MeshType::PQTorusKnot;
+                    //    if (s == "Sphere")       return Mesh::MeshType::Sphere;
+                    //    if (s == "Torus")        return Mesh::MeshType::Torus;
+                    //    if (s == "TrefoilKnot")  return Mesh::MeshType::TrefoilKnot;
+                    //    if (s == "Quad")         return Mesh::MeshType::Quad;
 
-                        MG_CORE_ASSERT_MSG(false, "Unknown model type");
-                        return StaticMesh::MeshType::Cube;
-                    };
+                    //    MG_CORE_ASSERT_MSG(false, "Unknown model type");
+                    //    return Mesh::MeshType::Cube;
+                    //};
 
                     auto stringToRenderQueue = [](const std::string& s) -> Material::RenderQueue
                     {
@@ -612,39 +613,40 @@ namespace mango
                         return Material::TextureType::DIFFUSE;
                     };
 
-                    auto modelType = stringToModelType(modelRendererComponent["ModelType"].as<std::string>());
+                    /*auto modelType = stringToModelType(modelRendererComponent["ModelType"].as<std::string>());*/
                     auto renderQueue = stringToRenderQueue(modelRendererComponent["RenderQueue"].as<std::string>());
 
-                    if (modelType == StaticMesh::MeshType::StaticMesh)
+                    /*if (modelType == Mesh::MeshType::StaticMesh)*/
                     {
                         auto filename   = modelRendererComponent["Filename"].as<std::string>();
-                        auto staticMesh = AssetManager::createStaticMesh(filename);
+                        auto staticMesh = AssetManager::createMesh(filename);
 
                         deserializedEntity.addComponent<StaticMeshComponent>(staticMesh);
                     }
-                    else
+                    //else
                     {
-                        ref<StaticMesh> staticMesh = createRef<StaticMesh>();
-                        auto  primitiveProperties = modelRendererComponent["PrimitiveProperties"];
+                        ref<Mesh> staticMesh = createRef<Mesh>();
+                        //auto  primitiveProperties = modelRendererComponent["PrimitiveProperties"];
 
-                        PrimitiveProperties pp;
-                        pp.width       = primitiveProperties["Width"].as<float>();
-                        pp.height      = primitiveProperties["Height"].as<float>();
-                        pp.radius      = primitiveProperties["Radius"].as<float>();
-                        pp.size        = primitiveProperties["Size"].as<float>();
-                        pp.innerRadius = primitiveProperties["InnerRadius"].as<float>();
-                        pp.outerRadius = primitiveProperties["OuterRadius"].as<float>();
-                        pp.slices      = primitiveProperties["Slices"].as<int32_t>();
-                        pp.stacks      = primitiveProperties["Stacks"].as<int32_t>();
-                        staticMesh->setPrimitiveProperties(modelType, pp);
+                        //PrimitiveProperties pp;
+                        //pp.width       = primitiveProperties["Width"].as<float>();
+                        //pp.height      = primitiveProperties["Height"].as<float>();
+                        //pp.radius      = primitiveProperties["Radius"].as<float>();
+                        //pp.size        = primitiveProperties["Size"].as<float>();
+                        //pp.innerRadius = primitiveProperties["InnerRadius"].as<float>();
+                        //pp.outerRadius = primitiveProperties["OuterRadius"].as<float>();
+                        //pp.slices      = primitiveProperties["Slices"].as<int32_t>();
+                        //pp.stacks      = primitiveProperties["Stacks"].as<int32_t>();
+                        // staticMesh->setPrimitiveProperties(modelType, pp);
 
                         deserializedEntity.addComponent<StaticMeshComponent>(staticMesh);
 
-                        auto material = modelRendererComponent["Material"];
+                        // TODO(TG): implement later
+                        /*auto material = modelRendererComponent["Material"];
                         if (material)
                         {
                             auto& mrc          = deserializedEntity.getComponent<StaticMeshComponent>();
-                            auto& meshMaterial = mrc.staticMesh->getSubmesh().material;
+                            auto& meshMaterial = mrc.mesh->getSubmesh().material;
 
                             auto vec3Map = material["Vec3Map"];
                             if (vec3Map)
@@ -680,7 +682,7 @@ namespace mango
                                     }
                                 }
                             }
-                        }
+                        }*/
                     }
                 }
 

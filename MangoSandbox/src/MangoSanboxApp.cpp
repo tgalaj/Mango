@@ -17,8 +17,8 @@ public:
         mango::VFI::setWriteDir(executableDir / "output");
 
         mango::VFI::addToSearchPath(executableDir);
-        mango::VFI::addToSearchPath(rootDir / "MangoTestAssets");
         mango::VFI::addToSearchPath(rootDir / "MangoSandbox/assets");
+        mango::VFI::addToSearchPath(rootDir / "MangoTestAssets");
 
         MG_TRACE("Search path:");
         for (auto const& p : mango::VFI::getSearchPath())

@@ -1,15 +1,9 @@
 #pragma once
 #include "Material.h"
-#include "StaticMesh.h"
+#include "Mesh.h"
 #include "Shader.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 namespace mango
 {
@@ -42,17 +36,15 @@ namespace mango
     public:
         Submesh() = default;
 
-        ref<Material> material      = nullptr;
-        uint32_t      baseVertex    = 0;
-        uint32_t      baseIndex     = 0;
-        uint32_t      indicesCount  = 0;
+        int32_t  materialIndex = -1;
+        uint32_t baseVertex    = 0;
+        uint32_t baseIndex     = 0;
+        uint32_t indicesCount  = 0;
     };
 
-    class StaticMesh
+    class Mesh
     {
     public:
-        enum class MeshType { StaticMesh, AnimatedMesh, Cone, Cube, Cylinder, Plane, PQTorusKnot, Sphere, Torus, TrefoilKnot, Quad };
-
         enum class DrawMode { POINTS         = GL_POINTS, 
                               LINES          = GL_LINES, 
                               TRIANGLES      = GL_TRIANGLES, 
@@ -60,21 +52,22 @@ namespace mango
                               PATCHES        = GL_PATCHES };
 
     public:
-        StaticMesh()
+        Mesh(const std::string& filename = "")
             : m_unitScale(1),
               m_vaoName  (0),
               m_vboName  (0),
               m_iboName  (0),
-              m_drawMode (DrawMode::TRIANGLES)
+              m_drawMode (DrawMode::TRIANGLES),
+              m_filename (filename)
         {
         }
 
-        virtual ~StaticMesh() { release(); }
+        virtual ~Mesh() { release(); }
 
-        StaticMesh           (const StaticMesh&) = delete;
-        StaticMesh& operator=(const StaticMesh&) = delete;
+        Mesh           (const Mesh&) = delete;
+        Mesh& operator=(const Mesh&) = delete;
 
-        StaticMesh(StaticMesh&& other) noexcept
+        Mesh(Mesh&& other) noexcept
             : m_submeshes(std::move(other.m_submeshes)),
               m_unitScale(other.m_unitScale),
               m_vaoName  (other.m_vaoName),
@@ -89,7 +82,7 @@ namespace mango
             other.m_drawMode  = DrawMode::TRIANGLES;
         }
 
-        StaticMesh& operator=(StaticMesh&& other) noexcept
+        Mesh& operator=(Mesh&& other) noexcept
         {
             if (this != &other)
             {
@@ -106,17 +99,13 @@ namespace mango
             return *this;
         }
 
-        virtual void render(uint32_t instancesCount = 0);
-        virtual void render(ref<Shader>& shader, uint32_t instancesCount = 0);
+        void bind() const;
+        void render(uint32_t submeshIndex = 0, uint32_t instancesCount = 0);
 
         void addAttributeBuffer(GLuint attribIndex, GLuint bindingIndex, GLint formatSize, GLenum dataType, GLuint bufferID, GLsizei stride, GLuint divisor = 0);
-        void setMaterial(ref<Material>& material, uint32_t meshID = 0);
         
         void     setDrawMode(DrawMode mode) { m_drawMode = mode; }
         DrawMode getDrawMode()              { return m_drawMode; }
-
-        MeshType getMeshType() const        { return m_modelType; }
-        void     setMeshType(MeshType type);
 
         float getUnitScaleFactor() const { return m_unitScale; }
         std::string getFilename()  const { return m_filename; }
@@ -131,10 +120,13 @@ namespace mango
             return m_submeshes[index];
         }
 
-        unsigned getSubmeshCount() const { return m_submeshes.size(); }
+        std::vector<Submesh>& getSubmeshes()          { return m_submeshes; }
+        uint32_t              getSubmeshCount() const { return m_submeshes.size(); }
+
+        MaterialTable getMaterials() { return m_materialTable; }
 
         /* Primitives */
-        void genCone       (float    height      = 3.0f, float radius         = 1.5f, uint32_t slices = 10, uint32_t stacks = 10);
+        void genCone       (float    height      = 3.0f, float radius        = 1.5f, uint32_t slices = 10, uint32_t stacks = 10);
         void genCube       (float    size        = 1.0f, float texcoordScale = 1.0f);
         void genCubeMap    (float    radius      = 1.0f);                     
         void genCylinder   (float    height      = 3.0f, float    radius      = 1.5f, uint32_t slices = 10);
@@ -146,24 +138,6 @@ namespace mango
         void genPQTorusKnot(uint32_t slices      = 256,  uint32_t stacks      = 16,   int p = 2, int q = 3, float knotR = 0.75, float tubeR = 0.15);
         void genQuad       (float    width       = 1.0f, float    height      = 1.0f);
 
-        PrimitiveProperties getPrimitiveProperties() const { return m_primitiveProperties; }
-
-        void setPrimitiveProperties(PrimitiveProperties properties)
-        {
-            m_primitiveProperties = properties;
-            regeneratePrimitive();
-        }
-
-        void setPrimitiveProperties(MeshType modelType, PrimitiveProperties properties) 
-        { 
-            m_modelType           = modelType;
-            m_primitiveProperties = properties; 
-            regeneratePrimitive(); 
-        }
-    
-    public:
-        std::string m_filename = "";
-
     protected:
         struct VertexData
         {
@@ -173,22 +147,7 @@ namespace mango
             std::vector<glm::vec3> tangents;
             std::vector<uint32_t>  indices;
         };
-
-        // For converting between ASSIMP and glm
-        static inline glm::vec3 vec3_cast(const aiVector3D&   v) { return glm::vec3(v.x, v.y, v.z); }
-        static inline glm::vec2 vec2_cast(const aiVector3D&   v) { return glm::vec2(v.x, v.y); }
-        static inline glm::quat quat_cast(const aiQuaternion& q) { return glm::quat(q.w, q.x, q.y, q.z); }
-        static inline glm::mat4 mat4_cast(const aiMatrix4x4&  m) { return glm::transpose(glm::make_mat4(&m.a1)); }
-        static inline glm::mat4 mat4_cast(const aiMatrix3x3&  m) { return glm::transpose(glm::make_mat3(&m.a1)); }
-
-        void regeneratePrimitive();
-
-        virtual bool load(const std::string& filename);
-        virtual bool parseScene(const aiScene* scene, const std::filesystem::path& parentDirectory);
-        virtual void loadMeshPart(const aiMesh* mesh, VertexData& vertexData);
-        virtual bool loadMaterials(const aiScene* scene, const std::filesystem::path& parentDirectory);
-        virtual bool loadMaterialTextures(const aiScene* scene, const aiMaterial* material, ref<Material>& mangoMaterial, aiTextureType type, Material::TextureType texture_type, const std::filesystem::path& parentDirectory) const;
-        virtual void createBuffers(VertexData& vertexData);
+        void createBuffers(VertexData& vertexData);
 
         void calcTangentSpace(VertexData& vertexData);
         void genPrimitive(VertexData& vertexData, bool generateTangents = true);
@@ -213,17 +172,16 @@ namespace mango
 
     protected:
         std::vector<Submesh> m_submeshes;
+        MaterialTable        m_materialTable;
 
-        float    m_unitScale = 1.0f;
-        GLuint   m_vaoName   = 0;
-        GLuint   m_vboName   = 0;
-        GLuint   m_iboName   = 0;
-        DrawMode m_drawMode  = DrawMode::TRIANGLES;
-
-        MeshType            m_modelType = MeshType::Cube;
-        PrimitiveProperties m_primitiveProperties{};
+        std::string m_filename  = "";
+        float       m_unitScale = 1.0f;
+        GLuint      m_vaoName   = 0;
+        GLuint      m_vboName   = 0;
+        GLuint      m_iboName   = 0;
+        DrawMode    m_drawMode  = DrawMode::TRIANGLES;
 
     private:
-        friend class AssetManager;
+        friend class AssimpMeshImporter;
     };
 }

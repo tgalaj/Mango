@@ -1,3 +1,4 @@
+#if 0
 #include "mgpch.h"
 
 #include "AnimatedMesh.h"
@@ -551,3 +552,4 @@ namespace mango
         }
     }
 }
+#endif

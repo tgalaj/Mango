@@ -1,391 +1,42 @@
 #include "mgpch.h"
 
-#include "StaticMesh.h"
+#include "Mesh.h"
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Core/Services.h"
 
-#include <assimp/postprocess.h>
-#include <glm/gtc/matrix_transform.hpp>
-
 namespace mango
 {
-    void StaticMesh::render(uint32_t instancesCount)
+
+    void Mesh::bind() const
     {
-        MG_PROFILE_ZONE_SCOPED;
         glBindVertexArray(m_vaoName);
-
-        for (uint32_t i = 0; i < m_submeshes.size(); i++)
-        {
-            auto& material = m_submeshes[i].material;
-            if (material)
-            {
-                for (auto const& [texture_type, texture] : material->getTexturesMap())
-                {
-                    texture->bind(uint32_t(texture_type));
-                }
-            }
-
-            if (instancesCount == 0)
-            {
-                glDrawElementsBaseVertex(GLenum(m_drawMode),
-                                         m_submeshes[i].indicesCount,
-                                         GL_UNSIGNED_INT,
-                                         (void*)(sizeof(uint32_t) * m_submeshes[i].baseIndex),
-                                         m_submeshes[i].baseVertex);
-            }
-            else
-            {
-                glDrawElementsInstancedBaseVertex(GLenum(m_drawMode),
-                                                  m_submeshes[i].indicesCount,
-                                                  GL_UNSIGNED_INT,
-                                                  (void*)(sizeof(uint32_t) * m_submeshes[i].baseIndex),
-                                                  instancesCount,
-                                                  m_submeshes[i].baseVertex);
-            }
-        }
-
-        glBindTextureUnit(0, 0);
     }
 
-    void StaticMesh::render(ref<Shader>& shader, uint32_t instancesCount)
+    void Mesh::render(uint32_t submeshIndex, uint32_t instancesCount)
     {
         MG_PROFILE_ZONE_SCOPED;
-        glBindVertexArray(m_vaoName);
-    
-        for (uint32_t i = 0 ; i < m_submeshes.size() ; i++) 
+
+        if (instancesCount == 0)
         {
-            auto& material = m_submeshes[i].material;
-            if (material)
-            {
-                for (auto const& [texture_type, texture] : material->getTexturesMap())
-                {
-                    texture->bind(uint32_t(texture_type));
-                }
-
-                // Set uniforms based on the data in the material
-                for (auto& [uniform_name, value] : material->getBoolMap())
-                {
-                    shader->setUniform(uniform_name, value);
-                }
-
-                for (auto& [uniform_name, value] : material->getFloatMap())
-                {
-                    shader->setUniform(uniform_name, value);
-                }
-
-                for (auto& [uniform_name, value] : material->getVec3Map())
-                {
-                    shader->setUniform(uniform_name, value);
-                }
-            }
-
-            if (instancesCount == 0 )
-            {
-                glDrawElementsBaseVertex(GLenum(m_drawMode), 
-                                         m_submeshes[i].indicesCount,
-                                         GL_UNSIGNED_INT,
-                                         (void*)(sizeof(unsigned int) * m_submeshes[i].baseIndex),
-                                         m_submeshes[i].baseVertex);
-            }
-            else
-            {
-                glDrawElementsInstancedBaseVertex(GLenum(m_drawMode),
-                                                  m_submeshes[i].indicesCount,
-                                                  GL_UNSIGNED_INT,
-                                                  (void*)(sizeof(unsigned int) * m_submeshes[i].baseIndex),
-                                                  instancesCount,
-                                                  m_submeshes[i].baseVertex);
-            }
+            glDrawElementsBaseVertex(GLenum(m_drawMode),
+                                     m_submeshes[submeshIndex].indicesCount,
+                                     GL_UNSIGNED_INT,
+                                     (void*)(sizeof(uint32_t) * m_submeshes[submeshIndex].baseIndex),
+                                     m_submeshes[submeshIndex].baseVertex);
         }
-
-        glBindTextureUnit(0, 0);
+        else
+        {
+            glDrawElementsInstancedBaseVertex(GLenum(m_drawMode),
+                                              m_submeshes[submeshIndex].indicesCount,
+                                              GL_UNSIGNED_INT,
+                                              (void*)(sizeof(uint32_t) * m_submeshes[submeshIndex].baseIndex),
+                                              instancesCount,
+                                              m_submeshes[submeshIndex].baseVertex);
+        }
     }
 
-    bool StaticMesh::load(const std::string& filename)
+    void Mesh::createBuffers(VertexData& vertexData)
     {
-        MG_PROFILE_ZONE_SCOPED;
-        /* Release the previously loaded mesh if it was loaded. */
-        if (m_vaoName)
-        {
-            release();
-        }
-
-        m_modelType = MeshType::StaticMesh;
-        m_filename  = filename;
-
-        auto filepath = VFI::getFilepath(filename);
-
-        /* Load model */
-        Assimp::Importer importer;
-        const aiScene* scene = importer.ReadFile(filepath.string(), aiProcess_Triangulate              | 
-                                                                    aiProcess_GenSmoothNormals         | 
-                                                                    aiProcess_GenUVCoords              |
-                                                                    aiProcess_CalcTangentSpace         |
-                                                                    aiProcess_FlipUVs                  |
-                                                                    aiProcess_JoinIdenticalVertices    | 
-                                                                    aiProcess_RemoveRedundantMaterials |
-                                                                    aiProcess_ImproveCacheLocality     |
-                                                                    aiProcess_GenBoundingBoxes );
-
-        if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-        {
-            MG_CORE_ERROR("Assimp error while loading mesh {}\n Error: {}", filepath.string(), importer.GetErrorString());
-            return false;
-        }
-
-        auto parentDirectory = std::filesystem::path(filename).parent_path();
-
-        return parseScene(scene, parentDirectory);
-    }
-
-    bool StaticMesh::parseScene(const aiScene* scene, const std::filesystem::path& parentDirectory)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        m_submeshes.resize(scene->mNumMeshes);
-
-        for (uint32_t i = 0; i < m_submeshes.size(); ++i)
-        {
-            m_submeshes[i].material = std::make_shared<Material>();
-        }
-
-        VertexData vertexData;
-
-        uint32_t verticesCount = 0;
-        uint32_t indicesCount  = 0;
-
-        /* Count the number of vertices and indices. */
-        for (uint32_t i = 0; i < m_submeshes.size(); ++i)
-        {
-            m_submeshes[i].indicesCount = scene->mMeshes[i]->mNumFaces * 3;
-            m_submeshes[i].baseVertex   = verticesCount;
-            m_submeshes[i].baseIndex    = indicesCount;
-
-            verticesCount += scene->mMeshes[i]->mNumVertices;
-            indicesCount  += m_submeshes[i].indicesCount;
-        }
-
-        /* Reserve space in the vectors for the vertex attributes and indices. */
-        vertexData.positions.reserve(verticesCount);
-        vertexData.texcoords.reserve(verticesCount);
-        vertexData.normals.reserve(verticesCount);
-        vertexData.tangents.reserve(verticesCount);
-        vertexData.indices.reserve(indicesCount);
-
-        /* Load mesh parts one by one. */
-        glm::vec3 min = glm::vec3(std::numeric_limits<float>::max());
-        glm::vec3 max = -min;
-
-        for (uint32_t i = 0; i < m_submeshes.size(); ++i)
-        {
-            auto mesh = scene->mMeshes[i];
-            loadMeshPart(mesh, vertexData);
-
-            min = glm::min(min, vec3_cast(mesh->mAABB.mMin));
-            max = glm::max(max, vec3_cast(mesh->mAABB.mMax));
-        }
-
-        m_unitScale = 1.0f / glm::compMax(max - min);
-
-        /* Load materials. */
-        if (!loadMaterials(scene, parentDirectory))
-        {
-            MG_CORE_ERROR("Assimp error while loading mesh {}\n Error: Could not load the materials.", (parentDirectory / m_filename).string());
-            return false;
-        }
-
-        /* Populate buffers on the GPU with the model's data. */
-        createBuffers(vertexData);
-
-        return true;
-    }
-
-    void StaticMesh::loadMeshPart(const aiMesh* mesh, VertexData& vertexData)
-{
-        MG_PROFILE_ZONE_SCOPED;
-        for (uint32_t i = 0; i < mesh->mNumVertices; ++i)
-        {
-            auto pos      = vec3_cast(mesh->mVertices[i]);
-            auto texcoord = mesh->HasTextureCoords(0)        ? vec3_cast(mesh->mTextureCoords[0][i]) : math::zero;
-            auto normal   = mesh->HasNormals()               ? vec3_cast(mesh->mNormals[i])          : math::zero;
-            auto tangent  = mesh->HasTangentsAndBitangents() ? vec3_cast(mesh->mTangents[i])         : math::zero;
-
-            vertexData.positions.push_back(pos);
-            vertexData.texcoords.push_back(glm::vec2(texcoord));
-            vertexData.normals.push_back(normal);
-            vertexData.tangents.push_back(tangent);
-        }
-
-        for (uint32_t i = 0; i < mesh->mNumFaces; ++i)
-        {
-            const aiFace& face = mesh->mFaces[i];
-            MG_CORE_ASSERT(face.mNumIndices == 3);
-
-            for (char i = 0; i < face.mNumIndices; ++i)
-            {
-                vertexData.indices.push_back(face.mIndices[i]);
-            }
-        }
-    }
-
-    bool StaticMesh::loadMaterials(const aiScene* scene, const std::filesystem::path& parentDirectory)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        bool ret = true;
-
-        if (!scene->HasMaterials())
-        {
-            return ret;
-        }
-
-        std::vector<ref<Material>> materials(scene->mNumMaterials);
-
-        for (uint32_t i = 0; i < scene->mNumMaterials; ++i)
-        {
-            auto        pMaterial    = scene->mMaterials[i];
-            std::string materialName = pMaterial->GetName().C_Str();
-
-            if (materialName.empty())
-            {
-                materialName = std::filesystem::path(m_filename).stem().string() + "_" + std::to_string(i+1);
-            }
-
-            auto mangoMaterial = AssetManager::createMaterial(materialName);
-            MG_CORE_ERROR("Material name {}", mangoMaterial->name);
-            // NOTE(TG): Leaving parts of code commented as we'll need it when moving to PBR workflow
-            
-            //ret |= loadMaterialTextures(scene, pMaterial, aiTextureType_BASE_COLOR,        Material::TextureType::ALBEDO,    dir);
-            ret |= loadMaterialTextures(scene, pMaterial, mangoMaterial, aiTextureType_DIFFUSE,      Material::TextureType::DIFFUSE,      parentDirectory);
-            ret |= loadMaterialTextures(scene, pMaterial, mangoMaterial, aiTextureType_SPECULAR,     Material::TextureType::SPECULAR,     parentDirectory);
-            ret |= loadMaterialTextures(scene, pMaterial, mangoMaterial, aiTextureType_NORMALS,      Material::TextureType::NORMAL,       parentDirectory);
-            ret |= loadMaterialTextures(scene, pMaterial, mangoMaterial, aiTextureType_EMISSIVE,     Material::TextureType::EMISSION,     parentDirectory);
-            ret |= loadMaterialTextures(scene, pMaterial, mangoMaterial, aiTextureType_DISPLACEMENT, Material::TextureType::DISPLACEMENT, parentDirectory);
-            //ret |= loadMaterialTextures(scene, pMaterial, aiTextureType_AMBIENT_OCCLUSION, Material::TextureType::AO,        dir);
-            //ret |= loadMaterialTextures(scene, pMaterial, aiTextureType_DIFFUSE_ROUGHNESS, Material::TextureType::ROUGHNESS, dir);
-            //ret |= loadMaterialTextures(scene, pMaterial, aiTextureType_METALNESS,         Material::TextureType::METALLIC,  dir);
-
-            /* Load material parameters */
-            // aiColor3D colorRgb;
-            // aiColor4D colorRgba;
-            float value;
-
-            // if (AI_SUCCESS == pMaterial->Get(AI_MATKEY_BASE_COLOR, color_rgba))
-            // {
-            //     mangoMaterial->addVector3("u_albedo", glm::vec3(color_rgba.r, color_rgba.g, color_rgba.b));
-            // }
-            // if (AI_SUCCESS == pMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, color_rgb))
-            // {
-            //     mangoMaterial->addVector3("u_emission", glm::vec3(color_rgb.r, color_rgb.g, color_rgb.b));
-            // }
-            // if (AI_SUCCESS == pMaterial->Get(AI_MATKEY_COLOR_AMBIENT, color_rgb))
-            // {
-            //     mangoMaterial->addFloat("u_ao", (color_rgb.r + color_rgb.g + color_rgb.b) / 3.0f);
-            // }
-            // if (AI_SUCCESS == pMaterial->Get(AI_MATKEY_ROUGHNESS_FACTOR, value))
-            // {
-            //     mangoMaterial->addFloat("u_roughness", value);
-            // }
-            // if (AI_SUCCESS == pMaterial->Get(AI_MATKEY_METALLIC_FACTOR, value))
-            // {
-            //     mangoMaterial->addFloat("u_metallic", value);
-            // }
-
-            if (AI_SUCCESS == pMaterial->Get(AI_MATKEY_SHININESS, value))
-            {
-                mangoMaterial->addFloat("specular_power", value);
-            }
-            if (AI_SUCCESS == pMaterial->Get(AI_MATKEY_SHININESS_STRENGTH, value))
-            {
-                mangoMaterial->addFloat("specular_intensity", value);
-            }
-            if (AI_SUCCESS == pMaterial->Get(AI_MATKEY_OPACITY, value))
-            {
-                if (value != 1.0f)
-                {
-                    mangoMaterial->setRenderQueue(Material::RenderQueue::RQ_TRANSPARENT);
-                    mangoMaterial->addFloat("alpha", value);
-                }
-            }
-
-            materials[i] = mangoMaterial;
-        }
-
-        // Assign a proper material for each submesh based on the mesh's material index
-        for (uint32_t i = 0; i < m_submeshes.size(); ++i)
-        {
-            uint32_t materialIndex  = scene->mMeshes[i]->mMaterialIndex;
-            m_submeshes[i].material = materials[materialIndex];
-        }
-
-        return ret;
-    }
-
-    bool StaticMesh::loadMaterialTextures(const aiScene* scene, const aiMaterial* material, ref<Material>& mangoMaterial, aiTextureType type, Material::TextureType textureType, const std::filesystem::path& parentDirectory) const
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        if (material->GetTextureCount(type) > 0)
-        {
-            aiString path;
-            aiTextureMapMode textureMapMode[3];
-            
-            // Only one texture of a given type is being loaded
-            if (material->GetTexture(type, 0, &path, NULL, NULL, NULL, NULL, textureMapMode) == AI_SUCCESS)
-            {
-                bool isSrgb = (type == aiTextureType_DIFFUSE) || (type == aiTextureType_EMISSIVE) || (type == aiTextureType_BASE_COLOR);
-
-                      ref<Texture> texture    = createRef<Texture>();
-                const aiTexture*   paiTexture = scene->GetEmbeddedTexture(path.C_Str());
-
-                if (paiTexture)
-                {
-                    // Load embedded
-                    uint32_t dataSize = paiTexture->mHeight > 0 ? paiTexture->mWidth * paiTexture->mHeight : paiTexture->mWidth;
-                    
-                    if (texture->createTexture2dFromMemory(reinterpret_cast<unsigned char*>(paiTexture->pcData), dataSize, isSrgb))
-                    {
-                        MG_CORE_TRACE("Loaded embedded texture for the model {}", path.C_Str());
-                        mangoMaterial->addTexture(textureType, texture);
-
-                        if (textureMapMode[0] == aiTextureMapMode_Wrap)
-                        {
-                            texture->setWraping(TextureWrapingCoordinate::S, TextureWrapingParam::REPEAT);
-                            texture->setWraping(TextureWrapingCoordinate::T, TextureWrapingParam::REPEAT);
-                        }
-                    }
-                    else
-                    {
-                        MG_CORE_ERROR("Error loading embedded texture for the model {}.", path.C_Str());
-                        return false;
-                    }
-                }
-                else
-                {
-                    // Load from file
-                    auto fullPath = parentDirectory / path.C_Str();
-                    if (!texture->createTexture2d(fullPath.string(), isSrgb))
-                    {
-                        MG_CORE_ERROR("Error loading texture {}.", fullPath);
-                        return false;
-                    }
-                    
-                    
-                    MG_CORE_TRACE("Loaded texture {}.", fullPath);
-                    mangoMaterial->addTexture(textureType, texture);
-
-                    if (textureMapMode[0] == aiTextureMapMode_Wrap)
-                    {
-                        texture->setWraping(TextureWrapingCoordinate::S, TextureWrapingParam::REPEAT);
-                        texture->setWraping(TextureWrapingCoordinate::T, TextureWrapingParam::REPEAT);
-                    }
-                    
-                }
-            }
-        }
-
-        return true;
-    }
-
-    void StaticMesh::createBuffers(VertexData& vertexData)
-{
         MG_PROFILE_ZONE_SCOPED;
         bool hasTangents = !vertexData.tangents.empty();
 
@@ -452,7 +103,7 @@ namespace mango
     }
 
     /* The first available input attribute index is 4. */
-    void StaticMesh::addAttributeBuffer(GLuint attribIndex, GLuint bindingIndex, GLint formatSize, GLenum dataType, GLuint bufferID, GLsizei stride, GLuint divisor)
+    void Mesh::addAttributeBuffer(GLuint attribIndex, GLuint bindingIndex, GLint formatSize, GLenum dataType, GLuint bufferID, GLsizei stride, GLuint divisor)
     {
         MG_PROFILE_ZONE_SCOPED;
         if (m_vaoName)
@@ -465,21 +116,14 @@ namespace mango
         }
     }
 
-    void StaticMesh::setMaterial(ref<Material>& material, uint32_t meshID)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        MG_CORE_ASSERT(meshID < m_submeshes.size());
-        m_submeshes[meshID].material = material;
-    }
-
-    void StaticMesh::calcTangentSpace(VertexData& vertexData)
+    void Mesh::calcTangentSpace(VertexData& vertexData)
     {
         MG_PROFILE_ZONE_SCOPED;
 
         vertexData.tangents.resize(vertexData.positions.size());
         std::fill(std::begin(vertexData.tangents), std::end(vertexData.tangents), glm::vec3(0.0f));
 
-        for(uint32_t i = 0; i < vertexData.indices.size(); i += 3)
+        for (uint32_t i = 0; i < vertexData.indices.size(); i += 3)
         {
             auto i0 = vertexData.indices[i];
             auto i1 = vertexData.indices[i + 1];
@@ -510,7 +154,7 @@ namespace mango
         }
     }
 
-    void StaticMesh::genPrimitive(VertexData& vertexData, bool generateTangents /*= true*/)
+    void Mesh::genPrimitive(VertexData& vertexData, bool generateTangents /*= true*/)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -528,28 +172,21 @@ namespace mango
         createBuffers(vertexData);
         
         Submesh submesh;
-        submesh.baseIndex    = 0;
-        submesh.baseVertex   = 0;
-        submesh.indicesCount = vertexData.indices.size();
-        submesh.material     = AssetManager::createMaterial("default");
+        submesh.baseIndex     = 0;
+        submesh.baseVertex    = 0;
+        submesh.indicesCount  = vertexData.indices.size();
+        submesh.materialIndex = 0;
+
+        if(!m_materialTable.empty()) m_materialTable.clear();
+        
+        m_materialTable.emplace_back(AssetManager::createMaterial("default"));
 
         m_submeshes.push_back(submesh);
     }
 
-    void StaticMesh::genCone(float height, float radius, uint32_t slices, uint32_t stacks)
+    void Mesh::genCone(float height, float radius, uint32_t slices, uint32_t stacks)
     {
         MG_PROFILE_ZONE_SCOPED;
-
-        m_modelType = MeshType::Cone;
-
-        m_primitiveProperties =
-        {
-            .height = height <= 0.0f ? 0.01f : height,
-            .radius = radius <= 0.0f ? 0.01f : radius,
-            .slices = (int32_t)slices < 3 ? 3 : (int32_t)slices,
-            .stacks = (int32_t)stacks < 1 ? 1 : (int32_t)stacks
-        };
-
         VertexData vertexData;
 
         float thetaInc = glm::two_pi<float>() / float(slices);
@@ -623,17 +260,9 @@ namespace mango
         genPrimitive(vertexData);
     }
 
-    void StaticMesh::genCube(float size, float texcoordScale)
+    void Mesh::genCube(float size, float texcoordScale)
     {
         MG_PROFILE_ZONE_SCOPED;
-
-        m_modelType = MeshType::Cube;
-
-        m_primitiveProperties =
-        {
-            .size = size <= 0.0f ? 0.01f : size
-        };
-
         VertexData vertexData;
 
         float r2 = size;
@@ -750,7 +379,7 @@ namespace mango
         genPrimitive(vertexData);
     }
 
-    void StaticMesh::genCubeMap(float radius)
+    void Mesh::genCubeMap(float radius)
     {
         MG_PROFILE_ZONE_SCOPED;
         VertexData vertexData;
@@ -804,19 +433,9 @@ namespace mango
         genPrimitive(vertexData);
     }
 
-    void StaticMesh::genCylinder(float height, float radius, uint32_t slices)
+    void Mesh::genCylinder(float height, float radius, uint32_t slices)
     {
         MG_PROFILE_ZONE_SCOPED;
-
-        m_modelType = MeshType::Cylinder;
-
-        m_primitiveProperties =
-        {
-            .height = height <= 0.0f ? 0.01f : height,
-            .radius = radius <= 0.0f ? 0.01f : radius,
-            .slices = (int32_t)slices < 3 ? 3 : (int32_t)slices
-        };
-
         VertexData vertexData;
 
         float halfHeight = height * 0.5f;
@@ -913,20 +532,9 @@ namespace mango
         genPrimitive(vertexData);
     }
 
-    void StaticMesh::genPlane(float width, float height, uint32_t slices, uint32_t stacks)
+    void Mesh::genPlane(float width, float height, uint32_t slices, uint32_t stacks)
     {
         MG_PROFILE_ZONE_SCOPED;
-
-        m_modelType = MeshType::Plane;
-
-        m_primitiveProperties =
-        {
-            .width = width <= 0.0f ? 0.01f : width,
-            .height = height <= 0.0f ? 0.01f : height,
-            .slices = (int32_t)slices < 1 ? 1 : (int32_t)slices,
-            .stacks = (int32_t)stacks < 1 ? 1 : (int32_t)stacks
-        };
-
         VertexData vertexData;
 
         float widthInc  = width  / float(slices);
@@ -969,7 +577,7 @@ namespace mango
         genPrimitive(vertexData);    
     }
 
-    void StaticMesh::genPlaneGrid(float width, float height, uint32_t slices, uint32_t stacks)
+    void Mesh::genPlaneGrid(float width, float height, uint32_t slices, uint32_t stacks)
     {
         MG_PROFILE_ZONE_SCOPED;
         m_drawMode = DrawMode::LINES;
@@ -1019,18 +627,9 @@ namespace mango
         genPrimitive(vertexData, false);
     }
 
-    void StaticMesh::genSphere(float radius, uint32_t slices)
+    void Mesh::genSphere(float radius, uint32_t slices)
     {
         MG_PROFILE_ZONE_SCOPED;
-
-        m_modelType = MeshType::Sphere;
-
-        m_primitiveProperties =
-        {
-            .radius = radius <= 0.0f ? 0.01f : radius,
-            .slices = (int32_t)slices < 3 ? 3 : (int32_t)slices
-        };
-
         VertexData vertexData;
 
         float deltaPhi = glm::two_pi<float>() / static_cast<float>(slices);
@@ -1069,20 +668,9 @@ namespace mango
         genPrimitive(vertexData);
     }
 
-    void StaticMesh::genTorus(float innerRadius, float outerRadius, uint32_t slices, uint32_t stacks)
+    void Mesh::genTorus(float innerRadius, float outerRadius, uint32_t slices, uint32_t stacks)
     {
         MG_PROFILE_ZONE_SCOPED;
-
-        m_modelType = MeshType::Torus;
-
-        m_primitiveProperties =
-        {
-            .innerRadius = innerRadius <= 0.0f ? 0.01f : innerRadius,
-            .outerRadius = outerRadius <= 0.0f ? 0.01f : outerRadius,
-            .slices = (int32_t)slices < 3 ? 3 : (int32_t)slices,
-            .stacks = (int32_t)stacks < 3 ? 3 : (int32_t)stacks
-        };
-
         VertexData vertexData;
 
         float phi   = 0.0f;
@@ -1151,18 +739,9 @@ namespace mango
     }
 
     /* Code courtesy of: https://prideout.net/blog/old/blog/index.html@tag=toon-shader.html */
-    void StaticMesh::genTrefoilKnot(uint32_t slices, uint32_t stacks)
+    void Mesh::genTrefoilKnot(uint32_t slices, uint32_t stacks)
     {
         MG_PROFILE_ZONE_SCOPED;
-
-        m_modelType = MeshType::TrefoilKnot;
-
-        m_primitiveProperties =
-        {
-            .slices = (int32_t)slices < 3 ? 3 : (int32_t)slices,
-            .stacks = (int32_t)stacks < 3 ? 3 : (int32_t)stacks
-        };
-
         VertexData vertexData;
 
         auto evaluate_trefoil = [](float s, float t)
@@ -1243,20 +822,9 @@ namespace mango
     }
 
     /* Implementation inspired by: https://blackpawn.com/texts/pqtorus/default.html */
-    void StaticMesh::genPQTorusKnot(uint32_t slices, uint32_t stacks, int p, int q, float knotR, float tubeR)
+    void Mesh::genPQTorusKnot(uint32_t slices, uint32_t stacks, int p, int q, float knotR, float tubeR)
     {
         MG_PROFILE_ZONE_SCOPED;
-
-        m_modelType = MeshType::PQTorusKnot;
-
-        m_primitiveProperties =
-        {
-            .innerRadius = knotR <= 0.0f ? 0.01f : knotR,
-            .outerRadius = tubeR <= 0.0f ? 0.01f : tubeR,
-            .slices = (int32_t)slices < 3 ? 3 : (int32_t)slices,
-            .stacks = (int32_t)stacks < 3 ? 3 : (int32_t)stacks
-        };
-
         VertexData vertexData;
 
         float theta     = 0.0;
@@ -1323,18 +891,10 @@ namespace mango
         genPrimitive(vertexData);
     }
 
-    void StaticMesh::genQuad(float width, float height)
+    void Mesh::genQuad(float width, float height)
     {
         MG_PROFILE_ZONE_SCOPED;
-
-        m_modelType = MeshType::Quad;
-        m_drawMode  = DrawMode::TRIANGLE_STRIP;
-
-        m_primitiveProperties =
-        {
-            .width = width <= 0.0f ? 0.01f : width,
-            .height = height <= 0.0f ? 0.01f : height
-        };
+        m_drawMode = DrawMode::TRIANGLE_STRIP;
 
         VertexData vertexData;
 
@@ -1362,53 +922,5 @@ namespace mango
         vertexData.indices.push_back(3);
 
         genPrimitive(vertexData, false);
-    }
-
-    void StaticMesh::regeneratePrimitive()
-    {
-        switch (m_modelType)
-        {
-            case mango::StaticMesh::MeshType::Cone:
-                genCone(m_primitiveProperties.height, m_primitiveProperties.radius, m_primitiveProperties.slices, m_primitiveProperties.stacks);
-                break;
-            case mango::StaticMesh::MeshType::Cube:
-                genCube(m_primitiveProperties.size);
-                break;
-            case mango::StaticMesh::MeshType::Cylinder:
-                genCylinder(m_primitiveProperties.height, m_primitiveProperties.radius, m_primitiveProperties.slices);
-                break;
-            case mango::StaticMesh::MeshType::Plane:
-                genPlane(m_primitiveProperties.width, m_primitiveProperties.height, m_primitiveProperties.slices, m_primitiveProperties.stacks);
-                break;
-            case mango::StaticMesh::MeshType::PQTorusKnot:
-                genPQTorusKnot(m_primitiveProperties.slices, m_primitiveProperties.stacks, m_primitiveProperties.p, m_primitiveProperties.q, m_primitiveProperties.innerRadius, m_primitiveProperties.outerRadius);
-                break;
-            case mango::StaticMesh::MeshType::Sphere:
-                genSphere(m_primitiveProperties.radius, m_primitiveProperties.slices);
-                break;
-            case mango::StaticMesh::MeshType::Torus:
-                genTorus(m_primitiveProperties.innerRadius, m_primitiveProperties.outerRadius, m_primitiveProperties.slices, m_primitiveProperties.stacks);
-                break;
-            case mango::StaticMesh::MeshType::TrefoilKnot:
-                genTrefoilKnot(m_primitiveProperties.slices, m_primitiveProperties.stacks);
-                break;
-            case mango::StaticMesh::MeshType::Quad:
-                genQuad(m_primitiveProperties.width, m_primitiveProperties.height);
-                break;
-        }
-    }
-
-    void StaticMesh::setMeshType(MeshType type)
-    {
-        m_modelType = type; 
-        
-        if (MeshType::StaticMesh == m_modelType || MeshType::AnimatedMesh == m_modelType)
-        {
-            load(m_filename);
-        }
-        else
-        {
-            regeneratePrimitive();
-        }
     }
 }

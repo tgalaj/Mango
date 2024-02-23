@@ -30,9 +30,11 @@ void Sandbox::onInit()
     });
 
     m_camera1 = m_mainScene->createEntity("MainCamera");
-    m_camera1.addComponent<CameraComponent>().camera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
     m_camera1.setPosition(0, 4, 30);
-
+    auto& cc1 = m_camera1.addComponent<CameraComponent>();
+    cc1.camera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
+    cc1.isPrimary = true;
+    
     m_camera2 = m_mainScene->createEntity("MainCamera2");
     m_camera2.addComponent<CameraComponent>().camera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
     m_camera2.setPosition(0, 4, -30);
@@ -58,15 +60,15 @@ void Sandbox::onInit()
                                     "back.jpg" );
     Services::renderer()->setSkybox(skybox);
 
-    auto sphereModel = createRef<StaticMesh>();
+    auto sphereModel = createRef<Mesh>();
     sphereModel->genSphere(0.5f, 24);
 
-    auto cyborgModel        = AssetManager::createStaticMesh("models/cyborg/cyborg.obj");
-    auto zen3cModel         = AssetManager::createStaticMesh("models/Zen3C/Zen3C.X");
-    auto damagedHelmetModel = AssetManager::createStaticMesh("models/damaged_helmet/DamagedHelmet.gltf");
-    auto sponzaModel        = AssetManager::createStaticMesh("models/sponza/Sponza.gltf");
+    auto cyborgModel        = AssetManager::createMesh("models/cyborg/cyborg.obj");
+    auto zen3cModel         = AssetManager::createMesh("models/Zen3C/Zen3C.X");
+    auto damagedHelmetModel = AssetManager::createMesh("models/damaged_helmet/DamagedHelmet.gltf");
+    auto sponzaModel        = AssetManager::createMesh("models/sponza/Sponza.gltf");
 
-    auto wallModel = createRef<StaticMesh>();
+    auto wallModel = createRef<Mesh>();
     wallModel->genQuad(5, 5);
 
     auto groundTex           = AssetManager::createTexture2D("textures/trak_tile_g.jpg", true);
@@ -83,9 +85,6 @@ void Sandbox::onInit()
     brickwallMaterial->addTexture(Material::TextureType::DIFFUSE, brickwallTex);
     brickwallMaterial->addTexture(Material::TextureType::NORMAL,  brickwallNormalTex);
 
-    // TODO(TG): problem: StaticMeshesComponents refer to the same meshes... hence changing material, changes it for all StaticMeshes...
-    // Possible solution: 1. make a copy of static mesh reference ptr? doesn't work - removed cpy constructors...
-    //                    2. Hold static meshes on stack
     auto bricksMaterial = AssetManager::createMaterial("bricks");
     bricksMaterial->addTexture(Material::TextureType::DIFFUSE, bricks2);
     bricksMaterial->addTexture(Material::TextureType::NORMAL, bricks2Normal);
@@ -130,53 +129,53 @@ void Sandbox::onInit()
 
     auto wall = m_mainScene->createEntity();
     wall.addComponent<StaticMeshComponent>(wallModel);
-    wall.getComponent<StaticMeshComponent>().staticMesh->setMaterial(brickwallMaterial);
+    wall.getComponent<StaticMeshComponent>().materials[0] = brickwallMaterial;
     wall.setRotation(90.0f, 0.0f, 0.0f);
     wall.setPosition(0, 2.0, -9);
 
     auto wall2 = m_mainScene->createEntity();
     wall2.addComponent<StaticMeshComponent>(wallModel);
-    wall2.getComponent<StaticMeshComponent>().staticMesh->setMaterial(bricksMaterial);
+    wall2.getComponent<StaticMeshComponent>().materials[0] = bricksMaterial;
     wall2.setRotation(90.0f, 0.0f, 0.0f);
     wall2.setPosition(-5, 2.0, -9);
 
     auto grass = m_mainScene->createEntity();
     grass.addComponent<StaticMeshComponent>(wallModel);
-    grass.getComponent<StaticMeshComponent>().staticMesh->setMaterial(grassMaterial);
+    grass.getComponent<StaticMeshComponent>().materials[0] = grassMaterial;
     grass.setRotation(90.0f, 0.0f, 0.0f);
     grass.setPosition(-5, 1.2, 9);
     grass.setScale(0.5);
 
     auto window1 = m_mainScene->createEntity();
     window1.addComponent<StaticMeshComponent>(wallModel);
-    window1.getComponent<StaticMeshComponent>().staticMesh->setMaterial(windowMaterial);
+    window1.getComponent<StaticMeshComponent>().materials[0] = windowMaterial;
     window1.setRotation(90.0f, 0.0f, 0.0f);
     window1.setPosition(0, 1.2, 9);
     window1.setScale(0.51);
 
     auto window3 = m_mainScene->createEntity();
     window3.addComponent<StaticMeshComponent>(wallModel);
-    window3.getComponent<StaticMeshComponent>().staticMesh->setMaterial(windowMaterial);
+    window3.getComponent<StaticMeshComponent>().materials[0] = windowMaterial;
     window3.setRotation(90.0f, 0.0f, 0.0f);
     window3.setPosition(3, 1.2, 13);
     window3.setScale(0.5);
 
     auto window2 = m_mainScene->createEntity();
     window2.addComponent<StaticMeshComponent>(wallModel);
-    window2.getComponent<StaticMeshComponent>().staticMesh->setMaterial(windowMaterial);
+    window2.getComponent<StaticMeshComponent>().materials[0] = windowMaterial;
     window2.setRotation(90.0f, 0.0f, 0.0f);
     window2.setPosition(5, 1.2, 9);
     window2.setScale(0.5);
 
     auto plane1 = m_mainScene->createEntity();
     plane1.addComponent<StaticMeshComponent>(wallModel);
-    plane1.getComponent<StaticMeshComponent>().staticMesh->setMaterial(bricks2Material);
+    plane1.getComponent<StaticMeshComponent>().materials[0] = bricks2Material;
     plane1.setRotation(90.0f, 0.0f, 0.0f);
     plane1.setPosition(5, 3.0, -14);
 
     auto plane2 = m_mainScene->createEntity();
     plane2.addComponent<StaticMeshComponent>(wallModel);
-    plane2.getComponent<StaticMeshComponent>().staticMesh->setMaterial(bricks2Material);
+    plane2.getComponent<StaticMeshComponent>().materials[0] = bricks2Material;
     plane2.setRotation(0.5f, 0.0f, 0.0f);
     plane2.setPosition(5, 0.5, -11.5);
     plane2.addComponent<BoxCollider3DComponent>(glm::vec3(2.5f, 0.1f, 2.5f), glm::vec3(0.0f, -0.1f, 0.0f));
@@ -185,7 +184,7 @@ void Sandbox::onInit()
     auto sphere1 = m_mainScene->createEntity();
     {
         auto& smc = sphere1.addComponent<StaticMeshComponent>(sphereModel);
-        smc.staticMesh->setMaterial(reflectiveSphereMaterial);
+        smc.materials[0] = reflectiveSphereMaterial;
         sphere1.setPosition(5, 20, -11.5);
         sphere1.setScale(0.5f);
         sphere1.addComponent<SphereColliderComponent>(0.5f);
@@ -198,10 +197,8 @@ void Sandbox::onInit()
               rb3dSphere1.restitution          = 0.7f;
     }
 
-    sphereModel = createRef<StaticMesh>();
+    sphereModel = createRef<Mesh>();
     sphereModel->genSphere(0.5f, 24);
-    auto defaultMaterial = AssetManager::createMaterial("default");
-    sphereModel->setMaterial(defaultMaterial);
 
     auto sphere2 = m_mainScene->createEntity();
     sphere2.addComponent<StaticMeshComponent>(sphereModel);
@@ -227,7 +224,7 @@ void Sandbox::onInit()
             if (i == 2 && j == 2)
             {
                 cyborg.addChild(object);
-                //object.setScale(4.0f);
+                object.setScale(1.0f);
             }
         }
     }

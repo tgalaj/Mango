@@ -8,6 +8,8 @@
 
 namespace mango
 {
+    class Material;
+    using MaterialTable = std::vector<ref<Material>>;
 
     class Material
     {

@@ -86,10 +86,8 @@ namespace mango
         void renderDebug();
         void renderDebugLightsBoundingBoxes(Scene* scene);
 
-        void renderOpaque(ref<Shader>& shader);
-        void renderAlpha(ref<Shader>& shader);
-        void renderEnviroMappingStatic(ref<Shader>& shader);
-        void renderDynamicEnviroMapping(ref<Shader>& shader);
+        void renderEntitiesInQueue(ref<Shader>& shader, std::vector<Entity>& queue);
+
         void renderLightsForward(Scene* scene);
         void renderLightsDeferred(Scene* scene);
 
@@ -124,8 +122,8 @@ namespace mango
 
         ref<Shader> m_boundingboxShader;
         ref<Shader> m_nullShader;
-        StaticMesh m_lightBoundingSphere;
-        StaticMesh m_lightBoundingCone;
+        Mesh m_lightBoundingSphere;
+        Mesh m_lightBoundingCone;
 
         ref<PostprocessEffect> m_hdrFilter;
         ref<PostprocessEffect> m_fxaaFilter;

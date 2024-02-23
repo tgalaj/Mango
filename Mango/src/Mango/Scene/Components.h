@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Mango/Core/AssetManager.h"
+#include "Mango/Core/Services.h"
 #include "Mango/Core/UUID.h"
+
 #include "Mango/Rendering/Attenuation.h"
-#include "Mango/Rendering/AnimatedMesh.h"
+#include "Mango/Rendering/Mesh.h"
 #include "Mango/Rendering/Camera/Camera.h"
 
 #ifndef GLM_ENABLE_EXPERIMENTAL
@@ -207,22 +210,32 @@ namespace mango
     struct CameraComponent
     {
         Camera camera;
-        bool isPrimary = true;
+        bool isPrimary = false;
     };
 
     struct StaticMeshComponent
     {
     public:
         StaticMeshComponent()
-        {}
+        {
+            if (materials.empty())
+            {
+                materials.emplace_back(AssetManager::createMaterial("default"));
+            }
+        }
 
-        explicit StaticMeshComponent(const ref<StaticMesh>& staticMesh)
-            : staticMesh(staticMesh) {}
+        explicit StaticMeshComponent(const ref<Mesh>& m)
+            : mesh(m) 
+        {
+            materials = mesh->getMaterials();
+        }
 
     public:
-        ref<StaticMesh> staticMesh;
+        ref<Mesh>     mesh      = nullptr;
+        MaterialTable materials = {};
     };
 
+    #if 0
     struct AnimatedMeshComponent
     {
     public:
@@ -236,6 +249,7 @@ namespace mango
     public:
         ref<AnimatedMesh> animatedMesh;
     };
+    #endif
 
     struct TransformComponent
     {
@@ -433,6 +447,6 @@ namespace mango
 
     // Except: IDComponent, TagComponent which are special case components
     using ComponentsRegistry = ComponentsGroup<DirectionalLightComponent, PointLightComponent, SpotLightComponent, 
-                                               CameraComponent, StaticMeshComponent, AnimatedMeshComponent, TransformComponent, 
+                                               CameraComponent, StaticMeshComponent, /*AnimatedMeshComponent,*/ TransformComponent, 
                                                RigidBody3DComponent, SphereColliderComponent, BoxCollider3DComponent>;
 }

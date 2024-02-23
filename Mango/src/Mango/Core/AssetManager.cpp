@@ -1,12 +1,14 @@
 #include "mgpch.h"
 #include "AssetManager.h"
 
+#include "Mango/Assets/AssimpMeshImporter.h"
+
 namespace mango
 {
     std::unordered_map<std::string, ref<Font>>       AssetManager::m_loadedFonts;
     std::unordered_map<std::string, ref<Material>>   AssetManager::m_loadedMaterials;
     std::unordered_map<std::string, ref<Shader>>     AssetManager::m_loadedShaders;
-    std::unordered_map<std::string, ref<StaticMesh>> AssetManager::m_loadedStaticMeshes;
+    std::unordered_map<std::string, ref<Mesh>> AssetManager::m_loadedStaticMeshes;
     std::unordered_map<std::string, ref<Texture>>    AssetManager::m_loadedTextures;
 
     ref<Font> AssetManager::createFont(const std::string & fontNname, const std::string& filename, GLuint fontHeight)
@@ -98,7 +100,7 @@ namespace mango
         return textureCube;
     }
 
-    ref<StaticMesh> AssetManager::createStaticMesh(const std::string & filename)
+    ref<Mesh> AssetManager::createMesh(const std::string & filename)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -107,8 +109,7 @@ namespace mango
             return m_loadedStaticMeshes[filename];
         }
 
-        auto staticMesh = createRef<StaticMesh>();
-        staticMesh->load(filename);
+        auto staticMesh = AssimpMeshImporter::load(filename);
         m_loadedStaticMeshes[filename] = staticMesh;
 
         return staticMesh;
@@ -252,7 +253,7 @@ namespace mango
         return nullptr;
     }
 
-    ref<StaticMesh> AssetManager::getStaticMesh(const std::string& staticMeshName)
+    ref<Mesh> AssetManager::getMesh(const std::string& staticMeshName)
     {
         MG_PROFILE_ZONE_SCOPED;
         if (m_loadedStaticMeshes.contains(staticMeshName))

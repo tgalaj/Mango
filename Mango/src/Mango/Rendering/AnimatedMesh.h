@@ -1,6 +1,7 @@
+#if 0
 #pragma once
 
-#include "StaticMesh.h"
+#include "Mesh.h"
 
 #include <glm/mat2x4.hpp>
 #include <glm/mat4x4.hpp>
@@ -8,7 +9,7 @@
 
 namespace mango
 {
-    class AnimatedMesh : public StaticMesh
+    class AnimatedMesh : public Mesh
     {
     public:
         AnimatedMesh() : m_bonesCount            (0), 
@@ -135,3 +136,4 @@ namespace mango
         uint32_t m_animationsCount;
     };
 }
+#endif
