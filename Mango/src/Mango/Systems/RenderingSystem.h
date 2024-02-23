@@ -122,8 +122,8 @@ namespace mango
 
         ref<Shader> m_boundingboxShader;
         ref<Shader> m_nullShader;
-        Mesh m_lightBoundingSphere;
-        Mesh m_lightBoundingCone;
+        ref<Mesh>   m_lightBoundingSphere;
+        ref<Mesh>   m_lightBoundingCone;
 
         ref<PostprocessEffect> m_hdrFilter;
         ref<PostprocessEffect> m_fxaaFilter;

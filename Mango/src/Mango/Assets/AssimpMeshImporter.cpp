@@ -21,12 +21,12 @@ namespace mango
         Assimp::Importer importer;
         const aiScene* scene = importer.ReadFile(filepath.string(), aiProcess_Triangulate              |
                                                                     aiProcess_GenSmoothNormals         |
-                                                                    aiProcess_GenUVCoords              |
                                                                     aiProcess_CalcTangentSpace         |
                                                                     aiProcess_FlipUVs                  |
-                                                                    aiProcess_JoinIdenticalVertices    |
+                                                                    aiProcess_PreTransformVertices     |
                                                                     aiProcess_RemoveRedundantMaterials |
                                                                     aiProcess_ImproveCacheLocality     |
+                                                                    aiProcess_JoinIdenticalVertices    |
                                                                     aiProcess_GenBoundingBoxes);
 
         if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)

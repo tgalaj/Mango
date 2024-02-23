@@ -181,7 +181,7 @@ namespace mango
         
         m_materialTable.emplace_back(AssetManager::createMaterial("default"));
 
-        m_submeshes.push_back(submesh);
+        m_submeshes.emplace_back(submesh);
     }
 
     void Mesh::genCone(float height, float radius, uint32_t slices, uint32_t stacks)

@@ -102,11 +102,11 @@ namespace mango
         m_nullShader = AssetManager::createShader("NullShader", "DebugObjectGeometry.vert", "Shadow-Map-Gen.frag");
         m_nullShader->link();
 
-        m_lightBoundingSphere = Mesh();
-        m_lightBoundingSphere.genSphere(1.1f, 12);
+        m_lightBoundingSphere = createRef<Mesh>();
+        m_lightBoundingSphere->genSphere(1.1f, 12);
 
-        m_lightBoundingCone = Mesh();
-        m_lightBoundingCone.genCone(1.1f, 1.1f, 12, 1);
+        m_lightBoundingCone = createRef<Mesh>();
+        m_lightBoundingCone->genCone(1.1f, 1.1f, 12, 1);
 
         int width  = m_mainWindow->getWidth();
         int height = m_mainWindow->getHeight();
@@ -168,6 +168,24 @@ namespace mango
 
         glBindFramebuffer(GL_FRAMEBUFFER, m_outputToOffscreenTexture ? m_mainRenderTarget->m_fbo : 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        m_opaqueQueue.clear();
+        m_alphaQueue.clear();
+        m_enviroStaticQueue.clear();
+        m_enviroDynamicQueue.clear();
+
+        auto view = m_activeScene->getEntitiesWithComponent<StaticMeshComponent>();
+
+        for (auto& e : view)
+        {
+            Entity entity = { e, m_activeScene };
+
+            auto& smc          = entity.getComponent<StaticMeshComponent>();
+            auto materialIndex = smc.mesh->getSubmesh().materialIndex;
+            auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
+            
+            addEntityToRenderQueue(entity, renderQueue);
+        }
 
         // TODO: create two methods: renderGame and renderEditor + use switch
         if (m_mode == RenderingMode::GAME)
@@ -510,7 +528,7 @@ namespace mango
         m_mainRenderTarget->bind();
         glClear(GL_COLOR_BUFFER_BIT);
 
-        m_ssao->bindBlurredSSAOTexture(4); //TODO: replace magic number with a variable
+        m_ssao->bindBlurredSSAOTexture(9); //TODO: replace magic number with a variable
         renderLightsDeferred(scene);
 
         m_deferredRendering->bindGBufferReadOnly();
@@ -601,7 +619,7 @@ namespace mango
 
         /* Point Lights */
         {
-            m_lightBoundingSphere.setDrawMode(Mesh::DrawMode::LINES);
+            m_lightBoundingSphere->setDrawMode(Mesh::DrawMode::LINES);
             auto view = scene->getEntitiesWithComponent<PointLightComponent, TransformComponent>();
             for (auto entity : view)
             {
@@ -616,14 +634,15 @@ namespace mango
                 m_boundingboxShader->setUniform("g_mvp", projection * view * model);
                 m_boundingboxShader->setUniform("color", glm::vec4(1.0f, 1.0, 1.0, 1.0f));
 
-                m_lightBoundingSphere.render();
+                m_lightBoundingSphere->bind();
+                m_lightBoundingSphere->render();
             }
-            m_lightBoundingSphere.setDrawMode(Mesh::DrawMode::TRIANGLES);
+            m_lightBoundingSphere->setDrawMode(Mesh::DrawMode::TRIANGLES);
         }
 
         /* Spot Lights */
         {
-            m_lightBoundingCone.setDrawMode(Mesh::DrawMode::LINES);
+            m_lightBoundingCone->setDrawMode(Mesh::DrawMode::LINES);
             auto view = scene->getEntitiesWithComponent<SpotLightComponent, TransformComponent>();
             for (auto entity : view)
             {
@@ -642,9 +661,10 @@ namespace mango
                 m_boundingboxShader->setUniform("g_mvp", projection * view * model);
                 m_boundingboxShader->setUniform("color", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
 
-                m_lightBoundingCone.render();
+                m_lightBoundingCone->bind();
+                m_lightBoundingCone->render();
             }
-            m_lightBoundingCone.setDrawMode(Mesh::DrawMode::TRIANGLES);
+            m_lightBoundingCone->setDrawMode(Mesh::DrawMode::TRIANGLES);
         }
         glEnable(GL_BLEND);
     }
@@ -982,7 +1002,8 @@ namespace mango
                 glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 
                 m_nullShader->setUniform("g_mvp", mvp);
-                m_lightBoundingSphere.render();
+                m_lightBoundingSphere->bind();
+                m_lightBoundingSphere->render();
 
                 glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
@@ -1010,7 +1031,8 @@ namespace mango
                 m_deferredPoint->setUniform("s_far_plane",                    pointLight.getShadowFarPlane());
 
                 m_deferredPoint->setUniform("g_mvp", mvp);
-                m_lightBoundingSphere.render();
+                m_lightBoundingSphere->bind();
+                m_lightBoundingSphere->render();
 
                 glCullFace(GL_BACK);
                 glDisable(GL_BLEND);
@@ -1079,7 +1101,8 @@ namespace mango
                 glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 
                 m_nullShader->setUniform("g_mvp", mvp);
-                m_lightBoundingCone.render();
+                m_lightBoundingCone->bind();
+                m_lightBoundingCone->render();
 
                 glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
@@ -1109,7 +1132,8 @@ namespace mango
                 m_deferredSpot->setUniform("s_light_matrix",                      lightMatrix);
 
                 m_deferredSpot->setUniform("g_mvp", mvp);
-                m_lightBoundingCone.render();
+                m_lightBoundingCone->bind();
+                m_lightBoundingCone->render();
 
                 glCullFace(GL_BACK);
                 glDisable(GL_BLEND);

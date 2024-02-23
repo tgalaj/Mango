@@ -77,9 +77,9 @@ void Sandbox::onInit()
     auto bricks2             = AssetManager::createTexture2D("textures/bricks2.jpg", true);
     auto bricks2Depth        = AssetManager::createTexture2D("textures/bricks2_disp.jpg");
     auto bricks2Normal       = AssetManager::createTexture2D("textures/bricks2_normal.jpg");
-    auto windowTex           = AssetManager::createTexture2D("textures/window.png");
-    auto grassTex            = AssetManager::createTexture2D("textures/grass.png");
-    auto openglLogo          = AssetManager::createTexture2D("textures/opengl.png");
+    auto windowTex           = AssetManager::createTexture2D("textures/window.png", true);
+    auto grassTex            = AssetManager::createTexture2D("textures/grass.png", true);
+    auto openglLogo          = AssetManager::createTexture2D("textures/opengl.png", true);
 
     auto brickwallMaterial = AssetManager::createMaterial("brickwall");
     brickwallMaterial->addTexture(Material::TextureType::DIFFUSE, brickwallTex);
@@ -122,9 +122,9 @@ void Sandbox::onInit()
     auto sponza = m_mainScene->createEntity();
     {
         auto& smc = sponza.addComponent<StaticMeshComponent>(sponzaModel);
-        sponza.setPosition(-1.5f, -2.0f, 10.0f);
+        sponza.setPosition(-1.5f, 0.0f, 10.0f);
         sponza.setRotation(0.0f, -90.0f, 0.0f);
-        sponza.setScale(1.0 / 12.0f);
+        sponza.setScale(6.0f);
     }
 
     auto wall = m_mainScene->createEntity();
@@ -231,8 +231,8 @@ void Sandbox::onInit()
 
     /* Lights */
     auto dirLight = m_mainScene->createEntity();
-    dirLight.addComponent<DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f, false);
-    dirLight.setRotation(-45.0f, 180.0f, 0.0f);
+    dirLight.addComponent<DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f, true);
+    dirLight.setRotation(45.0f, 180.0f, 0.0f);
 
     float d = 8;
     glm::vec3 positions[4]
