@@ -709,8 +709,8 @@ namespace mango
                                                            torusRadius * sin2PIt));
 
                 vertexData.normals.push_back(glm::vec3(cos2PIp * cos2PIt,
-                                                        sin2PIp * cos2PIt,
-                                                        sin2PIt));
+                                                       sin2PIp * cos2PIt,
+                                                       sin2PIt));
 
                 vertexData.texcoords.push_back(glm::vec2(phi, theta));
             }
@@ -901,20 +901,33 @@ namespace mango
         float halfWidth  = width * 0.5f;
         float halfHeight = height * 0.5f;
 
-        vertexData.positions.push_back(glm::vec3(-halfWidth, 0.0f, -halfHeight));
-        vertexData.positions.push_back(glm::vec3(-halfWidth, 0.0f, halfHeight));
-        vertexData.positions.push_back(glm::vec3(halfWidth, 0.0f, -halfHeight));
-        vertexData.positions.push_back(glm::vec3(halfWidth, 0.0f, halfHeight));
+        vertexData.positions = {
+            glm::vec3(-halfWidth, 0.0f, -halfHeight),
+            glm::vec3(-halfWidth, 0.0f,  halfHeight),
+            glm::vec3(halfWidth,  0.0f, -halfHeight),
+            glm::vec3(halfWidth,  0.0f,  halfHeight)
+        };
 
-        vertexData.normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-        vertexData.normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-        vertexData.normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-        vertexData.normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+        vertexData.texcoords = {
+            glm::vec2(0.0f, 0.0f),
+            glm::vec2(0.0f, 1.0f),
+            glm::vec2(1.0f, 0.0f),
+            glm::vec2(1.0f, 1.0f),
+        };
 
-        vertexData.texcoords.push_back(glm::vec2(0.0f, 1.0f));
-        vertexData.texcoords.push_back(glm::vec2(0.0f, 0.0f));
-        vertexData.texcoords.push_back(glm::vec2(1.0f, 1.0f));
-        vertexData.texcoords.push_back(glm::vec2(1.0f, 0.0f));
+        vertexData.normals = {
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+        };
+
+        vertexData.tangents = {
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+        };
 
         vertexData.indices.push_back(0);
         vertexData.indices.push_back(1);
