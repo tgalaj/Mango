@@ -8,7 +8,7 @@ namespace mango
     std::unordered_map<std::string, ref<Font>>       AssetManager::m_loadedFonts;
     std::unordered_map<std::string, ref<Material>>   AssetManager::m_loadedMaterials;
     std::unordered_map<std::string, ref<Shader>>     AssetManager::m_loadedShaders;
-    std::unordered_map<std::string, ref<Mesh>> AssetManager::m_loadedStaticMeshes;
+    std::unordered_map<std::string, ref<Mesh>>       AssetManager::m_loadedStaticMeshes;
     std::unordered_map<std::string, ref<Texture>>    AssetManager::m_loadedTextures;
 
     ref<Font> AssetManager::createFont(const std::string & fontNname, const std::string& filename, GLuint fontHeight)
@@ -100,7 +100,19 @@ namespace mango
         return textureCube;
     }
 
-    ref<Mesh> AssetManager::createMesh(const std::string & filename)
+    ref<Mesh> AssetManager::createMesh(const std::string& meshName)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        if (m_loadedStaticMeshes.contains(meshName))
+        {
+            return m_loadedStaticMeshes[meshName];
+        }
+
+        return createRef<Mesh>(meshName);
+    }
+
+    ref<Mesh> AssetManager::createMeshFromFile(const std::string & filename)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -242,6 +254,56 @@ namespace mango
         return nullptr;
     }
 
+    void AssetManager::initDefaultAssets()
+    {
+        // Default textures
+        auto defaultDiffuse      = createTexture2D1x1("DefaultDiffuse",      glm::uvec4(255, 255, 255, 255));
+        auto defaultSpecular     = createTexture2D1x1("DefaultSpecular",     glm::uvec4(0,   0,   0,   255));
+        auto defaultNormal       = createTexture2D1x1("DefaultNormal",       glm::uvec4(128, 127, 254, 255));
+        auto defaultEmission     = createTexture2D1x1("DefaultEmission",     glm::uvec4(0,   0,   0,   255));
+        auto defaultDisplacement = createTexture2D1x1("DefaultDisplacement", glm::uvec4(0,   0,   0,   255));
+
+        // Default material
+        auto material = createMaterial("DefaultMaterial");
+
+        // Default meshes
+        {
+            ref<Mesh> m = createMesh("Cone");
+            m->genCone(1.0f, 1.0f, 12, 12);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Cube");
+            m->genCube(1.0f);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Cylinder");
+            m->genCylinder(2.0f, 1.0f);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Plane");
+            m->genPlane(10.0f, 10.0f, 10, 10);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Sphere");
+            m->genSphere(1.0f, 12);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Torus");
+            m->genTorus(0.5f, 1.0f, 12, 12);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Quad");
+            m->genQuad(2.0, 2.0);
+        }
+
+    }
+
     ref<Shader> AssetManager::getShader(const std::string& shaderName)
     {
         MG_PROFILE_ZONE_SCOPED;
@@ -271,6 +333,8 @@ namespace mango
         m_loadedShaders.clear();
         m_loadedStaticMeshes.clear();
         m_loadedTextures.clear();
+
+        initDefaultAssets();
     }
 
 }

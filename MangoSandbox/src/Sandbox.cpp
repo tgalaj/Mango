@@ -1,6 +1,7 @@
 #define GLFW_INCLUDE_NONE 
 
 #include "Sandbox.h"
+#include "Mango/Scene/SceneSerializer.h"
 
 using namespace mango;
 
@@ -63,10 +64,10 @@ void Sandbox::onInit()
     auto sphereModel = createRef<Mesh>();
     sphereModel->genSphere(0.5f, 24);
 
-    auto cyborgModel        = AssetManager::createMesh("models/cyborg/cyborg.obj");
-    auto zen3cModel         = AssetManager::createMesh("models/Zen3C/Zen3C.X");
-    auto damagedHelmetModel = AssetManager::createMesh("models/damaged_helmet/DamagedHelmet.gltf");
-    auto sponzaModel        = AssetManager::createMesh("models/sponza/Sponza.gltf");
+    auto cyborgModel        = AssetManager::createMeshFromFile("models/cyborg/cyborg.obj");
+    auto zen3cModel         = AssetManager::createMeshFromFile("models/Zen3C/Zen3C.X");
+    auto damagedHelmetModel = AssetManager::createMeshFromFile("models/damaged_helmet/DamagedHelmet.gltf");
+    auto sponzaModel        = AssetManager::createMeshFromFile("models/sponza/Sponza.gltf");
 
     auto wallModel = createRef<Mesh>();
     wallModel->genQuad(5, 5);
@@ -225,6 +226,7 @@ void Sandbox::onInit()
             {
                 cyborg.addChild(object);
                 object.setScale(1.0f);
+                object.getComponent<StaticMeshComponent>().materials[0] = AssetManager::getMaterial("window");
             }
         }
     }
@@ -272,6 +274,8 @@ void Sandbox::onInit()
     spotLight.setPosition(1.5, 5, 1.5);
     spotLight.setRotation(-45, 45, 45);
     spotLight.getComponent<SpotLightComponent>().setCastsShadows(true);
+
+    //SceneSerializer::serialize(m_mainScene, "D:/ProjectsPriv/Mango/Test.mango");
 }
 
 void Sandbox::onDestroy()
@@ -362,9 +366,11 @@ void Sandbox::onGui()
 
     ImGuiSystem::beginHUD();
 
-    //ImGuiSystem::circleFilled({ ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f}, 2.0f, glm::vec4(0.0, 1.0, 0.0, 1.0));
-    //auto pos = ImGuiSystem::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo!", { ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f + 100.0f}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, true);
-    //ImGuiSystem::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo2!", { ImGui::GetIO().DisplaySize.x / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
+    #if 0
+    ImGuiSystem::circleFilled({ ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f}, 2.0f, glm::vec4(0.0, 1.0, 0.0, 1.0));
+    auto pos = ImGuiSystem::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo!", { ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f + 100.0f}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, true);
+    ImGuiSystem::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo2!", { ImGui::GetIO().DisplaySize.x / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
+    #endif
     auto window = Services::application()->getWindow();
     ImGuiSystem::image(AssetManager::getTexture2D("textures/opengl.png"), { window->getWidth() - 200, 0 }, { window->getWidth(), 100 }, { 1.0f, 1.0f, 1.0f, 0.5f });
 

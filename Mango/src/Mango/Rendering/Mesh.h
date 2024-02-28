@@ -7,20 +7,6 @@
 
 namespace mango
 {
-    struct PrimitiveProperties
-    {
-        float    width         = 1.0f;
-        float    height        = 1.0f;
-        float    radius        = 1.0f;
-        float    size          = 1.0f;
-        float    innerRadius   = 1.0f;
-        float    outerRadius   = 2.0f;
-        int32_t  slices        = 10;
-        int32_t  stacks        = 10;
-        int32_t  p             = 2;
-        int32_t  q             = 3;
-    }; 
-
     struct Vertex
     {
         Vertex() = default;
@@ -52,13 +38,13 @@ namespace mango
                               PATCHES        = GL_PATCHES };
 
     public:
-        Mesh(const std::string& filename = "")
+        Mesh(const std::string& name = "")
             : m_unitScale(1),
               m_vaoName  (0),
               m_vboName  (0),
               m_iboName  (0),
               m_drawMode (DrawMode::TRIANGLES),
-              m_filename (filename)
+              m_name     (name)
         {
         }
 
@@ -108,16 +94,18 @@ namespace mango
         DrawMode getDrawMode()              { return m_drawMode; }
 
         float getUnitScaleFactor() const { return m_unitScale; }
-        std::string getFilename()  const { return m_filename; }
+        std::string getName()      const { return m_name; }
 
-        Submesh& getSubmesh(unsigned int index = 0)
+        Submesh* getSubmesh(unsigned int index = 0)
         {
+            if (m_submeshes.empty()) return nullptr;
+
             if (index > m_submeshes.size())
             {
                 index = m_submeshes.size() - 1;
             }
 
-            return m_submeshes[index];
+            return &m_submeshes[index];
         }
 
         std::vector<Submesh>& getSubmeshes()          { return m_submeshes; }
@@ -174,7 +162,7 @@ namespace mango
         std::vector<Submesh> m_submeshes;
         MaterialTable        m_materialTable;
 
-        std::string m_filename  = "";
+        std::string m_name      = "";
         float       m_unitScale = 1.0f;
         GLuint      m_vaoName   = 0;
         GLuint      m_vboName   = 0;

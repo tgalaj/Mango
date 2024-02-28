@@ -326,7 +326,7 @@ namespace mango
             displayAddComponentEntry<DirectionalLightComponent>("Directional Light");
             displayAddComponentEntry<PointLightComponent>("Point Light");
             displayAddComponentEntry<SpotLightComponent>("Spot Light");
-            displayAddComponentEntry<ModelRendererComponent>("Model Renderer");
+            displayAddComponentEntry<StaticMeshComponent>("Static Mesh");
             displayAddComponentEntry<RigidBody3DComponent>("Rigidbody 3D");
             displayAddComponentEntry<BoxCollider3DComponent>("Box Collider 3D");
             displayAddComponentEntry<SphereColliderComponent>("Sphere Collider");
@@ -537,170 +537,33 @@ namespace mango
 
         });
 
-        drawComponent<ModelRendererComponent>("Model Renderer", entity, [&entity](auto& component)
+        drawComponent<StaticMeshComponent>("STATIC MESH", entity, [&entity](auto& component)
         {
-            const char* renderQueueStrings[] = { "Opaque", "Alpha", "Static Environment Mapping", "Dynamic Environment Mapping"};
-            const char* currentRenderQueue   = renderQueueStrings[int(component.getRenderQueue())];
+            auto&       mesh  = component.mesh;
+            std::string meshLabel = mesh ? mesh->getName() : "NULL";
 
-            if (ImGui::BeginCombo("Render Queue", currentRenderQueue))
+            ImGui::Text("Mesh");
+            ImGui::SameLine();
+            ImGui::Button(meshLabel.c_str());
+
+            const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen    |
+                                                     ImGuiTreeNodeFlags_Framed         |
+                                                     ImGuiTreeNodeFlags_FramePadding   |
+                                                     ImGuiTreeNodeFlags_SpanAvailWidth |
+                                                     ImGuiTreeNodeFlags_AllowItemOverlap;
+            ImGui::Unindent();
+            if (ImGui::TreeNodeEx("Materials", treeNodeFlags))
             {
-                for (int i = 0; i < std::size(renderQueueStrings); ++i)
+                for (uint32_t i = 0; i < component.materials.size(); ++i)
                 {
-                    bool isSelected = currentRenderQueue == renderQueueStrings[i];
-                    if (ImGui::Selectable(renderQueueStrings[i], isSelected))
-                    {
-                        currentRenderQueue   = renderQueueStrings[i];
-                        entity.addOrReplaceComponent<ModelRendererComponent>(component.model, ModelRendererComponent::RenderQueue(i));
-                    }
+                    std::string materialLabel = component.materials[i] ? component.materials[i]->name : "NULL";
 
-                    if (isSelected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-                ImGui::EndCombo();
-            }
-
-            Model& model = component.model;
-            const char* modelTypeStrings[] = { "Model3D", "Cone", "Cube", "Cylinder", "Plane", "Sphere", "Torus", "Quad" };
-            const char* currentModelType = modelTypeStrings[int(model.getModelType())];
-
-            if (ImGui::BeginCombo("Type", currentModelType))
-            {
-                for (int i = 0; i < std::size(modelTypeStrings); ++i)
-                {
-                    bool isSelected = currentModelType == modelTypeStrings[i];
-                    if (ImGui::Selectable(modelTypeStrings[i], isSelected))
-                    {
-                        currentModelType = modelTypeStrings[i];
-                        model.setModelType(Model::ModelType(i));
-                    }
-
-                    if (isSelected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-                ImGui::EndCombo();
-            }
-
-            PrimitiveProperties pp                        = model.getPrimitiveProperties();
-            bool                updatePrimitiveProperties = false;
-
-            switch (model.getModelType())
-            {
-                case Model::ModelType::Model3D:
-                    ImGui::InputText("##Filename", &model.m_filename);
-
+                    ImGui::Text("[Material %d]", i);
                     ImGui::SameLine();
-                    ImGui::PushItemWidth(-1);
-
-                    if (ImGui::Button("Load"))
-                    {
-                        model.load(model.m_filename);
-                    }
-                    ImGui::PopItemWidth();
-                    break;
-
-                case mango::Model::ModelType::Cone: 
-                    updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragFloat("Radius", &pp.radius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices", &pp.slices, 1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Stacks", &pp.stacks, 1,     1,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    break;
-
-                case mango::Model::ModelType::Cube:
-                    updatePrimitiveProperties |= ImGui::DragFloat("Size", &pp.size, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    break;
-
-                case mango::Model::ModelType::Cylinder:
-                    updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragFloat("Radius", &pp.radius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices", &pp.slices, 1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    break;
-
-                case mango::Model::ModelType::Plane:
-                    updatePrimitiveProperties |= ImGui::DragFloat("Width",  &pp.width,  0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices", &pp.slices, 1,     1,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Stacks", &pp.stacks, 1,     1,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    break;
-
-                case mango::Model::ModelType::Sphere:
-                    updatePrimitiveProperties |= ImGui::DragFloat("Radius", &pp.radius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices", &pp.slices, 1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    break;
-
-                case mango::Model::ModelType::Torus:
-                    updatePrimitiveProperties |= ImGui::DragFloat("Inner Radius", &pp.innerRadius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragFloat("Outer Radius", &pp.outerRadius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices",       &pp.slices,      1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Stacks",       &pp.stacks,      1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    break;
-
-                case mango::Model::ModelType::Quad:
-                    updatePrimitiveProperties |= ImGui::DragFloat("Width",  &pp.width,  0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    break;
-            }
-
-            if (updatePrimitiveProperties) model.setPrimitiveProperties(pp);
-
-            ImGui::Separator();
-
-            // TODO: this needs to be reworked, it's a temporary solution right now
-            // Display material for the base mesh only
-            auto& material = model.getMesh().material;
-
-            ImGui::Text("Material");
-
-            // Draw vec3 map
-            for (auto& [propertyName, vec3Value] : material.m_vec3Map)
-            {
-                ImGui::DragFloat3(propertyName.c_str(), glm::value_ptr(vec3Value));
-            }
-            // Draw float map
-            for (auto& [propertyName, floatValue] : material.m_floatMap)
-            {
-                ImGui::DragFloat(propertyName.c_str(), &floatValue);
-            }
-            // Draw textures
-            for (auto& [textureType, texture] : material.m_textureMap)
-            {
-                std::string textureName = "##" + Material::m_textureUniformsMap[textureType];
-                ImGui::InputText(textureName.c_str(), &texture->getFilename());
-
-                /** Drag drop target */
-                bool loadDroppedTexture = false;
-                std::string textureFilename = texture->getFilename();
-                if (ImGui::BeginDragDropTarget())
-                {
-                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MG_CONTENT_BROWSER_ITEM"))
-                    {
-                        const auto* path = (const wchar_t*)payload->Data;
-
-                        auto basePath      = Project::getAssetDirectory();
-                        auto relativePath  = std::filesystem::relative(std::filesystem::path(path), basePath);
-
-                        textureFilename    = std::filesystem::path(path).string();
-
-                        loadDroppedTexture = true;
-                    }
-                    ImGui::EndDragDropTarget();
+                    ImGui::Button(meshLabel.c_str());
                 }
-                ImGui::SameLine();
-                ImGui::PushItemWidth(-1);
-
-                if (ImGui::Button("Load") || loadDroppedTexture)
-                {
-                    if (textureFilename.empty()) return;
-
-                    bool isSrgb = (textureType == Material::TextureType::DIFFUSE) || (textureType == Material::TextureType::SPECULAR);
-                    texture = AssetManager::createTexture2D(textureFilename, isSrgb);
-                }
-                ImGui::PopItemWidth();
+                ImGui::TreePop();
             }
-
         });
 
         drawComponent<RigidBody3DComponent>("Rigidbody 3D", entity, [](auto& component)

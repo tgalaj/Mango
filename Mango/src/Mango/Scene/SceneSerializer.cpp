@@ -6,6 +6,7 @@
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
+#include <unordered_set>
 
 namespace YAML {
 
@@ -241,122 +242,35 @@ namespace mango
 
         if (entity.hasComponent<StaticMeshComponent>())
         {
-            //auto modelTypeToString = [](Mesh::MeshType type) -> std::string
-            //{
-            //    switch (type)
-            //    {
-            //        case Mesh::MeshType::StaticMesh:   return "StaticMesh";
-            //        case Mesh::MeshType::AnimatedMesh: return "AnimatedMesh";
-            //        case Mesh::MeshType::Cone:         return "Cone";
-            //        case Mesh::MeshType::Cube:         return "Cube";
-            //        case Mesh::MeshType::Cylinder:     return "Cylinder";
-            //        case Mesh::MeshType::Plane:        return "Plane";
-            //        case Mesh::MeshType::PQTorusKnot:  return "PQTorusKnot";
-            //        case Mesh::MeshType::Sphere:       return "Sphere";
-            //        case Mesh::MeshType::Torus:        return "Torus";
-            //        case Mesh::MeshType::TrefoilKnot:  return "TrefoilKnot";
-            //        case Mesh::MeshType::Quad:         return "Quad";
-            //    }
-            //    MG_CORE_ASSERT_MSG(false, "Unknown model type");
-            //    return {};
-            //};
-
-            auto renderQueueToString = [](Material::RenderQueue queue) -> std::string
-            {
-                switch (queue)
-                {
-                    case Material::RenderQueue::RQ_OPAQUE:                 return "Opaque";
-                    case Material::RenderQueue::RQ_TRANSPARENT:            return "Transparent";
-                    case Material::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:  return "StaticEnvMapping";
-                    case Material::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC: return "DynamicEnvMapping";
-                }
-                MG_CORE_ASSERT_MSG(false, "Unknown render queue type");
-                return {};
-            };
-
-            auto materialTextureTypeToString = [](Material::TextureType type) -> std::string
-            {
-                switch (type)
-                {
-                    case Material::TextureType::DIFFUSE:      return "Diffuse";
-                    case Material::TextureType::SPECULAR:     return "Specular";
-                    case Material::TextureType::NORMAL:       return "Normal";
-                    case Material::TextureType::EMISSION:     return "Emission";
-                    case Material::TextureType::DISPLACEMENT: return "Displacement";
-                }
-                MG_CORE_ASSERT_MSG(false, "Unknown texture type");
-                return {};
-            };
-
             out << YAML::Key << "StaticMeshComponent";
             out << YAML::BeginMap;
             {
-                auto& mrc = entity.getComponent<StaticMeshComponent>();
-                /*out << YAML::Key << "MeshType"    << YAML::Value << modelTypeToString(mrc.staticMesh->getMeshType());*/
-                
-                /*if (mrc.staticMesh->getMeshType() == Mesh::MeshType::StaticMesh)*/
+                auto& smc = entity.getComponent<StaticMeshComponent>();
+                out << YAML::Key << "Filename"  << YAML::Value << smc.mesh->getName();
+                out << YAML::Key << "Materials" << YAML::Value;
+                out << YAML::BeginSeq;
                 {
-                    out << YAML::Key << "Filename"  << YAML::Value << mrc.mesh->getFilename();
-                }
-                //else
-                {
-                    //out << YAML::Key << "PrimitiveProperties" << YAML::Value;
-                    //out << YAML::BeginMap;
-                    //{
-                    //    auto pp = mrc.staticMesh->getPrimitiveProperties();
-                    //    out << YAML::Key << "Width"       << YAML::Value << pp.width;
-                    //    out << YAML::Key << "Height"      << YAML::Value << pp.height;
-                    //    out << YAML::Key << "Radius"      << YAML::Value << pp.radius;
-                    //    out << YAML::Key << "Size"        << YAML::Value << pp.size;
-                    //    out << YAML::Key << "InnerRadius" << YAML::Value << pp.innerRadius;
-                    //    out << YAML::Key << "OuterRadius" << YAML::Value << pp.outerRadius;
-                    //    out << YAML::Key << "Slices"      << YAML::Value << pp.slices;
-                    //    out << YAML::Key << "Stacks"      << YAML::Value << pp.stacks;
-                    //    out << YAML::Key << "P"           << YAML::Value << pp.p;
-                    //    out << YAML::Key << "Q"           << YAML::Value << pp.q;
-                    //}
-                    //out << YAML::EndMap;
-
-                    out << YAML::Key << "Material" << YAML::Value;
-                    // TODO(TG): implement later
-                    /*out << YAML::BeginMap;
+                    if (!std::filesystem::path(smc.mesh->getName()).has_extension())
                     {
-                        auto material = mrc.mesh->getSubmesh().material;
+                        auto originalMaterials = smc.mesh->getMaterials();
 
-                        out << YAML::Key << "Vec3Map" << YAML::Value;
-                        out << YAML::BeginMap;
+                        if (!smc.materials.empty())
                         {
-                            for (auto& [propertyName, vec3Value] : material->getVec3Map())
+                            for (uint32_t i = 0; i < smc.materials.size(); ++i)
                             {
-                                out << YAML::Key << propertyName << YAML::Value << vec3Value;
+                                auto& material = smc.materials[i];
+
+                                if (material != originalMaterials[i])
+                                {
+                                    out << material->name;
+                                }
                             }
                         }
-                        out << YAML::EndMap;
-
-                        out << YAML::Key << "FloatMap" << YAML::Value;
-                        out << YAML::BeginMap;
-                        {
-                            for (auto& [propertyName, floatValue] : material->getFloatMap())
-                            {
-                                out << YAML::Key << propertyName << YAML::Value << floatValue;
-                            }
-                        }
-                        out << YAML::EndMap;
-
-                        out << YAML::Key << "Textures" << YAML::Value;
-                        out << YAML::BeginMap;
-                        {
-                            for (auto& [textureType, texture] : material->getTexturesMap())
-                            {
-                                out << YAML::Key << materialTextureTypeToString(textureType) << YAML::Value << texture->getFilename();
-                            }
-                        }
-                        out << YAML::EndMap;
                     }
-                    out << YAML::EndMap;*/
                 }
-                out << YAML::EndMap;
+                out << YAML::EndSeq;
             }
+            out << YAML::EndMap;
         }
 
         if (entity.hasComponent<RigidBody3DComponent>())
@@ -418,9 +332,125 @@ namespace mango
     {
         YAML::Emitter out;
         out << YAML::BeginMap;
-        out << YAML::Key << "Scene" << YAML::Value << scene->getName();
-        out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
+        out << YAML::Key << "Scene"     << YAML::Value << scene->getName();
+        out << YAML::Key << "Materials" << YAML::Value << YAML::BeginSeq;
 
+        // NOTE(TG): serialize materials first (this will change when we have proper asset system - materials saved in files)
+        auto renderQueueToString = [](Material::RenderQueue queue) -> std::string
+        {
+            switch (queue)
+            {
+                case Material::RenderQueue::RQ_OPAQUE:                 return "Opaque";
+                case Material::RenderQueue::RQ_TRANSPARENT:            return "Transparent";
+                case Material::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:  return "StaticEnvMapping";
+                case Material::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC: return "DynamicEnvMapping";
+            }
+            MG_CORE_ASSERT_MSG(false, "Unknown render queue type");
+            return {};
+        };
+
+        auto materialTextureTypeToString = [](Material::TextureType type) -> std::string
+        {
+            switch (type)
+            {
+                case Material::TextureType::DIFFUSE:      return "Diffuse";
+                case Material::TextureType::SPECULAR:     return "Specular";
+                case Material::TextureType::NORMAL:       return "Normal";
+                case Material::TextureType::EMISSION:     return "Emission";
+                case Material::TextureType::DISPLACEMENT: return "Displacement";
+            }
+            MG_CORE_ASSERT_MSG(false, "Unknown texture type");
+            return {};
+        };
+
+        auto materialBlendModeToString = [](Material::BlendMode mode) -> std::string
+        {
+            switch (mode)
+            {
+                case Material::BlendMode::NONE:   return "None";
+                case Material::BlendMode::ALPHA : return "Alpha";
+            }
+            MG_CORE_ASSERT_MSG(false, "Unknown blend mode");
+            return {};
+        };
+
+        std::unordered_set<std::string> alreadySerializedMaterials;
+        auto view = scene->getEntitiesWithComponent<StaticMeshComponent>();
+        for (auto entityID : view)
+        {
+            auto& smc = view.get<StaticMeshComponent>(entityID);
+
+            if (!std::filesystem::path(smc.mesh->getName()).has_extension()) // check if mesh name has an extension, if yes, then don't store the materials
+            {
+                auto originalMaterials = smc.mesh->getMaterials();
+
+                if (!smc.materials.empty())
+                {
+                    for (uint32_t i = 0; i < smc.materials.size(); ++i)
+                    {
+                        auto& material = smc.materials[i];
+
+                        if (material != originalMaterials[i] && !alreadySerializedMaterials.contains(material->name))
+                        {
+                            alreadySerializedMaterials.insert(material->name);
+
+                            out << YAML::BeginMap;
+                            {
+                                out << YAML::Key << "Name" << YAML::Value << material->name;
+
+                                out << YAML::Key << "Textures" << YAML::Value;
+                                out << YAML::BeginMap;
+                                {
+                                    for (auto& [type, texture] : material->getTextureMap())
+                                    {
+                                        out << YAML::Key << materialTextureTypeToString(type) << YAML::Value << texture->getFilename();
+                                    }
+                                }
+                                out << YAML::EndMap;
+
+                                out << YAML::Key << "Vec3Map" << YAML::Value;
+                                out << YAML::BeginMap;
+                                {
+                                    for (auto& [name, value] : material->getVec3Map())
+                                    {
+                                        out << YAML::Key << name << YAML::Value << value;
+                                    }
+                                }
+                                out << YAML::EndMap;
+
+                                out << YAML::Key << "FloatMap" << YAML::Value;
+                                out << YAML::BeginMap;
+                                {
+                                    for (auto& [name, value] : material->getFloatMap())
+                                    {
+                                        out << YAML::Key << name << YAML::Value << value;
+                                    }
+                                }
+                                out << YAML::EndMap;
+
+                                out << YAML::Key << "BoolMap" << YAML::Value;
+                                out << YAML::BeginMap;
+                                {
+                                    for (auto& [name, value] : material->getBoolMap())
+                                    {
+                                        out << YAML::Key << name << YAML::Value << value;
+                                    }
+                                }
+                                out << YAML::EndMap;
+
+                                out << YAML::Key << "BlendMode"   << YAML::Value << materialBlendModeToString(material->getBlendMode());
+                                out << YAML::Key << "RenderQueue" << YAML::Value << renderQueueToString(material->getRenderQueue());
+                            }
+                            out << YAML::EndMap;
+                        }
+                    }
+                }
+            }
+        }
+        out << YAML::EndSeq;
+
+        // Serialize entities now
+        out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
         scene->m_registry.each([&](auto entityID)
         {
             Entity entity = { entityID, scene.get() };
@@ -459,6 +489,10 @@ namespace mango
             MG_CORE_ERROR("Failed to load scene file '{}'\n    {}", inFilepath.string(), e.what());
             return nullptr;
         }
+
+        // Deserialize materials first
+        // NOTE(TG): when proper asset manager is implemented, this should be changed
+        // TODO....
 
         // Scene is a mandatory node
         if (!data["Scene"])

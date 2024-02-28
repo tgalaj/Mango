@@ -91,7 +91,7 @@ namespace mango
         /* Load materials. */
         if (!loadMaterials(mesh, scene, parentDirectory))
         {
-            MG_CORE_ERROR("Assimp error while loading mesh {}\n Error: Could not load the materials.", (parentDirectory / mesh->getFilename()).string());
+            MG_CORE_ERROR("AssimpMeshImporter: error while loading mesh {}\n Error: Could not load the materials.", (parentDirectory / mesh->getName()).string());
             return false;
         }
 
@@ -150,11 +150,11 @@ namespace mango
 
             if (materialName.empty())
             {
-                materialName = std::filesystem::path(mesh->getFilename()).stem().string() + "_" + std::to_string(i+1);
+                materialName = std::filesystem::path(mesh->getName()).stem().string() + "_" + std::to_string(i+1);
             }
 
             auto mangoMaterial = AssetManager::createMaterial(materialName);
-            MG_CORE_ERROR("Material name {}", mangoMaterial->name);
+
             // NOTE(TG): Leaving parts of code commented as we'll need it when moving to PBR workflow
             
             //ret |= loadMaterialTextures(scene, pMaterial, aiTextureType_BASE_COLOR,        Material::TextureType::ALBEDO,    dir);
@@ -239,7 +239,6 @@ namespace mango
                     
                     if (texture->createTexture2dFromMemory(reinterpret_cast<unsigned char*>(paiTexture->pcData), dataSize, isSrgb))
                     {
-                        MG_CORE_TRACE("Loaded embedded texture for the model {}", path.C_Str());
                         mangoMaterial->addTexture(textureType, texture);
 
                         if (textureMapMode[0] == aiTextureMapMode_Wrap)
@@ -250,7 +249,7 @@ namespace mango
                     }
                     else
                     {
-                        MG_CORE_ERROR("Error loading embedded texture for the model {}.", path.C_Str());
+                        MG_CORE_ERROR("AssimpMeshImporter: error while loading embedded texture for the model {}.", path.C_Str());
                         return false;
                     }
                 }
@@ -260,12 +259,10 @@ namespace mango
                     auto fullPath = parentDirectory / path.C_Str();
                     if (!texture->createTexture2d(fullPath.string(), isSrgb))
                     {
-                        MG_CORE_ERROR("Error loading texture {}.", fullPath);
+                        MG_CORE_ERROR("AssimpMeshImporter: error while loading texture {}.", fullPath);
                         return false;
                     }
-                    
-                    
-                    MG_CORE_TRACE("Loaded texture {}.", fullPath);
+
                     mangoMaterial->addTexture(textureType, texture);
 
                     if (textureMapMode[0] == aiTextureMapMode_Wrap)

@@ -15,8 +15,6 @@ namespace mango
     bool         RenderingSystem::DEBUG_RENDERING    = false;
     unsigned int RenderingSystem::DEBUG_WINDOW_WIDTH = 0;
 
-    std::unordered_map<Material::TextureType, ref<Texture>> RenderingSystem::s_defaultTextures;
-
     RenderingSystem::RenderingSystem()
         : System("RenderingSystem")
     {
@@ -40,22 +38,10 @@ namespace mango
         m_mainWindow = Services::application()->getWindow().get();
 
         Services::eventBus()->subscribe<EntityRemovedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
-        Services::eventBus()->subscribe<ComponentAddedEvent<StaticMeshComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
-        Services::eventBus()->subscribe<ComponentReplacedEvent<StaticMeshComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
-        Services::eventBus()->subscribe<ComponentRemovedEvent<StaticMeshComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
+        //Services::eventBus()->subscribe<ComponentAddedEvent<StaticMeshComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
+        //Services::eventBus()->subscribe<ComponentReplacedEvent<StaticMeshComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
+        //Services::eventBus()->subscribe<ComponentRemovedEvent<StaticMeshComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ActiveSceneChangedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
-
-        auto defaultDiffuse      = createRef<Texture>(); defaultDiffuse     ->createTexture2d1x1(glm::uvec4(255, 255, 255, 255));
-        auto defaultSpecular     = createRef<Texture>(); defaultSpecular    ->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
-        auto defaultNormal       = createRef<Texture>(); defaultNormal      ->createTexture2d1x1(glm::uvec4(128, 127, 254, 255));
-        auto defaultEmission     = createRef<Texture>(); defaultEmission    ->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
-        auto defaultDisplacement = createRef<Texture>(); defaultDisplacement->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
-
-        s_defaultTextures[Material::TextureType::DIFFUSE]      = defaultDiffuse;
-        s_defaultTextures[Material::TextureType::SPECULAR]     = defaultSpecular;
-        s_defaultTextures[Material::TextureType::NORMAL]       = defaultNormal;
-        s_defaultTextures[Material::TextureType::EMISSION]     = defaultEmission;
-        s_defaultTextures[Material::TextureType::DISPLACEMENT] = defaultDisplacement;
 
         m_opaqueQueue.reserve(50);
         m_alphaQueue.reserve(5);
@@ -180,14 +166,18 @@ namespace mango
         {
             Entity entity = { e, m_activeScene };
 
-            auto& smc          = entity.getComponent<StaticMeshComponent>();
-            auto materialIndex = smc.mesh->getSubmesh().materialIndex;
+            auto& smc = entity.getComponent<StaticMeshComponent>();
+
+            if (!smc.mesh) continue;
+
+            auto materialIndex = smc.mesh->getSubmesh()->materialIndex;
             auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
             
             addEntityToRenderQueue(entity, renderQueue);
         }
 
         // TODO: create two methods: renderGame and renderEditor + use switch
+        // Or SceneRenderer class
         if (m_mode == RenderingMode::GAME)
         {
             auto primaryCameraEntity = m_activeScene->getPrimaryCamera();
@@ -238,44 +228,44 @@ namespace mango
 
         if (event.entity.get().hasComponent<StaticMeshComponent>())
         {
-            auto& smc          = event.entity.get().getComponent<StaticMeshComponent>();
-            auto materialIndex = smc.mesh->getSubmesh().materialIndex;
-            auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
-
-            removeEntityFromRenderQueue(event.entity, renderQueue);
+            //auto& smc          = event.entity.get().getComponent<StaticMeshComponent>();
+            //auto materialIndex = smc.mesh->getSubmesh().materialIndex;
+            //auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
+            //
+            //removeEntityFromRenderQueue(event.entity, renderQueue);
         }
     }
 
-    void RenderingSystem::receive(const ComponentAddedEvent<StaticMeshComponent>& event)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        auto& smc          = event.entity.get().getComponent<StaticMeshComponent>();
-        auto materialIndex = smc.mesh->getSubmesh().materialIndex;
-        auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
+    //void RenderingSystem::receive(const ComponentAddedEvent<StaticMeshComponent>& event)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
+    //    auto& smc          = event.entity.get().getComponent<StaticMeshComponent>();
+    //    auto materialIndex = smc.mesh->getSubmesh().materialIndex;
+    //    auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
 
-        addEntityToRenderQueue(event.entity, renderQueue);
-    }
+    //    addEntityToRenderQueue(event.entity, renderQueue);
+    //}
 
-    void RenderingSystem::receive(const ComponentReplacedEvent<StaticMeshComponent>& event)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        auto& smc          = event.entity.get().getComponent<StaticMeshComponent>();
-        auto materialIndex = smc.mesh->getSubmesh().materialIndex;
-        auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
+    //void RenderingSystem::receive(const ComponentReplacedEvent<StaticMeshComponent>& event)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
+    //    auto& smc          = event.entity.get().getComponent<StaticMeshComponent>();
+    //    auto materialIndex = smc.mesh->getSubmesh().materialIndex;
+    //    auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
 
-        removeEntityFromRenderQueue(event.entity, renderQueue);
-        addEntityToRenderQueue     (event.entity, renderQueue);
-    }
+    //    removeEntityFromRenderQueue(event.entity, renderQueue);
+    //    addEntityToRenderQueue     (event.entity, renderQueue);
+    //}
 
-    void RenderingSystem::receive(const ComponentRemovedEvent<StaticMeshComponent>& event)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        auto& smc          = event.entity.get().getComponent<StaticMeshComponent>();
-        auto materialIndex = smc.mesh->getSubmesh().materialIndex;
-        auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
+    //void RenderingSystem::receive(const ComponentRemovedEvent<StaticMeshComponent>& event)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
+    //    auto& smc          = event.entity.get().getComponent<StaticMeshComponent>();
+    //    auto materialIndex = smc.mesh->getSubmesh().materialIndex;
+    //    auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
 
-        removeEntityFromRenderQueue(event.entity, renderQueue);
-    }
+    //    removeEntityFromRenderQueue(event.entity, renderQueue);
+    //}
 
     void RenderingSystem::receive(const ActiveSceneChangedEvent& event)
     {
@@ -292,12 +282,12 @@ namespace mango
         auto view = m_activeScene->getEntitiesWithComponent<StaticMeshComponent>();
         for (auto e : view)
         {
-            Entity entity        = { e, m_activeScene };
-            auto&  smc           = entity.getComponent<StaticMeshComponent>();
-            auto   materialIndex = smc.mesh->getSubmesh().materialIndex;
-            auto   renderQueue   = smc.materials[materialIndex]->getRenderQueue();
+            //Entity entity        = { e, m_activeScene };
+            //auto&  smc           = entity.getComponent<StaticMeshComponent>();
+            //auto   materialIndex = smc.mesh->getSubmesh().materialIndex;
+            //auto   renderQueue   = smc.materials[materialIndex]->getRenderQueue();
 
-            addEntityToRenderQueue(entity, renderQueue);
+            //addEntityToRenderQueue(entity, renderQueue);
         }
     }
 
@@ -691,7 +681,7 @@ namespace mango
                 auto& material = smc.materials[materialIndex];
                 if (material)
                 {
-                    for (auto const& [texture_type, texture] : material->getTexturesMap())
+                    for (auto const& [texture_type, texture] : material->getTextureMap())
                     {
                         texture->bind(uint32_t(texture_type));
                     }

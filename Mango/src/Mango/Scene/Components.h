@@ -220,19 +220,19 @@ namespace mango
         {
             if (materials.empty())
             {
-                materials.emplace_back(AssetManager::createMaterial("default"));
+                materials.emplace_back(AssetManager::getMaterial("DefaultMaterial"));
             }
         }
 
         explicit StaticMeshComponent(const ref<Mesh>& m)
             : mesh(m) 
         {
-            materials = mesh->getMaterials();
+            if (mesh) materials = mesh->getMaterials();
         }
 
     public:
         ref<Mesh>     mesh      = nullptr;
-        MaterialTable materials = {};
+        MaterialTable materials;// = {};
     };
 
     #if 0

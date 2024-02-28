@@ -117,6 +117,8 @@ namespace mango
         mango::VFI::addToSearchPath(rootDir / "Mango/assets/shaders");
 
         // Init core services
+        AssetManager::initDefaultAssets();
+
         m_eventBus     = new EventBus();
         m_sceneManager = new SceneManager();
 

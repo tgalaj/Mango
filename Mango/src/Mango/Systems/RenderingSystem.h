@@ -42,9 +42,9 @@ namespace mango
         void onDestroy();
 
         void receive(const EntityRemovedEvent                            & event);
-        void receive(const ComponentAddedEvent<StaticMeshComponent>   & event);
+ /*       void receive(const ComponentAddedEvent<StaticMeshComponent>   & event);
         void receive(const ComponentReplacedEvent<StaticMeshComponent>& event);
-        void receive(const ComponentRemovedEvent<StaticMeshComponent> & event);
+        void receive(const ComponentRemovedEvent<StaticMeshComponent> & event);*/
         void receive(const ActiveSceneChangedEvent                       & event);
 
         void setSkybox(const ref<Skybox> & skybox);
@@ -68,8 +68,6 @@ namespace mango
 
         static bool         DEBUG_RENDERING;
         static unsigned int DEBUG_WINDOW_WIDTH;
-
-        static std::unordered_map<Material::TextureType, ref<Texture>> s_defaultTextures;
 
     private:
         static void initRenderingStates();

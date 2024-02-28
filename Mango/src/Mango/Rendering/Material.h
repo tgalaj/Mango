@@ -21,10 +21,10 @@ namespace mango
         Material(const std::string& name = "Unnamed");
         ~Material();
 
-        void addTexture(TextureType textureType, const ref<Texture> & texture);
-        void addVector3(const std::string & uniformName, const glm::vec3 & vec);
-        void addFloat  (const std::string & uniformName, float value);
-        void addBool   (const std::string& uniform_name, bool  value);
+        void addTexture(      TextureType  textureType,  const ref<Texture>& texture);
+        void addVector3(const std::string& uniformName,  const glm::vec3&    vec);
+        void addFloat  (const std::string& uniformName,  float               value);
+        void addBool   (const std::string& uniform_name, bool                value);
 
         ref<Texture> getTexture(TextureType textureType);
         glm::vec3    getVector3(const std::string & uniformName);
@@ -32,15 +32,15 @@ namespace mango
         bool         getBool   (const std::string & uniformName);
 
         void      setBlendMode(BlendMode mode) { m_blendMode = mode; }
-        BlendMode getBlendmode() const         { return m_blendMode; }
+        BlendMode getBlendMode() const         { return m_blendMode; }
 
         void        setRenderQueue(RenderQueue queue) { m_renderQueue = queue; }
         RenderQueue getRenderQueue() const { return m_renderQueue; }
 
-        std::unordered_map<TextureType, ref<Texture>>& getTexturesMap() { return m_textureMap; }
-        std::unordered_map<std::string, glm::vec3>   & getVec3Map()     { return m_vec3Map; }
-        std::unordered_map<std::string, float>       & getFloatMap()    { return m_floatMap; }
-        std::unordered_map<std::string, bool>        & getBoolMap()     { return m_boolMap; }
+        std::unordered_map<TextureType, ref<Texture>>& getTextureMap() { return m_textureMap; }
+        std::unordered_map<std::string, glm::vec3>   & getVec3Map()    { return m_vec3Map; }
+        std::unordered_map<std::string, float>       & getFloatMap()   { return m_floatMap; }
+        std::unordered_map<std::string, bool>        & getBoolMap()    { return m_boolMap; }
 
         std::string name;
 
@@ -52,8 +52,6 @@ namespace mango
 
         BlendMode   m_blendMode   = BlendMode::NONE;
         RenderQueue m_renderQueue = RenderQueue::RQ_OPAQUE;
-
-        // static std::unordered_map<TextureType, std::string> m_textureUniformsMap;
 
     private:
         friend class SceneHierarchyPanel;
