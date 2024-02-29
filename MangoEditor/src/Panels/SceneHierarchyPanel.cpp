@@ -594,9 +594,10 @@ namespace mango
                                                      ImGuiTreeNodeFlags_FramePadding   |
                                                      ImGuiTreeNodeFlags_SpanAvailWidth |
                                                      ImGuiTreeNodeFlags_AllowItemOverlap;
-            ImGui::Unindent();
+
             static int32_t selectedMaterialIndex = -1;
 
+            ImGui::Unindent();
             if (ImGui::TreeNodeEx("Materials", treeNodeFlags))
             {
                 for (uint32_t i = 0; i < component.materials.size(); ++i)
@@ -639,6 +640,7 @@ namespace mango
                 ImGui::PopID();
                 ImGui::TreePop();
             }
+            ImGui::Indent();
         });
 
         drawComponent<RigidBody3DComponent>("Rigidbody 3D", entity, [](auto& component)
