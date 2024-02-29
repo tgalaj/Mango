@@ -339,12 +339,18 @@ namespace mango
         auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, StaticMeshComponent>();
         for (auto entity : view)
         {
-            auto [tc, mrc] = view.get<TransformComponent, StaticMeshComponent>(entity);
+            auto [tc, smc] = view.get<TransformComponent, StaticMeshComponent>(entity);
 
             pickingShader->updateGlobalUniforms(tc);
             int id = (int)entity;
             pickingShader->setUniform("objectID", (int)id);
-            mrc.mesh->render();
+            smc.mesh->bind();
+            
+            auto& submeshes = smc.mesh->getSubmeshes();
+            for (uint32_t submeshIndex = 0; submeshIndex < submeshes.size(); ++submeshIndex)
+            {
+                smc.mesh->render(submeshIndex);
+            }
         }
         glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
         glDisable(GL_DEPTH_TEST);
@@ -671,7 +677,8 @@ namespace mango
             auto& mesh = smc.mesh;
 
             mesh->bind();
-            
+            shader->updateGlobalUniforms(tc);
+
             auto& submeshes = mesh->getSubmeshes();
             for (uint32_t submeshIndex = 0; submeshIndex < submeshes.size(); ++submeshIndex)
             {
@@ -702,8 +709,6 @@ namespace mango
                         shader->setUniform(uniform_name, value);
                     }
                 }
-
-                shader->updateGlobalUniforms(tc);
                 mesh->render(submeshIndex);
             }
         }

@@ -109,7 +109,10 @@ namespace mango
             return m_loadedStaticMeshes[meshName];
         }
 
-        return createRef<Mesh>(meshName);
+        auto staticMesh = createRef<Mesh>(meshName);
+        m_loadedStaticMeshes[meshName] = staticMesh;
+
+        return staticMesh;
     }
 
     ref<Mesh> AssetManager::createMeshFromFile(const std::string & filename)
@@ -269,17 +272,17 @@ namespace mango
         // Default meshes
         {
             ref<Mesh> m = createMesh("Cone");
-            m->genCone(1.0f, 1.0f, 12, 12);
+            m->genCone(1.0f, 0.5f, 12, 12);
         }
 
         {
             ref<Mesh> m = createMesh("Cube");
-            m->genCube(1.0f);
+            m->genCube(0.5f);
         }
 
         {
             ref<Mesh> m = createMesh("Cylinder");
-            m->genCylinder(2.0f, 1.0f);
+            m->genCylinder(1.0f, 0.5f);
         }
 
         {
@@ -289,7 +292,7 @@ namespace mango
 
         {
             ref<Mesh> m = createMesh("Sphere");
-            m->genSphere(1.0f, 12);
+            m->genSphere(0.5f, 36);
         }
 
         {
@@ -299,7 +302,7 @@ namespace mango
 
         {
             ref<Mesh> m = createMesh("Quad");
-            m->genQuad(2.0, 2.0);
+            m->genQuad(5.0, 5.0);
         }
 
     }

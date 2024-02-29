@@ -61,16 +61,13 @@ void Sandbox::onInit()
                                     "back.jpg" );
     Services::renderer()->setSkybox(skybox);
 
-    auto sphereModel = createRef<Mesh>();
-    sphereModel->genSphere(0.5f, 24);
+    auto sphereMesh = AssetManager::getMesh("Sphere");
+    auto wallMesh   = AssetManager::getMesh("Quad");
 
     auto cyborgModel        = AssetManager::createMeshFromFile("models/cyborg/cyborg.obj");
     auto zen3cModel         = AssetManager::createMeshFromFile("models/Zen3C/Zen3C.X");
     auto damagedHelmetModel = AssetManager::createMeshFromFile("models/damaged_helmet/DamagedHelmet.gltf");
     auto sponzaModel        = AssetManager::createMeshFromFile("models/sponza/Sponza.gltf");
-
-    auto wallModel = createRef<Mesh>();
-    wallModel->genQuad(5, 5);
 
     auto groundTex           = AssetManager::createTexture2D("textures/trak_tile_g.jpg", true);
     auto brickwallTex        = AssetManager::createTexture2D("textures/brickwall.dds", true);
@@ -129,53 +126,53 @@ void Sandbox::onInit()
     }
 
     auto wall = m_mainScene->createEntity();
-    wall.addComponent<StaticMeshComponent>(wallModel);
+    wall.addComponent<StaticMeshComponent>(wallMesh);
     wall.getComponent<StaticMeshComponent>().materials[0] = brickwallMaterial;
     wall.setRotation(90.0f, 0.0f, 0.0f);
     wall.setPosition(0, 2.0, -9);
 
     auto wall2 = m_mainScene->createEntity();
-    wall2.addComponent<StaticMeshComponent>(wallModel);
+    wall2.addComponent<StaticMeshComponent>(wallMesh);
     wall2.getComponent<StaticMeshComponent>().materials[0] = bricksMaterial;
     wall2.setRotation(90.0f, 0.0f, 0.0f);
     wall2.setPosition(-5, 2.0, -9);
 
     auto grass = m_mainScene->createEntity();
-    grass.addComponent<StaticMeshComponent>(wallModel);
+    grass.addComponent<StaticMeshComponent>(wallMesh);
     grass.getComponent<StaticMeshComponent>().materials[0] = grassMaterial;
     grass.setRotation(90.0f, 0.0f, 0.0f);
     grass.setPosition(-5, 1.2, 9);
     grass.setScale(0.5);
 
     auto window1 = m_mainScene->createEntity();
-    window1.addComponent<StaticMeshComponent>(wallModel);
+    window1.addComponent<StaticMeshComponent>(wallMesh);
     window1.getComponent<StaticMeshComponent>().materials[0] = windowMaterial;
     window1.setRotation(90.0f, 0.0f, 0.0f);
     window1.setPosition(0, 1.2, 9);
     window1.setScale(0.51);
 
     auto window3 = m_mainScene->createEntity();
-    window3.addComponent<StaticMeshComponent>(wallModel);
+    window3.addComponent<StaticMeshComponent>(wallMesh);
     window3.getComponent<StaticMeshComponent>().materials[0] = windowMaterial;
     window3.setRotation(90.0f, 0.0f, 0.0f);
     window3.setPosition(3, 1.2, 13);
     window3.setScale(0.5);
 
     auto window2 = m_mainScene->createEntity();
-    window2.addComponent<StaticMeshComponent>(wallModel);
+    window2.addComponent<StaticMeshComponent>(wallMesh);
     window2.getComponent<StaticMeshComponent>().materials[0] = windowMaterial;
     window2.setRotation(90.0f, 0.0f, 0.0f);
     window2.setPosition(5, 1.2, 9);
     window2.setScale(0.5);
 
     auto plane1 = m_mainScene->createEntity();
-    plane1.addComponent<StaticMeshComponent>(wallModel);
+    plane1.addComponent<StaticMeshComponent>(wallMesh);
     plane1.getComponent<StaticMeshComponent>().materials[0] = bricks2Material;
     plane1.setRotation(90.0f, 0.0f, 0.0f);
     plane1.setPosition(5, 3.0, -14);
 
     auto plane2 = m_mainScene->createEntity();
-    plane2.addComponent<StaticMeshComponent>(wallModel);
+    plane2.addComponent<StaticMeshComponent>(wallMesh);
     plane2.getComponent<StaticMeshComponent>().materials[0] = bricks2Material;
     plane2.setRotation(0.5f, 0.0f, 0.0f);
     plane2.setPosition(5, 0.5, -11.5);
@@ -184,7 +181,7 @@ void Sandbox::onInit()
 
     auto sphere1 = m_mainScene->createEntity();
     {
-        auto& smc = sphere1.addComponent<StaticMeshComponent>(sphereModel);
+        auto& smc = sphere1.addComponent<StaticMeshComponent>(sphereMesh);
         smc.materials[0] = reflectiveSphereMaterial;
         sphere1.setPosition(5, 20, -11.5);
         sphere1.setScale(0.5f);
@@ -198,11 +195,8 @@ void Sandbox::onInit()
               rb3dSphere1.restitution          = 0.7f;
     }
 
-    sphereModel = createRef<Mesh>();
-    sphereModel->genSphere(0.5f, 24);
-
     auto sphere2 = m_mainScene->createEntity();
-    sphere2.addComponent<StaticMeshComponent>(sphereModel);
+    sphere2.addComponent<StaticMeshComponent>(sphereMesh);
     sphere2.setPosition(5, 3, -12.5);
     sphere2.setScale(0.5f);
 
@@ -216,7 +210,7 @@ void Sandbox::onInit()
         for(int j = 0; j < numObjects; ++j)
         {
             auto object = m_mainScene->createEntity();
-            object.addComponent<StaticMeshComponent>(sphereModel);
+            object.addComponent<StaticMeshComponent>(sphereMesh);
             object.setScale(0.75f);
             
             float zPos = 15.0f / -2.0f + (j * offset);
@@ -274,8 +268,6 @@ void Sandbox::onInit()
     spotLight.setPosition(1.5, 5, 1.5);
     spotLight.setRotation(-45, 45, 45);
     spotLight.getComponent<SpotLightComponent>().setCastsShadows(true);
-
-    //SceneSerializer::serialize(m_mainScene, "D:/ProjectsPriv/Mango/Test.mango");
 }
 
 void Sandbox::onDestroy()
