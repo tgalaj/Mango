@@ -53,6 +53,9 @@ namespace mango
         static void initDefaultAssets();
         static void unload();
 
+        static std::unordered_map<std::string, ref<Material>>& getMaterialList()   { return m_loadedMaterials; }
+        static std::unordered_map<std::string, ref<Mesh>>&     getStaticMeshList() { return m_loadedStaticMeshes; }
+
     private:
         AssetManager() {}
         ~AssetManager() {}

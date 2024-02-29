@@ -248,27 +248,24 @@ namespace mango
                 auto& smc = entity.getComponent<StaticMeshComponent>();
                 out << YAML::Key << "Filename"  << YAML::Value << smc.mesh->getName();
                 out << YAML::Key << "Materials" << YAML::Value;
-                out << YAML::BeginSeq;
+                out << YAML::BeginMap;
                 {
-                    if (!std::filesystem::path(smc.mesh->getName()).has_extension())
+                    auto originalMaterials = smc.mesh->getMaterials();
+
+                    if (!smc.materials.empty())
                     {
-                        auto originalMaterials = smc.mesh->getMaterials();
-
-                        if (!smc.materials.empty())
+                        for (uint32_t i = 0; i < smc.materials.size(); ++i)
                         {
-                            for (uint32_t i = 0; i < smc.materials.size(); ++i)
-                            {
-                                auto& material = smc.materials[i];
+                            auto& material = smc.materials[i];
 
-                                if (material != originalMaterials[i])
-                                {
-                                    out << material->name;
-                                }
+                            if (material != originalMaterials[i])
+                            {
+                                out << YAML::Key << i << YAML::Value << material->name;
                             }
                         }
                     }
                 }
-                out << YAML::EndSeq;
+                out << YAML::EndMap;
             }
             out << YAML::EndMap;
         }
@@ -720,10 +717,11 @@ namespace mango
                     auto materials = staticMeshComponent["Materials"];
                     if (materials)
                     {
-                        uint32_t materialIndex = 0;
-                        for (auto material : materials)
+                        for (auto it = materials.begin(); it != materials.end(); ++it)
                         {
-                            smc.materials[materialIndex] = AssetManager::getMaterial(material.as<std::string>());
+                            auto materialIndex = it->first.as<uint32_t>();
+                            auto materialName  = it->second.as<std::string>();
+                            smc.materials[materialIndex] = AssetManager::getMaterial(materialName);
                         }
                     }
                 }

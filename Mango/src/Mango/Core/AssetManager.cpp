@@ -297,7 +297,17 @@ namespace mango
 
         {
             ref<Mesh> m = createMesh("Torus");
-            m->genTorus(0.5f, 1.0f, 12, 12);
+            m->genTorus(0.5f, 1.0f, 36, 24);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Trefoil Knot");
+            m->genTrefoilKnot(128, 32);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Torus Knot");
+            m->genPQTorusKnot(256, 32, 3, 2);
         }
 
         {

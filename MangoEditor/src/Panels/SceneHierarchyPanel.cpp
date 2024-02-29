@@ -544,7 +544,50 @@ namespace mango
 
             ImGui::Text("Mesh");
             ImGui::SameLine();
-            ImGui::Button(meshLabel.c_str());
+            
+            static std::string searchPattern = "";
+            if (ImGui::Button(meshLabel.c_str()))
+            {
+                ImGui::OpenPopup("mesh_select_popup");
+                searchPattern = "";
+            }
+
+            auto popupLambda = [](const char* popupName, auto& component, std::function<void(void)> func)
+            {
+                if (ImGui::BeginPopup(popupName))
+                {
+                    ImGui::InputText("##search_pattern", &searchPattern, ImGuiInputTextFlags_EscapeClearsAll);
+
+                    auto availWidth = ImGui::GetContentRegionAvail().x;
+                    if (ImGui::Button("CLEAR", ImVec2(availWidth, ImGui::GetFrameHeight()))) searchPattern = "";
+
+                    ImGui::BeginChild("##item_list", ImVec2(availWidth, ImGui::GetFrameHeight() * 7.0f));
+                    
+                    func();
+
+                    ImGui::EndChild();
+                    ImGui::EndPopup();
+                }
+            };
+
+            popupLambda("mesh_select_popup", component, [&component]()
+            {
+                // 1. get list of all loaded meshes from AssetManager and list them
+                // 2. if item selected -> change the mesh for the component.mesh
+                for (auto [name, staticMesh] : AssetManager::getStaticMeshList())
+                {
+                    auto rx = std::regex(searchPattern, std::regex_constants::icase);
+                    if (std::regex_search(name, rx))
+                    {
+                        if (ImGui::Selectable(name.c_str()))
+                        {
+                            component.mesh      = staticMesh;
+                            component.materials = staticMesh->getMaterials();
+                            ImGui::CloseCurrentPopup();
+                        }
+                    }
+                }
+            });
 
             const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen    |
                                                      ImGuiTreeNodeFlags_Framed         |
@@ -552,6 +595,8 @@ namespace mango
                                                      ImGuiTreeNodeFlags_SpanAvailWidth |
                                                      ImGuiTreeNodeFlags_AllowItemOverlap;
             ImGui::Unindent();
+            static int32_t selectedMaterialIndex = -1;
+
             if (ImGui::TreeNodeEx("Materials", treeNodeFlags))
             {
                 for (uint32_t i = 0; i < component.materials.size(); ++i)
@@ -560,8 +605,38 @@ namespace mango
 
                     ImGui::Text("[Material %d]", i);
                     ImGui::SameLine();
-                    ImGui::Button(meshLabel.c_str());
+                    
+                    ImGui::PushID(i);
+                    if (ImGui::Button(materialLabel.c_str()))
+                    {
+                        ImGui::OpenPopup("material_select_popup");
+                        searchPattern = "";
+                        selectedMaterialIndex = i;
+                    }
+                    ImGui::PopID();
                 }
+
+                ImGui::PushID(selectedMaterialIndex);
+                popupLambda("material_select_popup", component, [&component]()
+                {
+                    // 1. get list of all loaded materials from AssetManager and list them
+                    // 2. if item selected -> change the material for the component
+                    int32_t id = 0;
+                    for (auto [name, material] : AssetManager::getMaterialList())
+                    {
+                        auto rx = std::regex(searchPattern, std::regex_constants::icase);
+                        if (std::regex_search(name, rx))
+                        {
+                            if (ImGui::Selectable(name.c_str()))
+                            {
+                                component.materials[selectedMaterialIndex] = material;
+                                selectedMaterialIndex = -1;
+                                ImGui::CloseCurrentPopup();
+                            }
+                        }
+                    }
+                });
+                ImGui::PopID();
                 ImGui::TreePop();
             }
         });

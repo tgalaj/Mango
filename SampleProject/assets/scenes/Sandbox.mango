@@ -1,10 +1,10 @@
 Scene: Sandbox Scene
 Materials:
-  - Name: window
+  - Name: brickwall
     Textures:
-      Diffuse: textures/window.png
+      Diffuse: textures/brickwall.dds
       Specular: ""
-      Normal: ""
+      Normal: textures/brickwall_normal.jpg
       Emission: ""
       Displacement: ""
     Vec3Map:
@@ -18,33 +18,14 @@ Materials:
     BoolMap:
       {}
     BlendMode: None
-    RenderQueue: Transparent
-  - Name: reflectiveSphere
-    Textures:
-      Diffuse: ""
-      Specular: ""
-      Normal: ""
-      Emission: ""
-      Displacement: ""
-    Vec3Map:
-      {}
-    FloatMap:
-      specular_power: 20
-      specular_intensity: 5
-      m_depth_scale: 0.0149999997
-      alpha_cutoff: 0.200000003
-      alpha: 1
-    BoolMap:
-      {}
-    BlendMode: None
-    RenderQueue: StaticEnvMapping
-  - Name: bricks2
+    RenderQueue: Opaque
+  - Name: bricks
     Textures:
       Diffuse: textures/bricks2.jpg
       Specular: ""
-      Normal: ""
+      Normal: textures/bricks2_normal.jpg
       Emission: ""
-      Displacement: ""
+      Displacement: textures/bricks2_disp.jpg
     Vec3Map:
       {}
     FloatMap:
@@ -76,13 +57,32 @@ Materials:
       {}
     BlendMode: None
     RenderQueue: Opaque
-  - Name: bricks
+  - Name: Sponza_15
     Textures:
-      Diffuse: textures/bricks2.jpg
+      Diffuse: models/sponza\4675343432951571524.jpg
       Specular: ""
-      Normal: textures/bricks2_normal.jpg
+      Normal: models/sponza\7056944414013900257.jpg
       Emission: ""
-      Displacement: textures/bricks2_disp.jpg
+      Displacement: ""
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 0
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.200000003
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: Opaque
+  - Name: window
+    Textures:
+      Diffuse: textures/window.png
+      Specular: ""
+      Normal: ""
+      Emission: ""
+      Displacement: ""
     Vec3Map:
       {}
     FloatMap:
@@ -94,12 +94,12 @@ Materials:
     BoolMap:
       {}
     BlendMode: None
-    RenderQueue: Opaque
-  - Name: brickwall
+    RenderQueue: Transparent
+  - Name: bricks2
     Textures:
-      Diffuse: textures/brickwall.dds
+      Diffuse: textures/bricks2.jpg
       Specular: ""
-      Normal: textures/brickwall_normal.jpg
+      Normal: ""
       Emission: ""
       Displacement: ""
     Vec3Map:
@@ -114,54 +114,1566 @@ Materials:
       {}
     BlendMode: None
     RenderQueue: Opaque
+  - Name: reflectiveSphere
+    Textures:
+      Diffuse: ""
+      Specular: ""
+      Normal: ""
+      Emission: ""
+      Displacement: ""
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 20
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.200000003
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: StaticEnvMapping
+  - Name: spine
+    Textures:
+      Diffuse: models/Zen3C\Zen3C_Spine_D.jpg
+      Specular: ""
+      Normal: ""
+      Emission: ""
+      Displacement: ""
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 10
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.200000003
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: Opaque
+  - Name: Cyborg
+    Textures:
+      Diffuse: models/cyborg\cyborg_diffuse.png
+      Specular: models/cyborg\cyborg_specular.png
+      Normal: ""
+      Emission: ""
+      Displacement: ""
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 92.1568604
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.200000003
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: Opaque
+  - Name: Sponza_17
+    Textures:
+      Diffuse: models/sponza\2185409758123873465.jpg
+      Specular: ""
+      Normal: models/sponza\332936164838540657.jpg
+      Emission: ""
+      Displacement: ""
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 0
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.200000003
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: Opaque
+  - Name: Sponza_16
+    Textures:
+      Diffuse: models/sponza\2775690330959970771.jpg
+      Specular: ""
+      Normal: models/sponza\2374361008830720677.jpg
+      Emission: ""
+      Displacement: ""
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 0
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.200000003
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: Opaque
+  - Name: Sponza_6
+    Textures:
+      Diffuse: models/sponza\14650633544276105767.jpg
+      Specular: ""
+      Normal: models/sponza\2051777328469649772.jpg
+      Emission: ""
+      Displacement: ""
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 0
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.200000003
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: Opaque
 Entities:
-  - Entity: 11278215265673251507
+  - Entity: 6374000167384504475
     TagComponent:
-      Name: Entity
+      Name: MainCamera
     TransformComponent:
-      Position: [1.5, 5, 1.5]
-      Rotation: [-45, 45, 45]
-      Orientation: [0.732537746, -0.461939812, 0.191341713, 0.461939812]
+      Position: [0, 4, 30]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
       Scale: [1, 1, 1]
-    SpotLightComponent:
-      Color: [1, 0.807843149, 0.980392158]
-      Intensity: 1000
-      CutOffAngle: 30.0000019
-      Attenuation:
-        Constant: 0
-        Linear: 0
-        Quadratic: 1
-      ShadowNearPlane: 0.00100000005
-      ShadowFarPlane: 100
-      CastsShadows: true
-  - Entity: 6241452550071693760
+    CameraComponent:
+      ProjectionType: Perspective
+      PerspectiveFOV: 45
+      PerspectiveNear: 0.100000001
+      PerspectiveFar: 1000
+      OrthographicSize: 10
+      OrthographicNear: 0.00999999978
+      OrthographicFar: 1000
+      IsPrimary: true
+  - Entity: 7650579392531706778
+    TagComponent:
+      Name: MainCamera2
+    TransformComponent:
+      Position: [0, 4, -30]
+      Rotation: [180, -5.00895612e-06, 180]
+      Orientation: [-4.37113847e-08, -4.37113918e-08, 1, -4.37113918e-08]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      ProjectionType: Perspective
+      PerspectiveFOV: 45
+      PerspectiveNear: 0.100000001
+      PerspectiveFar: 1000
+      OrthographicSize: 10
+      OrthographicNear: 0.00999999978
+      OrthographicFar: 1000
+      IsPrimary: false
+  - Entity: 2048516003800201213
     TagComponent:
       Name: Entity
     TransformComponent:
-      Position: [0, 1.20000005, -8]
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+    StaticMeshComponent:
+      Filename: models/cyborg/cyborg.obj
+      Materials:
+        {}
+  - Entity: 3847508303506330720
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3, -1.71712208, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.0179999992, 0.0179999992, 0.0179999992]
+    StaticMeshComponent:
+      Filename: models/Zen3C/Zen3C.X
+      Materials:
+        3: bricks2
+  - Entity: 11890106841285175864
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3, 2.5, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+    StaticMeshComponent:
+      Filename: models/damaged_helmet/DamagedHelmet.gltf
+      Materials:
+        {}
+  - Entity: 6167347527482013595
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-1.5, 0, 10]
+      Rotation: [0, -90, 0]
+      Orientation: [0.707106829, 0, -0.707106829, 0]
+      Scale: [6, 6, 6]
+    StaticMeshComponent:
+      Filename: models/sponza/Sponza.gltf
+      Materials:
+        {}
+  - Entity: 6178006914964082929
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0, 2, -9]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [1, 1, 1]
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: brickwall
+  - Entity: 15419805251623473515
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5, 2, -9]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [1, 1, 1]
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: bricks
+  - Entity: 10097405178741415299
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5, 1.20000005, 9]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: grass
+  - Entity: 17719729654925960296
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.73240423, 2.91437817, 4.74237251]
+      Rotation: [112.367355, 34.6035881, -24.1672287]
+      Orientation: [0.467851132, 0.810305655, -0.00420634449, -0.352849096]
+      Scale: [2.00000238, 2.00013208, 2.0000999]
+    StaticMeshComponent:
+      Filename: Torus
+      Materials:
+        0: Sponza_15
+  - Entity: 805755402565097889
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3, 1.20000005, 13]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: window
+  - Entity: 7762941117620752158
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5, 1.20000005, 9]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: window
+  - Entity: 15581571294204918080
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5, 3, -14]
+      Rotation: [90, 0, 0]
+      Orientation: [0.707106829, 0.707106829, 0, 0]
+      Scale: [1, 1, 1]
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: bricks2
+  - Entity: 809506919725630732
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5, 0.5, -11.5]
+      Rotation: [0.5, 0, 0]
+      Orientation: [0.999990582, 0.00436330959, 0, 0]
+      Scale: [1, 1, 1]
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: bricks2
+    RigidBody3DComponent:
+      MotionType: Static
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, -0.100000001, 0]
+      Extent: [2.5, 0.100000001, 2.5]
+  - Entity: 18179586025720236209
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5, 20, -11.5]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        0: reflectiveSphere
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.100000001
+      Restitution: 0.699999988
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    SphereColliderComponent:
+      Offset: [0, 0, 0]
+      Radius: 0.5
+  - Entity: 10910149190182558106
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5, 3, -12.5]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 12088338074967886091
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3768915803474479980
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6326538712810011997
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3138775610616662714
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6403960704838616244
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6000309566630592424
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 13485524110991152670
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 10438712354018586405
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14222165555104252821
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14529476055159202385
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 727371943762566547
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 5579679985098859685
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 2170251893457607559
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16959883251063065147
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16272970640784241861
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1166922357733217979
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 4982560548295895986
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 17835535124182438580
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        0: spine
+  - Entity: 12885067464924536695
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1775058220300683959
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 10473764525934156888
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6596558652539497412
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 18255620714422723317
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        0: window
+  - Entity: 15661351788513723747
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 10082970503575052825
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1074089094578148016
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14227382468330652899
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6485681146388887138
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 945142399077118799
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3998000208534594293
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 13876278085186216192
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6961857431746630934
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 9359734755799544492
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 12198293277835338520
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6969605412166986337
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 4414594842974061819
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6336071606127557568
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 341456629869033219
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        0: Cyborg
+  - Entity: 9129065211661002291
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 12896322946196506845
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6834243006313697006
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 7348723191356431123
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8994871083747628948
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 7838834864430796379
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 9461469372482406006
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3657452210415813742
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 4384654896267899857
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 17588612270765239756
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 7009164717179307258
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8496487872805245241
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.700820208, 10.6103859, -16.6809883]
+      Rotation: [-21.078619, 42.4040642, 8.55614999e-05]
+      Orientation: [0.916582525, -0.170529351, 0.35555622, 0.0661515146]
+      Scale: [2.00000024, 2.00000072, 2.00000215]
+    StaticMeshComponent:
+      Filename: Torus Knot
+      Materials:
+        0: Sponza_17
+  - Entity: 14066053548479940477
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 12807715203938055862
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16701329932938793785
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 7799681912684117911
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 815552669125911257
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 5783131474338225265
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 4427713060704344856
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1619950580958603017
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 17193101339261964920
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        0: Sponza_16
+  - Entity: 17139994896872140668
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3292946020813739365
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6558263482526429376
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16317474049448973787
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14577297562087559217
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 11154585500806024608
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14323982380796019577
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 2312072221541057938
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        0: Sponza_6
+  - Entity: 8013012352469997488
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 17001233105772711366
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 7342284743134474112
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 18301651274401739264
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 7595299755222785696
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 11729830865263562357
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8880915778132063657
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 12296202960582433718
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14689871263095946572
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 15298659747431337034
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 9725678326873857561
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 17228775772256733127
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 635992649494653788
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8064959354719206171
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 12441355058265504465
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 7206313383350785435
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 424075842204272288
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 10767560826907250521
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8601243789233851998
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6084970722718626613
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 4612979212488075372
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16945315437789404443
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 18197283115016209378
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6082939016937418086
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 12220882252825375775
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 574126877998258430
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16426253054953492625
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 12710997648994984231
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 10163465148306957920
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 17936752075363940040
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 17082081349075193322
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 18290753038571970849
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1731900818931523416
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1541646372343250823
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [45, 180, 0]
+      Orientation: [-4.03840552e-08, -1.67276255e-08, 0.923879504, -0.382683456]
+      Scale: [1, 1, 1]
+    DirectionalLightComponent:
+      Color: [1, 1, 1]
+      Intensity: 4
+      Size: 200
+      CastsShadows: true
+  - Entity: 12328680822954742297
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-8, 1.20000005, 0]
       Rotation: [0, 0, 0]
       Orientation: [1, 0, 0, 0]
       Scale: [1, 1, 1]
     PointLightComponent:
-      Color: [1, 1, 0]
-      Intensity: 200
-      Attenuation:
-        Constant: 3
-        Linear: 4
-        Quadratic: 10
-      ShadowNearPlane: 0.00100000005
-      ShadowFarPlane: 100
-      CastsShadows: true
-  - Entity: 9112419947882260557
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0, 1.20000005, 8]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-    PointLightComponent:
-      Color: [0, 0, 1]
+      Color: [1, 0, 0]
       Intensity: 200
       Attenuation:
         Constant: 3
@@ -188,16 +1700,16 @@ Entities:
       ShadowNearPlane: 0.00100000005
       ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 12328680822954742297
+  - Entity: 9112419947882260557
     TagComponent:
       Name: Entity
     TransformComponent:
-      Position: [-8, 1.20000005, 0]
+      Position: [0, 1.20000005, 8]
       Rotation: [0, 0, 0]
       Orientation: [1, 0, 0, 0]
       Scale: [1, 1, 1]
     PointLightComponent:
-      Color: [1, 0, 0]
+      Color: [0, 0, 1]
       Intensity: 200
       Attenuation:
         Constant: 3
@@ -206,1438 +1718,40 @@ Entities:
       ShadowNearPlane: 0.00100000005
       ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 1541646372343250823
+  - Entity: 6241452550071693760
     TagComponent:
       Name: Entity
     TransformComponent:
-      Position: [0, 0, 0]
-      Rotation: [45, 180, 0]
-      Orientation: [-4.03840552e-08, -1.67276255e-08, 0.923879504, -0.382683456]
+      Position: [0, 1.20000005, -8]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
       Scale: [1, 1, 1]
-    DirectionalLightComponent:
-      Color: [1, 1, 1]
-      Intensity: 4
-      Size: 200
+    PointLightComponent:
+      Color: [1, 1, 0]
+      Intensity: 200
+      Attenuation:
+        Constant: 3
+        Linear: 4
+        Quadratic: 10
+      ShadowNearPlane: 0.00100000005
+      ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 1731900818931523416
+  - Entity: 11278215265673251507
     TagComponent:
       Name: Entity
     TransformComponent:
-      Position: [6.75, 0.5, 6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 18290753038571970849
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [6.75, 0.5, 5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 17082081349075193322
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [6.75, 0.5, 3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 17936752075363940040
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [6.75, 0.5, 2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 10163465148306957920
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [6.75, 0.5, 0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 12710997648994984231
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [6.75, 0.5, -0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 16426253054953492625
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [6.75, 0.5, -2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 574126877998258430
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [6.75, 0.5, -3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 12220882252825375775
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [6.75, 0.5, -5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 6082939016937418086
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [6.75, 0.5, -6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 18197283115016209378
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5.25, 0.5, 6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 16945315437789404443
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5.25, 0.5, 5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 4612979212488075372
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5.25, 0.5, 3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 6084970722718626613
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5.25, 0.5, 2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 8601243789233851998
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5.25, 0.5, 0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 10767560826907250521
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5.25, 0.5, -0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 424075842204272288
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5.25, 0.5, -2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 7206313383350785435
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5.25, 0.5, -3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 12441355058265504465
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5.25, 0.5, -5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 8064959354719206171
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5.25, 0.5, -6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 635992649494653788
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [3.75, 0.5, 6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 17228775772256733127
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [3.75, 0.5, 5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 9725678326873857561
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [3.75, 0.5, 3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 15298659747431337034
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [3.75, 0.5, 2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 14689871263095946572
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [3.75, 0.5, 0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 12296202960582433718
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [3.75, 0.5, -0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 8880915778132063657
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [3.75, 0.5, -2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 11729830865263562357
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [3.75, 0.5, -3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 7595299755222785696
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [3.75, 0.5, -5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 18301651274401739264
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [3.75, 0.5, -6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 7342284743134474112
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [2.25, 0.5, 6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 17001233105772711366
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [2.25, 0.5, 5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 8013012352469997488
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [2.25, 0.5, 3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 2312072221541057938
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [2.25, 0.5, 2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 14323982380796019577
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [2.25, 0.5, 0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 11154585500806024608
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [2.25, 0.5, -0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 14577297562087559217
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [2.25, 0.5, -2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 16317474049448973787
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [2.25, 0.5, -3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 6558263482526429376
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [2.25, 0.5, -5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 3292946020813739365
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [2.25, 0.5, -6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 17139994896872140668
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0.75, 0.5, 6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 17193101339261964920
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0.75, 0.5, 5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 1619950580958603017
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0.75, 0.5, 3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 4427713060704344856
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0.75, 0.5, 2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 5783131474338225265
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0.75, 0.5, 0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 815552669125911257
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0.75, 0.5, -0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 7799681912684117911
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0.75, 0.5, -2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 16701329932938793785
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0.75, 0.5, -3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 12807715203938055862
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0.75, 0.5, -5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 14066053548479940477
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0.75, 0.5, -6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 8496487872805245241
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-0.75, 0.5, 6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 7009164717179307258
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-0.75, 0.5, 5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 17588612270765239756
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-0.75, 0.5, 3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 4384654896267899857
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-0.75, 0.5, 2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 3657452210415813742
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-0.75, 0.5, 0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 9461469372482406006
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-0.75, 0.5, -0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 7838834864430796379
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-0.75, 0.5, -2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 8994871083747628948
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-0.75, 0.5, -3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 7348723191356431123
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-0.75, 0.5, -5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 6834243006313697006
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-0.75, 0.5, -6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 12896322946196506845
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-2.25, 0.5, 6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 9129065211661002291
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-2.25, 0.5, 5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 341456629869033219
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-2.25, 0.5, 3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 6336071606127557568
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-2.25, 0.5, 2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 4414594842974061819
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-2.25, 0.5, 0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 6969605412166986337
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-2.25, 0.5, -0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 12198293277835338520
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-2.25, 0.5, -2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 9359734755799544492
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-2.25, 0.5, -3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 6961857431746630934
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-2.25, 0.5, -5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 13876278085186216192
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-2.25, 0.5, -6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 3998000208534594293
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-3.75, 0.5, 6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 945142399077118799
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-3.75, 0.5, 5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 6485681146388887138
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-3.75, 0.5, 3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 14227382468330652899
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-3.75, 0.5, 2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 1074089094578148016
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-3.75, 0.5, 0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 10082970503575052825
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-3.75, 0.5, -0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 15661351788513723747
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-3.75, 0.5, -2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 18255620714422723317
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-3.75, 0.5, -3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
+      Position: [1.5, 5, 1.5]
+      Rotation: [-45, 45, 45]
+      Orientation: [0.732537746, -0.461939812, 0.191341713, 0.461939812]
       Scale: [1, 1, 1]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        - window
-  - Entity: 6596558652539497412
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-3.75, 0.5, -5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 10473764525934156888
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-3.75, 0.5, -6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 1775058220300683959
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-5.25, 0.5, 6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 12885067464924536695
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-5.25, 0.5, 5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 17835535124182438580
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-5.25, 0.5, 3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 4982560548295895986
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-5.25, 0.5, 2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 1166922357733217979
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-5.25, 0.5, 0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 16272970640784241861
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-5.25, 0.5, -0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 16959883251063065147
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-5.25, 0.5, -2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 2170251893457607559
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-5.25, 0.5, -3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 5579679985098859685
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-5.25, 0.5, -5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 727371943762566547
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-5.25, 0.5, -6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 14529476055159202385
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-6.75, 0.5, 6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 14222165555104252821
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-6.75, 0.5, 5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 10438712354018586405
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-6.75, 0.5, 3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 13485524110991152670
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-6.75, 0.5, 2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 6000309566630592424
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-6.75, 0.5, 0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 6403960704838616244
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-6.75, 0.5, -0.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 3138775610616662714
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-6.75, 0.5, -2.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 6326538712810011997
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-6.75, 0.5, -3.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 3768915803474479980
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-6.75, 0.5, -5.25]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 12088338074967886091
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-6.75, 0.5, -6.75]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 10910149190182558106
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5, 3, -12.5]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.5, 0.5, 0.5]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        []
-  - Entity: 18179586025720236209
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5, 20, -11.5]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.5, 0.5, 0.5]
-    StaticMeshComponent:
-      Filename: Sphere
-      Materials:
-        - reflectiveSphere
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.100000001
-      Restitution: 0.699999988
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    SphereColliderComponent:
-      Offset: [0, 0, 0]
-      Radius: 0.5
-  - Entity: 809506919725630732
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5, 0.5, -11.5]
-      Rotation: [0.5, 0, 0]
-      Orientation: [0.999990582, 0.00436330959, 0, 0]
-      Scale: [1, 1, 1]
-    StaticMeshComponent:
-      Filename: Quad
-      Materials:
-        - bricks2
-    RigidBody3DComponent:
-      MotionType: Static
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, -0.100000001, 0]
-      Extent: [2.5, 0.100000001, 2.5]
-  - Entity: 15581571294204918080
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5, 3, -14]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [1, 1, 1]
-    StaticMeshComponent:
-      Filename: Quad
-      Materials:
-        - bricks2
-  - Entity: 7762941117620752158
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [5, 1.20000005, 9]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [0.5, 0.5, 0.5]
-    StaticMeshComponent:
-      Filename: Quad
-      Materials:
-        - window
-  - Entity: 805755402565097889
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [3, 1.20000005, 13]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [0.5, 0.5, 0.5]
-    StaticMeshComponent:
-      Filename: Quad
-      Materials:
-        - window
-  - Entity: 17719729654925960296
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0, 1.20000005, 9]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [0.50999999, 0.50999999, 0.50999999]
-    StaticMeshComponent:
-      Filename: Quad
-      Materials:
-        - window
-  - Entity: 10097405178741415299
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-5, 1.20000005, 9]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [0.5, 0.5, 0.5]
-    StaticMeshComponent:
-      Filename: Quad
-      Materials:
-        - grass
-  - Entity: 15419805251623473515
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-5, 2, -9]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [1, 1, 1]
-    StaticMeshComponent:
-      Filename: Quad
-      Materials:
-        - bricks
-  - Entity: 6178006914964082929
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0, 2, -9]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [1, 1, 1]
-    StaticMeshComponent:
-      Filename: Quad
-      Materials:
-        - brickwall
-  - Entity: 6167347527482013595
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-1.5, 0, 10]
-      Rotation: [0, -90, 0]
-      Orientation: [0.707106829, 0, -0.707106829, 0]
-      Scale: [6, 6, 6]
-    StaticMeshComponent:
-      Filename: models/sponza/Sponza.gltf
-      Materials:
-        []
-  - Entity: 11890106841285175864
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [3, 2.5, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-    StaticMeshComponent:
-      Filename: models/damaged_helmet/DamagedHelmet.gltf
-      Materials:
-        []
-  - Entity: 3847508303506330720
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [-3, -2.29999995, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [0.0179999992, 0.0179999992, 0.0179999992]
-    StaticMeshComponent:
-      Filename: models/Zen3C/Zen3C.X
-      Materials:
-        []
-  - Entity: 2048516003800201213
-    TagComponent:
-      Name: Entity
-    TransformComponent:
-      Position: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-    StaticMeshComponent:
-      Filename: models/cyborg/cyborg.obj
-      Materials:
-        []
-  - Entity: 7650579392531706778
-    TagComponent:
-      Name: MainCamera2
-    TransformComponent:
-      Position: [0, 4, -30]
-      Rotation: [180, -5.00895612e-06, 180]
-      Orientation: [-4.37113883e-08, 0, 1, 0]
-      Scale: [1, 1, 1]
-    CameraComponent:
-      ProjectionType: Perspective
-      PerspectiveFOV: 45
-      PerspectiveNear: 0.100000001
-      PerspectiveFar: 1000
-      OrthographicSize: 10
-      OrthographicNear: 0.00999999978
-      OrthographicFar: 1000
-      IsPrimary: false
-  - Entity: 6374000167384504475
-    TagComponent:
-      Name: MainCamera
-    TransformComponent:
-      Position: [0, 4, 30]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-    CameraComponent:
-      ProjectionType: Perspective
-      PerspectiveFOV: 45
-      PerspectiveNear: 0.100000001
-      PerspectiveFar: 1000
-      OrthographicSize: 10
-      OrthographicNear: 0.00999999978
-      OrthographicFar: 1000
-      IsPrimary: true
+    SpotLightComponent:
+      Color: [1, 0.807843149, 0.980392158]
+      Intensity: 1000
+      CutOffAngle: 30.0000019
+      Attenuation:
+        Constant: 0
+        Linear: 0
+        Quadratic: 1
+      ShadowNearPlane: 0.00100000005
+      ShadowFarPlane: 100
+      CastsShadows: true
