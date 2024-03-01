@@ -851,7 +851,7 @@ namespace mango
             auto  P = glm::vec3(glm::cos(p * theta), glm::cos(q * theta), glm::sin(p * theta)) * r;
 
             auto theta_next = theta + thetaStep * 1.0;
-                      r     = knotR * (0.5 * (2.0 + glm::sin(q * theta_next)));
+                 r          = knotR * (0.5 * (2.0 + glm::sin(q * theta_next)));
             auto pNext      = glm::vec3(glm::cos(p * theta_next), glm::cos(q * theta_next), glm::sin(p * theta_next)) * r;
 
             auto T = pNext - P;
@@ -864,7 +864,7 @@ namespace mango
                 glm::vec2 circleVertexPosition = glm::vec2(glm::cos(phi), glm::sin(phi)) * tubeR;
 
                 vertexData.positions.push_back(N * circleVertexPosition.x + B * circleVertexPosition.y + P);
-                vertexData.normals  .push_back(glm::normalize(vertexData.positions[stack] - P));
+                vertexData.normals  .push_back(glm::normalize(vertexData.positions.back() - P));
                 vertexData.texcoords.push_back(glm::vec2(slice / float(slices), 1.0 - stack / float(stacks)));
             }
         }
