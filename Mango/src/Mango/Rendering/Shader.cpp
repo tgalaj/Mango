@@ -100,9 +100,10 @@ namespace mango
         std::string code     = loadFile(filepath);
                     code     = loadShaderIncludes(code);
 
-        const char * shaderCode = code.c_str();
+        const char* shaderCode            = code.c_str();
+              int   shaderCodeSizeBytes[] = { code.length() };
 
-        glShaderSource(shaderObject, 1, &shaderCode, nullptr);
+        glShaderSource(shaderObject, 1, &shaderCode, shaderCodeSizeBytes);
         glCompileShader(shaderObject);
 
         GLint result;

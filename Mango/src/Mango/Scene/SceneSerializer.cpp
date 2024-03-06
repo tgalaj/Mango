@@ -448,14 +448,15 @@ namespace mango
 
         // Serialize entities now
         out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
-        scene->m_registry.each([&](auto entityID)
+
+        for (auto [entityID] : scene->m_registry.storage<entt::entity>().each())
         {
             Entity entity = { entityID, scene.get() };
             
             if (!entity) return false;
 
             serializeEntity(out, entity);
-        });
+        }
 
         out << YAML::EndSeq;
         out << YAML::EndMap;

@@ -81,7 +81,7 @@ endif()
 CPMAddPackage(
     NAME entt
     GITHUB_REPOSITORY skypjack/entt
-    VERSION 3.12.2
+    VERSION 3.13.1
     DOWNLOAD_ONLY True
     GIT_SHALLOW TRUE
 )
@@ -218,7 +218,6 @@ set_target_properties(glad
                       yaml-cpp-parse
                       yaml-cpp-read
                       yaml-cpp-sandbox
-                      format
                       PROPERTIES FOLDER "thirdparty")
 
 set_target_properties(update_mappings PROPERTIES FOLDER "thirdparty/GLFW3")

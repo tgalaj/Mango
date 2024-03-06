@@ -33,11 +33,11 @@ namespace mango
         {
             if (m_scene)
             {
-                m_scene->m_registry.each([&](auto entityID)
+                for (auto [entityID] : m_scene->m_registry.storage<entt::entity>().each())
                 { 
                     Entity entity{ entityID, m_scene.get() };
                     drawEntityNode(entity);
-                });
+                }
             }
 
             if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
