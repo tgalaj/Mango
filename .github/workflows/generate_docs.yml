@@ -1,4 +1,4 @@
-name: Docs
+name: Generate Documentation
 
 # Run GH actions manually: https://docs.github.com/en/actions/using-workflows/manually-running-a-workflow
 on: workflow_dispatch
