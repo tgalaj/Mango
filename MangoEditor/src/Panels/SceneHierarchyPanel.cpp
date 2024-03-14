@@ -632,16 +632,15 @@ namespace mango
                 ImGui::PushID(selectedMaterialIndex);
                 if (ImGui::BeginPopup("material_options"))
                 {
-                    materialToEdit = component.materials[selectedMaterialIndex];
-
                     if (ImGui::Selectable("Edit"))
                     {
                         isMaterialEditorOpen = true;
+                        materialToEdit       = component.materials[selectedMaterialIndex];
                     }
                     
                     auto originalMaterial = mesh->getMaterials()[selectedMaterialIndex];
 
-                    ImGui::BeginDisabled(materialToEdit == originalMaterial);
+                    ImGui::BeginDisabled(component.materials[selectedMaterialIndex] == originalMaterial);
                     if (ImGui::Selectable("Clear"))
                     {
                         component.materials[selectedMaterialIndex] = originalMaterial;
@@ -687,12 +686,49 @@ namespace mango
                 MG_CORE_ASSERT_MSG(false, "Unknown texture type");
                 return {};
             };
-
+            
+            // TODO(TG): clean this up - move this to a separate MaterialEditorPanel class
             if (isMaterialEditorOpen)
             {
                 ImGui::Begin("Material Editor", &isMaterialEditorOpen);
 
-                ImGui::Text("Material: %s", materialToEdit->name.c_str());
+                ImGui::Text("Material");
+                ImGui::SameLine();
+
+                if (ImGui::Button(materialToEdit->name.c_str(), { ImGui::GetContentRegionAvail().x, 0 }))
+                {
+                    ImGui::OpenPopup("select_material_to_edit_popup");
+                }
+
+                if (ImGui::BeginPopup("select_material_to_edit_popup"))
+                {
+                    ImGui::InputText("##search_pattern", &searchPattern, ImGuiInputTextFlags_EscapeClearsAll);
+
+                    auto availWidth = ImGui::GetContentRegionAvail().x;
+                    if (ImGui::Button("CLEAR", ImVec2(availWidth, ImGui::GetFrameHeight()))) searchPattern = "";
+
+                    ImGui::BeginChild("##item_list", ImVec2(availWidth, ImGui::GetFrameHeight() * 7.0f));
+
+                    // 1. get list of all loaded materials from AssetManager and list them
+                    // 2. if item selected -> change the material to edit
+                    int32_t id = 0;
+                    for (auto [name, material] : AssetManager::getMaterialList())
+                    {
+                        auto rx = std::regex(searchPattern, std::regex_constants::icase);
+                        if (std::regex_search(name, rx))
+                        {
+                            if (ImGui::Selectable(name.c_str()))
+                            {
+                                materialToEdit = material;
+                                ImGui::CloseCurrentPopup();
+                            }
+                        }
+                    }
+
+                    ImGui::EndChild();
+                    ImGui::EndPopup();
+                }
+
                 ImGui::Text("Shader:   %s", "tbd");
                 ImGui::Separator();
 
@@ -848,6 +884,7 @@ namespace mango
                         ImGui::EndTable();
                     }
                 }
+
                 ImGui::End();
             }
         });
