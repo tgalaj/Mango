@@ -149,6 +149,8 @@ namespace mango
         std::string&      getFilename()         { return m_filename;   }
         uint32_t          getRendererID() const { return m_id;         }
 
+        void setName(const std::string& name) { m_filename = name; }
+
         static uint8_t calcMaxMipMapsLevels(uint32_t width, uint32_t height, uint32_t depth)
         {
             uint8_t num_levels = 1 + std::floor(std::log2(std::max(width, std::max(height, depth))));

@@ -76,6 +76,7 @@ namespace mango
 
         auto texture2D = createRef<Texture>();
         texture2D->createTexture2d1x1(color);
+        texture2D->setName(textureName);
         m_loadedTextures[textureName] = texture2D;
 
         return texture2D;

@@ -1,4 +1,6 @@
+#include "IconsFontAwesome6.h"
 #include "SceneHierarchyPanel.h"
+#include "DragDropPayloadTypes.h"
 
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Core/VFI.h"
@@ -595,7 +597,9 @@ namespace mango
                                                      ImGuiTreeNodeFlags_SpanAvailWidth |
                                                      ImGuiTreeNodeFlags_AllowItemOverlap;
 
-            static int32_t selectedMaterialIndex = -1;
+            static int32_t       selectedMaterialIndex = -1;
+            static bool          isMaterialEditorOpen  = false;
+            static ref<Material> materialToEdit        = nullptr;
 
             ImGui::Unindent();
             if (ImGui::TreeNodeEx("Materials", treeNodeFlags))
@@ -614,10 +618,38 @@ namespace mango
                         searchPattern = "";
                         selectedMaterialIndex = i;
                     }
+
+                    ImGui::SameLine();
+                    if(ImGui::Button(ICON_FA_ELLIPSIS_VERTICAL)) // Clear, Edit menu
+                    {
+                        ImGui::OpenPopup("material_options");
+                        selectedMaterialIndex = i;
+                    }
+
                     ImGui::PopID();
                 }
 
                 ImGui::PushID(selectedMaterialIndex);
+                if (ImGui::BeginPopup("material_options"))
+                {
+                    materialToEdit = component.materials[selectedMaterialIndex];
+
+                    if (ImGui::Selectable("Edit"))
+                    {
+                        isMaterialEditorOpen = true;
+                    }
+                    
+                    auto originalMaterial = mesh->getMaterials()[selectedMaterialIndex];
+
+                    ImGui::BeginDisabled(materialToEdit == originalMaterial);
+                    if (ImGui::Selectable("Clear"))
+                    {
+                        component.materials[selectedMaterialIndex] = originalMaterial;
+                    }
+                    ImGui::EndDisabled();
+                    ImGui::EndPopup();
+                }
+
                 popupLambda("material_select_popup", component, [&component]()
                 {
                     // 1. get list of all loaded materials from AssetManager and list them
@@ -641,6 +673,183 @@ namespace mango
                 ImGui::TreePop();
             }
             ImGui::Indent();
+
+            auto materialTextureTypeToString = [](Material::TextureType type) -> std::string
+            {
+                switch (type)
+                {
+                    case Material::TextureType::DIFFUSE:      return "Diffuse";
+                    case Material::TextureType::SPECULAR:     return "Specular";
+                    case Material::TextureType::NORMAL:       return "Normal";
+                    case Material::TextureType::EMISSION:     return "Emission";
+                    case Material::TextureType::DISPLACEMENT: return "Displacement";
+                }
+                MG_CORE_ASSERT_MSG(false, "Unknown texture type");
+                return {};
+            };
+
+            if (isMaterialEditorOpen)
+            {
+                ImGui::Begin("Material Editor", &isMaterialEditorOpen);
+
+                ImGui::Text("Material: %s", materialToEdit->name.c_str());
+                ImGui::Text("Shader:   %s", "tbd");
+                ImGui::Separator();
+
+                if (ImGui::BeginTable("Textures", 2, ImGuiTableFlags_SizingStretchSame))
+                {
+                    // Render Queue
+                    ImGui::TableNextColumn();
+                    ImGui::Text("Render Queue");
+
+                    ImGui::TableNextColumn();
+                    ImGui::SetNextItemWidth(-1);
+                    const  char* renderQueueItems[]      = {"Opaque", "Transparent", "Env. Mapped Static", "Env. Mapped Dynamic"};
+                    static auto  renderQueueCurrentIndex = (int)materialToEdit->getRenderQueue();
+
+                    if (ImGui::BeginCombo("##render_queue", renderQueueItems[renderQueueCurrentIndex]))
+                    {
+                        for (int n = 0; n < std::size(renderQueueItems); ++n)
+                        {
+                            const bool isSelected = (renderQueueCurrentIndex == n);
+                            if (ImGui::Selectable(renderQueueItems[n], isSelected))
+                            {
+                                renderQueueCurrentIndex = n;
+                                materialToEdit->setRenderQueue((Material::RenderQueue)renderQueueCurrentIndex);
+                            }
+
+                            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                            if (isSelected) ImGui::SetItemDefaultFocus();
+                        }
+                        ImGui::EndCombo();
+                    }
+
+                    // Blend Mode
+                    ImGui::TableNextColumn();
+                    ImGui::Text("Blend Mode");
+
+                    ImGui::TableNextColumn();
+                    const  char* blendModeItems[] = { "None", "Alpha" };
+                    static auto  blendModeCurrentIndex = (int)materialToEdit->getBlendMode();
+
+                    if (ImGui::BeginCombo("##blend_mode", blendModeItems[blendModeCurrentIndex]))
+                    {
+                        for (int n = 0; n < std::size(blendModeItems); ++n)
+                        {
+                            const bool isSelected = (blendModeCurrentIndex == n);
+                            if (ImGui::Selectable(blendModeItems[n], isSelected))
+                            {
+                                blendModeCurrentIndex = n;
+                                materialToEdit->setBlendMode((Material::BlendMode)blendModeCurrentIndex);
+                            }
+
+                            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                            if (isSelected) ImGui::SetItemDefaultFocus();
+                        }
+                        ImGui::EndCombo();
+                    }
+
+                    ImGui::EndTable();
+                }
+
+                float previewSize = ImGui::GetFontSize() * 5.0f;
+                if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    if (ImGui::BeginTable("Textures", 2, ImGuiTableFlags_SizingFixedFit))
+                    {
+                        auto availWidth = ImGui::GetContentRegionAvail().x;
+                        ImGui::TableSetupColumn("x", ImGuiTableColumnFlags_WidthStretch);
+                        ImGui::TableSetupColumn("y", ImGuiTableColumnFlags_WidthFixed, previewSize);
+
+                        for (auto &[type, texture] : materialToEdit->getTextureMap())
+                        {
+                            ImGui::TableNextColumn();
+                            ImGui::Text("%s", materialTextureTypeToString(type).c_str());
+
+                            ImGui::TableNextColumn();
+                            ImGui::Image((ImTextureID)texture->getRendererID(), { previewSize, previewSize });
+
+                            if (ImGui::BeginDragDropTarget())
+                            {
+                                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MG_DRAG_PAYLOAD_CONTENT_BROWSER_ITEM))
+                                {
+                                    const auto* path = (const wchar_t*)payload->Data;
+
+                                    bool isSrgb = (type == Material::TextureType::DIFFUSE) || (type == Material::TextureType::EMISSION);
+                                    texture = AssetManager::createTexture2D(std::filesystem::path(path).string(), isSrgb);
+                                }
+                                ImGui::EndDragDropTarget();
+                            }
+
+                            if (ImGui::BeginItemTooltip())
+                            {
+                                ImGui::Text("Path: %s", texture->getFilename().c_str());
+                                ImGui::Image((ImTextureID)texture->getRendererID(), { 512, 512 });
+                                ImGui::EndTooltip();
+                            }
+                        }
+                        ImGui::EndTable();
+                    }
+                }
+
+                if (ImGui::CollapsingHeader("Floats", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    if (ImGui::BeginTable("Floats", 2, ImGuiTableFlags_SizingStretchSame))
+                    {
+                        for (auto& [name, value] : materialToEdit->getFloatMap())
+                        {
+                            ImGui::TableNextColumn();
+                            ImGui::Text(name.c_str());
+
+                            ImGui::TableNextColumn();
+                            ImGui::SetNextItemWidth(-1);
+                            ImGui::PushID(name.c_str());
+                            ImGui::DragFloat("##", &value);
+                            ImGui::PopID();
+                        }
+                        ImGui::EndTable();
+                    }
+                }
+
+                if (ImGui::CollapsingHeader("Vec3s", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    if (ImGui::BeginTable("Vec3s", 2, ImGuiTableFlags_SizingStretchSame))
+                    {
+                        for (auto& [name, value] : materialToEdit->getVec3Map())
+                        {
+                            ImGui::TableNextColumn();
+                            ImGui::Text(name.c_str());
+
+                            ImGui::TableNextColumn();
+                            ImGui::SetNextItemWidth(-1);
+                            ImGui::PushID(name.c_str());
+                            ImGui::DragFloat3("##", &value[0]);
+                            ImGui::PopID();
+                        }
+                        ImGui::EndTable();
+                    }
+                }
+
+                if (ImGui::CollapsingHeader("Bools", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    if (ImGui::BeginTable("Bools", 2, ImGuiTableFlags_SizingStretchSame))
+                    {
+                        for (auto& [name, value] : materialToEdit->getBoolMap())
+                        {
+                            ImGui::TableNextColumn();
+                            ImGui::Text(name.c_str());
+
+                            ImGui::TableNextColumn();
+                            ImGui::SetNextItemWidth(-1);
+                            ImGui::PushID(name.c_str());
+                            ImGui::Checkbox("##", &value);
+                            ImGui::PopID();
+                        }
+                        ImGui::EndTable();
+                    }
+                }
+                ImGui::End();
+            }
         });
 
         drawComponent<RigidBody3DComponent>("Rigidbody 3D", entity, [](auto& component)
