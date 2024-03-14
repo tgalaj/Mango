@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/tgalaj/Mango/actions/workflows/cpp_cmake.yml/badge.svg)](https://github.com/tgalaj/Mango/actions)
+[![Build Status](https://github.com/tgalaj/Mango/actions/workflows/build.yml/badge.svg)](https://github.com/tgalaj/Mango/actions)
 [![License](https://img.shields.io/github/license/tgalaj/Mango)](https://github.com/tgalaj/Mango/blob/master/LICENSE)
 
 # Mango
