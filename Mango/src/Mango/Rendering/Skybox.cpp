@@ -2,7 +2,6 @@
 
 #include "Skybox.h"
 #include "Mesh.h"
-#include "Mango/Rendering/GeomPrimitive.h"
 
 namespace mango
 {

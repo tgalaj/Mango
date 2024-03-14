@@ -1,17 +1,20 @@
 #include "mgpch.h"
 #include "AssetManager.h"
 
+#include "Mango/Assets/AssimpMeshImporter.h"
+
 namespace mango
 {
-    std::unordered_map<std::string, Model>                    AssetManager::m_loadedModels;
-    std::unordered_map<std::string, ref<Texture>> AssetManager::m_loadedTextures;
-    std::unordered_map<std::string, ref<Shader>>  AssetManager::m_loadedShaders;
-    std::unordered_map<std::string, ref<Font>>    AssetManager::m_loadedFonts;
+    std::unordered_map<std::string, ref<Font>>       AssetManager::m_loadedFonts;
+    std::unordered_map<std::string, ref<Material>>   AssetManager::m_loadedMaterials;
+    std::unordered_map<std::string, ref<Shader>>     AssetManager::m_loadedShaders;
+    std::unordered_map<std::string, ref<Mesh>>       AssetManager::m_loadedStaticMeshes;
+    std::unordered_map<std::string, ref<Texture>>    AssetManager::m_loadedTextures;
 
     ref<Font> AssetManager::createFont(const std::string & fontNname, const std::string& filename, GLuint fontHeight)
     {
         MG_PROFILE_ZONE_SCOPED;
-        if (m_loadedFonts.count(fontNname))
+        if (m_loadedFonts.contains(fontNname))
         {
             return m_loadedFonts[fontNname];
         }
@@ -22,11 +25,25 @@ namespace mango
         return font;
     }
 
-    ref<Texture> AssetManager::createTexture2D(const std::string & filename, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
+    ref<Material> AssetManager::createMaterial(const std::string& materialName)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+        if (m_loadedMaterials.contains(materialName))
+        {
+            return m_loadedMaterials[materialName];
+        }
+
+        auto material = createRef<Material>(materialName);
+        m_loadedMaterials[materialName] = material;
+
+        return material;
+    }
+
+    ref<Texture> AssetManager::createTexture2D(const std::string& filename, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        if (m_loadedTextures.count(filename))
+        if (m_loadedTextures.contains(filename))
         {
             return m_loadedTextures[filename];
         }
@@ -52,13 +69,14 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        if (m_loadedTextures.count(textureName))
+        if (m_loadedTextures.contains(textureName))
         {
             return m_loadedTextures[textureName];
         }
 
         auto texture2D = createRef<Texture>();
         texture2D->createTexture2d1x1(color);
+        texture2D->setName(textureName);
         m_loadedTextures[textureName] = texture2D;
 
         return texture2D;
@@ -71,7 +89,7 @@ namespace mango
         auto filepath = VFI::getFilepath(filenames[0]);
         std::string filepathString = filepath.parent_path().string();
 
-        if (m_loadedTextures.count(filepathString))
+        if (m_loadedTextures.contains(filepathString))
         {
             return m_loadedTextures[filepathString];
         }
@@ -83,34 +101,41 @@ namespace mango
         return textureCube;
     }
 
-    Model AssetManager::createModel(const std::string & filename)
+    ref<Mesh> AssetManager::createMesh(const std::string& meshName)
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        if (m_loadedModels.count(filename))
+        if (m_loadedStaticMeshes.contains(meshName))
         {
-            return m_loadedModels[filename];
+            return m_loadedStaticMeshes[meshName];
         }
 
-        Model model;
-        model.load(filename);
-        m_loadedModels[filename] = model;
+        auto staticMesh = createRef<Mesh>(meshName);
+        m_loadedStaticMeshes[meshName] = staticMesh;
 
-        return model;
+        return staticMesh;
     }
 
-    Model AssetManager::createModel()
+    ref<Mesh> AssetManager::createMeshFromFile(const std::string & filename)
     {
         MG_PROFILE_ZONE_SCOPED;
-        Model model;
-        return model;
+
+        if (m_loadedStaticMeshes.contains(filename))
+        {
+            return m_loadedStaticMeshes[filename];
+        }
+
+        auto staticMesh = AssimpMeshImporter::load(filename);
+        m_loadedStaticMeshes[filename] = staticMesh;
+
+        return staticMesh;
     }
 
     ref<Shader> AssetManager::createShader(const std::string & shaderName,
                                            const std::string & computeShaderFilename)
     {
         MG_PROFILE_ZONE_SCOPED;
-        if (m_loadedShaders.count(shaderName))
+        if (m_loadedShaders.contains(shaderName))
         {
             return m_loadedShaders[shaderName];
         }
@@ -126,7 +151,7 @@ namespace mango
                                            const std::string & fragmentShaderFilename)
     {
         MG_PROFILE_ZONE_SCOPED;
-        if (m_loadedShaders.count(shaderName))
+        if (m_loadedShaders.contains(shaderName))
         {
             return m_loadedShaders[shaderName];
         }
@@ -143,7 +168,7 @@ namespace mango
                                            const std::string & geometryShaderFilename)
     {
         MG_PROFILE_ZONE_SCOPED;
-        if (m_loadedShaders.count(shaderName))
+        if (m_loadedShaders.contains(shaderName))
         {
             return m_loadedShaders[shaderName];
         }
@@ -163,7 +188,7 @@ namespace mango
                                            const std::string & tessellationEvaluationShaderFilename)
     {
         MG_PROFILE_ZONE_SCOPED;
-        if (m_loadedShaders.count(shaderName))
+        if (m_loadedShaders.contains(shaderName))
         {
             return m_loadedShaders[shaderName];
         }
@@ -185,7 +210,7 @@ namespace mango
                                            const std::string & tessellationEvaluationShaderFilename)
     {
         MG_PROFILE_ZONE_SCOPED;
-        if (m_loadedShaders.count(shaderName))
+        if (m_loadedShaders.contains(shaderName))
         {
             return m_loadedShaders[shaderName];
         }
@@ -203,9 +228,20 @@ namespace mango
     ref<Font> AssetManager::getFont(const std::string& fontName)
     {
         MG_PROFILE_ZONE_SCOPED;
-        if (m_loadedFonts.count(fontName))
+        if (m_loadedFonts.contains(fontName))
         {
             return m_loadedFonts[fontName];
+        }
+
+        return nullptr;
+    }
+
+    ref<Material> AssetManager::getMaterial(const std::string& materialName)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+        if (m_loadedMaterials.contains(materialName))
+        {
+            return m_loadedMaterials[materialName];
         }
 
         return nullptr;
@@ -214,7 +250,7 @@ namespace mango
     ref<Texture> AssetManager::getTexture2D(const std::string& textureName)
     {
         MG_PROFILE_ZONE_SCOPED;
-        if (m_loadedTextures.count(textureName))
+        if (m_loadedTextures.contains(textureName))
         {
             return m_loadedTextures[textureName];
         }
@@ -222,10 +258,70 @@ namespace mango
         return nullptr;
     }
 
+    void AssetManager::initDefaultAssets()
+    {
+        // Default textures
+        auto defaultDiffuse      = createTexture2D1x1("DefaultDiffuse",      glm::uvec4(255, 255, 255, 255));
+        auto defaultSpecular     = createTexture2D1x1("DefaultSpecular",     glm::uvec4(0,   0,   0,   255));
+        auto defaultNormal       = createTexture2D1x1("DefaultNormal",       glm::uvec4(128, 127, 254, 255));
+        auto defaultEmission     = createTexture2D1x1("DefaultEmission",     glm::uvec4(0,   0,   0,   255));
+        auto defaultDisplacement = createTexture2D1x1("DefaultDisplacement", glm::uvec4(0,   0,   0,   255));
+
+        // Default material
+        auto material = createMaterial("DefaultMaterial");
+
+        // Default meshes
+        {
+            ref<Mesh> m = createMesh("Cone");
+            m->genCone(1.0f, 0.5f, 12, 12);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Cube");
+            m->genCube(0.5f);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Cylinder");
+            m->genCylinder(1.0f, 0.5f);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Plane");
+            m->genPlane(10.0f, 10.0f, 10, 10);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Sphere");
+            m->genSphere(0.5f, 36);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Torus");
+            m->genTorus(0.5f, 1.0f, 36, 24);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Trefoil Knot");
+            m->genTrefoilKnot(128, 32);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Torus Knot");
+            m->genPQTorusKnot(256, 32, 2, 3);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Quad");
+            m->genQuad(5.0, 5.0);
+        }
+
+    }
+
     ref<Shader> AssetManager::getShader(const std::string& shaderName)
     {
         MG_PROFILE_ZONE_SCOPED;
-        if (m_loadedShaders.count(shaderName))
+        if (m_loadedShaders.contains(shaderName))
         {
             return m_loadedShaders[shaderName];
         }
@@ -233,12 +329,26 @@ namespace mango
         return nullptr;
     }
 
+    ref<Mesh> AssetManager::getMesh(const std::string& staticMeshName)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+        if (m_loadedStaticMeshes.contains(staticMeshName))
+        {
+            return m_loadedStaticMeshes[staticMeshName];
+        }
+
+        return nullptr;
+    }
+
     void AssetManager::unload()
     {
-        m_loadedModels.clear();
-        m_loadedTextures.clear();
-        m_loadedShaders.clear();
         m_loadedFonts.clear();
+        m_loadedMaterials.clear();
+        m_loadedShaders.clear();
+        m_loadedStaticMeshes.clear();
+        m_loadedTextures.clear();
+
+        initDefaultAssets();
     }
 
 }

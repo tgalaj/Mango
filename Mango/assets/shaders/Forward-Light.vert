@@ -1,8 +1,8 @@
 #version 450
 
 layout(location = 0) in vec3 a_position;
-layout(location = 1) in vec3 a_normal;
-layout(location = 2) in vec3 a_texcoord;
+layout(location = 1) in vec2 a_texcoord;
+layout(location = 2) in vec3 a_normal;
 layout(location = 3) in vec3 a_tangent;
 
 out vec2 texcoord;
@@ -19,7 +19,7 @@ uniform mat4 s_light_matrix;
 void main()
 {
     world_pos            = (g_model * vec4(a_position, 1.0f)).xyz;
-    texcoord             = a_texcoord.xy;
+    texcoord             = a_texcoord;
     frag_pos_light_space = s_light_matrix * vec4(world_pos, 1.0f);
 
     gl_Position = g_mvp * vec4(a_position, 1.0f);

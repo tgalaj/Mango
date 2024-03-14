@@ -400,8 +400,8 @@ namespace mango
                             GL_UNSIGNED_BYTE,
                             pixelData);
 
-        setFiltering(TextureFiltering::MIN,       TextureFilteringParam::LINEAR);
-        setFiltering(TextureFiltering::MAG,       TextureFilteringParam::LINEAR);
+        setFiltering(TextureFiltering::MIN,       TextureFilteringParam::NEAREST);
+        setFiltering(TextureFiltering::MAG,       TextureFilteringParam::NEAREST);
         setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::CLAMP_TO_EDGE);
         setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::CLAMP_TO_EDGE);
 

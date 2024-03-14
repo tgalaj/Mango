@@ -15,8 +15,6 @@ namespace mango
     bool         RenderingSystem::DEBUG_RENDERING    = false;
     unsigned int RenderingSystem::DEBUG_WINDOW_WIDTH = 0;
 
-    std::unordered_map<Material::TextureType, ref<Texture>> RenderingSystem::s_defaultTextures;
-
     RenderingSystem::RenderingSystem()
         : System("RenderingSystem")
     {
@@ -40,22 +38,10 @@ namespace mango
         m_mainWindow = Services::application()->getWindow().get();
 
         Services::eventBus()->subscribe<EntityRemovedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
-        Services::eventBus()->subscribe<ComponentAddedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
-        Services::eventBus()->subscribe<ComponentReplacedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
-        Services::eventBus()->subscribe<ComponentRemovedEvent<ModelRendererComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
+        //Services::eventBus()->subscribe<ComponentAddedEvent<StaticMeshComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
+        //Services::eventBus()->subscribe<ComponentReplacedEvent<StaticMeshComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
+        //Services::eventBus()->subscribe<ComponentRemovedEvent<StaticMeshComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ActiveSceneChangedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
-
-        auto defaultDiffuse   = createRef<Texture>(); defaultDiffuse ->createTexture2d1x1(glm::uvec4(255, 255, 255, 255));
-        auto defaultSpecular  = createRef<Texture>(); defaultSpecular->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
-        auto defaultNormal    = createRef<Texture>(); defaultNormal  ->createTexture2d1x1(glm::uvec4(128, 127, 254, 255));
-        auto defaultEmission  = createRef<Texture>(); defaultEmission->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
-        auto defaultDepth     = createRef<Texture>(); defaultDepth   ->createTexture2d1x1(glm::uvec4(0,   0,   0,   255));
-
-        s_defaultTextures[Material::TextureType::DIFFUSE]  = defaultDiffuse;
-        s_defaultTextures[Material::TextureType::SPECULAR] = defaultSpecular;
-        s_defaultTextures[Material::TextureType::NORMAL]   = defaultNormal;
-        s_defaultTextures[Material::TextureType::EMISSION] = defaultEmission;
-        s_defaultTextures[Material::TextureType::DEPTH]    = defaultDepth;
 
         m_opaqueQueue.reserve(50);
         m_alphaQueue.reserve(5);
@@ -102,11 +88,11 @@ namespace mango
         m_nullShader = AssetManager::createShader("NullShader", "DebugObjectGeometry.vert", "Shadow-Map-Gen.frag");
         m_nullShader->link();
 
-        m_lightBoundingSphere = Model();
-        m_lightBoundingSphere.genSphere(1.1f, 12);
+        m_lightBoundingSphere = createRef<Mesh>();
+        m_lightBoundingSphere->genSphere(1.1f, 12);
 
-        m_lightBoundingCone = Model();
-        m_lightBoundingCone.genCone(1.1f, 1.1f, 12, 1);
+        m_lightBoundingCone = createRef<Mesh>();
+        m_lightBoundingCone->genCone(1.1f, 1.1f, 12, 1);
 
         int width  = m_mainWindow->getWidth();
         int height = m_mainWindow->getHeight();
@@ -169,7 +155,29 @@ namespace mango
         glBindFramebuffer(GL_FRAMEBUFFER, m_outputToOffscreenTexture ? m_mainRenderTarget->m_fbo : 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        m_opaqueQueue.clear();
+        m_alphaQueue.clear();
+        m_enviroStaticQueue.clear();
+        m_enviroDynamicQueue.clear();
+
+        auto view = m_activeScene->getEntitiesWithComponent<StaticMeshComponent>();
+
+        for (auto& e : view)
+        {
+            Entity entity = { e, m_activeScene };
+
+            auto& smc = entity.getComponent<StaticMeshComponent>();
+
+            if (!smc.mesh) continue;
+
+            auto materialIndex = smc.mesh->getSubmesh()->materialIndex;
+            auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
+            
+            addEntityToRenderQueue(entity, renderQueue);
+        }
+
         // TODO: create two methods: renderGame and renderEditor + use switch
+        // Or SceneRenderer class
         if (m_mode == RenderingMode::GAME)
         {
             auto primaryCameraEntity = m_activeScene->getPrimaryCamera();
@@ -218,31 +226,46 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        if (event.entity.get().hasComponent<ModelRendererComponent>())
+        if (event.entity.get().hasComponent<StaticMeshComponent>())
         {
-            auto renderQueue = event.entity.get().getComponent<ModelRendererComponent>().getRenderQueue();
-            removeEntityFromRenderQueue(event.entity, renderQueue);
+            //auto& smc          = event.entity.get().getComponent<StaticMeshComponent>();
+            //auto materialIndex = smc.mesh->getSubmesh().materialIndex;
+            //auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
+            //
+            //removeEntityFromRenderQueue(event.entity, renderQueue);
         }
     }
 
-    void RenderingSystem::receive(const ComponentAddedEvent<ModelRendererComponent>& event)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        addEntityToRenderQueue(event.entity, event.component.getRenderQueue());
-    }
+    //void RenderingSystem::receive(const ComponentAddedEvent<StaticMeshComponent>& event)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
+    //    auto& smc          = event.entity.get().getComponent<StaticMeshComponent>();
+    //    auto materialIndex = smc.mesh->getSubmesh().materialIndex;
+    //    auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
 
-    void RenderingSystem::receive(const ComponentReplacedEvent<ModelRendererComponent>& event)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        removeEntityFromRenderQueue(event.entity, event.component.getRenderQueue());
-        addEntityToRenderQueue(event.entity, event.component.getRenderQueue());
-    }
+    //    addEntityToRenderQueue(event.entity, renderQueue);
+    //}
 
-    void RenderingSystem::receive(const ComponentRemovedEvent<ModelRendererComponent>& event)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        removeEntityFromRenderQueue(event.entity, event.component.getRenderQueue());
-    }
+    //void RenderingSystem::receive(const ComponentReplacedEvent<StaticMeshComponent>& event)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
+    //    auto& smc          = event.entity.get().getComponent<StaticMeshComponent>();
+    //    auto materialIndex = smc.mesh->getSubmesh().materialIndex;
+    //    auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
+
+    //    removeEntityFromRenderQueue(event.entity, renderQueue);
+    //    addEntityToRenderQueue     (event.entity, renderQueue);
+    //}
+
+    //void RenderingSystem::receive(const ComponentRemovedEvent<StaticMeshComponent>& event)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
+    //    auto& smc          = event.entity.get().getComponent<StaticMeshComponent>();
+    //    auto materialIndex = smc.mesh->getSubmesh().materialIndex;
+    //    auto renderQueue   = smc.materials[materialIndex]->getRenderQueue();
+
+    //    removeEntityFromRenderQueue(event.entity, renderQueue);
+    //}
 
     void RenderingSystem::receive(const ActiveSceneChangedEvent& event)
     {
@@ -256,13 +279,15 @@ namespace mango
 
         m_activeScene = event.scene;
 
-        auto view = m_activeScene->getEntitiesWithComponent<ModelRendererComponent>();
+        auto view = m_activeScene->getEntitiesWithComponent<StaticMeshComponent>();
         for (auto e : view)
         {
-            Entity entity = { e, m_activeScene };
-            auto& mrc = entity.getComponent<ModelRendererComponent>();
+            //Entity entity        = { e, m_activeScene };
+            //auto&  smc           = entity.getComponent<StaticMeshComponent>();
+            //auto   materialIndex = smc.mesh->getSubmesh().materialIndex;
+            //auto   renderQueue   = smc.materials[materialIndex]->getRenderQueue();
 
-            addEntityToRenderQueue(entity, mrc.getRenderQueue());
+            //addEntityToRenderQueue(entity, renderQueue);
         }
     }
 
@@ -311,15 +336,21 @@ namespace mango
         auto pickingShader = m_picking->getShader();
         pickingShader->bind();
 
-        auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, ModelRendererComponent>();
+        auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, StaticMeshComponent>();
         for (auto entity : view)
         {
-            auto [tc, mrc] = view.get<TransformComponent, ModelRendererComponent>(entity);
+            auto [tc, smc] = view.get<TransformComponent, StaticMeshComponent>(entity);
 
             pickingShader->updateGlobalUniforms(tc);
             int id = (int)entity;
             pickingShader->setUniform("objectID", (int)id);
-            mrc.model.render(*pickingShader);
+            smc.mesh->bind();
+            
+            auto& submeshes = smc.mesh->getSubmeshes();
+            for (uint32_t submeshIndex = 0; submeshIndex < submeshes.size(); ++submeshIndex)
+            {
+                smc.mesh->render(submeshIndex);
+            }
         }
         glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
         glDisable(GL_DEPTH_TEST);
@@ -422,7 +453,7 @@ namespace mango
 
         m_forwardAmbient->bind();
         m_forwardAmbient->setUniform("s_scene_ambient", sceneAmbientColor);
-        renderOpaque(m_forwardAmbient);
+        renderEntitiesInQueue(m_forwardAmbient, m_opaqueQueue);
 
         renderLightsForward(scene);
 
@@ -433,7 +464,7 @@ namespace mango
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDisable(GL_CULL_FACE);
         m_blendingShader->bind();
-        renderAlpha(m_blendingShader);
+        renderEntitiesInQueue(m_blendingShader, m_alphaQueue);
         glEnable(GL_CULL_FACE);
 
         if (DEBUG_RENDERING)
@@ -450,7 +481,7 @@ namespace mango
             m_enviroMappingShader->setSubroutine(Shader::Type::FRAGMENT, "reflection"); // TODO: control this using Material class
 
             m_skybox->bindSkyboxTexture();
-            renderEnviroMappingStatic(m_enviroMappingShader);
+            renderEntitiesInQueue(m_enviroMappingShader, m_enviroStaticQueue);
         }
 
         /* Apply postprocess effect */
@@ -476,7 +507,7 @@ namespace mango
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         m_gbufferShader->bind();
-        renderOpaque(m_gbufferShader);
+        renderEntitiesInQueue(m_gbufferShader, m_opaqueQueue);
 
         /* Compute SSAO */
         m_ssao->computeSSAO(m_deferredRendering, getCamera().getView(), getCamera().getProjection());
@@ -493,7 +524,7 @@ namespace mango
         m_mainRenderTarget->bind();
         glClear(GL_COLOR_BUFFER_BIT);
 
-        m_ssao->bindBlurredSSAOTexture(4); //TODO: replace magic number with a variable
+        m_ssao->bindBlurredSSAOTexture(9); //TODO: replace magic number with a variable
         renderLightsDeferred(scene);
 
         m_deferredRendering->bindGBufferReadOnly();
@@ -519,7 +550,7 @@ namespace mango
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDisable(GL_CULL_FACE);
         m_blendingShader->bind();
-        renderAlpha(m_blendingShader);
+        renderEntitiesInQueue(m_blendingShader, m_alphaQueue);
         glEnable(GL_CULL_FACE);
 
         /* Render skybox */
@@ -532,7 +563,7 @@ namespace mango
             m_enviroMappingShader->setSubroutine(Shader::Type::FRAGMENT, "reflection");
 
             m_skybox->bindSkyboxTexture();
-            renderEnviroMappingStatic(m_enviroMappingShader);
+            renderEntitiesInQueue(m_enviroMappingShader, m_enviroStaticQueue);
         }
 
         /* Apply postprocess effect */
@@ -584,7 +615,7 @@ namespace mango
 
         /* Point Lights */
         {
-            m_lightBoundingSphere.setDrawMode(GL_LINES);
+            m_lightBoundingSphere->setDrawMode(Mesh::DrawMode::LINES);
             auto view = scene->getEntitiesWithComponent<PointLightComponent, TransformComponent>();
             for (auto entity : view)
             {
@@ -599,14 +630,15 @@ namespace mango
                 m_boundingboxShader->setUniform("g_mvp", projection * view * model);
                 m_boundingboxShader->setUniform("color", glm::vec4(1.0f, 1.0, 1.0, 1.0f));
 
-                m_lightBoundingSphere.render(*m_boundingboxShader);
+                m_lightBoundingSphere->bind();
+                m_lightBoundingSphere->render();
             }
-            m_lightBoundingSphere.setDrawMode(GL_TRIANGLES);
+            m_lightBoundingSphere->setDrawMode(Mesh::DrawMode::TRIANGLES);
         }
 
         /* Spot Lights */
         {
-            m_lightBoundingCone.setDrawMode(GL_LINES);
+            m_lightBoundingCone->setDrawMode(Mesh::DrawMode::LINES);
             auto view = scene->getEntitiesWithComponent<SpotLightComponent, TransformComponent>();
             for (auto entity : view)
             {
@@ -625,61 +657,61 @@ namespace mango
                 m_boundingboxShader->setUniform("g_mvp", projection * view * model);
                 m_boundingboxShader->setUniform("color", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
 
-                m_lightBoundingCone.render(*m_boundingboxShader);
+                m_lightBoundingCone->bind();
+                m_lightBoundingCone->render();
             }
-            m_lightBoundingCone.setDrawMode(GL_TRIANGLES);
+            m_lightBoundingCone->setDrawMode(Mesh::DrawMode::TRIANGLES);
         }
         glEnable(GL_BLEND);
     }
 
-    void RenderingSystem::renderOpaque(const ref<Shader> & shader)
+    void RenderingSystem::renderEntitiesInQueue(ref<Shader>& shader, std::vector<Entity>& queue)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderingSystem::renderOpaque");
 
-        for (auto& entity : m_opaqueQueue)
+        for (auto& entity : queue)
         {
-            auto& modelRenderer = entity.getComponent<ModelRendererComponent>();
-            auto& transform     = entity.getComponent<TransformComponent>();
+            auto& smc  = entity.getComponent<StaticMeshComponent>();
+            auto& tc   = entity.getComponent<TransformComponent>();
+            auto& mesh = smc.mesh;
 
-            shader->updateGlobalUniforms(transform);
-            modelRenderer.model.render(*shader);
+            mesh->bind();
+            shader->updateGlobalUniforms(tc);
+
+            auto& submeshes = mesh->getSubmeshes();
+            for (uint32_t submeshIndex = 0; submeshIndex < submeshes.size(); ++submeshIndex)
+            {
+                auto materialIndex = submeshes[submeshIndex].materialIndex;
+                MG_CORE_ASSERT(materialIndex < smc.materials.size());
+
+                auto& material = smc.materials[materialIndex];
+                if (material)
+                {
+                    for (auto const& [texture_type, texture] : material->getTextureMap())
+                    {
+                        texture->bind(uint32_t(texture_type));
+                    }
+
+                    // Set uniforms based on the data in the material
+                    for (auto& [uniform_name, value] : material->getBoolMap())
+                    {
+                        shader->setUniform(uniform_name, value);
+                    }
+
+                    for (auto& [uniform_name, value] : material->getFloatMap())
+                    {
+                        shader->setUniform(uniform_name, value);
+                    }
+
+                    for (auto& [uniform_name, value] : material->getVec3Map())
+                    {
+                        shader->setUniform(uniform_name, value);
+                    }
+                }
+                mesh->render(submeshIndex);
+            }
         }
-    }
-
-    void RenderingSystem::renderAlpha(const ref<Shader>& shader)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        MG_PROFILE_GL_ZONE("RenderingSystem::renderAlpha");
-
-        for (auto& entity : m_alphaQueue)
-        {
-            auto& modelRenderer = entity.getComponent<ModelRendererComponent>();
-            auto& transform     = entity.getComponent<TransformComponent>();
-
-            shader->updateGlobalUniforms(transform);
-            modelRenderer.model.render(*shader);
-        }
-    }
-
-    void RenderingSystem::renderEnviroMappingStatic(const ref<Shader>& shader)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        MG_PROFILE_GL_ZONE("RenderingSystem::renderEnviroMappingStatic");
-
-        for (auto& entity : m_enviroStaticQueue)
-        {
-            auto& modelRenderer = entity.getComponent<ModelRendererComponent>();
-            auto& transform     = entity.getComponent<TransformComponent>();
-
-            shader->updateGlobalUniforms(transform);
-            modelRenderer.model.render(*shader);
-        }
-    }
-
-    void RenderingSystem::renderDynamicEnviroMapping(const ref<Shader>& shader)
-    {
-
     }
 
     void RenderingSystem::renderLightsForward(Scene* scene)
@@ -716,8 +748,8 @@ namespace mango
                     m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                     glCullFace(GL_FRONT);
-                    renderOpaque(m_shadowMapGenerator);
-                    renderEnviroMappingStatic(m_shadowMapGenerator);
+                    renderEntitiesInQueue(m_shadowMapGenerator, m_opaqueQueue);
+                    renderEntitiesInQueue(m_shadowMapGenerator, m_enviroStaticQueue);
                     glCullFace(GL_BACK);
                 }
 
@@ -732,7 +764,7 @@ namespace mango
                 m_forwardDirectional->setUniform("s_light_matrix", lightMatrix);
 
                 beginForwardRendering();
-                renderOpaque(m_forwardDirectional);
+                renderEntitiesInQueue(m_forwardDirectional, m_opaqueQueue);
                 endForwardRendering();
             }
         }
@@ -768,8 +800,8 @@ namespace mango
                     m_omniShadowMapGenerator->setUniform("s_far_plane",      100.0f);
 
                     glCullFace(GL_FRONT);
-                    renderOpaque(m_omniShadowMapGenerator);
-                    renderEnviroMappingStatic(m_omniShadowMapGenerator);
+                    renderEntitiesInQueue(m_omniShadowMapGenerator, m_opaqueQueue);
+                    renderEntitiesInQueue(m_omniShadowMapGenerator, m_enviroStaticQueue);
                     glCullFace(GL_BACK);
                 }
 
@@ -788,7 +820,7 @@ namespace mango
                 m_forwardPoint->setUniform("s_far_plane", 100.0f);
 
                 beginForwardRendering();
-                renderOpaque(m_forwardPoint);
+                renderEntitiesInQueue(m_forwardPoint, m_opaqueQueue);
                 endForwardRendering();
             }
         }
@@ -815,8 +847,8 @@ namespace mango
                     m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                     glCullFace(GL_FRONT);
-                    renderOpaque(m_shadowMapGenerator);
-                    renderEnviroMappingStatic(m_shadowMapGenerator);
+                    renderEntitiesInQueue(m_shadowMapGenerator, m_opaqueQueue);
+                    renderEntitiesInQueue(m_shadowMapGenerator, m_enviroStaticQueue);
                     glCullFace(GL_BACK);
                 }
 
@@ -837,7 +869,7 @@ namespace mango
                 m_forwardSpot->setUniform("s_light_matrix",                      lightMatrix);
 
                 beginForwardRendering();
-                renderOpaque(m_forwardSpot);
+                renderEntitiesInQueue(m_forwardSpot, m_opaqueQueue);
                 endForwardRendering();
             }
         }
@@ -874,8 +906,8 @@ namespace mango
                     m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                     glCullFace(GL_FRONT);
-                    renderOpaque(m_shadowMapGenerator);
-                    renderEnviroMappingStatic(m_shadowMapGenerator);
+                    renderEntitiesInQueue(m_shadowMapGenerator, m_opaqueQueue);
+                    renderEntitiesInQueue(m_shadowMapGenerator, m_enviroStaticQueue);
                     glCullFace(GL_BACK);
 
                     glDepthMask(GL_FALSE);
@@ -934,8 +966,8 @@ namespace mango
                     m_omniShadowMapGenerator->setUniform("s_far_plane", 100.0f);
 
                     glCullFace(GL_FRONT);
-                    renderOpaque(m_omniShadowMapGenerator);
-                    renderEnviroMappingStatic(m_omniShadowMapGenerator);
+                    renderEntitiesInQueue(m_omniShadowMapGenerator, m_opaqueQueue);
+                    renderEntitiesInQueue(m_omniShadowMapGenerator, m_enviroStaticQueue);
                     glCullFace(GL_BACK);
 
                     glDepthMask(GL_FALSE);
@@ -965,7 +997,8 @@ namespace mango
                 glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 
                 m_nullShader->setUniform("g_mvp", mvp);
-                m_lightBoundingSphere.render(*m_nullShader);
+                m_lightBoundingSphere->bind();
+                m_lightBoundingSphere->render();
 
                 glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
@@ -993,7 +1026,8 @@ namespace mango
                 m_deferredPoint->setUniform("s_far_plane",                    pointLight.getShadowFarPlane());
 
                 m_deferredPoint->setUniform("g_mvp", mvp);
-                m_lightBoundingSphere.render(*m_deferredPoint);
+                m_lightBoundingSphere->bind();
+                m_lightBoundingSphere->render();
 
                 glCullFace(GL_BACK);
                 glDisable(GL_BLEND);
@@ -1027,8 +1061,8 @@ namespace mango
                     m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                     glCullFace(GL_FRONT);
-                    renderOpaque(m_shadowMapGenerator);
-                    renderEnviroMappingStatic(m_shadowMapGenerator);
+                    renderEntitiesInQueue(m_shadowMapGenerator, m_opaqueQueue);
+                    renderEntitiesInQueue(m_shadowMapGenerator, m_enviroStaticQueue);
                     glCullFace(GL_BACK);
 
                     glDepthMask(GL_FALSE);
@@ -1062,7 +1096,8 @@ namespace mango
                 glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 
                 m_nullShader->setUniform("g_mvp", mvp);
-                m_lightBoundingCone.render(*m_nullShader);
+                m_lightBoundingCone->bind();
+                m_lightBoundingCone->render();
 
                 glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
@@ -1092,7 +1127,8 @@ namespace mango
                 m_deferredSpot->setUniform("s_light_matrix",                      lightMatrix);
 
                 m_deferredSpot->setUniform("g_mvp", mvp);
-                m_lightBoundingCone.render(*m_deferredPoint);
+                m_lightBoundingCone->bind();
+                m_lightBoundingCone->render();
 
                 glCullFace(GL_BACK);
                 glDisable(GL_BLEND);
@@ -1115,53 +1151,53 @@ namespace mango
                   });
     }
 
-    void RenderingSystem::addEntityToRenderQueue(Entity entity, ModelRendererComponent::RenderQueue renderQueue)
+    void RenderingSystem::addEntityToRenderQueue(Entity entity, Material::RenderQueue renderQueue)
     {
         switch (renderQueue)
         {
-            case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
+            case Material::RenderQueue::RQ_OPAQUE:
                 m_opaqueQueue.push_back(entity);
                 break;
-            case ModelRendererComponent::RenderQueue::RQ_ALPHA:
+            case Material::RenderQueue::RQ_TRANSPARENT:
                 m_alphaQueue.push_back(entity);
                 break;
-            case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
+            case Material::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
                 m_enviroStaticQueue.push_back(entity);
                 break;
-            case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
+            case Material::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
                 m_enviroDynamicQueue.push_back(entity);
                 break;
         }
     }
 
-    void RenderingSystem::removeEntityFromRenderQueue(Entity entity, ModelRendererComponent::RenderQueue renderQueue)
+    void RenderingSystem::removeEntityFromRenderQueue(Entity entity, Material::RenderQueue renderQueue)
     {
         std::vector<Entity>::iterator entityIterator;
 
         switch (renderQueue)
         {
-            case ModelRendererComponent::RenderQueue::RQ_OPAQUE:
+            case Material::RenderQueue::RQ_OPAQUE:
                 entityIterator = std::find(m_opaqueQueue.begin(), m_opaqueQueue.end(), entity);
                 if (entityIterator != m_opaqueQueue.end())
                 {
                     m_opaqueQueue.erase(entityIterator);
                 }
                 break;
-            case ModelRendererComponent::RenderQueue::RQ_ALPHA:
+            case Material::RenderQueue::RQ_TRANSPARENT:
                 entityIterator = std::find(m_alphaQueue.begin(), m_alphaQueue.end(), entity);
                 if (entityIterator != m_alphaQueue.end())
                 {
                     m_alphaQueue.erase(entityIterator);
                 }
                 break;
-            case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
+            case Material::RenderQueue::RQ_ENVIRO_MAPPING_STATIC:
                 entityIterator = std::find(m_enviroStaticQueue.begin(), m_enviroStaticQueue.end(), entity);
                 if (entityIterator != m_enviroStaticQueue.end())
                 {
                     m_enviroStaticQueue.erase(entityIterator);
                 }
                 break;
-            case ModelRendererComponent::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
+            case Material::RenderQueue::RQ_ENVIRO_MAPPING_DYNAMIC:
                 entityIterator = std::find(m_enviroDynamicQueue.begin(), m_enviroDynamicQueue.end(), entity);
                 if (entityIterator != m_enviroDynamicQueue.end())
                 {

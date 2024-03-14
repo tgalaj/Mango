@@ -154,6 +154,24 @@ namespace mango
         style.ScaleAllSizes(dpiScale);
     }
 
+    void ImGuiSystem::mergeFont(const std::string& path, float size, const ImWchar iconRanges[3])
+    {
+        float dpiScale = Services::application()->getWindow()->getDpiScale().x;
+
+        if (size <= 0.0f) size = 16.0f;
+
+        size = std::floorf(size * dpiScale);
+
+        ImGuiIO& io = ImGui::GetIO();
+
+        ImFontConfig config;
+        config.MergeMode        = true;
+        config.PixelSnapH = true;
+        config.GlyphMinAdvanceX = size; // Use if you want to make the icon monospaced
+
+        io.Fonts->AddFontFromFileTTF(VFI::getFilepath(path).string().c_str(), size, &config, iconRanges);
+    }
+
     void ImGuiSystem::setDefaultIniSettingsFile(const std::string& filename)
     {
         m_iniFilepath = VFI::getFilepath(filename).string();

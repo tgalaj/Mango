@@ -1,4 +1,5 @@
-﻿#version 450
+﻿#version 460 core
+
 in vec2 texcoord;
 in vec3 world_pos;
 in mat3 tbn;

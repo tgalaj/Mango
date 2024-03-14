@@ -1,6 +1,9 @@
 #define GLFW_INCLUDE_NONE 
 
 #include "EditorSystem.h"
+#include "DragDropPayloadTypes.h"
+#include "IconsFontAwesome6.h"
+
 #include "Mango/ImGui/ImGuiUtils.h"
 #include "Mango/Math/Math.h"
 #include "Mango/Project/ProjectSerializer.h"
@@ -66,9 +69,14 @@ namespace mango
         }
 
         // Setup font
-        ImGuiSystem::addFont("InterBold16", "fonts/inter/Inter-Bold.ttf",    16.0f); 
-        ImGuiSystem::addFont("Inter24",     "fonts/inter/Inter-Regular.ttf", 24.0f);
-        ImGuiSystem::addFont("Inter16",     "fonts/inter/Inter-Regular.ttf", 16.0f, true);
+        ImGuiSystem::addFont("Inter16", "fonts/inter/Inter-Regular.ttf", 16.0f, true);
+        
+        static const ImWchar iconRanges[3] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+        ImGuiSystem::mergeFont("fonts/fontawesome/webfonts/" FONT_ICON_FILE_NAME_FAR, 16.0f * 2.0f / 3.0f, iconRanges);
+        ImGuiSystem::mergeFont("fonts/fontawesome/webfonts/" FONT_ICON_FILE_NAME_FAS, 16.0f * 2.0f / 3.0f, iconRanges);
+
+        ImGuiSystem::addFont("InterBold16",  "fonts/inter/Inter-Bold.ttf",    16.0f); 
+        ImGuiSystem::addFont("Inter24",      "fonts/inter/Inter-Regular.ttf", 24.0f);
 
         // Load icons
         m_playIcon = createRef<Texture>();
@@ -564,8 +572,7 @@ namespace mango
             /** Drag drop target */
             if (ImGui::BeginDragDropTarget())
             {
-                // TODO(TG): consider moving payload type to a shared file (make a define or static const)
-                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MG_CONTENT_BROWSER_ITEM"))
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MG_DRAG_PAYLOAD_CONTENT_BROWSER_ITEM))
                 {
                     const auto* path = (const wchar_t*)payload->Data;
                     openScene(path);

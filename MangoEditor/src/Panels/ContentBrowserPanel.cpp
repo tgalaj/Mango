@@ -1,4 +1,5 @@
 #include "ContentBrowserPanel.h"
+#include "DragDropPayloadTypes.h"
 
 #include "Mango/Core/VFI.h"
 #include "Mango/Project/Project.h"
@@ -108,8 +109,7 @@ namespace mango
                     std::filesystem::path relativePath = std::filesystem::relative(path, m_basePath);
                     const wchar_t* itemPath = relativePath.c_str();
 
-                    // TODO: consider moving payload type to a shared file (make a define or static const)
-                    ImGui::SetDragDropPayload("MG_CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
+                    ImGui::SetDragDropPayload(MG_DRAG_PAYLOAD_CONTENT_BROWSER_ITEM, itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
                     ImGui::Text(relativePath.filename().string().c_str());
                     ImGui::EndDragDropSource();
                 }

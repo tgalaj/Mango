@@ -1,4 +1,6 @@
+#include "IconsFontAwesome6.h"
 #include "SceneHierarchyPanel.h"
+#include "DragDropPayloadTypes.h"
 
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Core/VFI.h"
@@ -33,11 +35,11 @@ namespace mango
         {
             if (m_scene)
             {
-                m_scene->m_registry.each([&](auto entityID)
+                for (auto [entityID] : m_scene->m_registry.storage<entt::entity>().each())
                 { 
                     Entity entity{ entityID, m_scene.get() };
                     drawEntityNode(entity);
-                });
+                }
             }
 
             if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
@@ -326,7 +328,7 @@ namespace mango
             displayAddComponentEntry<DirectionalLightComponent>("Directional Light");
             displayAddComponentEntry<PointLightComponent>("Point Light");
             displayAddComponentEntry<SpotLightComponent>("Spot Light");
-            displayAddComponentEntry<ModelRendererComponent>("Model Renderer");
+            displayAddComponentEntry<StaticMeshComponent>("Static Mesh");
             displayAddComponentEntry<RigidBody3DComponent>("Rigidbody 3D");
             displayAddComponentEntry<BoxCollider3DComponent>("Box Collider 3D");
             displayAddComponentEntry<SphereColliderComponent>("Sphere Collider");
@@ -537,170 +539,354 @@ namespace mango
 
         });
 
-        drawComponent<ModelRendererComponent>("Model Renderer", entity, [&entity](auto& component)
+        drawComponent<StaticMeshComponent>("STATIC MESH", entity, [&entity](auto& component)
         {
-            const char* renderQueueStrings[] = { "Opaque", "Alpha", "Static Environment Mapping", "Dynamic Environment Mapping"};
-            const char* currentRenderQueue   = renderQueueStrings[int(component.getRenderQueue())];
+            auto&       mesh  = component.mesh;
+            std::string meshLabel = mesh ? mesh->getName() : "NULL";
 
-            if (ImGui::BeginCombo("Render Queue", currentRenderQueue))
+            ImGui::Text("Mesh");
+            ImGui::SameLine();
+            
+            static std::string searchPattern = "";
+            if (ImGui::Button(meshLabel.c_str()))
             {
-                for (int i = 0; i < std::size(renderQueueStrings); ++i)
-                {
-                    bool isSelected = currentRenderQueue == renderQueueStrings[i];
-                    if (ImGui::Selectable(renderQueueStrings[i], isSelected))
-                    {
-                        currentRenderQueue   = renderQueueStrings[i];
-                        entity.addOrReplaceComponent<ModelRendererComponent>(component.model, ModelRendererComponent::RenderQueue(i));
-                    }
-
-                    if (isSelected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-                ImGui::EndCombo();
+                ImGui::OpenPopup("mesh_select_popup");
+                searchPattern = "";
             }
 
-            Model& model = component.model;
-            const char* modelTypeStrings[] = { "Model3D", "Cone", "Cube", "Cylinder", "Plane", "Sphere", "Torus", "Quad" };
-            const char* currentModelType = modelTypeStrings[int(model.getModelType())];
-
-            if (ImGui::BeginCombo("Type", currentModelType))
+            auto popupLambda = [](const char* popupName, auto& component, std::function<void(void)> func)
             {
-                for (int i = 0; i < std::size(modelTypeStrings); ++i)
+                if (ImGui::BeginPopup(popupName))
                 {
-                    bool isSelected = currentModelType == modelTypeStrings[i];
-                    if (ImGui::Selectable(modelTypeStrings[i], isSelected))
-                    {
-                        currentModelType = modelTypeStrings[i];
-                        model.setModelType(Model::ModelType(i));
-                    }
+                    ImGui::InputText("##search_pattern", &searchPattern, ImGuiInputTextFlags_EscapeClearsAll);
 
-                    if (isSelected)
+                    auto availWidth = ImGui::GetContentRegionAvail().x;
+                    if (ImGui::Button("CLEAR", ImVec2(availWidth, ImGui::GetFrameHeight()))) searchPattern = "";
+
+                    ImGui::BeginChild("##item_list", ImVec2(availWidth, ImGui::GetFrameHeight() * 7.0f));
+                    
+                    func();
+
+                    ImGui::EndChild();
+                    ImGui::EndPopup();
+                }
+            };
+
+            popupLambda("mesh_select_popup", component, [&component]()
+            {
+                // 1. get list of all loaded meshes from AssetManager and list them
+                // 2. if item selected -> change the mesh for the component.mesh
+                for (auto [name, staticMesh] : AssetManager::getStaticMeshList())
+                {
+                    auto rx = std::regex(searchPattern, std::regex_constants::icase);
+                    if (std::regex_search(name, rx))
                     {
-                        ImGui::SetItemDefaultFocus();
+                        if (ImGui::Selectable(name.c_str()))
+                        {
+                            component.mesh      = staticMesh;
+                            component.materials = staticMesh->getMaterials();
+                            ImGui::CloseCurrentPopup();
+                        }
                     }
                 }
-                ImGui::EndCombo();
-            }
+            });
 
-            PrimitiveProperties pp                        = model.getPrimitiveProperties();
-            bool                updatePrimitiveProperties = false;
+            const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen    |
+                                                     ImGuiTreeNodeFlags_Framed         |
+                                                     ImGuiTreeNodeFlags_FramePadding   |
+                                                     ImGuiTreeNodeFlags_SpanAvailWidth |
+                                                     ImGuiTreeNodeFlags_AllowItemOverlap;
 
-            switch (model.getModelType())
+            static int32_t       selectedMaterialIndex = -1;
+            static bool          isMaterialEditorOpen  = false;
+            static ref<Material> materialToEdit        = nullptr;
+
+            ImGui::Unindent();
+            if (ImGui::TreeNodeEx("Materials", treeNodeFlags))
             {
-                case Model::ModelType::Model3D:
-                    ImGui::InputText("##Filename", &model.m_filename);
+                for (uint32_t i = 0; i < component.materials.size(); ++i)
+                {
+                    std::string materialLabel = component.materials[i] ? component.materials[i]->name : "NULL";
+
+                    ImGui::Text("[Material %d]", i);
+                    ImGui::SameLine();
+                    
+                    ImGui::PushID(i);
+                    if (ImGui::Button(materialLabel.c_str()))
+                    {
+                        ImGui::OpenPopup("material_select_popup");
+                        searchPattern = "";
+                        selectedMaterialIndex = i;
+                    }
 
                     ImGui::SameLine();
-                    ImGui::PushItemWidth(-1);
-
-                    if (ImGui::Button("Load"))
+                    if(ImGui::Button(ICON_FA_ELLIPSIS_VERTICAL)) // Clear, Edit menu
                     {
-                        model.load(model.m_filename);
+                        ImGui::OpenPopup("material_options");
+                        selectedMaterialIndex = i;
                     }
-                    ImGui::PopItemWidth();
-                    break;
 
-                case mango::Model::ModelType::Cone: 
-                    updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragFloat("Radius", &pp.radius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices", &pp.slices, 1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Stacks", &pp.stacks, 1,     1,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    break;
-
-                case mango::Model::ModelType::Cube:
-                    updatePrimitiveProperties |= ImGui::DragFloat("Size", &pp.size, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    break;
-
-                case mango::Model::ModelType::Cylinder:
-                    updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragFloat("Radius", &pp.radius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices", &pp.slices, 1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    break;
-
-                case mango::Model::ModelType::Plane:
-                    updatePrimitiveProperties |= ImGui::DragFloat("Width",  &pp.width,  0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices", &pp.slices, 1,     1,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Stacks", &pp.stacks, 1,     1,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    break;
-
-                case mango::Model::ModelType::Sphere:
-                    updatePrimitiveProperties |= ImGui::DragFloat("Radius", &pp.radius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices", &pp.slices, 1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    break;
-
-                case mango::Model::ModelType::Torus:
-                    updatePrimitiveProperties |= ImGui::DragFloat("Inner Radius", &pp.innerRadius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragFloat("Outer Radius", &pp.outerRadius, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Slices",       &pp.slices,      1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragInt  ("Stacks",       &pp.stacks,      1,     3,     INT_MAX, "%d",   ImGuiSliderFlags_AlwaysClamp);
-                    break;
-
-                case mango::Model::ModelType::Quad:
-                    updatePrimitiveProperties |= ImGui::DragFloat("Width",  &pp.width,  0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    updatePrimitiveProperties |= ImGui::DragFloat("Height", &pp.height, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-                    break;
-            }
-
-            if (updatePrimitiveProperties) model.setPrimitiveProperties(pp);
-
-            ImGui::Separator();
-
-            // TODO: this needs to be reworked, it's a temporary solution right now
-            // Display material for the base mesh only
-            auto& material = model.getMesh().material;
-
-            ImGui::Text("Material");
-
-            // Draw vec3 map
-            for (auto& [propertyName, vec3Value] : material.m_vec3Map)
-            {
-                ImGui::DragFloat3(propertyName.c_str(), glm::value_ptr(vec3Value));
-            }
-            // Draw float map
-            for (auto& [propertyName, floatValue] : material.m_floatMap)
-            {
-                ImGui::DragFloat(propertyName.c_str(), &floatValue);
-            }
-            // Draw textures
-            for (auto& [textureType, texture] : material.m_textureMap)
-            {
-                std::string textureName = "##" + Material::m_textureUniformsMap[textureType];
-                ImGui::InputText(textureName.c_str(), &texture->getFilename());
-
-                /** Drag drop target */
-                bool loadDroppedTexture = false;
-                std::string textureFilename = texture->getFilename();
-                if (ImGui::BeginDragDropTarget())
-                {
-                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MG_CONTENT_BROWSER_ITEM"))
-                    {
-                        const auto* path = (const wchar_t*)payload->Data;
-
-                        auto basePath      = Project::getAssetDirectory();
-                        auto relativePath  = std::filesystem::relative(std::filesystem::path(path), basePath);
-
-                        textureFilename    = std::filesystem::path(path).string();
-
-                        loadDroppedTexture = true;
-                    }
-                    ImGui::EndDragDropTarget();
+                    ImGui::PopID();
                 }
+
+                ImGui::PushID(selectedMaterialIndex);
+                if (ImGui::BeginPopup("material_options"))
+                {
+                    if (ImGui::Selectable("Edit"))
+                    {
+                        isMaterialEditorOpen = true;
+                        materialToEdit       = component.materials[selectedMaterialIndex];
+                    }
+                    
+                    auto originalMaterial = mesh->getMaterials()[selectedMaterialIndex];
+
+                    ImGui::BeginDisabled(component.materials[selectedMaterialIndex] == originalMaterial);
+                    if (ImGui::Selectable("Clear"))
+                    {
+                        component.materials[selectedMaterialIndex] = originalMaterial;
+                    }
+                    ImGui::EndDisabled();
+                    ImGui::EndPopup();
+                }
+
+                popupLambda("material_select_popup", component, [&component]()
+                {
+                    // 1. get list of all loaded materials from AssetManager and list them
+                    // 2. if item selected -> change the material for the component
+                    int32_t id = 0;
+                    for (auto [name, material] : AssetManager::getMaterialList())
+                    {
+                        auto rx = std::regex(searchPattern, std::regex_constants::icase);
+                        if (std::regex_search(name, rx))
+                        {
+                            if (ImGui::Selectable(name.c_str()))
+                            {
+                                component.materials[selectedMaterialIndex] = material;
+                                selectedMaterialIndex = -1;
+                                ImGui::CloseCurrentPopup();
+                            }
+                        }
+                    }
+                });
+                ImGui::PopID();
+                ImGui::TreePop();
+            }
+            ImGui::Indent();
+
+            auto materialTextureTypeToString = [](Material::TextureType type) -> std::string
+            {
+                switch (type)
+                {
+                    case Material::TextureType::DIFFUSE:      return "Diffuse";
+                    case Material::TextureType::SPECULAR:     return "Specular";
+                    case Material::TextureType::NORMAL:       return "Normal";
+                    case Material::TextureType::EMISSION:     return "Emission";
+                    case Material::TextureType::DISPLACEMENT: return "Displacement";
+                }
+                MG_CORE_ASSERT_MSG(false, "Unknown texture type");
+                return {};
+            };
+            
+            // TODO(TG): clean this up - move this to a separate MaterialEditorPanel class
+            if (isMaterialEditorOpen)
+            {
+                ImGui::Begin("Material Editor", &isMaterialEditorOpen);
+
+                ImGui::Text("Material");
                 ImGui::SameLine();
-                ImGui::PushItemWidth(-1);
 
-                if (ImGui::Button("Load") || loadDroppedTexture)
+                if (ImGui::Button(materialToEdit->name.c_str(), { ImGui::GetContentRegionAvail().x, 0 }))
                 {
-                    if (textureFilename.empty()) return;
-
-                    bool isSrgb = (textureType == Material::TextureType::DIFFUSE) || (textureType == Material::TextureType::SPECULAR);
-                    texture = AssetManager::createTexture2D(textureFilename, isSrgb);
+                    ImGui::OpenPopup("select_material_to_edit_popup");
                 }
-                ImGui::PopItemWidth();
-            }
 
+                if (ImGui::BeginPopup("select_material_to_edit_popup"))
+                {
+                    ImGui::InputText("##search_pattern", &searchPattern, ImGuiInputTextFlags_EscapeClearsAll);
+
+                    auto availWidth = ImGui::GetContentRegionAvail().x;
+                    if (ImGui::Button("CLEAR", ImVec2(availWidth, ImGui::GetFrameHeight()))) searchPattern = "";
+
+                    ImGui::BeginChild("##item_list", ImVec2(availWidth, ImGui::GetFrameHeight() * 7.0f));
+
+                    // 1. get list of all loaded materials from AssetManager and list them
+                    // 2. if item selected -> change the material to edit
+                    int32_t id = 0;
+                    for (auto [name, material] : AssetManager::getMaterialList())
+                    {
+                        auto rx = std::regex(searchPattern, std::regex_constants::icase);
+                        if (std::regex_search(name, rx))
+                        {
+                            if (ImGui::Selectable(name.c_str()))
+                            {
+                                materialToEdit = material;
+                                ImGui::CloseCurrentPopup();
+                            }
+                        }
+                    }
+
+                    ImGui::EndChild();
+                    ImGui::EndPopup();
+                }
+
+                ImGui::Text("Shader:   %s", "tbd");
+                ImGui::Separator();
+
+                if (ImGui::BeginTable("Textures", 2, ImGuiTableFlags_SizingStretchSame))
+                {
+                    // Render Queue
+                    ImGui::TableNextColumn();
+                    ImGui::Text("Render Queue");
+
+                    ImGui::TableNextColumn();
+                    ImGui::SetNextItemWidth(-1);
+                    const  char* renderQueueItems[]      = {"Opaque", "Transparent", "Env. Mapped Static", "Env. Mapped Dynamic"};
+                    static auto  renderQueueCurrentIndex = (int)materialToEdit->getRenderQueue();
+
+                    if (ImGui::BeginCombo("##render_queue", renderQueueItems[renderQueueCurrentIndex]))
+                    {
+                        for (int n = 0; n < std::size(renderQueueItems); ++n)
+                        {
+                            const bool isSelected = (renderQueueCurrentIndex == n);
+                            if (ImGui::Selectable(renderQueueItems[n], isSelected))
+                            {
+                                renderQueueCurrentIndex = n;
+                                materialToEdit->setRenderQueue((Material::RenderQueue)renderQueueCurrentIndex);
+                            }
+
+                            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                            if (isSelected) ImGui::SetItemDefaultFocus();
+                        }
+                        ImGui::EndCombo();
+                    }
+
+                    // Blend Mode
+                    ImGui::TableNextColumn();
+                    ImGui::Text("Blend Mode");
+
+                    ImGui::TableNextColumn();
+                    const  char* blendModeItems[] = { "None", "Alpha" };
+                    static auto  blendModeCurrentIndex = (int)materialToEdit->getBlendMode();
+
+                    if (ImGui::BeginCombo("##blend_mode", blendModeItems[blendModeCurrentIndex]))
+                    {
+                        for (int n = 0; n < std::size(blendModeItems); ++n)
+                        {
+                            const bool isSelected = (blendModeCurrentIndex == n);
+                            if (ImGui::Selectable(blendModeItems[n], isSelected))
+                            {
+                                blendModeCurrentIndex = n;
+                                materialToEdit->setBlendMode((Material::BlendMode)blendModeCurrentIndex);
+                            }
+
+                            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                            if (isSelected) ImGui::SetItemDefaultFocus();
+                        }
+                        ImGui::EndCombo();
+                    }
+
+                    ImGui::EndTable();
+                }
+
+                float previewSize = ImGui::GetFontSize() * 5.0f;
+                if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    if (ImGui::BeginTable("Textures", 2, ImGuiTableFlags_SizingFixedFit))
+                    {
+                        auto availWidth = ImGui::GetContentRegionAvail().x;
+                        ImGui::TableSetupColumn("x", ImGuiTableColumnFlags_WidthStretch);
+                        ImGui::TableSetupColumn("y", ImGuiTableColumnFlags_WidthFixed, previewSize);
+
+                        for (auto &[type, texture] : materialToEdit->getTextureMap())
+                        {
+                            ImGui::TableNextColumn();
+                            ImGui::Text("%s", materialTextureTypeToString(type).c_str());
+
+                            ImGui::TableNextColumn();
+                            ImGui::Image((ImTextureID)texture->getRendererID(), { previewSize, previewSize });
+
+                            if (ImGui::BeginDragDropTarget())
+                            {
+                                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MG_DRAG_PAYLOAD_CONTENT_BROWSER_ITEM))
+                                {
+                                    const auto* path = (const wchar_t*)payload->Data;
+
+                                    bool isSrgb = (type == Material::TextureType::DIFFUSE) || (type == Material::TextureType::EMISSION);
+                                    texture = AssetManager::createTexture2D(std::filesystem::path(path).string(), isSrgb);
+                                }
+                                ImGui::EndDragDropTarget();
+                            }
+
+                            if (ImGui::BeginItemTooltip())
+                            {
+                                ImGui::Text("Path: %s", texture->getFilename().c_str());
+                                ImGui::Image((ImTextureID)texture->getRendererID(), { 512, 512 });
+                                ImGui::EndTooltip();
+                            }
+                        }
+                        ImGui::EndTable();
+                    }
+                }
+
+                if (ImGui::CollapsingHeader("Floats", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    if (ImGui::BeginTable("Floats", 2, ImGuiTableFlags_SizingStretchSame))
+                    {
+                        for (auto& [name, value] : materialToEdit->getFloatMap())
+                        {
+                            ImGui::TableNextColumn();
+                            ImGui::Text(name.c_str());
+
+                            ImGui::TableNextColumn();
+                            ImGui::SetNextItemWidth(-1);
+                            ImGui::PushID(name.c_str());
+                            ImGui::DragFloat("##", &value);
+                            ImGui::PopID();
+                        }
+                        ImGui::EndTable();
+                    }
+                }
+
+                if (ImGui::CollapsingHeader("Vec3s", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    if (ImGui::BeginTable("Vec3s", 2, ImGuiTableFlags_SizingStretchSame))
+                    {
+                        for (auto& [name, value] : materialToEdit->getVec3Map())
+                        {
+                            ImGui::TableNextColumn();
+                            ImGui::Text(name.c_str());
+
+                            ImGui::TableNextColumn();
+                            ImGui::SetNextItemWidth(-1);
+                            ImGui::PushID(name.c_str());
+                            ImGui::DragFloat3("##", &value[0]);
+                            ImGui::PopID();
+                        }
+                        ImGui::EndTable();
+                    }
+                }
+
+                if (ImGui::CollapsingHeader("Bools", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    if (ImGui::BeginTable("Bools", 2, ImGuiTableFlags_SizingStretchSame))
+                    {
+                        for (auto& [name, value] : materialToEdit->getBoolMap())
+                        {
+                            ImGui::TableNextColumn();
+                            ImGui::Text(name.c_str());
+
+                            ImGui::TableNextColumn();
+                            ImGui::SetNextItemWidth(-1);
+                            ImGui::PushID(name.c_str());
+                            ImGui::Checkbox("##", &value);
+                            ImGui::PopID();
+                        }
+                        ImGui::EndTable();
+                    }
+                }
+
+                ImGui::End();
+            }
         });
 
         drawComponent<RigidBody3DComponent>("Rigidbody 3D", entity, [](auto& component)

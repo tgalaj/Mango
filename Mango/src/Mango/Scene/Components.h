@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Mango/Core/AssetManager.h"
+#include "Mango/Core/Services.h"
 #include "Mango/Core/UUID.h"
+
 #include "Mango/Rendering/Attenuation.h"
-#include "Mango/Rendering/Model.h"
+#include "Mango/Rendering/Mesh.h"
 #include "Mango/Rendering/Camera/Camera.h"
 
 #ifndef GLM_ENABLE_EXPERIMENTAL
@@ -207,31 +210,46 @@ namespace mango
     struct CameraComponent
     {
         Camera camera;
-        bool isPrimary = true;
+        bool isPrimary = false;
     };
 
-    struct ModelRendererComponent
+    struct StaticMeshComponent
     {
     public:
-        enum class RenderQueue { RQ_OPAQUE, RQ_ALPHA, RQ_ENVIRO_MAPPING_STATIC, RQ_ENVIRO_MAPPING_DYNAMIC };
+        StaticMeshComponent()
+        {
+            if (materials.empty())
+            {
+                materials.emplace_back(AssetManager::getMaterial("DefaultMaterial"));
+            }
+        }
 
-        ModelRendererComponent()
-            : m_renderQueue(RenderQueue::RQ_OPAQUE)
-        {}
-
-        explicit ModelRendererComponent(const Model& model, RenderQueue renderQueue = RenderQueue::RQ_OPAQUE)
-            : model(model),
-              m_renderQueue(renderQueue)
-        {}
-
-        RenderQueue getRenderQueue() const { return m_renderQueue; }
+        explicit StaticMeshComponent(const ref<Mesh>& m)
+            : mesh(m) 
+        {
+            if (mesh) materials = mesh->getMaterials();
+        }
 
     public:
-        Model model;
-
-    private:
-        RenderQueue m_renderQueue;
+        ref<Mesh>     mesh      = nullptr;
+        MaterialTable materials;// = {};
     };
+
+    #if 0
+    struct AnimatedMeshComponent
+    {
+    public:
+        AnimatedMeshComponent()
+        {}
+
+        explicit AnimatedMeshComponent(const ref<AnimatedMesh>& animatedMesh)
+            : animatedMesh(animatedMesh)
+        {}
+
+    public:
+        ref<AnimatedMesh> animatedMesh;
+    };
+    #endif
 
     struct TransformComponent
     {
@@ -429,6 +447,6 @@ namespace mango
 
     // Except: IDComponent, TagComponent which are special case components
     using ComponentsRegistry = ComponentsGroup<DirectionalLightComponent, PointLightComponent, SpotLightComponent, 
-                                               CameraComponent, ModelRendererComponent, TransformComponent, 
+                                               CameraComponent, StaticMeshComponent, /*AnimatedMeshComponent,*/ TransformComponent, 
                                                RigidBody3DComponent, SphereColliderComponent, BoxCollider3DComponent>;
 }
