@@ -114,7 +114,7 @@ namespace mango
         // however, it'll work without any issues.
         // Figure out a better way to do this ???
         auto rootDir = std::filesystem::path(MG_ROOT_DIR);
-        mango::VFI::addToSearchPath(rootDir / "Mango/assets/shaders");
+        mango::VFI::addToSearchPath(rootDir / "Mango/resources/shaders");
 
         // Init core services
         AssetManager::initDefaultAssets();

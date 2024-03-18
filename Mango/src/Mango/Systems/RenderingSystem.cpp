@@ -61,6 +61,9 @@ namespace mango
         m_debugRendering = AssetManager::createShader("Debug-Rendering", "FSQ.vert", "DebugRendering.frag");
         m_debugRendering->link();
 
+        m_wireframeShader = AssetManager::createShader("Wireframe", "Wireframe.vert", "Wireframe.frag");
+        m_wireframeShader->link();
+
         m_shadowMapGenerator = AssetManager::createShader("Shadow-Map-Gen", "Shadow-Map-Gen.vert", "Shadow-Map-Gen.frag");
         m_shadowMapGenerator->link();
 
@@ -178,7 +181,7 @@ namespace mango
 
         // TODO: create two methods: renderGame and renderEditor + use switch
         // Or SceneRenderer class
-        if (m_mode == RenderingMode::GAME)
+        if (renderingMode == RenderingMode::GAME)
         {
             auto primaryCameraEntity = m_activeScene->getPrimaryCamera();
 
@@ -200,7 +203,7 @@ namespace mango
             renderDeferred(m_activeScene);
         }
 
-        if (m_mode == RenderingMode::EDITOR)
+        if (renderingMode == RenderingMode::EDITOR)
         {
             renderDeferred(m_activeScene);
 
@@ -368,7 +371,7 @@ namespace mango
 
     void RenderingSystem::setRenderingMode(RenderingMode mode, Camera* editorCamera /*= nullptr*/, const glm::vec3& editorCameraPosition /*= glm::vec3(0.0f)*/)
     {
-        m_mode           = mode;
+        renderingMode           = mode;
         m_camera         = editorCamera;
         m_cameraPosition = editorCameraPosition;
     }
@@ -503,74 +506,104 @@ namespace mango
         glEnable(GL_DEPTH_TEST);
         glDepthMask(GL_TRUE);
 
+        glClearColor(0.0, 0.0, 0.0, 1.0);
+
         m_deferredRendering->bindGBuffer();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        m_gbufferShader->bind();
-        renderEntitiesInQueue(m_gbufferShader, m_opaqueQueue);
-
-        /* Compute SSAO */
-        m_ssao->computeSSAO(m_deferredRendering, getCamera().getView(), getCamera().getProjection());
-        m_ssao->blurSSAO();
-
-        /* Light Pass - compute lighting */
-        glDepthMask(GL_FALSE);
-        glDisable(GL_DEPTH_TEST);
-
-        glEnable(GL_BLEND);
-        glBlendEquation(GL_FUNC_ADD);
-        glBlendFunc(GL_ONE, GL_ONE);
-
-        m_mainRenderTarget->bind();
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        m_ssao->bindBlurredSSAOTexture(9); //TODO: replace magic number with a variable
-        renderLightsDeferred(scene);
-
-        m_deferredRendering->bindGBufferReadOnly();
-        m_mainRenderTarget->bindWriteOnly();
-        glBlitFramebuffer(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight(),
-                          0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight(),
-                          GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-
-        m_mainRenderTarget->bind();
-        glEnable(GL_DEPTH_TEST);
-        glDepthMask(GL_TRUE);
-
-        if (DEBUG_RENDERING && m_mode == RenderingMode::EDITOR)
+        if (ShadingMode::SHADED == shadingMode || ShadingMode::SHADED_WIREFRAME == shadingMode)
         {
-            renderDebugLightsBoundingBoxes(scene);
+            m_gbufferShader->bind();
+            renderEntitiesInQueue(m_gbufferShader, m_opaqueQueue);
+
+            /* Compute SSAO */
+            m_ssao->computeSSAO(m_deferredRendering, getCamera().getView(), getCamera().getProjection());
+            m_ssao->blurSSAO();
+
+            /* Light Pass - compute lighting */
+            glDepthMask(GL_FALSE);
+            glDisable(GL_DEPTH_TEST);
+
+            glEnable(GL_BLEND);
+            glBlendEquation(GL_FUNC_ADD);
+            glBlendFunc(GL_ONE, GL_ONE);
+
+            m_mainRenderTarget->bind();
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            m_ssao->bindBlurredSSAOTexture(9); //TODO: replace magic number with a variable
+            renderLightsDeferred(scene);
+
+            m_deferredRendering->bindGBufferReadOnly();
+            m_mainRenderTarget->bindWriteOnly();
+            glBlitFramebuffer(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight(),
+                              0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight(),
+                              GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+            m_mainRenderTarget->bind();
+            glEnable(GL_DEPTH_TEST);
+            glDepthMask(GL_TRUE);
+
+            if (DEBUG_RENDERING && renderingMode == RenderingMode::EDITOR)
+            {
+                renderDebugLightsBoundingBoxes(scene);
+            }
+
+            /* Sort transparent objects back to front */
+            sortAlpha();
+
+            /* Render transparent objects */
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glDisable(GL_CULL_FACE);
+            m_blendingShader->bind();
+            renderEntitiesInQueue(m_blendingShader, m_alphaQueue);
+            glEnable(GL_CULL_FACE);
+
+            /* Render skybox */
+            if (m_skybox != nullptr)
+            {
+                m_skybox->render(getCamera().getProjection(), getCamera().getView());
+
+                m_enviroMappingShader->bind();
+                //m_enviro_mapping_shader->setSubroutine(Shader::Type::FRAGMENT, "refraction"); // TODO: control this using Material class
+                m_enviroMappingShader->setSubroutine(Shader::Type::FRAGMENT, "reflection");
+
+                m_skybox->bindSkyboxTexture();
+                renderEntitiesInQueue(m_enviroMappingShader, m_enviroStaticQueue);
+            }
+
+            /* Apply postprocess effect */
+            m_bloomFilter->extractBrightness(m_mainRenderTarget, 1.0);
+            m_bloomFilter->blurGaussian(2);
+        }
+        
+        if (ShadingMode::WIREFRAME == shadingMode || ShadingMode::SHADED_WIREFRAME == shadingMode)
+        {
+            if (ShadingMode::WIREFRAME == shadingMode)
+            {
+                m_bloomFilter->clearBuffers();
+            }
+
+            glClearColor(0.05, 0.05, 0.05, 1.0);
+
+            m_mainRenderTarget->bind();
+            m_wireframeShader->bind();
+            
+            glEnable(GL_POLYGON_OFFSET_LINE);
+            glPolygonOffset(-1.5, -1.0);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+            renderEntitiesInQueue(m_wireframeShader, m_opaqueQueue);
+            renderEntitiesInQueue(m_wireframeShader, m_alphaQueue);
+            renderEntitiesInQueue(m_wireframeShader, m_enviroStaticQueue);
+            renderEntitiesInQueue(m_wireframeShader, m_enviroDynamicQueue);
+
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glDisable(GL_POLYGON_OFFSET_LINE);
         }
 
-        /* Sort transparent objects back to front */
-        sortAlpha();
-
-        /* Render transparent objects */
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glDisable(GL_CULL_FACE);
-        m_blendingShader->bind();
-        renderEntitiesInQueue(m_blendingShader, m_alphaQueue);
-        glEnable(GL_CULL_FACE);
-
-        /* Render skybox */
-        if (m_skybox != nullptr)
-        {
-            m_skybox->render(getCamera().getProjection(), getCamera().getView());
-
-            m_enviroMappingShader->bind();
-            //m_enviro_mapping_shader->setSubroutine(Shader::Type::FRAGMENT, "refraction"); // TODO: control this using Material class
-            m_enviroMappingShader->setSubroutine(Shader::Type::FRAGMENT, "reflection");
-
-            m_skybox->bindSkyboxTexture();
-            renderEntitiesInQueue(m_enviroMappingShader, m_enviroStaticQueue);
-        }
-
-        /* Apply postprocess effect */
-        m_bloomFilter->extractBrightness(m_mainRenderTarget, 1.0);
-        m_bloomFilter->blurGaussian(2);
         m_bloomFilter->bindBrightnessTexture(1);
-
         applyPostprocess(m_hdrFilter, &m_mainRenderTarget, &m_helperRenderTarget);
         applyPostprocess(m_fxaaFilter, &m_helperRenderTarget, m_outputToOffscreenTexture ? &m_mainRenderTarget : 0);
     }

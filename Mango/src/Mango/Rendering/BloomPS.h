@@ -21,6 +21,8 @@ namespace mango
         void extractBrightness(const ref<RenderTarget> & hdrRenderTarget, float threshold = 1.0f);
         void blurGaussian(uint32_t iterations = 5);
 
+        void clearBuffers();
+
     private:
         ref<RenderTarget> m_brightnessBuffer;
         ref<RenderTarget> m_blurredBuffer;

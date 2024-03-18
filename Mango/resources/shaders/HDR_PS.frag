@@ -14,7 +14,7 @@ void main()
     vec3 hdr_color   = texture(filterTexture, texcoord).rgb;
     vec3 bloom_color = texture(bloomBlurTexture, texcoord).rgb;
 
-    hdr_color += bloom_color;
+    //hdr_color += bloom_color;
 
     /* Exposure tone mapping */
     vec3 result = vec3(1.0f) - exp(-hdr_color * exposure);

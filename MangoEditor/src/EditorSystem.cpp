@@ -751,7 +751,27 @@ namespace mango
     {
         ImGui::Begin("Rendering Settings");
         {
-            ImGui::Checkbox("Visualize lights", &RenderingSystem::DEBUG_RENDERING);
+            ImGui::Checkbox("Visualize Lights", &RenderingSystem::DEBUG_RENDERING);
+
+            const  char* drawModeItems[]      = { "Shaded", "Wireframe", "Shaded Wireframe" };
+            static auto  drawModeCurrentIndex = (int)Services::renderer()->shadingMode;
+
+            if (ImGui::BeginCombo("Draw Mode", drawModeItems[drawModeCurrentIndex]))
+            {
+                for (int n = 0; n < std::size(drawModeItems); ++n)
+                {
+                    const bool isSelected = (drawModeCurrentIndex == n);
+                    if (ImGui::Selectable(drawModeItems[n], isSelected))
+                    {
+                        drawModeCurrentIndex = n;
+                        Services::renderer()->setShadingMode((ShadingMode)drawModeCurrentIndex);
+                    }
+
+                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                    if (isSelected) ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
         }
         ImGui::End();
     }

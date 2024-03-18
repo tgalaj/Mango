@@ -22,6 +22,7 @@ namespace mango
     class Window;
 
     enum class RenderingMode { EDITOR, GAME };
+    enum class ShadingMode   { SHADED, WIREFRAME, SHADED_WIREFRAME };
 
     struct RendererStatistics
     {
@@ -56,6 +57,7 @@ namespace mango
         uint32_t getOutputOffscreenTextureID() const;
 
         void setRenderingMode(RenderingMode mode, Camera* editorCamera = nullptr, const glm::vec3& editorCameraPosition = glm::vec3(0.0f));
+        void setShadingMode(ShadingMode mode) { shadingMode = mode; }
 
         Camera& getCamera() const;
         glm::vec3 getCameraPosition() const { return m_cameraPosition; }
@@ -65,6 +67,9 @@ namespace mango
 
     public:
         glm::vec3 sceneAmbientColor{};
+
+        RenderingMode renderingMode = RenderingMode::GAME;
+        ShadingMode   shadingMode   = ShadingMode::SHADED;
 
         static bool         DEBUG_RENDERING;
         static unsigned int DEBUG_WINDOW_WIDTH;
@@ -112,6 +117,7 @@ namespace mango
         ref<Shader> m_blendingShader;
         ref<Shader> m_enviroMappingShader;
         ref<Shader> m_debugRendering;
+        ref<Shader> m_wireframeShader;
 
         ref<Shader> m_gbufferShader;
         ref<Shader> m_deferredDirectional;
@@ -142,7 +148,6 @@ namespace mango
 
         RendererStatistics m_statistics = {};
 
-        RenderingMode m_mode           = RenderingMode::GAME;
         glm::vec3     m_cameraPosition = {};
 
         Camera * m_camera      = nullptr;

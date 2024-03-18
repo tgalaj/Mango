@@ -30,6 +30,7 @@ namespace mango
         glm::vec2                     getCenter();
         glm::vec2                     getDpiScale();
         float                         getAspectRatio();
+        glm::mat4                     getViewportMatrix();
         std::vector<MonitorVideoMode> getPrimaryMonitorVideoModes();
         GLFWwindow*                   getNativeWindow();
 
@@ -43,11 +44,13 @@ namespace mango
 
     private:
         void create(uint32_t width, uint32_t height, const std::string & title, bool maximized = false);
+        void setViewportMatrix(int width, int height);
 
     private:
         GLFWwindow  * m_window;
         GLFWmonitor * m_monitor;
         std::string   m_title;
+        glm::mat4     m_viewportMatrix;
         glm::ivec2    m_windowPos;
         glm::ivec2    m_windowSize;
         glm::ivec2    m_viewportSize;

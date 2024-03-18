@@ -94,7 +94,8 @@ namespace mango
         /* Set the viewport */
         glfwGetFramebufferSize(m_window, &m_viewportSize.x, &m_viewportSize.y);
         glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
-        
+        setViewportMatrix(m_viewportSize.x, m_viewportSize.y);
+
         glfwSetWindowUserPointer(m_window, this);
 
         glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
@@ -111,6 +112,7 @@ namespace mango
 
             glfwGetFramebufferSize(window, &data.m_viewportSize.x, &data.m_viewportSize.y);
             glViewport(0, 0, data.m_viewportSize.x, data.m_viewportSize.y);
+            data.setViewportMatrix(data.m_viewportSize.x, data.m_viewportSize.y);
 
             MG_CORE_ASSERT_MSG(Services::application()                   != nullptr, "application can't be nullptr!");
             MG_CORE_ASSERT_MSG(Services::application()->getImGuiSystem() != nullptr, "imGuiSystem can't be nullptr!");
@@ -137,6 +139,17 @@ namespace mango
         glfwGetWindowSize(m_window, &m_windowSize.x, &m_windowSize.y);
         glfwGetWindowPos(m_window, &m_windowPos.x, &m_windowPos.y);
         setVSync(false);
+    }
+
+    void Window::setViewportMatrix(int width, int height)
+    {
+        float w2 = width  / 2.0f;
+        float h2 = height / 2.0f;
+
+        m_viewportMatrix = glm::mat4(glm::vec4(w2,  0.0, 0.0, 0.0), 
+                                     glm::vec4(0.0, h2,  0.0, 0.0), 
+                                     glm::vec4(0.0, 0.0, 1.0, 0.0), 
+                                     glm::vec4(0.0, 0.0, 0.0, 1.0));
     }
 
     void Window::endFrame()
@@ -183,6 +196,11 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
         return float(m_viewportSize.x) / float(m_viewportSize.y);
+    }
+
+    glm::mat4 Window::getViewportMatrix()
+    {
+        return m_viewportMatrix;
     }
 
     std::vector<MonitorVideoMode> Window::getPrimaryMonitorVideoModes()

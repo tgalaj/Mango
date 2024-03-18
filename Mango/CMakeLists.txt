@@ -17,17 +17,17 @@ file(GLOB_RECURSE HEADER_FILES
      ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)
      
 # Search for the assets files
-file(GLOB_RECURSE ASSETS_FILES 
-     ${CMAKE_CURRENT_SOURCE_DIR}/assets/*.*)
+file(GLOB_RECURSE RESOURCE_FILES 
+     ${CMAKE_CURRENT_SOURCE_DIR}/resources/*.*)
 
-set_source_files_properties(${ASSETS_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties(${RESOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
 
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ASSETS_FILES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${RESOURCE_FILES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${HEADER_FILES})
 
 # Define the library
-add_library(Mango STATIC ${HEADER_FILES} ${SOURCE_FILES} ${ASSETS_FILES})
+add_library(Mango STATIC ${HEADER_FILES} ${SOURCE_FILES} ${RESOURCE_FILES})
 add_library(Mango::Mango ALIAS Mango)
 
 set_target_properties(Mango PROPERTIES

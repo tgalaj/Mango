@@ -81,4 +81,16 @@ namespace mango
             render();
         }
     }
+
+    void BloomPS::clearBuffers()
+    {
+        m_brightnessBuffer->bind();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        m_blurredBuffer->bind();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
 }
