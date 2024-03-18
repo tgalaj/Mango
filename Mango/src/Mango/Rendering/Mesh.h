@@ -118,13 +118,12 @@ namespace mango
         void genCube       (float    size        = 1.0f, float texcoordScale = 1.0f);
         void genCubeMap    (float    radius      = 1.0f);                     
         void genCylinder   (float    height      = 3.0f, float    radius      = 1.5f, uint32_t slices = 10);
-        void genPlane      (float    width       = 1.0f, float    height      = 1.0f, uint32_t slices = 5, uint32_t stacks = 5);
-        void genPlaneGrid  (float    width       = 1.0f, float    height      = 1.0f, uint32_t slices = 5, uint32_t stacks = 5);
+        void genPlane      (uint32_t resolution  = 10);
         void genSphere     (float    radius      = 1.5f, uint32_t slices      = 12);
         void genTorus      (float    innerRadius = 1.0f, float    outerRadius = 2.0f, uint32_t slices = 10, uint32_t stacks = 10);
         void genTrefoilKnot(uint32_t slices      = 100,  uint32_t stacks      = 20);
         void genPQTorusKnot(uint32_t slices      = 256,  uint32_t stacks      = 16,   int p = 2, int q = 3, float knotR = 0.75, float tubeR = 0.15);
-        void genQuad       (float    width       = 1.0f, float    height      = 1.0f);
+        void genQuad       ();
 
     protected:
         struct VertexData

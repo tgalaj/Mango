@@ -135,7 +135,7 @@ Materials:
     RenderQueue: Opaque
   - Name: Cyborg
     Textures:
-      Diffuse: textures\bricks2.jpg
+      Diffuse: models/cyborg\cyborg_diffuse.png
       Specular: models/cyborg\cyborg_specular.png
       Normal: DefaultNormal
       Emission: DefaultEmission
@@ -297,9 +297,9 @@ Entities:
       Name: Entity
     TransformComponent:
       Position: [0, 2, -9]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [1, 1, 1]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [5, 5, 1]
     StaticMeshComponent:
       Filename: Quad
       Materials:
@@ -309,9 +309,9 @@ Entities:
       Name: Entity
     TransformComponent:
       Position: [-5, 2, -9]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [1, 1, 1]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [5, 5, 1]
     StaticMeshComponent:
       Filename: Quad
       Materials:
@@ -321,9 +321,9 @@ Entities:
       Name: Entity
     TransformComponent:
       Position: [-5, 1.20000005, 9]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [0.5, 0.5, 0.5]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [2.5, 2.5, 0.5]
     StaticMeshComponent:
       Filename: Quad
       Materials:
@@ -345,9 +345,9 @@ Entities:
       Name: Entity
     TransformComponent:
       Position: [3, 1.20000005, 13]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [0.5, 0.5, 0.5]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [2.5, 2.5, 0.5]
     StaticMeshComponent:
       Filename: Quad
       Materials:
@@ -357,9 +357,9 @@ Entities:
       Name: Entity
     TransformComponent:
       Position: [5, 1.20000005, 9]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [0.5, 0.5, 0.5]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [2.5, 2.5, 0.5]
     StaticMeshComponent:
       Filename: Quad
       Materials:
@@ -369,9 +369,9 @@ Entities:
       Name: Entity
     TransformComponent:
       Position: [5, 3, -14]
-      Rotation: [90, 0, 0]
-      Orientation: [0.707106829, 0.707106829, 0, 0]
-      Scale: [1, 1, 1]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [5, 5, 1]
     StaticMeshComponent:
       Filename: Quad
       Materials:
@@ -381,9 +381,9 @@ Entities:
       Name: Entity
     TransformComponent:
       Position: [5, 0.5, -11.5]
-      Rotation: [0.5, 0, 0]
-      Orientation: [0.999990582, 0.00436330959, 0, 0]
-      Scale: [1, 1, 1]
+      Rotation: [-89.5, 0, 0]
+      Orientation: [0.710185409, -0.704014719, 0, 0]
+      Scale: [5, 5, 1]
     StaticMeshComponent:
       Filename: Quad
       Materials:

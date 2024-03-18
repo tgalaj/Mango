@@ -288,7 +288,7 @@ namespace mango
 
         {
             ref<Mesh> m = createMesh("Plane");
-            m->genPlane(10.0f, 10.0f, 10, 10);
+            m->genPlane(10);
         }
 
         {
@@ -313,7 +313,7 @@ namespace mango
 
         {
             ref<Mesh> m = createMesh("Quad");
-            m->genQuad(5.0, 5.0);
+            m->genQuad();
         }
 
     }

@@ -128,53 +128,50 @@ void Sandbox::onInit()
     auto wall = m_mainScene->createEntity();
     wall.addComponent<StaticMeshComponent>(wallMesh);
     wall.getComponent<StaticMeshComponent>().materials[0] = brickwallMaterial;
-    wall.setRotation(90.0f, 0.0f, 0.0f);
+    wall.setScale(5.0f);
     wall.setPosition(0, 2.0, -9);
 
     auto wall2 = m_mainScene->createEntity();
     wall2.addComponent<StaticMeshComponent>(wallMesh);
     wall2.getComponent<StaticMeshComponent>().materials[0] = bricksMaterial;
-    wall2.setRotation(90.0f, 0.0f, 0.0f);
+    wall2.setScale(5.0f);
     wall2.setPosition(-5, 2.0, -9);
 
     auto grass = m_mainScene->createEntity();
     grass.addComponent<StaticMeshComponent>(wallMesh);
     grass.getComponent<StaticMeshComponent>().materials[0] = grassMaterial;
-    grass.setRotation(90.0f, 0.0f, 0.0f);
+    grass.setScale(2.5f);
     grass.setPosition(-5, 1.2, 9);
-    grass.setScale(0.5);
 
     auto window1 = m_mainScene->createEntity();
     window1.addComponent<StaticMeshComponent>(wallMesh);
     window1.getComponent<StaticMeshComponent>().materials[0] = windowMaterial;
-    window1.setRotation(90.0f, 0.0f, 0.0f);
+    window1.setScale(2.5f);
     window1.setPosition(0, 1.2, 9);
-    window1.setScale(0.51);
 
     auto window3 = m_mainScene->createEntity();
     window3.addComponent<StaticMeshComponent>(wallMesh);
     window3.getComponent<StaticMeshComponent>().materials[0] = windowMaterial;
-    window3.setRotation(90.0f, 0.0f, 0.0f);
+    window3.setScale(2.5f);
     window3.setPosition(3, 1.2, 13);
-    window3.setScale(0.5);
 
     auto window2 = m_mainScene->createEntity();
     window2.addComponent<StaticMeshComponent>(wallMesh);
     window2.getComponent<StaticMeshComponent>().materials[0] = windowMaterial;
-    window2.setRotation(90.0f, 0.0f, 0.0f);
+    window2.setScale(2.5f);
     window2.setPosition(5, 1.2, 9);
-    window2.setScale(0.5);
 
     auto plane1 = m_mainScene->createEntity();
     plane1.addComponent<StaticMeshComponent>(wallMesh);
     plane1.getComponent<StaticMeshComponent>().materials[0] = bricks2Material;
-    plane1.setRotation(90.0f, 0.0f, 0.0f);
+    plane1.setScale(5.0f);
     plane1.setPosition(5, 3.0, -14);
 
     auto plane2 = m_mainScene->createEntity();
     plane2.addComponent<StaticMeshComponent>(wallMesh);
     plane2.getComponent<StaticMeshComponent>().materials[0] = bricks2Material;
-    plane2.setRotation(0.5f, 0.0f, 0.0f);
+    plane2.setScale(5.0f);
+    plane2.setRotation(-89.5f, 0.0f, 0.0f);
     plane2.setPosition(5, 0.5, -11.5);
     plane2.addComponent<BoxCollider3DComponent>(glm::vec3(2.5f, 0.1f, 2.5f), glm::vec3(0.0f, -0.1f, 0.0f));
     plane2.addComponent<RigidBody3DComponent>();

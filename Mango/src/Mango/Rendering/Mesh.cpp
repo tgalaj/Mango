@@ -532,41 +532,40 @@ namespace mango
         genPrimitive(vertexData);
     }
 
-    void Mesh::genPlane(float width, float height, uint32_t slices, uint32_t stacks)
+    void Mesh::genPlane(uint32_t resolution)
     {
         MG_PROFILE_ZONE_SCOPED;
         VertexData vertexData;
 
-        float widthInc  = width  / float(slices);
-        float heightInc = height / float(stacks);
+        float     halfResolution = resolution * 0.5f;
+        glm::vec3 v              = glm::vec3(-halfResolution, 0.0, -halfResolution);
 
-        float w = -width * 0.5f;
-        float h = -height * 0.5f;
-
-        for (uint32_t j = 0; j <= stacks; ++j, h += heightInc)
+        for (uint32_t i = 0; i <= resolution; ++i)
         {
-            for (uint32_t i = 0; i <= slices; ++i, w += widthInc)
+            for (uint32_t j = 0; j <= resolution; ++j)
             {
-                vertexData.positions.push_back(glm::vec3(w, 0.0f, h));
+                vertexData.positions.push_back(v);
                 vertexData.normals  .push_back(glm::vec3(0.0f, 1.0f, 0.0f));
                 vertexData.texcoords.push_back(glm::vec2(i, j));
+
+                v.z += 1.0;
             }
-            w = -width * 0.5f;
+            v.z  = -halfResolution;
+            v.x += 1.0f;
         }
 
         uint32_t idx = 0;
-
-        for (uint32_t j = 0; j < stacks; ++j)
+        for (uint32_t i = 0; i < resolution; ++i)
         {
-            for (uint32_t i = 0; i < slices; ++i)
+            for (uint32_t j = 0; j < resolution; ++j)
             {
                 vertexData.indices.push_back(idx);
-                vertexData.indices.push_back(idx + slices + 1);
                 vertexData.indices.push_back(idx + 1);
+                vertexData.indices.push_back(idx + resolution + 1);
 
                 vertexData.indices.push_back(idx + 1);
-                vertexData.indices.push_back(idx + slices + 1);
-                vertexData.indices.push_back(idx + slices + 2);
+                vertexData.indices.push_back(idx + resolution + 2);
+                vertexData.indices.push_back(idx + resolution + 1);
 
                 ++idx;
             }
@@ -574,57 +573,7 @@ namespace mango
             ++idx;
         }
 
-        genPrimitive(vertexData);    
-    }
-
-    void Mesh::genPlaneGrid(float width, float height, uint32_t slices, uint32_t stacks)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        m_drawMode = DrawMode::LINES;
-
-        VertexData vertexData;
-
-        float widthInc = width / float(slices);
-        float heightInc = height / float(stacks);
-
-        float w = -width * 0.5f;
-        float h = -height * 0.5f;
-
-        for (uint32_t j = 0; j <= stacks; ++j, h += heightInc)
-        {
-            for (uint32_t i = 0; i <= slices; ++i, w += widthInc)
-            {
-                vertexData.positions.push_back(glm::vec3(w   , 0.0f, h   ));
-                vertexData.normals  .push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-                vertexData.texcoords.push_back(glm::vec2(i, j));
-            }
-            w = -width * 0.5f;
-        }
-
-        uint32_t idx = 0;
-
-        for (uint32_t j = 0; j < stacks; ++j)
-        {
-            for (uint32_t i = 0; i < slices; ++i)
-            {
-                vertexData.indices.push_back(idx);
-                vertexData.indices.push_back(idx + 1);
-
-                vertexData.indices.push_back(idx + 1);
-                vertexData.indices.push_back(idx + slices + 2);
-
-                vertexData.indices.push_back(idx + slices + 2);
-                vertexData.indices.push_back(idx + slices + 1);
-
-                vertexData.indices.push_back(idx + slices + 1);
-                vertexData.indices.push_back(idx);
-
-                ++idx;
-            }
-
-            ++idx;
-        }
-        genPrimitive(vertexData, false);
+        genPrimitive(vertexData);
     }
 
     void Mesh::genSphere(float radius, uint32_t slices)
@@ -891,35 +840,35 @@ namespace mango
         genPrimitive(vertexData);
     }
 
-    void Mesh::genQuad(float width, float height)
+    void Mesh::genQuad()
     {
         MG_PROFILE_ZONE_SCOPED;
-        m_drawMode = DrawMode::TRIANGLE_STRIP;
+        m_drawMode = DrawMode::TRIANGLES;
 
         VertexData vertexData;
 
-        float halfWidth  = width * 0.5f;
-        float halfHeight = height * 0.5f;
+        float halfWidth  = 0.5f;
+        float halfHeight = 0.5f;
 
         vertexData.positions = {
-            glm::vec3(-halfWidth, 0.0f, -halfHeight),
-            glm::vec3(-halfWidth, 0.0f,  halfHeight),
-            glm::vec3(halfWidth,  0.0f, -halfHeight),
-            glm::vec3(halfWidth,  0.0f,  halfHeight)
+            glm::vec3(-halfWidth, -halfHeight, 0.0f),
+            glm::vec3(-halfWidth,  halfHeight, 0.0f),
+            glm::vec3(halfWidth,  -halfHeight, 0.0f),
+            glm::vec3(halfWidth,   halfHeight, 0.0f)
         };
 
         vertexData.texcoords = {
-            glm::vec2(0.0f, 0.0f),
             glm::vec2(0.0f, 1.0f),
-            glm::vec2(1.0f, 0.0f),
+            glm::vec2(0.0f, 0.0f),
             glm::vec2(1.0f, 1.0f),
+            glm::vec2(1.0f, 0.0f),
         };
 
         vertexData.normals = {
-            glm::vec3(0.0f, 1.0f, 0.0f),
-            glm::vec3(0.0f, 1.0f, 0.0f),
-            glm::vec3(0.0f, 1.0f, 0.0f),
-            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
         };
 
         vertexData.tangents = {
@@ -930,7 +879,9 @@ namespace mango
         };
 
         vertexData.indices.push_back(0);
+        vertexData.indices.push_back(3);
         vertexData.indices.push_back(1);
+        vertexData.indices.push_back(0);
         vertexData.indices.push_back(2);
         vertexData.indices.push_back(3);
 
