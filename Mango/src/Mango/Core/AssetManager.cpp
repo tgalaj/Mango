@@ -269,11 +269,11 @@ namespace mango
 
         // Default material
         auto material = createMaterial("DefaultMaterial");
-
+        
         // Default meshes
         {
             ref<Mesh> m = createMesh("Cone");
-            m->genCone(1.0f, 0.5f, 12, 12);
+            m->genCone(1.0f, 0.5f, 12, 20);
         }
 
         {
@@ -283,7 +283,7 @@ namespace mango
 
         {
             ref<Mesh> m = createMesh("Cylinder");
-            m->genCylinder(1.0f, 0.5f);
+            m->genCylinder(1.0f, 0.5f, 20);
         }
 
         {
@@ -299,11 +299,6 @@ namespace mango
         {
             ref<Mesh> m = createMesh("Torus");
             m->genTorus(0.5f, 1.0f, 36, 24);
-        }
-
-        {
-            ref<Mesh> m = createMesh("Trefoil Knot");
-            m->genTrefoilKnot(128, 32);
         }
 
         {

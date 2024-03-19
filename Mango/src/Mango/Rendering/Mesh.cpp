@@ -189,20 +189,20 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         VertexData vertexData;
 
-        float thetaInc = glm::two_pi<float>() / float(slices);
-        float theta    = 0.0f;
+        float thetaInc   = glm::two_pi<float>() / float(slices);
+        float theta      = 0.0f;
+        float halfHeight = height * 0.5f;
 
         /* Center bottom */
-        glm::vec3 p = glm::vec3(0.0f, height, 0.0f);
 
-        vertexData.positions.push_back(-p);
+        vertexData.positions.push_back(glm::vec3(0.0f, -halfHeight, -0.0f));
         vertexData.normals  .push_back(glm::vec3(0.0f, -1.0f, 0.0f));
         vertexData.texcoords.push_back(glm::vec2(0.5f, 0.5f));
 
         /* Bottom */
         for (uint32_t sideCount = 0; sideCount <= slices; ++sideCount, theta += thetaInc)
         {
-            vertexData.positions.push_back(glm::vec3(glm::cos(theta) * radius, -height, -glm::sin(theta) * radius));
+            vertexData.positions.push_back(glm::vec3(glm::cos(theta) * radius, -halfHeight, -glm::sin(theta) * radius));
             vertexData.normals  .push_back(glm::vec3(0.0f, -1.0f, 0.0f));
             vertexData.texcoords.push_back(glm::vec2(glm::cos(theta) * 0.5f + 0.5f, glm::sin(theta) * 0.5f + 0.5f));
         }
@@ -217,7 +217,7 @@ namespace mango
             for (uint32_t sliceCount = 0; sliceCount <= slices; ++sliceCount, theta += thetaInc)
             {
                 vertexData.positions.push_back( glm::vec3(glm::cos(theta) * radius * (1.0f - level),
-                                                -height + height * level,
+                                                -halfHeight + height * level,
                                                 -glm::sin(theta) * radius * (1.0f - level)));
                 vertexData.normals  .push_back( glm::vec3(glm::cos(theta) * height / l, radius / l, -glm::sin(theta) * height / l));
                 vertexData.texcoords.push_back( glm::vec2(sliceCount / float(slices), level));
@@ -682,89 +682,6 @@ namespace mango
                 vertexData.indices.push_back(v2);
                 vertexData.indices.push_back(v3);
             }
-        }
-
-        genPrimitive(vertexData);
-    }
-
-    /* Code courtesy of: https://prideout.net/blog/old/blog/index.html@tag=toon-shader.html */
-    void Mesh::genTrefoilKnot(uint32_t slices, uint32_t stacks)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        VertexData vertexData;
-
-        auto evaluate_trefoil = [](float s, float t)
-        {
-            const float a = 0.5f;
-            const float b = 0.3f;
-            const float c = 0.5f;
-            const float d = 0.1f;
-            const float u = (1 - s) * 2 * glm::two_pi<float>();
-            const float v = t * glm::two_pi<float>();
-            const float r = a + b * cos(1.5f * u);
-            const float x = r * cos(u);
-            const float y = r * sin(u);
-            const float z = c * sin(1.5f * u);
-
-            glm::vec3 dv;
-            dv.x = -1.5f * b * sin(1.5f * u) * cos(u) -
-                    (a + b * cos(1.5f * u)) * sin(u);
-            dv.y = -1.5f * b * sin(1.5f * u) * sin(u) +
-                    (a + b * cos(1.5f * u)) * cos(u);
-            dv.z =  1.5f * c * cos(1.5f * u);
-
-            glm::vec3 q   = glm::normalize(dv);
-            glm::vec3 qvn = glm::normalize(glm::vec3(q.y, -q.x, 0));
-            glm::vec3 ww  = glm::cross(qvn, q);
-
-            glm::vec3 range;
-            range.x = x + d * (qvn.x * cos(v) + ww.x * sin(v));
-            range.y = y + d * (qvn.y * cos(v) + ww.y * sin(v));
-            range.z = z + d * ww.z * sin(v);
-
-            return range;
-        };
-
-        float ds = 1.0 / slices;
-        float dt = 1.0 / stacks;
-
-        const float E = 0.01f;
-
-        // The upper bounds in these loops are tweaked to reduce the
-        // chance of precision error causing an incorrect # of iterations.
-    
-        for (float s = 0; s < 1.0 - ds / 2.0; s += ds)
-        {
-            for (float t = 0; t < 1.0 - dt / 2.0; t += dt)
-            {
-                glm::vec3 p = evaluate_trefoil(s, t);
-                glm::vec3 u = evaluate_trefoil(s + E, t) - p;
-                glm::vec3 v = evaluate_trefoil(s, t + E) - p;
-                glm::vec3 n = glm::normalize(glm::cross(v, u));
-
-                vertexData.positions.push_back(p);
-                vertexData.normals  .push_back(n);
-                vertexData.texcoords.push_back(glm::vec2(s, t));
-            }
-        }
-
-        uint32_t n            = 0;
-        uint32_t vertex_count = vertexData.positions.size();
-
-        for (uint32_t i = 0; i < slices; ++i)
-        {
-            for (uint32_t j = 0; j < stacks; ++j)
-            {
-                vertexData.indices.push_back(n + j);
-                vertexData.indices.push_back(n + (j + 1) % stacks);
-                vertexData.indices.push_back((n + j + stacks) % vertex_count);
-
-                vertexData.indices.push_back((n + j + stacks) % vertex_count);
-                vertexData.indices.push_back((n + (j + 1) % stacks) % vertex_count);
-                vertexData.indices.push_back((n + (j + 1) % stacks + stacks) % vertex_count);
-            }
-
-            n += stacks;
         }
 
         genPrimitive(vertexData);

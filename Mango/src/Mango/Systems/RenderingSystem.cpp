@@ -680,7 +680,7 @@ namespace mango
                 float heightScale = spotLight.getRange();
                 float radiusScale = spotLight.getRange() * glm::tan(spotLight.getCutOffAngle());
 
-                auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
+                auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition() + transform.getDirection() * heightScale * 0.5f) *
                                   glm::mat4_cast(glm::inverse(transform.getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
                                   glm::scale(glm::mat4(1.0f), glm::vec3(radiusScale, heightScale, radiusScale));
                 auto view       = getCamera().getView();
@@ -1108,7 +1108,7 @@ namespace mango
                 float heightScale = spotLight.getRange();
                 float radiusScale = spotLight.getRange() * glm::tan(spotLight.getCutOffAngle());
 
-                auto model = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
+                auto model = glm::translate(glm::mat4(1.0f), transform.getPosition() + transform.getDirection() * heightScale * 0.5f) *
                              glm::mat4_cast(glm::inverse(transform.getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
                              glm::scale    (glm::mat4(1.0f), glm::vec3(radiusScale, heightScale, radiusScale));
 
