@@ -35,6 +35,5 @@ namespace mango
 
         ref<Texture> m_folderIcon;
         ref<Texture> m_fileIcon;
-        ref<Texture> m_returnIcon;
     };
 }

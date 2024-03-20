@@ -31,82 +31,8 @@ namespace mango
         m_skyboxShader = AssetManager::createShader("Skybox", "Skybox.vert", "Skybox.frag");
         m_skyboxShader->link();
 
-        /* Create buffer objects */
-        glCreateVertexArrays(1, &m_vao);
-        glCreateBuffers(1, &m_vbo);
-
-        std::vector<float> skyboxPositions = {
-            // positions          
-            -1.0f,  1.0f, -1.0f,
-            -1.0f, -1.0f, -1.0f,
-             1.0f, -1.0f, -1.0f,
-             1.0f, -1.0f, -1.0f,
-             1.0f,  1.0f, -1.0f,
-            -1.0f,  1.0f, -1.0f,
-
-            -1.0f, -1.0f,  1.0f,
-            -1.0f, -1.0f, -1.0f,
-            -1.0f,  1.0f, -1.0f,
-            -1.0f,  1.0f, -1.0f,
-            -1.0f,  1.0f,  1.0f,
-            -1.0f, -1.0f,  1.0f,
-
-             1.0f, -1.0f, -1.0f,
-             1.0f, -1.0f,  1.0f,
-             1.0f,  1.0f,  1.0f,
-             1.0f,  1.0f,  1.0f,
-             1.0f,  1.0f, -1.0f,
-             1.0f, -1.0f, -1.0f,
-
-            -1.0f, -1.0f,  1.0f,
-            -1.0f,  1.0f,  1.0f,
-             1.0f,  1.0f,  1.0f,
-             1.0f,  1.0f,  1.0f,
-             1.0f, -1.0f,  1.0f,
-            -1.0f, -1.0f,  1.0f,
-
-            -1.0f,  1.0f, -1.0f,
-             1.0f,  1.0f, -1.0f,
-             1.0f,  1.0f,  1.0f,
-             1.0f,  1.0f,  1.0f,
-            -1.0f,  1.0f,  1.0f,
-            -1.0f,  1.0f, -1.0f,
-
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f,  1.0f,
-             1.0f, -1.0f, -1.0f,
-             1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f,  1.0f,
-             1.0f, -1.0f,  1.0f
-        };
-
-        /* Set up buffer objects */
-        glNamedBufferStorage(m_vbo, skyboxPositions.size() * sizeof(skyboxPositions[0]), skyboxPositions.data(), 0 /*flags*/);
-
-        /* Set up VAO */
-        glEnableVertexArrayAttrib (m_vao, 0 /*index*/);
-
-        /* Separate attribute format */
-        glVertexArrayAttribFormat (m_vao, 0 /*index*/, 3 /*size*/, GL_FLOAT, GL_FALSE, 0 /*relativeoffset*/);
-        glVertexArrayAttribBinding(m_vao, 0 /*index*/, 0 /*bindingindex*/);
-        glVertexArrayVertexBuffer (m_vao, 0 /*bindingindex*/, m_vbo, 0 /*offset*/, sizeof(glm::vec3) /*stride*/);
-    }
-
-
-    Skybox::~Skybox()
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        MG_PROFILE_GL_ZONE("Skybox::~Skybox");
-
-        if (m_vao != 0)
-        {
-            glDeleteVertexArrays(1, &m_vao);
-        }
-
-        if (m_vbo != 0)
-        {
-            glDeleteBuffers(1, &m_vbo);
-        }
+        m_skyboxMesh = createRef<Mesh>();
+        m_skyboxMesh->genCubeMap(2.0f);
     }
 
     void Skybox::render(const glm::mat4 & projection, const glm::mat4 & view)
@@ -118,10 +44,10 @@ namespace mango
         m_skyboxShader->setUniform("view_projection", projection * glm::mat4(glm::mat3(view)));
 
         m_cubeMapTexture->bind(0);
-        glBindVertexArray(m_vao);
+        m_skyboxMesh->bind();
 
         glDepthFunc(GL_LEQUAL);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        m_skyboxMesh->render();
         glDepthFunc(GL_LESS);
     }
 

@@ -72,8 +72,8 @@ namespace mango
         ImGuiSystem::addFont("Inter16", "fonts/inter/Inter-Regular.ttf", 16.0f, true);
         
         static const ImWchar iconRanges[3] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
-        ImGuiSystem::mergeFont("fonts/fontawesome/webfonts/" FONT_ICON_FILE_NAME_FAR, 16.0f * 2.0f / 3.0f, iconRanges);
-        ImGuiSystem::mergeFont("fonts/fontawesome/webfonts/" FONT_ICON_FILE_NAME_FAS, 16.0f * 2.0f / 3.0f, iconRanges);
+        ImGuiSystem::mergeFont("fonts/fontawesome/webfonts/" FONT_ICON_FILE_NAME_FAR, 16.0f, iconRanges);
+        ImGuiSystem::mergeFont("fonts/fontawesome/webfonts/" FONT_ICON_FILE_NAME_FAS, 16.0f, iconRanges);
 
         ImGuiSystem::addFont("InterBold16",  "fonts/inter/Inter-Bold.ttf",    16.0f); 
         ImGuiSystem::addFont("Inter24",      "fonts/inter/Inter-Regular.ttf", 24.0f);

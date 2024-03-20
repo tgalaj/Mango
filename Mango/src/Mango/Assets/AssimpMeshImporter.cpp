@@ -22,7 +22,6 @@ namespace mango
         const aiScene* scene = importer.ReadFile(filepath.string(), aiProcess_Triangulate              |
                                                                     aiProcess_GenSmoothNormals         |
                                                                     aiProcess_CalcTangentSpace         |
-                                                                    aiProcess_FlipUVs                  |
                                                                     aiProcess_PreTransformVertices     |
                                                                     aiProcess_RemoveRedundantMaterials |
                                                                     aiProcess_ImproveCacheLocality     |

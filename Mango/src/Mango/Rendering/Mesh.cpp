@@ -495,7 +495,7 @@ namespace mango
 
         for (auto& tc : vertexData.texcoords)
         {
-            tc = 1.0f - tc;
+            tc.x = 1.0f - tc.x;
         }
 
         genPrimitive(vertexData);
@@ -521,7 +521,7 @@ namespace mango
         {
             vertexData.positions.push_back(glm::vec3(glm::cos(theta) * radius, -halfHeight, -glm::sin(theta) * radius));
             vertexData.normals  .push_back(glm::vec3(0.0f, -1.0f, 0.0f));
-            vertexData.texcoords.push_back(glm::vec2(glm::cos(theta) * 0.5f + 0.5f, glm::sin(theta) * 0.5f + 0.5f));
+            vertexData.texcoords.push_back(glm::vec2(glm::cos(theta) * 0.5f + 0.5f, 1.0f - (glm::sin(theta) * 0.5f + 0.5f)));
         }
 
         /* Sides */
@@ -537,7 +537,7 @@ namespace mango
                                                 -halfHeight + height * level,
                                                 -glm::sin(theta) * radius * (1.0f - level)));
                 vertexData.normals  .push_back( glm::vec3(glm::cos(theta) * height / l, radius / l, -glm::sin(theta) * height / l));
-                vertexData.texcoords.push_back( glm::vec2(sliceCount / float(slices), 1.0f - level));
+                vertexData.texcoords.push_back( glm::vec2(sliceCount / float(slices), level));
             }
         }
 
@@ -734,20 +734,20 @@ namespace mango
             glm::vec3(-r2, +r2, +r2),
             glm::vec3(+r2, +r2, +r2),
             glm::vec3(+r2, +r2, -r2),
-            glm::vec3(+r2, -r2, +r2)
+            glm::vec3(-r2, +r2, -r2) 
         };
 
         vertexData.indices =
         {
-            0,  2,  1,  0,  3,  2,
-            4,  6,  5,  4,  7,  6,
-            8,  10, 9,  8,  11, 10,
-            12, 14, 13, 12, 15, 14,
-            16, 18, 17, 16, 19, 18,
-            20, 22, 21, 20, 23, 22
+            0,  2,  1,  0,  3,  2,  // front
+            4,  6,  5,  4,  7,  6,  // right
+            8,  10, 9,  8,  11, 10, // back
+            12, 14, 13, 12, 15, 14, // left
+            16, 18, 17, 16, 19, 18, // bottom
+            20, 22, 21, 20, 23, 22  // top
         };
 
-        genPrimitive(vertexData);
+        genPrimitive(vertexData, false);
     }
 
     void Mesh::genCylinder(float height, float radius, uint32_t slices)
@@ -773,7 +773,7 @@ namespace mango
         {
             vertexData.positions.push_back(glm::vec3(glm::cos(theta) * radius, -halfHeight, -glm::sin(theta) * radius));
             vertexData.normals  .push_back(glm::vec3(0.0f, -1.0f, 0.0f));
-            vertexData.texcoords.push_back(glm::vec2(glm::cos(theta) * 0.5f + 0.5f, glm::sin(theta) * 0.5f + 0.5f));
+            vertexData.texcoords.push_back(glm::vec2(1.0f - (glm::cos(theta) * 0.5f + 0.5f), glm::sin(theta) * 0.5f + 0.5f));
         }
 
         /* Center top */
@@ -863,7 +863,7 @@ namespace mango
             {
                 vertexData.positions.push_back(v);
                 vertexData.normals  .push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-                vertexData.texcoords.push_back(glm::vec2(i, j));
+                vertexData.texcoords.push_back(glm::vec2(i, 1.0f - j));
 
                 v.z += 1.0;
             }
@@ -912,7 +912,7 @@ namespace mango
                 vertexData.positions.emplace_back(p);
                 vertexData.normals  .emplace_back(glm::normalize(p));
                 vertexData.texcoords.emplace_back(glm::vec2(j / static_cast<float>(slices),
-                                                         i / static_cast<float>(parallels)));
+                                                            1.0f - i / static_cast<float>(parallels)));
             }
         }
 
@@ -1038,7 +1038,7 @@ namespace mango
 
             for (auto& uv : vertexData.texcoords)
             {
-                uv.x = 1.0f - uv.x;
+                uv = 1.0f - uv;
             }
         };
 
@@ -1267,7 +1267,7 @@ namespace mango
 
                 vertexData.positions.push_back(N * circleVertexPosition.x + B * circleVertexPosition.y + P);
                 vertexData.normals  .push_back(glm::normalize(vertexData.positions.back() - P));
-                vertexData.texcoords.push_back(glm::vec2(slice / float(slices), 1.0 - stack / float(stacks)));
+                vertexData.texcoords.push_back(glm::vec2(slice / float(slices), stack / float(stacks)));
             }
         }
 
@@ -1311,10 +1311,10 @@ namespace mango
         };
 
         vertexData.texcoords = {
-            glm::vec2(0.0f, 1.0f),
             glm::vec2(0.0f, 0.0f),
-            glm::vec2(1.0f, 1.0f),
+            glm::vec2(0.0f, 1.0f),
             glm::vec2(1.0f, 0.0f),
+            glm::vec2(1.0f, 1.0f),
         };
 
         vertexData.normals = {

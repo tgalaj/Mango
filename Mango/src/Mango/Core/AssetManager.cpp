@@ -269,7 +269,7 @@ namespace mango
 
         // Default material
         auto material = createMaterial("DefaultMaterial");
-        
+
         // Default meshes
         {
             ref<Mesh> m = createMesh("Capsule");

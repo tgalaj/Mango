@@ -19,7 +19,7 @@ layout(index = 0) subroutine(enviroMapping) vec4 reflection()
     float ratio = 1.0f / 1.52f;
     vec3 r_r = refract(i, normalize(world_normal), ratio);
 
-    return mix(vec4(texture(skybox, r).rgb, 1.0f), vec4(texture(skybox, r_r).rgb, 1.0f), 0.5);
+    return mix(vec4(texture(skybox, r).rgb, 1.0f), vec4(texture(skybox, r_r).rgb, 1.0f), 0.1);
 }
 
 layout(index = 1) subroutine(enviroMapping) vec4 refraction()

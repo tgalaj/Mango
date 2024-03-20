@@ -813,23 +813,7 @@ namespace mango
                             ImGui::TableNextColumn();
                             ImVec2 cursorPos = ImGui::GetCursorPos();
 
-                            ImGui::Image((ImTextureID)texture->getRendererID(), { previewSize, previewSize });
-
-                            auto defaultTextureName = defaultTextureNames[(int)type];
-                            if (texture->getFilename() != defaultTextureName)
-                            {
-                                cursorPos.x += previewSize - ImGui::CalcTextSize(ICON_FA_XMARK).x * 2.0f;
-                                ImGui::SetCursorPos(cursorPos);
-                                ImGui::PushID(defaultTextureName);
-
-                                if (ImGui::Button(ICON_FA_XMARK))
-                                {
-                                    texture = AssetManager::getTexture2D(defaultTextureName);
-                                }
-
-                                ImGui::PopID();
-                            }
-                            
+                            ImGui::Image((ImTextureID)texture->getRendererID(), { previewSize, previewSize }, { 0, 1 }, { 1, 0 });
 
                             if (ImGui::BeginDragDropTarget())
                             {
@@ -846,8 +830,22 @@ namespace mango
                             if (ImGui::BeginItemTooltip())
                             {
                                 ImGui::Text("Path: %s", texture->getFilename().c_str());
-                                ImGui::Image((ImTextureID)texture->getRendererID(), { 512, 512 });
+                                ImGui::Image((ImTextureID)texture->getRendererID(), { 512, 512 }, { 0, 1 }, { 1, 0 });
                                 ImGui::EndTooltip();
+                            }
+
+                            auto defaultTextureName = defaultTextureNames[(int)type];
+                            if (texture->getFilename() != defaultTextureName)
+                            {
+                                ImGui::SetCursorPos(cursorPos);
+                                ImGui::PushID(defaultTextureName);
+
+                                if (ImGui::Button(ICON_FA_XMARK))
+                                {
+                                    texture = AssetManager::getTexture2D(defaultTextureName);
+                                }
+
+                                ImGui::PopID();
                             }
                         }
                         ImGui::EndTable();

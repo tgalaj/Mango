@@ -1,4 +1,5 @@
 #include "ContentBrowserPanel.h"
+#include "IconsFontAwesome6.h"
 #include "DragDropPayloadTypes.h"
 
 #include "Mango/Core/VFI.h"
@@ -25,9 +26,6 @@ namespace mango
 
         m_fileIcon = createRef<Texture>();
         m_fileIcon->createTexture2d("icons/file.png", false, 8);
-
-        m_returnIcon = createRef<Texture>();
-        m_returnIcon->createTexture2d("icons/return.png", false, 8);
     }
 
     void ContentBrowserPanel::onGui()
@@ -39,7 +37,7 @@ namespace mango
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
         ImGui::BeginDisabled(m_currentPath == m_basePath);
         {
-            if (ImGui::ImageButton("backArrow", (ImTextureID)m_returnIcon->getRendererID(), { backButtonSize, backButtonSize }) ||
+            if (ImGui::Button(ICON_FA_ARROW_LEFT, { backButtonSize, backButtonSize }) ||
                 ImGui::IsMouseClicked(ImGuiMouseButton_Middle + 1))
             {
                 m_currentPath = m_currentPath.parent_path();
@@ -211,7 +209,7 @@ namespace mango
         ImGui::RenderNavHighlight(ImRect(p0, p1), id);
         ImGui::RenderFrame(p0, p1, col, true, glm::clamp((float)glm::min(padding.x, padding.y), 0.0f, style.FrameRounding));
         
-        drawList->AddImage(textureID, p0image, p1image);
+        drawList->AddImage(textureID, p0image, p1image, { 0, 1 }, { 1, 0 });
 
         if (!rename) 
             drawList->AddText(ImGui::GetDefaultFont(), ImGui::GetFontSize(), textPos, IM_COL32_WHITE, label, 0, thumbnailSize);

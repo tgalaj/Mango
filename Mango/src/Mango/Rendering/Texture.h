@@ -160,9 +160,9 @@ namespace mango
     private:
         void setDescriptor(int width, int height, int channelsCount, bool isSrgb);
 
-        uint8_t* load(const std::string& filename, bool isSrgb);
+        uint8_t* load(const std::string& filename, bool isSrgb, bool flip = true);
         uint8_t* load(uint8_t* memoryData, uint64_t dataSize, bool isSrgb);
-        float*   loadf(const std::string& filename);
+        float*   loadf(const std::string& filename, bool flip = true);
 
         void release()
         {

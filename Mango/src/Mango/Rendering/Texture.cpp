@@ -277,15 +277,19 @@ namespace mango
         }
     }
 
-    uint8_t* Texture::load(const std::string& filename, bool isSrgb)
+    uint8_t* Texture::load(const std::string& filename, bool isSrgb, bool flip /*= true*/)
     {
         MG_PROFILE_ZONE_SCOPED;
 
         auto filepath = VFI::getFilepath(filename);
+        
+        if (flip) stbi_set_flip_vertically_on_load(true);
 
         int width, height, channelsCount;
         uint8_t* data = stbi_load(filepath.string().c_str(), &width, &height, &channelsCount, 0);
         
+        if (flip) stbi_set_flip_vertically_on_load(false);
+
         if (data)
         {
             setDescriptor(width, height, channelsCount, isSrgb);
@@ -309,17 +313,17 @@ namespace mango
         return data;
     }
 
-    float* Texture::loadf(const std::string& filename)
+    float* Texture::loadf(const std::string& filename, bool flip /*= true*/)
     {
         MG_PROFILE_ZONE_SCOPED;
 
         auto filepath = VFI::getFilepath(filename);
-        stbi_set_flip_vertically_on_load(true);
+        if (flip) stbi_set_flip_vertically_on_load(true);
 
         int width, height, channelsCount;
         float* data = stbi_loadf(filepath.string().c_str(), &width, &height, &channelsCount, 3);
 
-        stbi_set_flip_vertically_on_load(false);
+        if (flip) stbi_set_flip_vertically_on_load(false);
 
         if (data)
         {
@@ -604,7 +608,7 @@ namespace mango
 
         for (int i = 0; i < NUM_FACES; ++i)
         {
-            images_data[i] = load(filenames[i], isSrgb);
+            images_data[i] = load(filenames[i], isSrgb, false);
 
             if (!images_data[i])
             {

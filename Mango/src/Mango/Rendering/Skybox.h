@@ -27,7 +27,7 @@ namespace mango
                const std::string & downFace,
                const std::string & frontFace,
                const std::string & backFace);
-        ~Skybox();
+        ~Skybox() = default;
 
         void render(const glm::mat4 & projection, const glm::mat4 & view);
         void bindSkyboxTexture(GLuint unit = 0);
@@ -40,6 +40,7 @@ namespace mango
 
         ref<Shader>  m_skyboxShader;
         ref<Texture> m_cubeMapTexture;
+        ref<Mesh>    m_skyboxMesh;
     };
 }
 
