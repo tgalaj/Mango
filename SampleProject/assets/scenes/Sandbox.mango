@@ -429,7 +429,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.5, 0.5, 0.5]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 12088338074967886091
@@ -441,7 +441,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 3768915803474479980
@@ -453,7 +453,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 6326538712810011997
@@ -465,7 +465,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 3138775610616662714
@@ -477,7 +477,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 6403960704838616244
@@ -489,7 +489,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 6000309566630592424
@@ -501,7 +501,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 13485524110991152670
@@ -513,7 +513,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 10438712354018586405
@@ -525,7 +525,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 14222165555104252821
@@ -537,7 +537,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 14529476055159202385
@@ -549,7 +549,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 727371943762566547
@@ -561,7 +561,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 5579679985098859685
@@ -573,7 +573,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 2170251893457607559
@@ -585,7 +585,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 16959883251063065147
@@ -597,7 +597,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 16272970640784241861
@@ -609,7 +609,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 1166922357733217979
@@ -621,7 +621,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 4982560548295895986
@@ -633,7 +633,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 17835535124182438580
@@ -645,7 +645,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         0: spine
   - Entity: 12885067464924536695
@@ -657,7 +657,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 1775058220300683959
@@ -669,7 +669,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 10473764525934156888
@@ -681,7 +681,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 6596558652539497412
@@ -693,7 +693,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 18255620714422723317
@@ -705,7 +705,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [1, 1, 1]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         0: window
   - Entity: 15661351788513723747
@@ -717,7 +717,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 10082970503575052825
@@ -729,7 +729,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 1074089094578148016
@@ -741,7 +741,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 14227382468330652899
@@ -753,7 +753,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 6485681146388887138
@@ -765,7 +765,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 945142399077118799
@@ -777,7 +777,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 3998000208534594293
@@ -789,7 +789,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 13876278085186216192
@@ -801,7 +801,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 6961857431746630934
@@ -813,7 +813,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 9359734755799544492
@@ -825,7 +825,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 12198293277835338520
@@ -837,7 +837,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 6969605412166986337
@@ -849,7 +849,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 4414594842974061819
@@ -861,7 +861,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 6336071606127557568
@@ -873,7 +873,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 341456629869033219
@@ -885,7 +885,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         0: Cyborg
   - Entity: 9129065211661002291
@@ -897,7 +897,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 12896322946196506845
@@ -909,7 +909,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 6834243006313697006
@@ -921,7 +921,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 7348723191356431123
@@ -933,7 +933,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 8994871083747628948
@@ -945,7 +945,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 7838834864430796379
@@ -957,7 +957,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 9461469372482406006
@@ -969,7 +969,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 3657452210415813742
@@ -981,7 +981,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 4384654896267899857
@@ -993,7 +993,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 17588612270765239756
@@ -1005,7 +1005,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 7009164717179307258
@@ -1017,7 +1017,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 8496487872805245241
@@ -1041,7 +1041,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 12807715203938055862
@@ -1053,7 +1053,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 16701329932938793785
@@ -1065,7 +1065,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 7799681912684117911
@@ -1077,7 +1077,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 815552669125911257
@@ -1089,7 +1089,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 5783131474338225265
@@ -1101,7 +1101,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 4427713060704344856
@@ -1113,7 +1113,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 1619950580958603017
@@ -1125,7 +1125,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 17193101339261964920
@@ -1137,7 +1137,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         0: Sponza_16
   - Entity: 17139994896872140668
@@ -1149,9 +1149,9 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
-        {}
+        0: bricks2
   - Entity: 3292946020813739365
     TagComponent:
       Name: Entity
@@ -1161,7 +1161,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 6558263482526429376
@@ -1173,7 +1173,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 16317474049448973787
@@ -1185,7 +1185,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 14577297562087559217
@@ -1197,7 +1197,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 11154585500806024608
@@ -1209,7 +1209,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 14323982380796019577
@@ -1221,7 +1221,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 2312072221541057938
@@ -1233,7 +1233,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         0: Sponza_6
   - Entity: 8013012352469997488
@@ -1245,7 +1245,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 17001233105772711366
@@ -1257,7 +1257,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 7342284743134474112
@@ -1269,7 +1269,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 18301651274401739264
@@ -1281,7 +1281,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 7595299755222785696
@@ -1293,7 +1293,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 11729830865263562357
@@ -1305,7 +1305,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 8880915778132063657
@@ -1317,7 +1317,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 12296202960582433718
@@ -1329,7 +1329,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 14689871263095946572
@@ -1341,7 +1341,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 15298659747431337034
@@ -1353,7 +1353,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 9725678326873857561
@@ -1365,7 +1365,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 17228775772256733127
@@ -1377,7 +1377,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 635992649494653788
@@ -1389,7 +1389,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 8064959354719206171
@@ -1401,7 +1401,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 12441355058265504465
@@ -1413,7 +1413,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 7206313383350785435
@@ -1425,7 +1425,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 424075842204272288
@@ -1437,7 +1437,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 10767560826907250521
@@ -1449,7 +1449,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 8601243789233851998
@@ -1461,7 +1461,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 6084970722718626613
@@ -1473,7 +1473,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 4612979212488075372
@@ -1485,7 +1485,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 16945315437789404443
@@ -1497,7 +1497,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 18197283115016209378
@@ -1509,7 +1509,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 6082939016937418086
@@ -1521,7 +1521,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 12220882252825375775
@@ -1533,7 +1533,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 574126877998258430
@@ -1545,7 +1545,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 16426253054953492625
@@ -1557,7 +1557,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 12710997648994984231
@@ -1569,7 +1569,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 10163465148306957920
@@ -1581,7 +1581,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 17936752075363940040
@@ -1593,7 +1593,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 17082081349075193322
@@ -1605,7 +1605,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 18290753038571970849
@@ -1617,7 +1617,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 1731900818931523416
@@ -1629,7 +1629,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.75, 0.75, 0.75]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         {}
   - Entity: 1541646372343250823
@@ -1745,7 +1745,7 @@ Entities:
       Orientation: [1, 0, 0, 0]
       Scale: [0.5, 0.5, 0.5]
     StaticMeshComponent:
-      Filename: Sphere
+      Filename: Sphere UV
       Materials:
         0: reflectiveSphere
     RigidBody3DComponent:
@@ -1758,3 +1758,15 @@ Entities:
     SphereColliderComponent:
       Offset: [0, 0, 0]
       Radius: 0.5
+  - Entity: 16375418775841919856
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        0: bricks2

@@ -292,8 +292,13 @@ namespace mango
         }
 
         {
-            ref<Mesh> m = createMesh("Sphere");
+            ref<Mesh> m = createMesh("Sphere UV");
             m->genSphere(0.5f, 36);
+        }
+
+        {
+            ref<Mesh> m = createMesh("Sphere");
+            m->genSphere(3u);
         }
 
         {

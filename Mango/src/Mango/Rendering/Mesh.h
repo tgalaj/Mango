@@ -119,7 +119,10 @@ namespace mango
         void genCubeMap    (float    radius      = 1.0f);                     
         void genCylinder   (float    height      = 3.0f, float    radius      = 1.5f, uint32_t slices = 10);
         void genPlane      (uint32_t resolution  = 10);
+        // UV Sphere
         void genSphere     (float    radius      = 1.5f, uint32_t slices      = 12);
+        // Octasphere based on: https://www.binpress.com/creating-octahedron-sphere-unity/
+        void genSphere     (uint32_t divisions   = 3);
         void genTorus      (float    innerRadius = 1.0f, float    outerRadius = 2.0f, uint32_t slices = 10, uint32_t stacks = 10);
         void genPQTorusKnot(uint32_t slices      = 256,  uint32_t stacks      = 16,   int p = 2, int q = 3, float knotR = 0.75, float tubeR = 0.15);
         void genQuad       ();

@@ -220,7 +220,7 @@ namespace mango
                                                 -halfHeight + height * level,
                                                 -glm::sin(theta) * radius * (1.0f - level)));
                 vertexData.normals  .push_back( glm::vec3(glm::cos(theta) * height / l, radius / l, -glm::sin(theta) * height / l));
-                vertexData.texcoords.push_back( glm::vec2(sliceCount / float(slices), level));
+                vertexData.texcoords.push_back( glm::vec2(sliceCount / float(slices), 1.0f - level));
             }
         }
 
@@ -589,14 +589,13 @@ namespace mango
         {
             for (uint32_t j = 0; j <= slices; ++j)
             {
-                vertexData.positions.push_back(glm::vec3(radius * glm::sin(deltaPhi * i) * glm::sin(deltaPhi * j),
-                                                          radius * glm::cos(deltaPhi * i),
-                                                          radius * glm::sin(deltaPhi * i) * glm::cos(deltaPhi * j)));
-                vertexData.normals  .push_back(glm::vec3(radius * glm::sin(deltaPhi * i) * glm::sin(deltaPhi * j) / radius,
-                                                          radius * glm::cos(deltaPhi * i) / radius,
-                                                          radius * glm::sin(deltaPhi * i) * glm::cos(deltaPhi * j) / radius));
-                vertexData.texcoords.push_back(glm::vec2(       j / static_cast<float>(slices),
-                                                          1.0f - i / static_cast<float>(parallels)));
+                glm::vec3 p = glm::vec3(radius * glm::sin(deltaPhi * i) * glm::sin(deltaPhi * j),
+                                        radius * glm::cos(deltaPhi * i),
+                                        radius * glm::sin(deltaPhi * i) * glm::cos(deltaPhi * j));
+                vertexData.positions.emplace_back(p);
+                vertexData.normals  .emplace_back(glm::normalize(p));
+                vertexData.texcoords.emplace_back(glm::vec2(j / static_cast<float>(slices),
+                                                         i / static_cast<float>(parallels)));
             }
         }
 
@@ -604,17 +603,237 @@ namespace mango
         {
             for (uint32_t j = 0; j < slices; ++j)
             {
-                vertexData.indices.push_back(i       * (slices + 1) + j);
-                vertexData.indices.push_back((i + 1) * (slices + 1) + j);
-                vertexData.indices.push_back((i + 1) * (slices + 1) + (j + 1));
+                vertexData.indices.emplace_back(i       * (slices + 1) + j);
+                vertexData.indices.emplace_back((i + 1) * (slices + 1) + j);
+                vertexData.indices.emplace_back((i + 1) * (slices + 1) + (j + 1));
 
-                vertexData.indices.push_back(i       * (slices + 1) + j);
-                vertexData.indices.push_back((i + 1) * (slices + 1) + (j + 1));
-                vertexData.indices.push_back(i       * (slices + 1) + (j + 1));
+                vertexData.indices.emplace_back(i       * (slices + 1) + j);
+                vertexData.indices.emplace_back((i + 1) * (slices + 1) + (j + 1));
+                vertexData.indices.emplace_back(i       * (slices + 1) + (j + 1));
             }
         }
 
         genPrimitive(vertexData);
+    }
+
+    void Mesh::genSphere(uint32_t divisions /*= 3*/)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        if (divisions > 6)
+        {
+            divisions = 6;
+            MG_CORE_WARN("Octasphere subdivisions decreased to maximum, which is 6.");
+        }
+
+        VertexData vertexData;
+
+        // Prepare helper lambdas
+        auto createLowerStrip = [&vertexData](uint32_t steps, uint32_t vTop, uint32_t vBottom, uint32_t t)
+        {
+            for (uint32_t i = 1; i < steps; ++i)
+            {
+                vertexData.indices[t++] = vBottom;
+                vertexData.indices[t++] = vTop - 1;
+                vertexData.indices[t++] = vTop;
+
+                vertexData.indices[t++] = vBottom++;
+                vertexData.indices[t++] = vTop++;
+                vertexData.indices[t++] = vBottom;
+            }
+
+            vertexData.indices[t++] = vBottom;
+            vertexData.indices[t++] = vTop - 1;
+            vertexData.indices[t++] = vTop;
+
+            return t;
+        };
+
+        auto createUpperStrip = [&vertexData](uint32_t steps, uint32_t vTop, uint32_t vBottom, uint32_t t)
+        {
+            vertexData.indices[t++] = vBottom;
+            vertexData.indices[t++] = vTop - 1;
+            vertexData.indices[t++] = ++vBottom;
+
+            for (uint32_t i = 1; i <= steps; ++i)
+            {
+                vertexData.indices[t++] = vTop - 1;
+                vertexData.indices[t++] = vTop;
+                vertexData.indices[t++] = vBottom;
+
+                vertexData.indices[t++] = vBottom;
+                vertexData.indices[t++] = vTop++;
+                vertexData.indices[t++] = ++vBottom;
+            }
+
+            return t;
+        };
+
+        auto createVertexLine = [&vertexData](const glm::vec3& start, const glm::vec3& end, uint32_t steps, uint32_t v) -> uint32_t
+        {
+            for (uint32_t i = 1; i <= steps; ++i)
+            {
+                vertexData.positions[v++] = glm::mix(start, end, (float)i / steps);
+            }
+
+            return v;
+        };
+
+        auto normalizeData = [&vertexData]()
+        {
+            for (uint32_t i = 0; i < vertexData.positions.size(); ++i)
+            {
+                vertexData.positions[i] = glm::normalize(vertexData.positions[i]);
+                vertexData.normals  [i] = vertexData.positions[i];
+            }
+        };
+
+        auto calcUVs = [&vertexData]()
+        {
+            float previousX = 1.0f;
+            for (uint32_t i = 0; i < vertexData.positions.size(); ++i)
+            {
+                auto v = vertexData.positions[i];
+
+                if (v.x == previousX)
+                {
+                    vertexData.texcoords[i - 1].x = 1.0f;
+                }
+                previousX = v.x;
+
+                glm::vec2 uv;
+                float p = glm::atan2(v.x, v.z);
+                      p = (p < 0.0f) ? (p + glm::two_pi<float>()) : p;
+
+                uv.x = p / -glm::two_pi<float>();
+                uv.y = glm::asin(glm::clamp(v.y, -1.0f, 1.0f)) / -glm::pi<float>() + 0.5f;
+
+                if (uv.x < 0.0f) uv.x += 1.0f;
+
+                vertexData.texcoords[i] = uv;
+            }
+
+            // manually fix the twisted texture coordinates
+            vertexData.texcoords[vertexData.positions.size() - 4].x = vertexData.texcoords[0].x = 0.125f;
+            vertexData.texcoords[vertexData.positions.size() - 3].x = vertexData.texcoords[1].x = 0.375f;
+            vertexData.texcoords[vertexData.positions.size() - 2].x = vertexData.texcoords[2].x = 0.625f;
+            vertexData.texcoords[vertexData.positions.size() - 1].x = vertexData.texcoords[3].x = 0.875f;
+
+            for (auto& uv : vertexData.texcoords)
+            {
+                uv.x = 1.0f - uv.x;
+            }
+        };
+
+        auto calcTangents = [&vertexData]()
+        {
+            const uint32_t count = vertexData.positions.size();
+
+            for (uint32_t i = 0; i < count; ++i)
+            {
+                glm::vec3 v = vertexData.positions[i];
+                v.y = 0.0f;
+                v = glm::normalize(v);
+
+                glm::vec3 tangent;
+                tangent.x = v.z;
+                tangent.y = 0.0f;
+                tangent.z = -v.x;
+
+                vertexData.tangents[i] = tangent;
+            }
+
+            vertexData.tangents[count - 4] = vertexData.tangents[0] = glm::normalize(glm::vec3(-1.0f, 0.0f, -1.0f));
+            vertexData.tangents[count - 3] = vertexData.tangents[1] = glm::normalize(glm::vec3( 1.0f, 0.0f, -1.0f));
+            vertexData.tangents[count - 2] = vertexData.tangents[2] = glm::normalize(glm::vec3( 1.0f, 0.0f,  1.0f));
+            vertexData.tangents[count - 1] = vertexData.tangents[3] = glm::normalize(glm::vec3(-1.0f, 0.0f,  1.0f));
+        };
+
+        // Resize the buffers
+        const uint32_t resolution    = 1 << divisions;
+        const uint32_t verticesCount = (resolution + 1) * (resolution + 1) * 4 - (resolution * 2 - 1) * 3;
+        const uint32_t indicesCount  = (1 << (divisions * 2 + 3)) * 3;
+
+        vertexData.positions.resize(verticesCount);
+        vertexData.texcoords.resize(verticesCount);
+        vertexData.normals.resize(verticesCount);
+        vertexData.tangents.resize(verticesCount);
+        vertexData.indices.resize(indicesCount);
+
+        // Calculate vertex positions
+        uint32_t v = 0, vBottom = 0, t = 0;
+
+        for (uint32_t i = 0; i < 4; ++i)
+        {
+            vertexData.positions[v++] = math::down;
+        }
+
+        glm::vec3 directions[] = 
+        {
+            math::left,
+            math::forward,
+            math::right,
+            math::back
+        };
+
+        // bottom hemisphere
+        for (uint32_t i = 1; i <= resolution; ++i)
+        {
+            float deltaRes = (float)i / resolution;
+            glm::vec3 start, end;
+
+            vertexData.positions[v++] = end = glm::mix(math::down, math::back, deltaRes);
+            
+            for (uint32_t d = 0; d < std::size(directions); ++d)
+            {
+                start   = end;
+                end     = glm::mix(math::down, directions[d], deltaRes);
+                t       = createLowerStrip(i, v, vBottom, t);
+                v       = createVertexLine(start, end, i, v);
+                vBottom += (i > 1) ? (i - 1) : 1;
+            }
+            vBottom = v - 1 - i * 4;
+        }
+
+        // top hemisphere
+        for (uint32_t i = resolution - 1; i >= 1; --i)
+        {
+            float deltaRes = (float)i / resolution;
+            glm::vec3 start, end;
+
+            vertexData.positions[v++] = end = glm::mix(math::up, math::back, deltaRes);
+
+            for (uint32_t d = 0; d < std::size(directions); ++d)
+            {
+                start    = end;
+                end      = glm::mix(math::up, directions[d], deltaRes);
+                t        = createUpperStrip(i, v, vBottom, t);
+                v        = createVertexLine(start, end, i, v);
+                vBottom += i + 1;
+            }
+            vBottom = v - 1 - i * 4;
+        }
+
+        // top row
+        for (uint32_t i = 0; i < 4; ++i)
+        {
+            vertexData.indices[t++] = vBottom;
+            vertexData.indices[t++] = v;
+            vertexData.indices[t++] = ++vBottom;
+
+            vertexData.positions[v++] = math::up;
+        }
+
+        normalizeData();
+        calcUVs();
+        calcTangents();
+
+        for (uint32_t i = 0; i < vertexData.positions.size(); ++i)
+        {
+            vertexData.positions[i] *= 0.5f;
+        }
+
+        genPrimitive(vertexData, false);
     }
 
     void Mesh::genTorus(float innerRadius, float outerRadius, uint32_t slices, uint32_t stacks)

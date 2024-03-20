@@ -16,7 +16,7 @@ namespace mango::math
 
     // Returns a unit vec3 designating backward direction 
     // in a right-handed coordinate system (0, 0, 1).
-    static vec3 backward = { 0.0f, 0.0f,  1.0f };
+    static vec3 back = { 0.0f, 0.0f,  1.0f };
     
     // Returns a unit vector designating up direction (0, 1, 0).
     static vec3 up = { 0.0f,  1.0f, 0.0f };
