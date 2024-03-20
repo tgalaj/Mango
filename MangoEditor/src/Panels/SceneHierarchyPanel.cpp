@@ -797,13 +797,39 @@ namespace mango
                         ImGui::TableSetupColumn("x", ImGuiTableColumnFlags_WidthStretch);
                         ImGui::TableSetupColumn("y", ImGuiTableColumnFlags_WidthFixed, previewSize);
 
+                        const char* defaultTextureNames[] = 
+                        {
+                            "DefaultDiffuse",
+                            "DefaultSpecular",
+                            "DefaultNormal",
+                            "DefaultEmission",
+                            "DefaultDisplacement"
+                        };
                         for (auto &[type, texture] : materialToEdit->getTextureMap())
                         {
                             ImGui::TableNextColumn();
                             ImGui::Text("%s", materialTextureTypeToString(type).c_str());
 
                             ImGui::TableNextColumn();
+                            ImVec2 cursorPos = ImGui::GetCursorPos();
+
                             ImGui::Image((ImTextureID)texture->getRendererID(), { previewSize, previewSize });
+
+                            auto defaultTextureName = defaultTextureNames[(int)type];
+                            if (texture->getFilename() != defaultTextureName)
+                            {
+                                cursorPos.x += previewSize - ImGui::CalcTextSize(ICON_FA_XMARK).x * 2.0f;
+                                ImGui::SetCursorPos(cursorPos);
+                                ImGui::PushID(defaultTextureName);
+
+                                if (ImGui::Button(ICON_FA_XMARK))
+                                {
+                                    texture = AssetManager::getTexture2D(defaultTextureName);
+                                }
+
+                                ImGui::PopID();
+                            }
+                            
 
                             if (ImGui::BeginDragDropTarget())
                             {
