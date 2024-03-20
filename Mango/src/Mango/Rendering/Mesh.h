@@ -114,7 +114,11 @@ namespace mango
         MaterialTable getMaterials() { return m_materialTable; }
 
         /* Primitives */
-        void genCone       (float    height      = 3.0f, float radius        = 1.5f, uint32_t slices = 10, uint32_t stacks = 10);
+        enum class CapsuleUvProfile { Aspect, Uniform, Fixed };
+
+        // Capsule based on: https://behreajj.medium.com/making-a-capsule-mesh-via-script-in-five-3d-environments-c2214abf02db
+        void genCapsule    (float    radius      = 0.5f, float depth         = 1.0f, uint32_t longitudes = 32, uint32_t latitudes = 16, uint32_t rings = 0, CapsuleUvProfile profile = CapsuleUvProfile::Aspect);
+        void genCone       (float    height      = 3.0f, float radius        = 1.5f, uint32_t slices     = 10, uint32_t stacks    = 10);
         void genCube       (float    size        = 1.0f, float texcoordScale = 1.0f);
         void genCubeMap    (float    radius      = 1.0f);                     
         void genCylinder   (float    height      = 3.0f, float    radius      = 1.5f, uint32_t slices = 10);

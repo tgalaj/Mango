@@ -184,6 +184,323 @@ namespace mango
         m_submeshes.emplace_back(submesh);
     }
 
+    void Mesh::genCapsule(float            radius     /*= 0.5f*/, 
+                          float            depth      /*= 1.0f*/, 
+                          uint32_t         longitudes /*= 32*/, 
+                          uint32_t         latitudes  /*= 16*/, 
+                          uint32_t         rings      /*= 0*/, 
+                          CapsuleUvProfile profile    /*= CapsuleUvProfile::Aspect*/)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+        VertexData vertexData;
+
+        latitudes = (latitudes % 2) ? latitudes : latitudes + 1;
+
+        float height = depth + radius * 2.0f;
+
+        bool  calcMiddle = rings > 0;
+        int   halfLats   = latitudes / 2;
+        int   halfLatsn1 = halfLats - 1;
+        int   halfLatsn2 = halfLats - 2;
+        int   ringsp1    = rings + 1;
+        int   lonsp1     = longitudes + 1;
+        float halfDepth  = depth * 0.5f;
+        float summit     = halfDepth + radius;
+
+        // Vertex index offsets.
+        int vertOffsetNorthHemi    = longitudes;
+        int vertOffsetNorthEquator = vertOffsetNorthHemi + lonsp1 * halfLatsn1;
+        int vertOffsetCylinder     = vertOffsetNorthEquator + lonsp1;
+        int vertOffsetSouthEquator = calcMiddle ?
+            vertOffsetCylinder + lonsp1 * rings :
+            vertOffsetCylinder;
+
+        int vertOffsetSouthHemi    = vertOffsetSouthEquator + lonsp1;
+        int vertOffsetSouthPolar   = vertOffsetSouthHemi + lonsp1 * halfLatsn2;
+        int vertOffsetSouthCap     = vertOffsetSouthPolar + lonsp1;
+
+        // Initialize arrays.
+        int vertLen = vertOffsetSouthCap + longitudes;
+        vertexData.positions.resize(vertLen);
+        vertexData.texcoords.resize(vertLen);
+        vertexData.normals.resize(vertLen);
+
+        float toTheta         = glm::two_pi<float>() / longitudes;
+        float toPhi           = glm::pi<float>() / latitudes;
+        float toTexHorizontal = 1.0f / longitudes;
+        float toTexVertical   = 1.0f / halfLats;
+
+        // Calculate positions for texture coordinates vertical.
+        float vtAspectRatio = 1.0f;
+
+        switch (profile)
+        {
+            case CapsuleUvProfile::Aspect :
+                vtAspectRatio = radius / (depth + radius + radius);
+                break;
+
+            case CapsuleUvProfile::Uniform:
+                vtAspectRatio = (float)halfLats / (ringsp1 + latitudes);
+                break;
+
+            case CapsuleUvProfile::Fixed:
+            default:
+                vtAspectRatio = 1.0f / 3.0f;
+                break;
+        }
+
+        float vtAspectNorth = 1.0f - vtAspectRatio;
+        float vtAspectSouth = vtAspectRatio;
+
+        std::vector<glm::vec2> thetaCartesian(longitudes);
+        std::vector<glm::vec2> rhoThetaCartesian(longitudes);
+        std::vector<float>     sTextureCache(lonsp1);
+
+        // Polar vertices.
+        for (int j = 0; j < longitudes; ++j)
+        {
+            float jf            = j;
+            float sTexturePolar = 1.0f - ((jf + 0.5f) * toTexHorizontal);
+            float theta         = jf * toTheta;
+
+            float cosTheta = glm::cos(theta);
+            float sinTheta = glm::sin(theta);
+
+            thetaCartesian   [j] = glm::vec2(cosTheta, sinTheta);
+            rhoThetaCartesian[j] = glm::vec2(radius * cosTheta,
+                                             radius * sinTheta);
+
+            // North.
+            vertexData.positions[j] = glm::vec3(0.0f, summit, 0.0f);
+            vertexData.texcoords[j] = glm::vec2(sTexturePolar, 1.0f);
+            vertexData.normals  [j] = glm::vec3(0.0f, 1.0f, 0.0f);
+
+            // South.
+            int idx = vertOffsetSouthCap + j;
+            vertexData.positions[idx] = glm::vec3(0.0f, -summit, 0.0f);
+            vertexData.texcoords[idx] = glm::vec2(sTexturePolar, 0.0f);
+            vertexData.normals  [idx] = glm::vec3(0.0f, -1.0f, 0.0f);
+        }
+
+        // Equatorial vertices.
+        for (int j = 0; j < lonsp1; ++j)
+        {
+            float sTexture         = 1.0f - j * toTexHorizontal;
+                  sTextureCache[j] = sTexture;
+
+            // Wrap to first element upon reaching last.
+            int jMod      = j % longitudes;
+            glm::vec2 tc  = thetaCartesian[jMod];
+            glm::vec2 rtc = rhoThetaCartesian[jMod];
+
+            // North equator.
+            int idxn = vertOffsetNorthEquator + j;
+            vertexData.positions[idxn] = glm::vec3(rtc.x, halfDepth, -rtc.y);
+            vertexData.texcoords[idxn] = glm::vec2(sTexture, vtAspectNorth);
+            vertexData.normals  [idxn] = glm::vec3(tc.x, 0.0f, -tc.y);
+
+            // South equator.
+            int idxs = vertOffsetSouthEquator + j;
+            vertexData.positions[idxs] = glm::vec3(rtc.x, -halfDepth, -rtc.y);
+            vertexData.texcoords[idxs] = glm::vec2(sTexture, vtAspectSouth);
+            vertexData.normals  [idxs] = glm::vec3(tc.x, 0.0f, -tc.y);
+        }
+
+        // Hemisphere vertices.
+        for (int i = 0; i < halfLatsn1; ++i)
+        {
+            float ip1f = i + 1.0f;
+            float phi  = ip1f * toPhi;
+
+            // For coordinates.
+            float cosPhiSouth = glm::cos(phi);
+            float sinPhiSouth = glm::sin(phi);
+
+            // Symmetrical hemispheres mean cosine and sine only needs
+            // to be calculated once.
+            float cosPhiNorth = sinPhiSouth;
+            float sinPhiNorth = -cosPhiSouth;
+
+            float rhoCosPhiNorth = radius * cosPhiNorth;
+            float rhoSinPhiNorth = radius * sinPhiNorth;
+            float zOffsetNorth   = halfDepth - rhoSinPhiNorth;
+
+            float rhoCosPhiSouth = radius * cosPhiSouth;
+            float rhoSinPhiSouth = radius * sinPhiSouth;
+            float zOffsetSouth   = -halfDepth - rhoSinPhiSouth;
+
+            // For texture coordinates.
+            float tTexFac    = ip1f * toTexVertical;
+            float cmplTexFac = 1.0f - tTexFac;
+            float tTexNorth  = cmplTexFac + vtAspectNorth * tTexFac;
+            float tTexSouth  = cmplTexFac * vtAspectSouth;
+
+            int iLonsp1          = i * lonsp1;
+            int vertCurrLatNorth = vertOffsetNorthHemi + iLonsp1;
+            int vertCurrLatSouth = vertOffsetSouthHemi + iLonsp1;
+
+            for (int j = 0; j < lonsp1; ++j)
+            {
+                int jMod       = j % longitudes;
+                float sTexture = sTextureCache[j];
+                glm::vec2 tc   = thetaCartesian[jMod];
+
+                // North hemisphere.
+                int idxn = vertCurrLatNorth + j;
+                vertexData.positions[idxn] = glm::vec3( rhoCosPhiNorth * tc.x,
+                                                        zOffsetNorth,
+                                                       -rhoCosPhiNorth * tc.y);
+                vertexData.texcoords[idxn] = glm::vec2(sTexture, tTexNorth);
+                vertexData.normals  [idxn] = glm::vec3( cosPhiNorth * tc.x,
+                                                       -sinPhiNorth,
+                                                       -cosPhiNorth * tc.y);
+
+                // South hemisphere.
+                int idxs = vertCurrLatSouth + j;
+                vertexData.positions[idxs] = glm::vec3(rhoCosPhiSouth * tc.x,
+                                                       zOffsetSouth,
+                                                       -rhoCosPhiSouth * tc.y);
+                vertexData.texcoords[idxs] = glm::vec2(sTexture, tTexSouth);
+                vertexData.normals  [idxs] = glm::vec3(cosPhiSouth * tc.x,
+                                                       -sinPhiSouth,
+                                                       -cosPhiSouth * tc.y);
+            }
+        }
+
+        // Cylinder vertices.
+        if (calcMiddle)
+        {
+            // Exclude both origin and destination edges
+            // (North and South equators) from the interpolation.
+            float toFac = 1.0f / ringsp1;
+            int idxCylLat = vertOffsetCylinder;
+
+            for (int h = 1; h < ringsp1; ++h)
+            {
+                float fac      = h * toFac;
+                float cmplFac  = 1.0f - fac;
+                float tTexture = cmplFac * vtAspectNorth + fac * vtAspectSouth;
+                float z        = halfDepth - depth * fac;
+
+                for (int j = 0; j < lonsp1; ++j)
+                {
+                    int jMod       = j % longitudes;
+                    glm::vec2 tc   = thetaCartesian[jMod];
+                    glm::vec2 rtc  = rhoThetaCartesian[jMod];
+                    float sTexture = sTextureCache[j];
+
+                    vertexData.positions[idxCylLat] = glm::vec3(rtc.x, z, -rtc.y);
+                    vertexData.texcoords[idxCylLat] = glm::vec2(sTexture, tTexture);
+                    vertexData.normals  [idxCylLat] = glm::vec3(tc.x, 0.0f, -tc.y);
+
+                    ++idxCylLat;
+                }
+            }
+        }
+
+        // Triangle indices.
+        // Stride is 3 for polar triangles;
+        // stride is 6 for two triangles forming a quad.
+        int lons3    = longitudes * 3;
+        int lons6    = longitudes * 6;
+        int hemiLons = halfLatsn1 * lons6;
+
+        int triOffsetNorthHemi = lons3;
+        int triOffsetCylinder  = triOffsetNorthHemi + hemiLons;
+        int triOffsetSouthHemi = triOffsetCylinder + ringsp1 * lons6;
+        int triOffsetSouthCap  = triOffsetSouthHemi + hemiLons;
+
+        int fsLen = triOffsetSouthCap + lons3;
+        vertexData.indices.resize(fsLen);
+
+        // Polar caps.
+        for (int i = 0, k = 0, m = triOffsetSouthCap; i < longitudes; ++i, k += 3, m += 3)
+        {
+            // North.
+            vertexData.indices[k]     = i;
+            vertexData.indices[k + 1] = vertOffsetNorthHemi + i;
+            vertexData.indices[k + 2] = vertOffsetNorthHemi + i + 1;
+
+            // South.
+            vertexData.indices[m]     = vertOffsetSouthCap + i;
+            vertexData.indices[m + 1] = vertOffsetSouthPolar + i + 1;
+            vertexData.indices[m + 2] = vertOffsetSouthPolar + i;
+        }
+
+        // Hemispheres.
+        for (int i = 0, k = triOffsetNorthHemi, m = triOffsetSouthHemi; i < halfLatsn1; ++i)
+        {
+            int iLonsp1 = i * lonsp1;
+
+            int vertCurrLatNorth = vertOffsetNorthHemi + iLonsp1;
+            int vertNextLatNorth = vertCurrLatNorth + lonsp1;
+
+            int vertCurrLatSouth = vertOffsetSouthEquator + iLonsp1;
+            int vertNextLatSouth = vertCurrLatSouth + lonsp1;
+
+            for (int j = 0; j < longitudes; ++j, k += 6, m += 6)
+            {
+                // North.
+                int north00 = vertCurrLatNorth + j;
+                int north01 = vertNextLatNorth + j;
+                int north11 = vertNextLatNorth + j + 1;
+                int north10 = vertCurrLatNorth + j + 1;
+
+                vertexData.indices[k]     = north00;
+                vertexData.indices[k + 1] = north11;
+                vertexData.indices[k + 2] = north10;
+
+                vertexData.indices[k + 3] = north00;
+                vertexData.indices[k + 4] = north01;
+                vertexData.indices[k + 5] = north11;
+
+                // South.
+                int south00 = vertCurrLatSouth + j;
+                int south01 = vertNextLatSouth + j;
+                int south11 = vertNextLatSouth + j + 1;
+                int south10 = vertCurrLatSouth + j + 1;
+
+                vertexData.indices[m]     = south00;
+                vertexData.indices[m + 1] = south11;
+                vertexData.indices[m + 2] = south10;
+
+                vertexData.indices[m + 3] = south00;
+                vertexData.indices[m + 4] = south01;
+                vertexData.indices[m + 5] = south11;
+            }
+        }
+
+        // Cylinder.
+        for (int i = 0, k = triOffsetCylinder; i < ringsp1; ++i)
+        {
+            int vertCurrLat = vertOffsetNorthEquator + i * lonsp1;
+            int vertNextLat = vertCurrLat + lonsp1;
+
+            for (int j = 0; j < longitudes; ++j, k += 6)
+            {
+                int cy00 = vertCurrLat + j;
+                int cy01 = vertNextLat + j;
+                int cy11 = vertNextLat + j + 1;
+                int cy10 = vertCurrLat + j + 1;
+
+                vertexData.indices[k]     = cy00;
+                vertexData.indices[k + 1] = cy11;
+                vertexData.indices[k + 2] = cy10;
+
+                vertexData.indices[k + 3] = cy00;
+                vertexData.indices[k + 4] = cy01;
+                vertexData.indices[k + 5] = cy11;
+            }
+        }
+
+        for (auto& tc : vertexData.texcoords)
+        {
+            tc = 1.0f - tc;
+        }
+
+        genPrimitive(vertexData);
+    }
+
     void Mesh::genCone(float height, float radius, uint32_t slices, uint32_t stacks)
     {
         MG_PROFILE_ZONE_SCOPED;

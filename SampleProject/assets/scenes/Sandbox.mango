@@ -376,9 +376,19 @@ Entities:
       Filename: Quad
       Materials:
         0: bricks2
+    RigidBody3DComponent:
+      MotionType: Static
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, 0, 0]
+      Extent: [2.5, 2.5, 0.100000001]
   - Entity: 809506919725630732
     TagComponent:
-      Name: Entity
+      Name: Entity2
     TransformComponent:
       Position: [5, 0.5, -11.5]
       Rotation: [-89.5, 0, 0]
@@ -396,8 +406,8 @@ Entities:
       AngularDamping: 0.0500000007
       Activated: true
     BoxCollider3DComponent:
-      Offset: [0, -0.100000001, 0]
-      Extent: [2.5, 0.100000001, 2.5]
+      Offset: [0, 0, 0]
+      Extent: [2.5, 2.5, 0.100000001]
   - Entity: 18179586025720236209
     TagComponent:
       Name: Entity
@@ -784,12 +794,12 @@ Entities:
     TagComponent:
       Name: Entity
     TransformComponent:
-      Position: [-3.75, 0.5, 6.75]
+      Position: [-3.75, 0.443834424, 6.75]
       Rotation: [0, 0, 0]
       Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
+      Scale: [1, 1, 1]
     StaticMeshComponent:
-      Filename: Sphere UV
+      Filename: Cube
       Materials:
         {}
   - Entity: 13876278085186216192
@@ -904,12 +914,12 @@ Entities:
     TagComponent:
       Name: Entity
     TransformComponent:
-      Position: [-2.25, 0.5, 6.75]
+      Position: [-2.25, 0.8574332, 8.84241486]
       Rotation: [0, 0, 0]
       Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
+      Scale: [1, 1, 1]
     StaticMeshComponent:
-      Filename: Sphere UV
+      Filename: Capsule
       Materials:
         {}
   - Entity: 6834243006313697006
@@ -1252,12 +1262,12 @@ Entities:
     TagComponent:
       Name: Entity
     TransformComponent:
-      Position: [2.25, 0.5, 5.25]
+      Position: [2.25, 0.468156189, 5.25]
       Rotation: [0, 0, 0]
       Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
+      Scale: [1, 1, 1]
     StaticMeshComponent:
-      Filename: Sphere UV
+      Filename: Cylinder
       Materials:
         {}
   - Entity: 7342284743134474112
@@ -1384,12 +1394,12 @@ Entities:
     TagComponent:
       Name: Entity
     TransformComponent:
-      Position: [3.75, 0.5, 6.75]
+      Position: [3.62258554, 0.505924225, 6.75]
       Rotation: [0, 0, 0]
       Orientation: [1, 0, 0, 0]
-      Scale: [0.75, 0.75, 0.75]
+      Scale: [1, 1, 1]
     StaticMeshComponent:
-      Filename: Sphere UV
+      Filename: Cone
       Materials:
         {}
   - Entity: 8064959354719206171

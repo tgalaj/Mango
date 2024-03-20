@@ -272,6 +272,11 @@ namespace mango
         
         // Default meshes
         {
+            ref<Mesh> m = createMesh("Capsule");
+            m->genCapsule(0.5f, 1.0f, 32, 16, 0);
+        }
+
+        {
             ref<Mesh> m = createMesh("Cone");
             m->genCone(1.0f, 0.5f, 12, 20);
         }
