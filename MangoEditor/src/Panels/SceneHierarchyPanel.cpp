@@ -340,6 +340,14 @@ namespace mango
 
         drawComponent<TransformComponent>("Transform", entity, [](auto& component)
         {
+            bool hasParent = component.getParent() != nullptr;
+            ImGui::Checkbox("Has parent", &hasParent);
+
+            if (hasParent)
+            {
+                if(ImGui::Button("Detach")) component.getParent()->removeChild(component);
+            }
+
             auto position = component.getPosition();
             auto rotation = glm::degrees(component.getRotation());
             auto scale    = component.getScale();

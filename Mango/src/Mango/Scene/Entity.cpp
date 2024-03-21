@@ -73,9 +73,26 @@ namespace mango
         return getComponent<TransformComponent>().getOrientation();
     }
 
+    mango::TransformComponent& Entity::getParentTransform()
+    {
+        MG_CORE_ASSERT(hasParent());
+
+        return *getComponent<TransformComponent>().getParent();
+    }
+
     void Entity::addChild(Entity& child)
     {
         getComponent<TransformComponent>().addChild(child.getComponent<TransformComponent>());
+    }
+
+    void Entity::removeChild(Entity& child)
+    {
+        getComponent<TransformComponent>().removeChild(child.getComponent<TransformComponent>());
+    }
+
+    bool Entity::hasParent()
+    {
+        return getComponent<TransformComponent>().hasParent();
     }
 
 }

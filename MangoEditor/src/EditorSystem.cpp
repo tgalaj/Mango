@@ -137,6 +137,32 @@ namespace mango
                                             "back.jpg" );
             Services::renderer()->setSkybox(skybox);
         }
+
+        auto texture = AssetManager::createTexture2D("textures/uv_checker_map_by_valle.jpg", true);
+
+        auto cyborgModel = AssetManager::createMeshFromFile("models/cyborg/cyborg.obj");
+        auto cyborg = m_activeScene->createEntity("Cyborg");
+        auto& smc = cyborg.addComponent<StaticMeshComponent>(cyborgModel);
+        smc.materials[0]->addTexture(Material::TextureType::DIFFUSE, texture);
+        cyborg.setPosition(2.0f, 0.0f, 0.0f);
+        cyborg.setScale(1.0f);
+
+
+        auto box = m_activeScene->createEntity("Box");
+        auto& smc2 = box.addComponent<StaticMeshComponent>(AssetManager::getMesh("Cube"));
+        smc2.materials[0]->addTexture(Material::TextureType::DIFFUSE, texture);
+        box.setScale(1.0f);
+        box.setPosition(1, 1, -1);
+
+        auto capsule = m_activeScene->createEntity("Capsule");
+        capsule.addComponent<StaticMeshComponent>(AssetManager::getMesh("Capsule"));
+        capsule.setPosition(1, 1, -1);
+
+
+        cyborg.addChild(box);
+        box.addChild(capsule);
+        //cyborg.removeChild(box);
+
     }
 
     void EditorSystem::onDestroy()
@@ -620,6 +646,7 @@ namespace mango
 
                     if (ImGuizmo::IsUsing())
                     {
+                        transform = glm::inverse(tc.getParentWorldMatrix()) * transform;
                         glm::vec3 translation, rotation, scale;
                         math::decompose(transform,
                                         translation,

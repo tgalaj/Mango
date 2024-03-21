@@ -8,6 +8,8 @@
 
 namespace mango
 {
+    struct TransformComponent;
+
     class Entity final
     {
     public:
@@ -99,8 +101,12 @@ namespace mango
         /** Returns rotation in radians. */
         glm::vec3 getRotation();
         glm::quat getOrientation();
+        /** Assumes that entity has a valid parent. */
+        TransformComponent& getParentTransform();
         
         void addChild(Entity& child);
+        void removeChild(Entity& child);
+        bool hasParent();
 
     private:
         entt::entity m_entityHandle = entt::null;

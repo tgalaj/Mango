@@ -338,8 +338,32 @@ namespace mango
 
         void addChild(TransformComponent& child)
         {
+            child.m_parent = this;
             m_children.push_back(&child);
         }
+
+        void removeChild(TransformComponent& child)
+        {
+            auto it = std::find(m_children.begin(), m_children.end(), &child);
+
+            if (it != m_children.end())
+            {
+                child.m_parent = nullptr;
+                m_children.erase(it);
+            }
+        }
+
+        auto getChildren() const
+        {
+            return m_children;
+        }
+
+        TransformComponent* const getParent() const
+        {
+            return m_parent;
+        }
+
+        bool hasParent() const { return m_parent != nullptr; }
 
         void update(const glm::mat4 & parentTransform, bool dirty)
         {
@@ -360,6 +384,12 @@ namespace mango
             }
         }
 
+        glm::mat4 getParentWorldMatrix() const 
+        { 
+            if (m_parent) return m_parent->m_worldMatrix; 
+            
+            return glm::mat4(1.0f); 
+        }
         glm::mat4 getWorldMatrix () const { return m_worldMatrix;  }
         glm::mat3 getNormalMatrix() const { return m_normalMatrix; }
         glm::vec3 getPosition    () const { return m_position;     }
@@ -381,6 +411,8 @@ namespace mango
 
     private:
         std::vector<TransformComponent*> m_children;
+        
+        TransformComponent* m_parent = nullptr;
 
         glm::mat4 m_worldMatrix{};
         glm::mat3 m_normalMatrix{};
