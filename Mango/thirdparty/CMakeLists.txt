@@ -183,6 +183,7 @@ if (imgui_ADDED AND imguizmo_ADDED)
                              ${imgui_SOURCE_DIR}/imgui_widgets.cpp
                              ${imguizmo_SOURCE_DIR}/ImGuizmo.cpp)
     target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${imguizmo_SOURCE_DIR})
+    target_compile_definitions(imgui PUBLIC -DIMGUI_USE_WCHAR32)
 endif()
 
 CPMAddPackage(

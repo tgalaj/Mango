@@ -1,6 +1,6 @@
 #include "ContentBrowserPanel.h"
-#include "IconsFontAwesome6.h"
 #include "DragDropPayloadTypes.h"
+#include "IconsMaterialDesignIcons.h"
 
 #include "Mango/Core/VFI.h"
 #include "Mango/Project/Project.h"
@@ -37,7 +37,7 @@ namespace mango
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
         ImGui::BeginDisabled(m_currentPath == m_basePath);
         {
-            if (ImGui::Button(ICON_FA_ARROW_LEFT, { backButtonSize, backButtonSize }) ||
+            if (ImGui::Button(ICON_MDI_ARROW_LEFT_BOLD, { backButtonSize, backButtonSize }) ||
                 ImGui::IsMouseClicked(ImGuiMouseButton_Middle + 1))
             {
                 m_currentPath = m_currentPath.parent_path();

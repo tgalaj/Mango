@@ -1,6 +1,6 @@
-#include "IconsFontAwesome6.h"
 #include "SceneHierarchyPanel.h"
 #include "DragDropPayloadTypes.h"
+#include "IconsMaterialDesignIcons.h"
 
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Core/VFI.h"
@@ -38,7 +38,11 @@ namespace mango
                 for (auto [entityID] : m_scene->m_registry.storage<entt::entity>().each())
                 { 
                     Entity entity{ entityID, m_scene.get() };
-                    drawEntityNode(entity);
+
+                    if (!entity.hasParent())
+                    {
+                        drawEntityNode(entity);
+                    }
                 }
             }
 
@@ -128,16 +132,19 @@ namespace mango
 
         if (opened)
         {
-            // TODO: display child nodes
-            ImGuiTreeNodeFlags flags  = ImGuiTreeNodeFlags_OpenOnArrow;
-                               flags |= ImGuiTreeNodeFlags_OpenOnDoubleClick;
-                               flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
-            bool opened = ImGui::TreeNodeEx((void*)34564574566, flags, name.c_str());
+            //// TODO: display child nodes
+            //ImGuiTreeNodeFlags flags  = ImGuiTreeNodeFlags_OpenOnArrow;
+            //                   flags |= ImGuiTreeNodeFlags_OpenOnDoubleClick;
+            //                   flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
+            //bool opened = ImGui::TreeNodeEx((void*)34564574566, flags, name.c_str());
 
-            if (opened)
-            {
-                ImGui::TreePop();
-            }
+            //if (opened)
+            //{
+            //    ImGui::TreePop();
+            //}
+            
+            // TODO: Store children and parent in Transform + entity handle
+            // for(auto& child : entity.get)
 
             ImGui::TreePop();
         }
@@ -319,7 +326,7 @@ namespace mango
         ImGui::SameLine();
         ImGui::PushItemWidth(-1);
 
-        if (ImGui::Button("Add Component"))
+        if (ImGui::Button("ADD " ICON_MDI_PLUS_THICK))
             ImGui::OpenPopup("AddComponent");
 
         if (ImGui::BeginPopup("AddComponent"))
@@ -338,14 +345,14 @@ namespace mango
 
         ImGui::PopItemWidth();
 
-        drawComponent<TransformComponent>("Transform", entity, [](auto& component)
+        drawComponent<TransformComponent>("Transform", entity, [&entity](auto& component)
         {
-            bool hasParent = component.getParent() != nullptr;
+            bool hasParent = entity.hasParent();
             ImGui::Checkbox("Has parent", &hasParent);
 
             if (hasParent)
             {
-                if(ImGui::Button("Detach")) component.getParent()->removeChild(component);
+                if(ImGui::Button("Detach")) entity.getParent()->removeChild(entity);
             }
 
             auto position = component.getPosition();
@@ -628,7 +635,7 @@ namespace mango
                     }
 
                     ImGui::SameLine();
-                    if(ImGui::Button(ICON_FA_ELLIPSIS_VERTICAL)) // Clear, Edit menu
+                    if(ImGui::Button(ICON_MDI_DOTS_VERTICAL)) // Clear, Edit menu
                     {
                         ImGui::OpenPopup("material_options");
                         selectedMaterialIndex = i;
@@ -848,7 +855,7 @@ namespace mango
                                 ImGui::SetCursorPos(cursorPos);
                                 ImGui::PushID(defaultTextureName);
 
-                                if (ImGui::Button(ICON_FA_XMARK))
+                                if (ImGui::Button("X"))
                                 {
                                     texture = AssetManager::getTexture2D(defaultTextureName);
                                 }

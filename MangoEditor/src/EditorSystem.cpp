@@ -2,7 +2,7 @@
 
 #include "EditorSystem.h"
 #include "DragDropPayloadTypes.h"
-#include "IconsFontAwesome6.h"
+#include "IconsMaterialDesignIcons.h"
 
 #include "Mango/ImGui/ImGuiUtils.h"
 #include "Mango/Math/Math.h"
@@ -71,9 +71,8 @@ namespace mango
         // Setup font
         ImGuiSystem::addFont("Inter16", "fonts/inter/Inter-Regular.ttf", 16.0f, true);
         
-        static const ImWchar iconRanges[3] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
-        ImGuiSystem::mergeFont("fonts/fontawesome/webfonts/" FONT_ICON_FILE_NAME_FAR, 16.0f, iconRanges);
-        ImGuiSystem::mergeFont("fonts/fontawesome/webfonts/" FONT_ICON_FILE_NAME_FAS, 16.0f, iconRanges);
+        static const ImWchar iconRanges[3] = { ICON_MIN_MDI, ICON_MAX_MDI, 0 };
+        ImGuiSystem::mergeFont("fonts/materialdesignicons-7.4.47/" FONT_ICON_FILE_NAME_MDI, 18.0f, iconRanges, 1.0f / 3.0f);
 
         ImGuiSystem::addFont("InterBold16",  "fonts/inter/Inter-Bold.ttf",    16.0f); 
         ImGuiSystem::addFont("Inter24",      "fonts/inter/Inter-Regular.ttf", 24.0f);

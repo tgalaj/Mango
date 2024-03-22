@@ -154,7 +154,7 @@ namespace mango
         style.ScaleAllSizes(dpiScale);
     }
 
-    void ImGuiSystem::mergeFont(const std::string& path, float size, const ImWchar iconRanges[3])
+    void ImGuiSystem::mergeFont(const std::string& path, float size, const ImWchar iconRanges[3], float glyphScale /*= 1.0f*/)
     {
         float dpiScale = Services::application()->getWindow()->getDpiScale().x;
 
@@ -166,8 +166,13 @@ namespace mango
 
         ImFontConfig config;
         config.MergeMode        = true;
-        config.PixelSnapH = true;
-        config.GlyphMinAdvanceX = size; // Use if you want to make the icon monospaced
+        config.PixelSnapH       = true;
+        config.GlyphMinAdvanceX = size * glyphScale; // Use if you want to make the icon monospaced
+
+        if (glyphScale != 1.0f)
+        {
+            config.GlyphOffset  = { 0.0f, size * glyphScale / 4.0f };
+        }
 
         io.Fonts->AddFontFromFileTTF(VFI::getFilepath(path).string().c_str(), size, &config, iconRanges);
     }

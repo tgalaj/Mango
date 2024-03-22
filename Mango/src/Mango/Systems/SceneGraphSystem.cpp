@@ -25,7 +25,7 @@ namespace mango
             for (auto entity : view)
             {
                 auto& tc = view.get<TransformComponent>(entity);
-                if (!tc.getParent())
+                if (!tc.hasParent())
                 {
                     tc.update(rootTransform, false);
                 }

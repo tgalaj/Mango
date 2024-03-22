@@ -31,7 +31,7 @@ namespace mango
         void updateWindowSize(float width, float height);
 
         static void    addFont(const std::string& name, const std::string& path, float size, bool isDefault = false);
-        static void    mergeFont(const std::string& path, float size, const ImWchar iconRanges[3]);
+        static void    mergeFont(const std::string& path, float size, const ImWchar iconRanges[3], float glyphScale = 1.0f);
         static ImFont* getFont(const std::string& name) { return s_ImFonts[name]; };
 
         void setDefaultIniSettingsFile(const std::string& filepath);
