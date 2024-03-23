@@ -345,14 +345,14 @@ namespace mango
 
         ImGui::PopItemWidth();
 
-        drawComponent<TransformComponent>("Transform", entity, [&entity](auto& component)
+        drawComponent<TransformComponent>("Transform", entity, [](auto& component)
         {
-            bool hasParent = entity.hasParent();
+            bool hasParent = component.hasParent();
             ImGui::Checkbox("Has parent", &hasParent);
 
             if (hasParent)
             {
-                if(ImGui::Button("Detach")) entity.getParent()->removeChild(entity);
+                if(ImGui::Button("Detach")) component.getParent()->removeChild(component);
             }
 
             auto position = component.getPosition();

@@ -371,9 +371,10 @@ namespace mango
 
             if (dirty)
             {
-                m_worldMatrix  = getUpdatedWorldMatrix();
-                m_worldMatrix  = parentTransform * m_worldMatrix;
-                m_normalMatrix = glm::mat3(glm::transpose(glm::inverse(m_worldMatrix)));
+                m_parentWorldMatrix = parentTransform;
+                m_localWorldMatrix  = getUpdatedWorldMatrix();
+                m_worldMatrix       = m_parentWorldMatrix * m_localWorldMatrix;
+                m_normalMatrix      = glm::mat3(glm::transpose(glm::inverse(m_worldMatrix)));
 
                 m_isDirty = false;
             }
@@ -383,21 +384,17 @@ namespace mango
                 m_children[i]->update(m_worldMatrix, dirty);
             }
         }
-
-        glm::mat4 getParentWorldMatrix() const 
-        { 
-            if (m_parent) return m_parent->m_worldMatrix; 
-            
-            return glm::mat4(1.0f); 
-        }
-        glm::mat4 getWorldMatrix () const { return m_worldMatrix;  }
-        glm::mat3 getNormalMatrix() const { return m_normalMatrix; }
-        glm::vec3 getPosition    () const { return m_position;     }
-        glm::quat getOrientation () const { return m_orientation;  }
+        
+        glm::mat4 getWorldMatrix      () const { return m_worldMatrix;       }
+        glm::mat4 getLocalWorldMatrix () const { return m_localWorldMatrix;  }
+        glm::mat4 getParentWorldMatrix() const { return m_parentWorldMatrix; }
+        glm::mat3 getNormalMatrix     () const { return m_normalMatrix;      }
+        glm::vec3 getPosition         () const { return m_position;          }
+        glm::quat getOrientation      () const { return m_orientation;       }
         /** Returns rotation in radians. */
-        glm::vec3 getRotation    () const { return m_rotation;     }
-        glm::vec3 getScale       () const { return m_scale;        }
-        glm::vec3 getDirection   () const { return m_direction;    }
+        glm::vec3 getRotation         () const { return m_rotation;          }
+        glm::vec3 getScale            () const { return m_scale;             }
+        glm::vec3 getDirection        () const { return m_direction;         }
 
     private:
         glm::mat4 getUpdatedWorldMatrix() const
@@ -414,14 +411,16 @@ namespace mango
         
         TransformComponent* m_parent = nullptr;
 
-        glm::mat4 m_worldMatrix{};
-        glm::mat3 m_normalMatrix{};
+        glm::mat4 m_worldMatrix      { 1.0f };
+        glm::mat4 m_localWorldMatrix { 1.0f };
+        glm::mat4 m_parentWorldMatrix{ 1.0f };
+        glm::mat3 m_normalMatrix     { 1.0f };
 
         glm::quat m_orientation{};
-        glm::vec3 m_position{};
-        glm::vec3 m_rotation{};
-        glm::vec3 m_scale{1.0f};
-        glm::vec3 m_direction{};
+        glm::vec3 m_position   {};
+        glm::vec3 m_rotation   {};
+        glm::vec3 m_scale      { 1.0f };
+        glm::vec3 m_direction  {};
         
         bool m_isDirty = true;
     };
