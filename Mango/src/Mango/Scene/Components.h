@@ -350,8 +350,7 @@ namespace mango
 
             if (it != m_children.end())
             {
-                childTransform.m_parent            = nullptr;
-                childTransform.m_parentWorldMatrix = glm::mat4(1.0f);
+                childTransform.resetParent();
                 m_children.erase(it);
             }
         }
@@ -367,6 +366,12 @@ namespace mango
         }
 
         bool hasParent() const { return m_parent != nullptr; }
+
+        void resetParent()
+        {
+            m_parent            = nullptr;
+            m_parentWorldMatrix = glm::mat4(1.0f);
+        }
 
         void update(const glm::mat4 & parentTransform, bool dirty)
         {
@@ -426,9 +431,6 @@ namespace mango
         glm::vec3 m_direction  {};
         
         bool m_isDirty = true;
-    
-    private:
-        friend class Scene;
     };
 
     // Physics

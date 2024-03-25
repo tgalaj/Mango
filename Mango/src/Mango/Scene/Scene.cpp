@@ -115,8 +115,7 @@ namespace mango
         // In case of copying the child entity only
         if (entity.hasParent())
         {
-            newEntity.getTransform().m_parent            = nullptr;
-            newEntity.getTransform().m_parentWorldMatrix = glm::mat4(1.0f);
+            newEntity.getTransform().resetParent();
         }
 
         // Set new hierarchy for the copied entities
@@ -146,7 +145,6 @@ namespace mango
         }
 
         Services::eventBus()->emit(EntityRemovedEvent(entity));
-        MG_CORE_TRACE("Destroying entity with ID: {} Name: {}", entity.getUUID(), entity.getName());
         m_registry.destroy(entity);
     }
 
