@@ -426,6 +426,9 @@ namespace mango
         glm::vec3 m_direction  {};
         
         bool m_isDirty = true;
+    
+    private:
+        friend class Scene;
     };
 
     // Physics

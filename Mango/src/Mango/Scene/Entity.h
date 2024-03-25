@@ -101,6 +101,8 @@ namespace mango
         /** Returns rotation in radians. */
         glm::vec3 getRotation();
         glm::quat getOrientation();
+
+        TransformComponent& getTransform();
         /** Assumes that entity has a valid parent. */
         TransformComponent& getParentTransform();
         TransformComponent* getParent();

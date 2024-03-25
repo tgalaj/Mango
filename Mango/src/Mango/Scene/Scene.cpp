@@ -107,7 +107,24 @@ namespace mango
         Entity newEntity = createEntity(entity.getName());
 
         copyComponentIfExists(ComponentsRegistry{}, newEntity, entity);
+        
+        // Clear the copied child entities
+        newEntity.getChildren().clear();
 
+        // Reset parent if the original entity has one
+        // In case of copying the child entity only
+        if (entity.hasParent())
+        {
+            newEntity.getTransform().m_parent            = nullptr;
+            newEntity.getTransform().m_parentWorldMatrix = glm::mat4(1.0f);
+        }
+
+        // Set new hierarchy for the copied entities
+        for (auto& [childEntity, childTransform] : entity.getChildren())
+        {
+            auto newChildEntity = duplicateEntity(childEntity);
+            newEntity.addChild(newChildEntity);
+        }
 
         return newEntity;
     }
