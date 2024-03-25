@@ -115,7 +115,21 @@ namespace mango
     void Scene::destroyEntity(Entity entity)
     {
         MG_PROFILE_ZONE_SCOPED;
+
+        auto name = entity.getName();
+
+        if (entity.hasParent())
+        {
+            entity.getParent()->removeChild(entity, entity.getComponent<TransformComponent>());
+        }
+
+        for (auto& [entity, transform] : entity.getChildren())
+        {
+            destroyEntity(entity);
+        }
+
         Services::eventBus()->emit(EntityRemovedEvent(entity));
+        MG_CORE_TRACE("Destroying entity with ID: {} Name: {}", entity.getUUID(), entity.getName());
         m_registry.destroy(entity);
     }
 

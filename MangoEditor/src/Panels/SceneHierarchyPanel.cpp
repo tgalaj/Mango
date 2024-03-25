@@ -98,11 +98,12 @@ namespace mango
     void SceneHierarchyPanel::drawEntityNode(Entity entity)
     {
         auto& name = entity.getComponent<TagComponent>().name;
-
+        
         ImGuiTreeNodeFlags flags  = ((m_selectedEntity == entity) ? ImGuiTreeNodeFlags_Selected : 0);
                            flags |= ImGuiTreeNodeFlags_OpenOnArrow;
                            flags |= ImGuiTreeNodeFlags_OpenOnDoubleClick;
                            flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
+                           flags |= entity.getChildren().empty() ? ImGuiTreeNodeFlags_Leaf : 0;
         bool opened     = ImGui::TreeNodeEx((void*)(uint64_t)(entity.getUUID()), flags, name.c_str());
         bool isSelected = flags & ImGuiTreeNodeFlags_Selected;
 
@@ -132,20 +133,10 @@ namespace mango
 
         if (opened)
         {
-            //// TODO: display child nodes
-            //ImGuiTreeNodeFlags flags  = ImGuiTreeNodeFlags_OpenOnArrow;
-            //                   flags |= ImGuiTreeNodeFlags_OpenOnDoubleClick;
-            //                   flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
-            //bool opened = ImGui::TreeNodeEx((void*)34564574566, flags, name.c_str());
-
-            //if (opened)
-            //{
-            //    ImGui::TreePop();
-            //}
-            
-            // TODO: Store children and parent in Transform + entity handle
-            // for(auto& child : entity.get)
-
+            for (auto [child, transform] : entity.getChildren())
+            {
+                drawEntityNode(child);
+            }
             ImGui::TreePop();
         }
 
@@ -345,14 +336,14 @@ namespace mango
 
         ImGui::PopItemWidth();
 
-        drawComponent<TransformComponent>("Transform", entity, [](auto& component)
+        drawComponent<TransformComponent>("Transform", entity, [entity](auto& component)
         {
             bool hasParent = component.hasParent();
             ImGui::Checkbox("Has parent", &hasParent);
 
             if (hasParent)
             {
-                if(ImGui::Button("Detach")) component.getParent()->removeChild(component);
+                if(ImGui::Button("Detach")) component.getParent()->removeChild(entity, component);
             }
 
             auto position = component.getPosition();

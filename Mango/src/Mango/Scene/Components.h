@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Entity.h"
+
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Core/Services.h"
 #include "Mango/Core/UUID.h"
@@ -336,24 +338,25 @@ namespace mango
             m_isDirty = true;
         }
 
-        void addChild(TransformComponent& child)
+        void addChild(Entity childEntity, TransformComponent& childTransform)
         {
-            child.m_parent = this;
-            m_children.push_back(&child);
+            childTransform.m_parent = this;
+            m_children.push_back({ childEntity, &childTransform });
         }
 
-        void removeChild(TransformComponent& child)
+        void removeChild(Entity childEntity, TransformComponent& childTransform)
         {
-            auto it = std::find(m_children.begin(), m_children.end(), &child);
+            auto it = std::find(m_children.begin(), m_children.end(), std::make_pair(childEntity, &childTransform));
 
             if (it != m_children.end())
             {
-                child.m_parent = nullptr;
+                childTransform.m_parent            = nullptr;
+                childTransform.m_parentWorldMatrix = glm::mat4(1.0f);
                 m_children.erase(it);
             }
         }
 
-        auto getChildren() const
+        auto& getChildren()
         {
             return m_children;
         }
@@ -381,7 +384,7 @@ namespace mango
 
             for (unsigned i = 0; i < m_children.size(); ++i)
             {
-                m_children[i]->update(m_worldMatrix, dirty);
+                m_children[i].second->update(m_worldMatrix, dirty);
             }
         }
         
@@ -407,7 +410,7 @@ namespace mango
         }
 
     private:
-        std::vector<TransformComponent*> m_children;
+        std::vector<std::pair<Entity, TransformComponent*>> m_children;
         
         TransformComponent* m_parent = nullptr;
 

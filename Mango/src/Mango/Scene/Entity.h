@@ -103,10 +103,12 @@ namespace mango
         glm::quat getOrientation();
         /** Assumes that entity has a valid parent. */
         TransformComponent& getParentTransform();
+        TransformComponent* getParent();
+        bool hasParent();
         
         void addChild(Entity& child);
         void removeChild(Entity& child);
-        bool hasParent();
+        std::vector<std::pair<Entity, TransformComponent*>>& getChildren();
 
     private:
         entt::entity m_entityHandle = entt::null;
