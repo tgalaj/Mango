@@ -31,8 +31,23 @@ namespace mango
 
     void SceneHierarchyPanel::onGui()
     {
-        ImGui::Begin("Scene Hierarchy");
-        {
+        ImGui::Begin("Scene Hierarchy", nullptr);
+        { 
+            auto* window = ImGui::GetCurrentWindow();
+            if(ImGui::BeginDragDropTargetCustom(window->InnerRect, window->ID))
+            {
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MG_DRAG_PAYLOAD_SHP_ENTITY))
+                {
+                    auto* dragEntity = (Entity*)payload->Data;
+
+                    if (dragEntity->hasParent())
+                    {
+                        dragEntity->getParent().removeChild(*dragEntity);
+                    }
+                }
+                ImGui::EndDragDropTarget();
+            }
+
             if (m_scene)
             {
                 for (auto [entityID] : m_scene->m_registry.storage<entt::entity>().each())
@@ -125,6 +140,33 @@ namespace mango
                            flags |= entity.getChildren().empty() ? ImGuiTreeNodeFlags_Leaf : 0;
         bool opened     = ImGui::TreeNodeEx((void*)(uint64_t)(entity.getUUID()), flags, name.c_str());
         bool isSelected = flags & ImGuiTreeNodeFlags_Selected;
+
+        if (ImGui::BeginDragDropSource())
+        {
+            ImGui::SetDragDropPayload(MG_DRAG_PAYLOAD_SHP_ENTITY, &entity, sizeof(Entity));
+            ImGui::Text(name.c_str());
+            ImGui::EndDragDropSource();
+        }
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MG_DRAG_PAYLOAD_SHP_ENTITY))
+            {
+                auto* dragEntity = (Entity*)payload->Data;
+
+                // TODO: check if dragged Entity is dropped onto its child
+                // TODO: fix transformations when adding an entity as a child
+                {
+                    if (dragEntity->hasParent())
+                    {
+                        dragEntity->getParent().removeChild(*dragEntity);
+                    }
+
+                    entity.addChild(*dragEntity);
+                }
+            }
+            ImGui::EndDragDropTarget();
+        }
 
         // Mark the entity as selected:
         // - on mouse click
@@ -845,7 +887,7 @@ namespace mango
 
                             if (ImGui::BeginDragDropTarget())
                             {
-                                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MG_DRAG_PAYLOAD_CONTENT_BROWSER_ITEM))
+                                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MG_DRAG_PAYLOAD_CB_ITEM))
                                 {
                                     const auto* path = (const wchar_t*)payload->Data;
 

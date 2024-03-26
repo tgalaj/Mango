@@ -383,6 +383,8 @@ namespace mango
             onGuiProjectSettings();
         }
 
+        ImGui::ShowDemoWindow();
+
         ImGui::End(); // Mango Editor
     }
 
@@ -597,7 +599,7 @@ namespace mango
             /** Drag drop target */
             if (ImGui::BeginDragDropTarget())
             {
-                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MG_DRAG_PAYLOAD_CONTENT_BROWSER_ITEM))
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MG_DRAG_PAYLOAD_CB_ITEM))
                 {
                     const auto* path = (const wchar_t*)payload->Data;
                     openScene(path);
