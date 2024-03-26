@@ -46,7 +46,7 @@ namespace mango
                 }
             }
 
-            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
+            if ((ImGui::IsMouseClicked(ImGuiMouseButton_Left) || ImGui::IsMouseDown(ImGuiMouseButton_Right)) && ImGui::IsWindowHovered() && !ImGui::IsAnyItemHovered())
             {
                 m_selectedEntity = {};
             }
@@ -54,10 +54,8 @@ namespace mango
             // Right click on empty space
             if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
             {
-                if (ImGui::MenuItem("Create Empty Entity"))
-                {
-                    m_scene->createEntity("Empty Entity");
-                }
+                displayEntityContextMenu(true);
+                
                 ImGui::EndPopup();
             }
         }
@@ -78,6 +76,27 @@ namespace mango
     void SceneHierarchyPanel::setSelectedEntity(Entity entity)
     {
         m_selectedEntity = entity;
+    }
+
+    SceneHierarchyPanel::EcmAction SceneHierarchyPanel::displayEntityContextMenu(bool isClickedEmptySpace)
+    {
+        EcmAction action = EcmAction::None;
+
+        if (ImGui::MenuItem("Create Empty Entity"))
+        {
+            auto newEntity = m_scene->createEntity("Empty Entity");
+
+            if (m_selectedEntity)
+            {
+                m_selectedEntity.addChild(newEntity);
+            }
+        }
+        if (ImGui::MenuItem("Delete Entity", nullptr, nullptr, !isClickedEmptySpace))
+        {
+            action = EcmAction::Delete;
+        }
+
+        return action;
     }
 
     template<typename ComponentType>
@@ -110,19 +129,20 @@ namespace mango
         // Mark the entity as selected:
         // - on mouse click
         // - when tree is traversed with the keyboard arrow keys (isHovered && isFocused)
-        if (ImGui::IsItemClicked() || (ImGui::IsItemHovered() && ImGui::IsItemFocused()))
+        if ((ImGui::IsMouseDown(ImGuiMouseButton_Left) || ImGui::IsMouseDown(ImGuiMouseButton_Right)) && ImGui::IsItemHovered())
         {
             m_selectedEntity = entity;
+            MG_CORE_TRACE("Selected entity ID: {}, name: {}", entity.getUUID(), entity.getName());
         }
 
         // Right click on empty space
-        bool isEntityDeleted = false;
+        bool      isEntityDeleted = false;
+        EcmAction ecmAction       = EcmAction::None;
         if (ImGui::BeginPopupContextItem())
         {
-            if (ImGui::MenuItem("Delete Entity"))
-            {
-                isEntityDeleted = true;
-            }
+            ecmAction       = displayEntityContextMenu(false);
+            isEntityDeleted = (EcmAction::Delete == ecmAction);
+
             ImGui::EndPopup();
         }
         
@@ -133,9 +153,9 @@ namespace mango
 
         if (opened)
         {
-            for (auto [child, transform] : entity.getChildren())
+            for (auto childEntity : entity.getChildren())
             {
-                drawEntityNode(child);
+                drawEntityNode(childEntity);
             }
             ImGui::TreePop();
         }
@@ -336,14 +356,16 @@ namespace mango
 
         ImGui::PopItemWidth();
 
-        drawComponent<TransformComponent>("Transform", entity, [entity](auto& component)
+        drawComponent<TransformComponent>("Transform", entity, [&entity](auto& component)
         {
+            ImGui::Text("Addr: %d", &component);
+
             bool hasParent = component.hasParent();
             ImGui::Checkbox("Has parent", &hasParent);
 
             if (hasParent)
             {
-                if(ImGui::Button("Detach")) component.getParent()->removeChild(entity, component);
+                if(ImGui::Button("Detach")) component.getParent().removeChild(entity);
             }
 
             auto position = component.getPosition();

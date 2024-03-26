@@ -19,6 +19,11 @@ namespace mango
         void setSelectedEntity(Entity entity);
 
     private:
+        enum class EcmAction { Create, Delete, None}; // Entity Context Menu Action
+
+    private:
+        EcmAction displayEntityContextMenu(bool isClickedEmptySpace);
+
         template<typename T>
         bool displayAddComponentEntry(const std::string& entryName);
 

@@ -119,7 +119,7 @@ namespace mango
         }
 
         // Set new hierarchy for the copied entities
-        for (auto& [childEntity, childTransform] : entity.getChildren())
+        for (auto childEntity : entity.getChildren())
         {
             auto newChildEntity = duplicateEntity(childEntity);
             newEntity.addChild(newChildEntity);
@@ -136,12 +136,12 @@ namespace mango
 
         if (entity.hasParent())
         {
-            entity.getParent()->removeChild(entity, entity.getComponent<TransformComponent>());
+            entity.getParent().removeChild(entity);
         }
 
-        for (auto& [entity, transform] : entity.getChildren())
+        for (auto childEntity : entity.getChildren())
         {
-            destroyEntity(entity);
+            destroyEntity(childEntity);
         }
 
         Services::eventBus()->emit(EntityRemovedEvent(entity));

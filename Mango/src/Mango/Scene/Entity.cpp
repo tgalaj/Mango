@@ -3,6 +3,8 @@
 
 namespace mango
 {
+    const Entity Entity::nullEntity = { entt::null, nullptr };
+
     UUID Entity::getUUID()
     {
         return getComponent<IDComponent>().id;
@@ -73,19 +75,19 @@ namespace mango
         return getComponent<TransformComponent>().getOrientation();
     }
 
-    mango::TransformComponent& Entity::getTransform()
+    TransformComponent& Entity::getTransform()
     {
         return getComponent<TransformComponent>();
     }
 
-    mango::TransformComponent& Entity::getParentTransform()
+    TransformComponent& Entity::getParentTransform()
     {
         MG_CORE_ASSERT(hasParent());
 
-        return *getComponent<TransformComponent>().getParent();
+        return getParent().getComponent<TransformComponent>();
     }
 
-    mango::TransformComponent* Entity::getParent()
+    Entity Entity::getParent()
     {
         return getComponent<TransformComponent>().getParent();
     }
@@ -99,15 +101,15 @@ namespace mango
 
     void Entity::addChild(Entity& child)
     {
-        getComponent<TransformComponent>().addChild(child, child.getComponent<TransformComponent>());
+        getComponent<TransformComponent>().addChild(child, *this);
     }
 
     void Entity::removeChild(Entity& child)
     {
-        getComponent<TransformComponent>().removeChild(child, child.getComponent<TransformComponent>());
+        getComponent<TransformComponent>().removeChild(child);
     }
 
-    std::vector<std::pair<Entity, TransformComponent*>>& Entity::getChildren()
+    std::vector<Entity>& Entity::getChildren()
     {
         return getComponent<TransformComponent>().getChildren();
     }

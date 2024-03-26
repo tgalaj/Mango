@@ -6,6 +6,8 @@
 #include "Mango/Core/Services.h"
 #include "Mango/Core/UUID.h"
 
+#include "Mango/Math/Math.h"
+
 #include "Mango/Rendering/Attenuation.h"
 #include "Mango/Rendering/Mesh.h"
 #include "Mango/Rendering/Camera/Camera.h"
@@ -338,19 +340,21 @@ namespace mango
             m_isDirty = true;
         }
 
-        void addChild(Entity childEntity, TransformComponent& childTransform)
+        void addChild(Entity childEntity, Entity parentEntity)
         {
-            childTransform.m_parent = this;
-            m_children.push_back({ childEntity, &childTransform });
+            auto& childTransform          = childEntity.getComponent<TransformComponent>();
+                  childTransform.m_parent = parentEntity;
+
+            m_children.push_back(childEntity);
         }
 
-        void removeChild(Entity childEntity, TransformComponent& childTransform)
+        void removeChild(Entity childEntity)
         {
-            auto it = std::find(m_children.begin(), m_children.end(), std::make_pair(childEntity, &childTransform));
+            auto it = std::find(m_children.begin(), m_children.end(), childEntity);
 
             if (it != m_children.end())
             {
-                childTransform.resetParent();
+                childEntity.getComponent<TransformComponent>().resetParent();
                 m_children.erase(it);
             }
         }
@@ -360,17 +364,21 @@ namespace mango
             return m_children;
         }
 
-        TransformComponent* const getParent() const
+        Entity getParent() const
         {
             return m_parent;
         }
 
-        bool hasParent() const { return m_parent != nullptr; }
+        bool hasParent() const { return m_parent != Entity::nullEntity; }
 
         void resetParent()
         {
-            m_parent            = nullptr;
+            m_parent            = Entity::nullEntity;
             m_parentWorldMatrix = glm::mat4(1.0f);
+
+            glm::vec3 rotation;
+            math::decompose(m_worldMatrix, m_position, rotation, m_scale);
+            setRotation(rotation);
         }
 
         void update(const glm::mat4 & parentTransform, bool dirty)
@@ -389,7 +397,7 @@ namespace mango
 
             for (unsigned i = 0; i < m_children.size(); ++i)
             {
-                m_children[i].second->update(m_worldMatrix, dirty);
+                m_children[i].getComponent<TransformComponent>().update(m_worldMatrix, dirty);
             }
         }
         
@@ -415,9 +423,8 @@ namespace mango
         }
 
     private:
-        std::vector<std::pair<Entity, TransformComponent*>> m_children;
-        
-        TransformComponent* m_parent = nullptr;
+        std::vector<Entity> m_children;
+        Entity m_parent = Entity::nullEntity;
 
         glm::mat4 m_worldMatrix      { 1.0f };
         glm::mat4 m_localWorldMatrix { 1.0f };

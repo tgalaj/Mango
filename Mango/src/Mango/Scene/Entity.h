@@ -13,6 +13,9 @@ namespace mango
     class Entity final
     {
     public:
+        static const Entity nullEntity;
+
+    public:
         Entity() = default;
         Entity(entt::entity handle, Scene* scene) : m_entityHandle(handle), m_scene(scene) {}
         Entity(const Entity& other) = default;
@@ -105,12 +108,13 @@ namespace mango
         TransformComponent& getTransform();
         /** Assumes that entity has a valid parent. */
         TransformComponent& getParentTransform();
-        TransformComponent* getParent();
+
+        Entity getParent();
         bool hasParent();
         
         void addChild(Entity& child);
         void removeChild(Entity& child);
-        std::vector<std::pair<Entity, TransformComponent*>>& getChildren();
+        std::vector<Entity>& getChildren();
 
     private:
         entt::entity m_entityHandle = entt::null;
