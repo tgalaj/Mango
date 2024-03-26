@@ -155,7 +155,6 @@ namespace mango
                 auto* dragEntity = (Entity*)payload->Data;
 
                 // TODO: check if dragged Entity is dropped onto its child
-                // TODO: fix transformations when adding an entity as a child
                 {
                     if (dragEntity->hasParent())
                     {

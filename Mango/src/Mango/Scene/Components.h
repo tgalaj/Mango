@@ -346,6 +346,13 @@ namespace mango
                   childTransform.m_parent = parentEntity;
 
             m_children.push_back(childEntity);
+
+            // Calculate new position for the attached child
+            // so it's world space position is the same
+            auto childPosition  = childTransform.getPosition();
+            auto parentPosition = parentEntity.getComponent<TransformComponent>().getPosition();
+
+            childTransform.setPosition(childPosition - parentPosition);
         }
 
         void removeChild(Entity childEntity)
