@@ -2,16 +2,40 @@ Scene: Empty
 Materials:
   []
 Entities:
-  - Entity: 14182566828014702131
+  - Entity: 11842777821620561057
     TagComponent:
-      Name: Torus
+      Name: Capsule
     TransformComponent:
-      Position: [0, 2.90329075, 0]
-      Rotation: [-37.9562836, 0, 0]
-      Orientation: [0.94564271, -0.325207412, 0, 0]
-      Scale: [8, 8, 8]
+      Position: [2, 0, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
     StaticMeshComponent:
-      Filename: Cone
+      Filename: Capsule
+      Materials:
+        {}
+  - Entity: 17468515523481005377
+    TagComponent:
+      Name: Box
+    TransformComponent:
+      Position: [-1, 1, -1]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+    StaticMeshComponent:
+      Filename: Cube
+      Materials:
+        {}
+  - Entity: 12698292391575061681
+    TagComponent:
+      Name: Cyborg
+    TransformComponent:
+      Position: [2, 0, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+    StaticMeshComponent:
+      Filename: models/cyborg/cyborg.obj
       Materials:
         {}
   - Entity: 11450204355375485186
@@ -27,3 +51,15 @@ Entities:
       Intensity: 1
       Size: 20
       CastsShadows: false
+  - Entity: 14182566828014702131
+    TagComponent:
+      Name: Torus
+    TransformComponent:
+      Position: [-13.1863699, 2.90329075, 0]
+      Rotation: [-37.9562836, 0, 0]
+      Orientation: [0.94564271, -0.325207412, 0, 0]
+      Scale: [8, 8, 8]
+    StaticMeshComponent:
+      Filename: Cone
+      Materials:
+        {}

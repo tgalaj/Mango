@@ -265,7 +265,7 @@ namespace mango
               m_position    (position),
               m_rotation    (rotation),
               m_scale       (scale),
-              m_isDirty     (true),
+              m_dirty     (true),
               m_worldMatrix (glm::mat4(1.0f)),
               m_normalMatrix(glm::mat3(1.0f)),
               m_direction   (glm::vec3(0.0f, 0.0f, -1.0f))
@@ -274,13 +274,13 @@ namespace mango
         void setPosition(float x, float y, float z)
         {
             m_position = glm::vec3(x, y, z);
-            m_isDirty  = true;
+            m_dirty    = true;
         }
 
         void setPosition(const glm::vec3 & position)
         {
             m_position = position;
-            m_isDirty  = true;
+            m_dirty    = true;
         }
 
         /*
@@ -292,7 +292,7 @@ namespace mango
             m_orientation = glm::quat(m_rotation);
             m_orientation = glm::normalize(m_orientation);
             m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
-            m_isDirty     = true;
+            m_dirty       = true;
         }
 
         /*
@@ -311,7 +311,7 @@ namespace mango
             m_orientation = glm::normalize(glm::angleAxis(angle, glm::normalize(axis)));
             m_rotation    = glm::eulerAngles(m_orientation);
             m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
-            m_isDirty     = true;
+            m_dirty       = true;
         }
 
         void setRotation(const glm::quat & quat)
@@ -319,94 +319,35 @@ namespace mango
             m_orientation = glm::normalize(quat);
             m_rotation    = glm::eulerAngles(m_orientation);
             m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
-            m_isDirty     = true;
+            m_dirty       = true;
         }
 
         void setScale(float x, float y, float z)
         {
-            m_scale   = glm::vec3(x, y, z);
-            m_isDirty = true;
+            m_scale = glm::vec3(x, y, z);
+            m_dirty = true;
         }
 
         void setScale(float uniformScale)
         {
-            m_scale   = glm::vec3(uniformScale);
-            m_isDirty = true;
+            m_scale = glm::vec3(uniformScale);
+            m_dirty = true;
         }
 
         void setScale(const glm::vec3 & scale)
         {
-            m_scale   = scale;
-            m_isDirty = true;
+            m_scale = scale;
+            m_dirty = true;
         }
 
-        void addChild(Entity childEntity, Entity parentEntity)
-        {
-            auto& childTransform          = childEntity.getComponent<TransformComponent>();
-                  childTransform.m_parent = parentEntity;
-
-            m_children.push_back(childEntity);
-
-            // Calculate new position for the attached child
-            // so it's world space position is the same
-            auto childPosition  = childTransform.getPosition();
-            auto parentPosition = parentEntity.getComponent<TransformComponent>().getPosition();
-
-            childTransform.setPosition(childPosition - parentPosition);
-        }
-
-        void removeChild(Entity childEntity)
-        {
-            auto it = std::find(m_children.begin(), m_children.end(), childEntity);
-
-            if (it != m_children.end())
-            {
-                childEntity.getComponent<TransformComponent>().resetParent();
-                m_children.erase(it);
-            }
-        }
-
-        auto& getChildren()
-        {
-            return m_children;
-        }
-
-        Entity getParent() const
-        {
-            return m_parent;
-        }
-
-        bool hasParent() const { return m_parent != Entity::nullEntity; }
-
-        void resetParent()
-        {
-            m_parent            = Entity::nullEntity;
-            m_parentWorldMatrix = glm::mat4(1.0f);
-
-            glm::vec3 rotation;
-            math::decompose(m_worldMatrix, m_position, rotation, m_scale);
-            setRotation(rotation);
-        }
-
-        void update(const glm::mat4 & parentTransform, bool dirty)
-        {
-            dirty |= m_isDirty;
-
-            if (dirty)
-            {
-                m_parentWorldMatrix = parentTransform;
-                m_localWorldMatrix  = getUpdatedWorldMatrix();
-                m_worldMatrix       = m_parentWorldMatrix * m_localWorldMatrix;
-                m_normalMatrix      = glm::mat3(glm::transpose(glm::inverse(m_worldMatrix)));
-
-                m_isDirty = false;
-            }
-
-            for (unsigned i = 0; i < m_children.size(); ++i)
-            {
-                m_children[i].getComponent<TransformComponent>().update(m_worldMatrix, dirty);
-            }
-        }
+        auto&  getChildren()       { return m_children;                     }
+        Entity getParent  () const { return m_parent;                       }
+        bool   hasParent  () const { return m_parent != Entity::nullEntity; }
+        
+        void addChild   (Entity childEntity, Entity parentEntity);
+        void removeChild(Entity childEntity);
+        void resetParent();
+        void update     (const glm::mat4 & parentTransform, bool dirty);
         
         glm::mat4 getWorldMatrix      () const { return m_worldMatrix;       }
         glm::mat4 getLocalWorldMatrix () const { return m_localWorldMatrix;  }
@@ -444,7 +385,7 @@ namespace mango
         glm::vec3 m_scale      { 1.0f };
         glm::vec3 m_direction  {};
         
-        bool m_isDirty = true;
+        bool m_dirty = true;
     };
 
     // Physics
