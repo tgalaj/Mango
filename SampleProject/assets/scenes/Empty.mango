@@ -2,42 +2,6 @@ Scene: Empty
 Materials:
   []
 Entities:
-  - Entity: 11842777821620561057
-    TagComponent:
-      Name: Capsule
-    TransformComponent:
-      Position: [2, 0, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-    StaticMeshComponent:
-      Filename: Capsule
-      Materials:
-        {}
-  - Entity: 17468515523481005377
-    TagComponent:
-      Name: Box
-    TransformComponent:
-      Position: [-1, 1, -1]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-  - Entity: 12698292391575061681
-    TagComponent:
-      Name: Cyborg
-    TransformComponent:
-      Position: [2, 0, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-    StaticMeshComponent:
-      Filename: models/cyborg/cyborg.obj
-      Materials:
-        {}
   - Entity: 11450204355375485186
     TagComponent:
       Name: Directional Light
@@ -53,7 +17,7 @@ Entities:
       CastsShadows: false
   - Entity: 14182566828014702131
     TagComponent:
-      Name: Torus
+      Name: Cone
     TransformComponent:
       Position: [-13.1863699, 2.90329075, 0]
       Rotation: [-37.9562836, 0, 0]

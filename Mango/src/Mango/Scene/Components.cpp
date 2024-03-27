@@ -11,7 +11,15 @@ namespace mango
 
         // Calculate new position for the attached child
         // so it's world space position is the same
-        // TODO ...
+        auto& parentTransform = parentEntity.getComponent<TransformComponent>();
+        auto  toGlobalWorld   = glm::inverse(parentTransform.m_worldMatrix) * childTransform.m_worldMatrix;
+
+        glm::vec3 T, R, S;
+        math::decompose(toGlobalWorld, T, R, S);
+
+        childTransform.setPosition(T);
+        childTransform.setRotation(R);
+        childTransform.setScale   (S);
     }
 
     void TransformComponent::removeChild(Entity childEntity)
