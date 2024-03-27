@@ -110,10 +110,12 @@ namespace mango
         TransformComponent& getParentTransform();
 
         Entity getParent();
-        bool hasParent();
+        bool   hasParent();
         
-        void addChild(Entity& child);
-        void removeChild(Entity& child);
+        void                 addChild   (Entity child);
+        void                 removeChild(Entity child);
+        Entity               findChild  (Entity child);
+        bool                 findChildB (Entity child);
         std::vector<Entity>& getChildren();
 
     private:

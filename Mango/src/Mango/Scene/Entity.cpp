@@ -99,14 +99,37 @@ namespace mango
         return getComponent<TransformComponent>().hasParent();
     }
 
-    void Entity::addChild(Entity& child)
+    void Entity::addChild(Entity child)
     {
         getComponent<TransformComponent>().addChild(child, *this);
     }
 
-    void Entity::removeChild(Entity& child)
+    void Entity::removeChild(Entity child)
     {
         getComponent<TransformComponent>().removeChild(child);
+    }
+
+    Entity Entity::findChild(Entity child)
+    {
+        auto children = getChildren();
+
+        auto it = std::find(children.begin(), children.end(), child);
+        if (it != children.end())
+        {
+            return *it;
+        }
+
+        for (auto c : children)
+        {
+            return c.findChild(child);
+        }
+
+        return nullEntity;
+    }
+
+    bool Entity::findChildB(Entity child)
+    {
+        return findChild(child) != nullEntity;
     }
 
     std::vector<Entity>& Entity::getChildren()
