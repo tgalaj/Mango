@@ -278,7 +278,7 @@ namespace mango
 
         {
             ref<Mesh> m = createMesh("Cone");
-            m->genCone(1.0f, 0.5f, 12, 20);
+            m->genCone(1.0f, 0.5f, 256, 5);
         }
 
         {

@@ -7,11 +7,11 @@ Entities:
       Name: Torus
     TransformComponent:
       Position: [0, 2.90329075, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [2, 2, 2]
+      Rotation: [-37.9562836, 0, 0]
+      Orientation: [0.94564271, -0.325207412, 0, 0]
+      Scale: [8, 8, 8]
     StaticMeshComponent:
-      Filename: Torus
+      Filename: Cone
       Materials:
         {}
   - Entity: 11450204355375485186

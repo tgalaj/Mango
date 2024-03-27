@@ -511,17 +511,16 @@ namespace mango
         float halfHeight = height * 0.5f;
 
         /* Center bottom */
-
-        vertexData.positions.push_back(glm::vec3(0.0f, -halfHeight, -0.0f));
-        vertexData.normals  .push_back(glm::vec3(0.0f, -1.0f, 0.0f));
-        vertexData.texcoords.push_back(glm::vec2(0.5f, 0.5f));
+        vertexData.positions.emplace_back(glm::vec3(0.0f, -halfHeight, 0.0f));
+        vertexData.normals  .emplace_back(glm::vec3(0.0f, -1.0f, 0.0f));
+        vertexData.texcoords.emplace_back(glm::vec2(0.5f, 0.5f));
 
         /* Bottom */
         for (uint32_t sideCount = 0; sideCount <= slices; ++sideCount, theta += thetaInc)
         {
-            vertexData.positions.push_back(glm::vec3(glm::cos(theta) * radius, -halfHeight, -glm::sin(theta) * radius));
-            vertexData.normals  .push_back(glm::vec3(0.0f, -1.0f, 0.0f));
-            vertexData.texcoords.push_back(glm::vec2(glm::cos(theta) * 0.5f + 0.5f, 1.0f - (glm::sin(theta) * 0.5f + 0.5f)));
+            vertexData.positions.emplace_back(glm::vec3(glm::cos(theta) * radius, -halfHeight, -glm::sin(theta) * radius));
+            vertexData.normals  .emplace_back(glm::vec3(0.0f, -1.0f, 0.0f));
+            vertexData.texcoords.emplace_back(glm::vec2(glm::cos(theta) * 0.5f + 0.5f, 1.0f - (glm::sin(theta) * 0.5f + 0.5f)));
         }
 
         /* Sides */
@@ -533,11 +532,11 @@ namespace mango
 
             for (uint32_t sliceCount = 0; sliceCount <= slices; ++sliceCount, theta += thetaInc)
             {
-                vertexData.positions.push_back( glm::vec3(glm::cos(theta) * radius * (1.0f - level),
-                                                -halfHeight + height * level,
-                                                -glm::sin(theta) * radius * (1.0f - level)));
-                vertexData.normals  .push_back( glm::vec3(glm::cos(theta) * height / l, radius / l, -glm::sin(theta) * height / l));
-                vertexData.texcoords.push_back( glm::vec2(sliceCount / float(slices), level));
+                vertexData.positions.emplace_back( glm::vec3(glm::cos(theta) * radius * (1.0f - level),
+                                                  -halfHeight + height * level,
+                                                  -glm::sin(theta) * radius * (1.0f - level)));
+                vertexData.normals  .emplace_back( glm::vec3(glm::cos(theta) * height / l, radius / l, -glm::sin(theta) * height / l));
+                vertexData.texcoords.emplace_back( glm::vec2(sliceCount / float(slices), level));
             }
         }
 
@@ -547,9 +546,9 @@ namespace mango
         /* Indices Bottom */
         for (uint32_t sliceCount = 0; sliceCount < slices; ++sliceCount)
         {
-            vertexData.indices.push_back(centerIdx);
-            vertexData.indices.push_back(idx + 1);
-            vertexData.indices.push_back(idx);
+            vertexData.indices.emplace_back(centerIdx);
+            vertexData.indices.emplace_back(idx + 1);
+            vertexData.indices.emplace_back(idx);
 
             ++idx;
         }
@@ -560,13 +559,13 @@ namespace mango
         {
             for (uint32_t sliceCount = 0; sliceCount < slices; ++sliceCount)
             {
-                vertexData.indices.push_back(idx);
-                vertexData.indices.push_back(idx + 1);
-                vertexData.indices.push_back(idx + slices + 1);
+                vertexData.indices.emplace_back(idx);
+                vertexData.indices.emplace_back(idx + 1);
+                vertexData.indices.emplace_back(idx + slices + 1);
 
-                vertexData.indices.push_back(idx + 1);
-                vertexData.indices.push_back(idx + slices + 2);
-                vertexData.indices.push_back(idx + slices + 1);
+                vertexData.indices.emplace_back(idx + 1);
+                vertexData.indices.emplace_back(idx + slices + 2);
+                vertexData.indices.emplace_back(idx + slices + 1);
 
                 ++idx;
             }
