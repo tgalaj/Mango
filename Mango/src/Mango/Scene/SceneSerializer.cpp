@@ -142,6 +142,16 @@ namespace mango
                 out << YAML::Key << "Rotation"    << YAML::Value << glm::degrees(tc.getRotation());
                 out << YAML::Key << "Orientation" << YAML::Value << tc.getOrientation();
                 out << YAML::Key << "Scale"       << YAML::Value << tc.getScale();
+                out << YAML::Key << "ParentID"    << YAML::Value << (tc.hasParent() ? tc.getParent().getUUID() : (UUID)0);
+                out << YAML::Key << "Children"    << YAML::Value;
+                out << YAML::BeginSeq;
+                {
+                    for (auto child : tc.getChildren())
+                    {
+                        out << child.getUUID();
+                    }
+                }
+                out << YAML::EndSeq;
             }
             out << YAML::EndMap;
         }
@@ -495,6 +505,8 @@ namespace mango
         std::string sceneName = data["Scene"].as<std::string>();
         auto scene = createRef<Scene>(sceneName);
 
+        MG_CORE_TRACE("Deserializing scene '{}'", sceneName);
+
         // Deserialize materials first
         // NOTE(TG): when proper asset manager is implemented, this should be changed
         MG_CORE_TRACE("Deserializing materials");
@@ -596,11 +608,10 @@ namespace mango
             }
         }
 
-        MG_CORE_TRACE("Deserializing scene '{}'", sceneName);
-
         auto entities = data["Entities"];
         if (entities)
         {
+            MG_CORE_TRACE("Deserializing entities...");
             for (auto entity : entities)
             {
                 uint64_t uuid = entity["Entity"].as<uint64_t>();
@@ -765,7 +776,46 @@ namespace mango
                     sc.radius = sphereColliderComponent["Radius"].as<float>();
                 }
             }
+
+            // Loop again to resolve parent-child hierarchy
+            MG_CORE_TRACE("Resolving scene graph...");
+            for (auto entity : entities)
+            {
+                uint64_t uuid = entity["Entity"].as<uint64_t>();
+
+                Entity parentEntity = scene->getEntity(uuid);
+
+                auto transformComponent = entity["TransformComponent"];
+                if (transformComponent)
+                {
+                    auto children = transformComponent["Children"];
+                    if (children)
+                    {
+                        for (auto childUuid : children)
+                        {
+                            Entity childEntity = scene->getEntity(childUuid.as<uint64_t>());
+
+                            // TODO(TG): figure out a better way to do this...
+                            auto& childTc = childEntity.getTransform();
+                            auto position = childTc.getPosition();
+                            auto rotation = childTc.getRotation();
+                            auto scale    = childTc.getScale();
+
+                            childTc.setPosition(0, 0, 0);
+                            childTc.setRotation(0, 0, 0);
+                            childTc.setScale   (1, 1, 1);
+
+                            parentEntity.addChild(childEntity);
+                            childTc.setPosition(position);
+                            childTc.setRotation(rotation);
+                            childTc.setScale(scale);
+                        }
+                    }
+                }                
+            }
         }
+
+        MG_CORE_TRACE("Successfully loaded scene '{}'", sceneName);
         return scene;
     }
 }

@@ -148,6 +148,21 @@ namespace mango
         m_registry.destroy(entity);
     }
 
+    Entity Scene::getEntity(UUID uuid)
+    {
+        auto view = getEntitiesWithComponent<IDComponent>();
+
+        for (auto entity : view)
+        {
+            auto [id] = view.get(entity);
+
+            if (id.id == uuid)
+            {
+                return Entity(entity, this);
+            }
+        }
+    }
+
     Entity Scene::getPrimaryCamera()
     {
         auto view = m_registry.view<CameraComponent>();

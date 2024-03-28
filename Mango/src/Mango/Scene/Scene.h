@@ -25,6 +25,7 @@ namespace mango
         Entity duplicateEntity(Entity entity);
         void destroyEntity(Entity entity);
 
+        Entity getEntity(UUID uuid);
         Entity getPrimaryCamera();
 
         template<typename... Components>
