@@ -115,7 +115,7 @@ namespace mango
         void                 addChild   (Entity child);
         void                 removeChild(Entity child);
         Entity               findChild  (Entity child);
-        bool                 findChildB (Entity child);
+        bool                 hasChild   (Entity child);
         std::vector<Entity>& getChildren();
 
     private:

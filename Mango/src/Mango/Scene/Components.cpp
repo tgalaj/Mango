@@ -62,4 +62,13 @@ namespace mango
             m_children[i].getComponent<TransformComponent>().update(m_worldMatrix, dirty);
         }
     }
+
+    glm::mat4 TransformComponent::getUpdatedWorldMatrix() const
+    {
+        glm::mat4 T = glm::translate(glm::mat4(1.0f), m_position);
+        glm::mat4 R = glm::mat4_cast(m_orientation);
+        glm::mat4 S = glm::scale(glm::mat4(1.0f), m_scale);
+
+        return T * R * S;
+    }
 }

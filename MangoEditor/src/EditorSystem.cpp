@@ -150,16 +150,17 @@ namespace mango
         auto box = m_activeScene->createEntity("Box");
         auto& smc2 = box.addComponent<StaticMeshComponent>(AssetManager::getMesh("Cube"));
         smc2.materials[0]->addTexture(Material::TextureType::DIFFUSE, texture);
+
+        cyborg.addChild(box);
         box.setScale(1.0f);
         box.setPosition(1, 1, -1);
 
         auto capsule = m_activeScene->createEntity("Capsule");
         capsule.addComponent<StaticMeshComponent>(AssetManager::getMesh("Capsule"));
-        capsule.setPosition(1, 1, -1);
-
-
-        cyborg.addChild(box);
+        
         box.addChild(capsule);
+        capsule.setPosition(1, 2, -2);
+
         //cyborg.removeChild(box);
 
     }

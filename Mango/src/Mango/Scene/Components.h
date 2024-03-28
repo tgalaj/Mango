@@ -361,14 +361,7 @@ namespace mango
         glm::vec3 getDirection        () const { return m_direction;         }
 
     private:
-        glm::mat4 getUpdatedWorldMatrix() const
-        {
-            glm::mat4 T = glm::translate(glm::mat4(1.0f), m_position);
-            glm::mat4 R = glm::mat4_cast(m_orientation);
-            glm::mat4 S = glm::scale(glm::mat4(1.0f), m_scale);
-
-            return T * R * S;
-        }
+        glm::mat4 getUpdatedWorldMatrix() const;
 
     private:
         std::vector<Entity> m_children;

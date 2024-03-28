@@ -127,7 +127,7 @@ namespace mango
         return nullEntity;
     }
 
-    bool Entity::findChildB(Entity child)
+    bool Entity::hasChild(Entity child)
     {
         return findChild(child) != nullEntity;
     }

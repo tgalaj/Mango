@@ -166,10 +166,13 @@ namespace mango
 
                     if (bodyInterface.IsActive(bodyID))
                     {
+                        MG_CORE_TRACE("Physics System: Updating entity: {}", entity.getName());
+
                         JPH::RVec3 p = bodyInterface.GetCenterOfMassPosition(bodyID);
                         JPH::Quat  r = bodyInterface.GetRotation(bodyID);
 
-                        entity.setPosition(p.GetX(), p.GetY(), p.GetZ());
+                        // TODO: should take into account parent transform !! p is treated as world pos in global world space!!
+                        entity.setPosition(glm::vec3(p.GetX(), p.GetY(), p.GetZ()));
                         entity.setOrientation(glm::quat(r.GetW(), r.GetX(), r.GetY(), r.GetZ()));
                     }
                 }
@@ -197,93 +200,97 @@ namespace mango
         onDestroyBodies();
     }
 
-        void PhysicsSystem::onInitBodies()
+    void PhysicsSystem::onInitBodies()
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        // The main way to interact with the bodies in the physics system is through the body interface. There is a locking and a non-locking
+        // variant of this. We're going to use the locking version (even though we're not planning to access bodies from multiple threads)
+        JPH::BodyInterface& bodyInterface = m_physicsSystem->GetBodyInterface();
+
+        m_scene = Services::sceneManager()->getActiveScene();
+
+        auto view = m_scene->getEntitiesWithComponent<RigidBody3DComponent>();
+        for (auto e : view)
         {
-            MG_PROFILE_ZONE_SCOPED;
+                  Entity      entity         = { e, m_scene.get() };
+                  auto        scale          = entity.getScale();
+            const JPH::Shape* collisionShape = nullptr;
 
-            // The main way to interact with the bodies in the physics system is through the body interface. There is a locking and a non-locking
-            // variant of this. We're going to use the locking version (even though we're not planning to access bodies from multiple threads)
-            JPH::BodyInterface& bodyInterface = m_physicsSystem->GetBodyInterface();
+            MG_CORE_TRACE("Physics System: Initialized body for entity: {}", entity.getName());
 
-            m_scene = Services::sceneManager()->getActiveScene();
-
-            auto view = m_scene->getEntitiesWithComponent<RigidBody3DComponent>();
-            for (auto e : view)
+            if (entity.hasComponent<BoxCollider3DComponent>())
             {
-                      Entity      entity         = { e, m_scene.get() };
-                      auto        scale          = entity.getScale();
-                const JPH::Shape* collisionShape = nullptr;
-                if (entity.hasComponent<BoxCollider3DComponent>())
-                {
-                    auto& bc3d           = entity.getComponent<BoxCollider3DComponent>();
-                          collisionShape = new JPH::RotatedTranslatedShape({ bc3d.offset.x, bc3d.offset.y, bc3d.offset.z }, 
-                                                                           JPH::Quat::sIdentity(), 
-                                                                           new JPH::BoxShape(glmVec3ToJoltVec3(bc3d.halfExtent * scale)));
-                }
-
-                if (entity.hasComponent<SphereColliderComponent>())
-                {
-                    auto& sc3d           = entity.getComponent<SphereColliderComponent>();
-                    collisionShape       = new JPH::RotatedTranslatedShape({ sc3d.offset.x, sc3d.offset.y, sc3d.offset.z },
-                                                                           JPH::Quat::sIdentity(), 
-                                                                           new JPH::SphereShape(sc3d.radius * scale.x));
-                }
-
-                if (!collisionShape)
-                {
-                    MG_CORE_WARN("Physics System: entity named [{}] does not have a collision shape assigned."
-                                 "Did you forget to add a collider component?", 
-                                 entity.getComponent<TagComponent>().name);
-                    continue;
-                }
-
-                auto& rb3d = entity.getComponent<RigidBody3DComponent>();
-
-                auto position    = entity.getPosition();
-                auto orientation = entity.getOrientation();
-
-                JPH::BodyCreationSettings bodySettings(collisionShape,
-                                                       JPH::RVec3(position.x, position.y, position.z),
-                                                       JPH::Quat(orientation.x, orientation.y, orientation.z, orientation.w),
-                                                       (JPH::EMotionType)rb3d.motionType,
-                                                       getLayer((JPH::EMotionType)rb3d.motionType));
-
-                bodySettings.mFriction       = rb3d.friction;
-                bodySettings.mRestitution    = rb3d.restitution;
-                bodySettings.mLinearDamping  = rb3d.linearDamping;
-                bodySettings.mAngularDamping = rb3d.angularDamping;
-
-                // Create the rigid body
-                rb3d.runtimeBody = bodyInterface.CreateBody(bodySettings);
-                bodyInterface.AddBody(static_cast<JPH::Body*>(rb3d.runtimeBody)->GetID(),
-                                      rb3d.isInitiallyActivated ? JPH::EActivation::Activate : JPH::EActivation::DontActivate);
+                auto& bc3d           = entity.getComponent<BoxCollider3DComponent>();
+                      collisionShape = new JPH::RotatedTranslatedShape({ bc3d.offset.x, bc3d.offset.y, bc3d.offset.z }, 
+                                                                       JPH::Quat::sIdentity(), 
+                                                                       new JPH::BoxShape(glmVec3ToJoltVec3(bc3d.halfExtent * scale)));
             }
 
-            // Optional step: Before starting the physics simulation you can optimize the broad phase. This improves collision detection performance (it's pointless here because we only have 2 bodies).
-            // You should definitely not call this every frame or when e.g. streaming in a new level section as it is an expensive operation.
-            // Instead insert all new objects in batches instead of 1 at a time to keep the broad phase efficient.
-            m_physicsSystem->OptimizeBroadPhase();
+            if (entity.hasComponent<SphereColliderComponent>())
+            {
+                auto& sc3d           = entity.getComponent<SphereColliderComponent>();
+                collisionShape       = new JPH::RotatedTranslatedShape({ sc3d.offset.x, sc3d.offset.y, sc3d.offset.z },
+                                                                       JPH::Quat::sIdentity(), 
+                                                                       new JPH::SphereShape(sc3d.radius * scale.x));
+            }
+
+            if (!collisionShape)
+            {
+                MG_CORE_WARN("Physics System: entity named [{}] does not have a collision shape assigned."
+                             "Did you forget to add a collider component?", 
+                             entity.getComponent<TagComponent>().name);
+                continue;
+            }
+
+            auto& rb3d = entity.getComponent<RigidBody3DComponent>();
+
+            // TODO: should take into account parent transform !! p is treated as world pos in global world space!!
+            auto position    = entity.getPosition();
+            auto orientation = entity.getOrientation();
+
+            JPH::BodyCreationSettings bodySettings(collisionShape,
+                                                   JPH::RVec3(position.x, position.y, position.z),
+                                                   JPH::Quat(orientation.x, orientation.y, orientation.z, orientation.w),
+                                                   (JPH::EMotionType)rb3d.motionType,
+                                                   getLayer((JPH::EMotionType)rb3d.motionType));
+
+            bodySettings.mFriction       = rb3d.friction;
+            bodySettings.mRestitution    = rb3d.restitution;
+            bodySettings.mLinearDamping  = rb3d.linearDamping;
+            bodySettings.mAngularDamping = rb3d.angularDamping;
+
+            // Create the rigid body
+            rb3d.runtimeBody = bodyInterface.CreateBody(bodySettings);
+            bodyInterface.AddBody(static_cast<JPH::Body*>(rb3d.runtimeBody)->GetID(),
+                                  rb3d.isInitiallyActivated ? JPH::EActivation::Activate : JPH::EActivation::DontActivate);
         }
 
-        void PhysicsSystem::onDestroyBodies()
+        // Optional step: Before starting the physics simulation you can optimize the broad phase. This improves collision detection performance (it's pointless here because we only have 2 bodies).
+        // You should definitely not call this every frame or when e.g. streaming in a new level section as it is an expensive operation.
+        // Instead insert all new objects in batches instead of 1 at a time to keep the broad phase efficient.
+        m_physicsSystem->OptimizeBroadPhase();
+    }
+
+    void PhysicsSystem::onDestroyBodies()
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        // Remove the bodies from the physics system. 
+        // Note that the body itself keeps all of its state and can be re-added at any time.
+        JPH::BodyInterface& bodyInterface = m_physicsSystem->GetBodyInterface();
+
+        auto view = m_scene->getEntitiesWithComponent<RigidBody3DComponent>();
+        for (auto e : view)
         {
-            MG_PROFILE_ZONE_SCOPED;
+            Entity entity = { e, m_scene.get() };
+            auto& rb3d = entity.getComponent<RigidBody3DComponent>();
 
-            // Remove the bodies from the physics system. 
-            // Note that the body itself keeps all of its state and can be re-added at any time.
-            JPH::BodyInterface& bodyInterface = m_physicsSystem->GetBodyInterface();
-
-            auto view = m_scene->getEntitiesWithComponent<RigidBody3DComponent>();
-            for (auto e : view)
+            if (rb3d.runtimeBody)
             {
-                Entity entity = { e, m_scene.get() };
-                auto& rb3d = entity.getComponent<RigidBody3DComponent>();
-
-                if (rb3d.runtimeBody)
-                {
-                    bodyInterface.RemoveBody(static_cast<JPH::Body*>(rb3d.runtimeBody)->GetID());
-                    bodyInterface.DestroyBody(static_cast<JPH::Body*>(rb3d.runtimeBody)->GetID());
-                }
+                bodyInterface.RemoveBody(static_cast<JPH::Body*>(rb3d.runtimeBody)->GetID());
+                bodyInterface.DestroyBody(static_cast<JPH::Body*>(rb3d.runtimeBody)->GetID());
             }
         }
+    }
 }

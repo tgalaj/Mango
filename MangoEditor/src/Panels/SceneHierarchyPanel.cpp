@@ -155,7 +155,7 @@ namespace mango
                 auto* dragEntity = (Entity*)payload->Data;
 
                 // Check if dragged Entity is dropped onto its child
-                if (!(*dragEntity).findChildB(entity))
+                if (!(*dragEntity).hasChild(entity))
                 {
                     if (dragEntity->hasParent())
                     {
