@@ -98,7 +98,7 @@ namespace mango
     {
         EcmAction action = EcmAction::None;
 
-        if (ImGui::MenuItem("Create Empty Entity"))
+        if (ImGui::MenuItem("Create Empty"))
         {
             auto newEntity = m_scene->createEntity("Empty Entity");
 
@@ -107,7 +107,79 @@ namespace mango
                 m_selectedEntity.addChild(newEntity);
             }
         }
-        if (ImGui::MenuItem("Delete Entity", nullptr, nullptr, !isClickedEmptySpace))
+        if (ImGui::BeginMenu("3D Object"))
+        {
+            static const char* objectStringList[] = { "Cube", "Sphere", "Sphere UV", "Capsule", "Cylinder", "Cone", "Plane", "Quad", "Torus", "Torus Knot" };
+
+            for (auto& objectString : objectStringList)
+            {
+                if (ImGui::MenuItem(objectString))
+                {
+                    auto newEntity = m_scene->createEntity(objectString);
+                    auto& smc = newEntity.addComponent<StaticMeshComponent>();
+
+                    auto mesh = AssetManager::getMesh(objectString);
+
+                    smc.mesh      = mesh;
+                    smc.materials = mesh->getMaterials();
+
+                    if (m_selectedEntity)
+                    {
+                        m_selectedEntity.addChild(newEntity);
+                    }
+                }
+            }
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Light"))
+        {
+            if (ImGui::MenuItem("Directional Light"))
+            {
+                auto newEntity = m_scene->createEntity("Directional Light");
+                newEntity.addComponent<DirectionalLightComponent>();
+
+                if (m_selectedEntity)
+                {
+                    m_selectedEntity.addChild(newEntity);
+                }
+            }
+            if (ImGui::MenuItem("Point Light"))
+            {
+                auto newEntity = m_scene->createEntity("Point Light");
+                newEntity.addComponent<PointLightComponent>();
+
+                if (m_selectedEntity)
+                {
+                    m_selectedEntity.addChild(newEntity);
+                }
+            }
+            if (ImGui::MenuItem("Spot Light"))
+            {
+                auto newEntity = m_scene->createEntity("Spot Light");
+                newEntity.addComponent<SpotLightComponent>();
+
+                if (m_selectedEntity)
+                {
+                    m_selectedEntity.addChild(newEntity);
+                }
+            }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::MenuItem("Camera"))
+        {
+            auto newEntity = m_scene->createEntity("Camera");
+            newEntity.addComponent<CameraComponent>();
+
+            if (m_selectedEntity)
+            {
+                m_selectedEntity.addChild(newEntity);
+            }
+        }
+
+        if (ImGui::MenuItem("Delete", nullptr, nullptr, !isClickedEmptySpace))
         {
             action = EcmAction::Delete;
         }
