@@ -185,7 +185,7 @@ namespace mango
         const ImVec2      padding          = style.FramePadding;
         const ImVec2      wrappedLabelSize = ImGui::CalcTextSize(label, 0, false, thumbnailSize);
 
-        if (rename) ImGui::BeginGroup();
+        ImGui::SetNextItemAllowOverlap();
         ImGui::InvisibleButton(label, { thumbnailSize, thumbnailSize + wrappedLabelSize.y });
 
         if (!ImGui::IsItemVisible()) // Skip rendering as ImDrawList elements are not clipped.
@@ -196,7 +196,7 @@ namespace mango
         const ImVec2 p0image = { p0.x, p0.y - padding.y };
         const ImVec2 p1image = { p1.x, p1.y - wrappedLabelSize.y - padding.y } ;
 
-        float textAlignedPosX = p0.x + glm::max((p1.x - p0.x) - wrappedLabelSize.x, 0.0f) * 0.5f;
+        float textAlignedPosX = p0.x + glm::max((p1.x - p0.x) - wrappedLabelSize.x, 0.0f) * 0.25f;
 
         const ImVec2      textPos  = ImVec2(textAlignedPosX, p1image.y);
               ImDrawList* drawList = ImGui::GetWindowDrawList();
@@ -217,8 +217,7 @@ namespace mango
         {   
             static char buffer[256];
             memset(buffer, 0, sizeof(buffer));
-            std::string s = label;
-            s.copy(buffer, sizeof(buffer));
+            strcpy_s(buffer, sizeof(buffer), label);
 
             ImGui::SetNextItemWidth(thumbnailSize);
             ImGui::SetKeyboardFocusHere(0);
@@ -231,11 +230,10 @@ namespace mango
                 m_currentRenameEntry = "";
             }
 
-            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) || ImGui::IsMouseClicked(ImGuiMouseButton_Middle) || ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+            if (!ImGui::IsItemHovered() && (ImGui::IsMouseClicked(ImGuiMouseButton_Left) || ImGui::IsMouseClicked(ImGuiMouseButton_Middle) || ImGui::IsMouseClicked(ImGuiMouseButton_Right)))
             {
                 m_currentRenameEntry = "";
             }
-            ImGui::EndGroup();
         }
     }
 

@@ -237,7 +237,7 @@ namespace mango
             {
                 ImGui::SameLine(contentRegionAvailable.x - (lineHeight + 3.0f) * 0.5f);
 
-                if (ImGui::Button("...", ImVec2{lineHeight + 3.0f, lineHeight}))
+                if (ImGui::Button(ICON_MDI_COG, ImVec2{lineHeight + 3.0f, lineHeight}))
                 {
                     ImGui::OpenPopup("ComponentSettings");
                 }
@@ -256,7 +256,6 @@ namespace mango
             {
                 float columnWidth = ImGui::GetContentRegionAvail().x * 0.5f;
                 auto& component   = entity.getComponent<ComponentType>();
-                ImGui::Unindent();
 
                 if (!std::is_same_v<ComponentType, TransformComponent>)
                 {
@@ -274,8 +273,6 @@ namespace mango
                 {
                     uiFunction(component);
                 }
-
-                ImGui::Indent();
                 ImGui::TreePop();
             }
 
@@ -292,15 +289,42 @@ namespace mango
     {
         if (entity.hasComponent<TagComponent>())
         {
+            static bool editMode = false;
+
             auto& name = entity.getComponent<TagComponent>().name;
 
-            char buffer[256];
-            memset(buffer, 0, sizeof(buffer));
-            strcpy_s(buffer, sizeof(buffer), name.c_str());
-
-            if (ImGui::InputText("##Name", buffer, sizeof(buffer)))
+            ImGui::BeginDisabled(editMode);
+            if (ImGui::Button(ICON_MDI_LEAD_PENCIL))
             {
-                name = std::string(buffer);
+                editMode = true;
+            }
+            ImGui::EndDisabled();
+
+            ImGui::SameLine(0.0f, ImGui::GetFontSize() * 0.3f);
+            if (editMode)
+            {
+                static char buffer[256];
+                memset(buffer, 0, sizeof(buffer));
+                strcpy_s(buffer, sizeof(buffer), name.c_str());
+
+                ImGui::SetKeyboardFocusHere(0);
+                if (ImGui::InputText("##edit_name", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+                {
+                    name     = buffer;
+                    editMode = false;
+                }
+
+                if (!ImGui::IsItemHovered())
+                {
+                    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) || ImGui::IsMouseClicked(ImGuiMouseButton_Middle) || ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+                    {
+                        editMode = false;
+                    }
+                }
+            }
+            else
+            {
+                ImGui::Text(name.c_str());
             }
         }
 
@@ -326,7 +350,7 @@ namespace mango
 
         ImGui::PopItemWidth();
 
-        drawComponent<TransformComponent>("Transform", entity, [](auto& component)
+        drawComponent<TransformComponent>("TRANSFORM", entity, [](auto& component)
         {
             float columnWidth = ImGui::GetTextLineHeight() * 4.0f;
 
@@ -350,7 +374,7 @@ namespace mango
             }
         });
 
-        drawComponent<DirectionalLightComponent>("Directional Light", entity, [](auto& component)
+        drawComponent<DirectionalLightComponent>("DIRECTIONAL LIGHT", entity, [](auto& component)
         {
             ImGui::Utils::TableColorEdit3("Color",     &component.color[0]);
             ImGui::Utils::TableDragFloat ("Intensity", &component.intensity, 0.1f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
@@ -368,7 +392,7 @@ namespace mango
             }
         });
 
-        drawComponent<PointLightComponent>("Point Light", entity, [](auto& component)
+        drawComponent<PointLightComponent>("POINT LIGHT", entity, [](auto& component)
         {
             ImGui::Utils::TableColorEdit3("Color",     &component.color[0]);
             ImGui::Utils::TableDragFloat ("Intensity", &component.intensity, 0.1f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
@@ -376,9 +400,9 @@ namespace mango
             const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen    |
                                                      ImGuiTreeNodeFlags_Framed         |
                                                      ImGuiTreeNodeFlags_FramePadding   |
-                                                     ImGuiTreeNodeFlags_SpanAvailWidth |
+                                                     ImGuiTreeNodeFlags_SpanFullWidth |
                                                      ImGuiTreeNodeFlags_SpanAllColumns |
-                                                     ImGuiTreeNodeFlags_AllowItemOverlap;
+                                                     ImGuiTreeNodeFlags_AllowOverlap;
             ImGui::TableNextColumn();
             if (ImGui::TreeNodeEx("Attenuation", treeNodeFlags))
             {
@@ -426,7 +450,7 @@ namespace mango
             }
         });
 
-        drawComponent<SpotLightComponent>("Spot Light", entity, [](auto& component)
+        drawComponent<SpotLightComponent>("SPOT LIGHT", entity, [](auto& component)
         {
             ImGui::Utils::TableColorEdit3("Color",     &component.color[0]);
             ImGui::Utils::TableDragFloat ("Intensity", &component.intensity, 0.1f, 0.0f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
@@ -490,7 +514,7 @@ namespace mango
             }
         });
 
-        drawComponent<CameraComponent>("Camera", entity, [](auto& component)
+        drawComponent<CameraComponent>("CAMERA", entity, [](auto& component)
         {            
             auto& camera = component.camera;
 
@@ -935,7 +959,7 @@ namespace mango
             }
         });
 
-        drawComponent<RigidBody3DComponent>("Rigidbody 3D", entity, [](auto& component)
+        drawComponent<RigidBody3DComponent>("RIGIDBODY 3D", entity, [](auto& component)
         {
             const char* motionTypeStrings[] = { "Static", "Kinematic", "Dynamic"};
             const char* currentMotionType   = motionTypeStrings[int(component.motionType)];
@@ -966,13 +990,13 @@ namespace mango
             ImGui::Utils::TableCheckbox ("Activated",       &component.isInitiallyActivated);
         });
 
-        drawComponent<BoxCollider3DComponent>("Box Collider 3D", entity, [](auto& component)
+        drawComponent<BoxCollider3DComponent>("BOX COLLIDER 3D", entity, [](auto& component)
         {
             ImGui::Utils::TableDragFloat3("Offset", &component.offset[0]);
             ImGui::Utils::TableDragFloat3("Extent", &component.halfExtent[0]);
         });
 
-        drawComponent<SphereColliderComponent>("Sphere Collider", entity, [](auto& component)
+        drawComponent<SphereColliderComponent>("SPHERE COLLIDER", entity, [](auto& component)
         {
             ImGui::Utils::TableDragFloat3("Offset", &component.offset[0]);
             ImGui::Utils::TableDragFloat ("Radius", &component.radius);
