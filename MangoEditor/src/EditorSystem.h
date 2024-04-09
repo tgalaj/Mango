@@ -2,6 +2,7 @@
 #include "Mango.h"
 #include "EditorCamera.h"
 #include "Panels/ContentBrowserPanel.h"
+#include "Panels/MaterialEditorPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 
 namespace mango
@@ -89,6 +90,7 @@ namespace mango
         GizmoMode m_gizmoMode = GizmoMode::LOCAL;
 
         scope<ContentBrowserPanel> m_assetsBrowserPanel;
+        MaterialEditorPanel m_materialEditorPanel;
         SceneHierarchyPanel m_sceneHierarchyPanel;
 
         EditorCamera m_editorCamera;

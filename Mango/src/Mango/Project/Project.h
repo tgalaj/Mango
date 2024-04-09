@@ -31,9 +31,8 @@ namespace mango
             return getProjectDirectory() / s_activeProject->m_config.assetDirectory;
         }
 
-        ProjectConfig& getConfig() { return s_activeProject->m_config; }
-
-        static ref<Project> getActive() { return s_activeProject; }
+        static ProjectConfig& getConfig() { return s_activeProject->m_config; }
+        static ref<Project>   getActive() { return s_activeProject; }
 
         static ref<Project> createNew(const std::string& name, const std::filesystem::path& path);
         static ref<Project> load(const std::filesystem::path& filepath);

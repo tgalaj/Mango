@@ -15,9 +15,6 @@ namespace mango
         void setScene(const ref<Scene>& scene);
         void onGui();
 
-        Entity getSelectedEntity() const;
-        void setSelectedEntity(Entity entity);
-
     private:
         enum class EcmAction { Create, Delete, None}; // Entity Context Menu Action
 

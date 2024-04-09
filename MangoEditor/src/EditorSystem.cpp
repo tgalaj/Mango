@@ -3,6 +3,7 @@
 #include "EditorSystem.h"
 #include "DragDropPayloadTypes.h"
 #include "IconsMaterialDesignIcons.h"
+#include "SelectionManager.h"
 
 #include "Mango/ImGui/ImGuiUtils.h"
 #include "Mango/Math/Math.h"
@@ -55,6 +56,8 @@ namespace mango
 
     void EditorSystem::onInit()
     {
+        SelectionManager::create();
+
         auto appConfig = Services::application()->getConfig();
         if (!appConfig.projectPath.empty())
         {
@@ -351,13 +354,12 @@ namespace mango
             onGuiViewport();
             m_sceneHierarchyPanel.onGui();
             m_assetsBrowserPanel->onGui();
+            m_materialEditorPanel.onGui();
             onGuiToolbar();
             onGuiStats();
             onGuiRenderingSettings();
             onGuiProjectSettings();
         }
-
-        ImGui::ShowDemoWindow();
 
         ImGui::End(); // Mango Editor
     }
@@ -584,7 +586,7 @@ namespace mango
             if (SceneState::Edit == m_sceneState || SceneState::Simulate == m_sceneState)
             {
                 /** ImGuizmo */
-                Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
+                Entity selectedEntity = SelectionManager::getSelectedEntity();
                 if (selectedEntity && m_gizmoType != GizmoType::NONE)
                 {
                     ImGuizmo::SetOrthographic(false);
@@ -653,7 +655,7 @@ namespace mango
                         int    selectedID     = Services::renderer()->getSelectedEntityID(mousePos.x, mousePos.y);
                         Entity selectedEntity = (selectedID == -1) ? Entity() : Entity((entt::entity)selectedID, m_activeScene.get());
 
-                        m_sceneHierarchyPanel.setSelectedEntity(selectedEntity);
+                        SelectionManager::selectEntity(selectedEntity);
                     }
                 }
             }
@@ -1104,11 +1106,11 @@ namespace mango
             return;
         }
 
-        Entity selectedEntity = m_sceneHierarchyPanel.getSelectedEntity();
+        Entity selectedEntity = SelectionManager::getSelectedEntity();
         if (selectedEntity)
         {
             Entity newEntity = m_editorScene->duplicateEntity(selectedEntity);
-            m_sceneHierarchyPanel.setSelectedEntity(newEntity);
+            SelectionManager::selectEntity(newEntity);
         }
     }
 
