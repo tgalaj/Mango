@@ -22,9 +22,9 @@ namespace mango
         static ref<Mesh> load(const std::string& filename);
 
     protected:
-        static bool parseScene   (      ref<Mesh>& mesh, const aiScene*               scene,  const std::filesystem::path& parentDirectory);
-        static void loadMeshPart (const aiMesh*    mesh,       Mesh::VertexData&      vertexData);
-        static bool loadMaterials(      ref<Mesh>& mesh, const aiScene*               scene, const std::filesystem::path& parentDirectory);
+        static bool parseScene   (      ref<Mesh>& mesh, const aiScene*    scene,  const std::filesystem::path& parentDirectory);
+        static void loadMeshPart (const aiMesh*    mesh,       VertexData& vertexData);
+        static bool loadMaterials(      ref<Mesh>& mesh, const aiScene*    scene, const std::filesystem::path& parentDirectory);
 
         static bool loadMaterialTextures(const aiScene*               scene, 
                                          const aiMaterial*            material, 

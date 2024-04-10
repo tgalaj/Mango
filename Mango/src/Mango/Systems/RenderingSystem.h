@@ -101,8 +101,6 @@ namespace mango
     private:
         enum TextureMaps { SHADOW_MAP = 5 }; //TODO: move to Material class
 
-        // TODO(TG): these should be te vectors of Submeshes* instead of entities
-        // NOTE(TG): leaving as is for now, as the renderer will be reworked from the ground
         std::vector<Entity> m_opaqueQueue;
         std::vector<Entity> m_alphaQueue;
         std::vector<Entity> m_enviroStaticQueue;

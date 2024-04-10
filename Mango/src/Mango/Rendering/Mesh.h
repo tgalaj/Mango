@@ -17,6 +17,15 @@ namespace mango
         glm::vec3 tangent;
     };
 
+    struct VertexData
+    {
+        std::vector<glm::vec3> positions;
+        std::vector<glm::vec2> texcoords;
+        std::vector<glm::vec3> normals;
+        std::vector<glm::vec3> tangents;
+        std::vector<uint32_t>  indices;
+    };
+
     struct Submesh
     {
     public:
@@ -132,14 +141,6 @@ namespace mango
         void genQuad       ();
 
     protected:
-        struct VertexData
-        {
-            std::vector<glm::vec3> positions;
-            std::vector<glm::vec2> texcoords;
-            std::vector<glm::vec3> normals;
-            std::vector<glm::vec3> tangents;
-            std::vector<uint32_t>  indices;
-        };
         void createBuffers(VertexData& vertexData);
 
         void calcTangentSpace(VertexData& vertexData);

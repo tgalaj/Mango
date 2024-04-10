@@ -49,9 +49,9 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         mesh->m_submeshes.resize(scene->mNumMeshes);
 
-        Mesh::VertexData vertexData;
-        uint32_t         verticesCount = 0;
-        uint32_t         indicesCount  = 0;
+        VertexData vertexData;
+        uint32_t   verticesCount = 0;
+        uint32_t   indicesCount  = 0;
 
         /* Count the number of vertices and indices. */
         for (uint32_t i = 0; i < mesh->m_submeshes.size(); ++i)
@@ -100,7 +100,7 @@ namespace mango
         return true;
     }
 
-    void AssimpMeshImporter::loadMeshPart(const aiMesh* mesh, Mesh::VertexData& vertexData)
+    void AssimpMeshImporter::loadMeshPart(const aiMesh* mesh, VertexData& vertexData)
     {
         MG_PROFILE_ZONE_SCOPED;
         for (uint32_t i = 0; i < mesh->mNumVertices; ++i)
