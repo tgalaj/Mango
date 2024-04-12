@@ -235,6 +235,8 @@ namespace mango
                 m_currentRenameEntry = "";
             }
         }
+
+        return true;
     }
 
     void ContentBrowserPanel::cmdShowInExplorer(std::filesystem::path path)

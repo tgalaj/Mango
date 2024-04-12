@@ -74,7 +74,7 @@ namespace mango
         inline static ShadingMode  s_ShadingMode               = ShadingMode::SHADED;
         inline static unsigned int s_DebugWindowWidth          = 0;
 
-        inline static glm::vec4 s_PhysicsCollidersColor = glm::vec4(0.247f, 0.629f, 0.208f, 1.0f);
+        inline static glm::vec3 s_PhysicsCollidersColor = glm::vec3(0.247f, 0.629f, 0.208f);
 
     private:
         static void initRenderingStates();

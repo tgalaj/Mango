@@ -3,6 +3,7 @@
 #include "RenderingSystem.h"
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Rendering/BloomPS.h"
+#include "Mango/Rendering/Debug/DebugMesh.h"
 #include "Mango/Rendering/DeferredRendering.h"
 #include "Mango/Rendering/Picking.h"
 #include "Mango/Rendering/SSAO.h"
@@ -95,225 +96,9 @@ namespace mango
         m_lightBoundingCone = createRef<Mesh>();
         m_lightBoundingCone->genCone(1.1f, 1.1f, 12, 1);
 
-        // TODO(tgalaj): Move below generation functions somewhere else (like DebugMesh)!!
-        //
-        m_physicsColliderBox = createRef<Mesh>();
-        VertexData boxColliderData;
-        boxColliderData.positions =
-        {
-            glm::vec3(-1.0f, -1.0f, +1.0f),
-            glm::vec3(+1.0f, -1.0f, +1.0f),
-            glm::vec3(+1.0f, +1.0f, +1.0f),
-            glm::vec3(-1.0f, +1.0f, +1.0f),
-
-            glm::vec3(-1.0f, -1.0f, -1.0f),
-            glm::vec3(+1.0f, -1.0f, -1.0f),
-            glm::vec3(+1.0f, +1.0f, -1.0f),
-            glm::vec3(-1.0f, +1.0f, -1.0f)
-        };
-
-        boxColliderData.indices =
-        {
-            0, 1, 
-            1, 2,
-            2, 3,
-            3, 0,
-
-            4, 5,
-            5, 6,
-            6, 7,
-            7, 4,
-
-            0, 4,
-            1, 5,
-            2, 6,
-            3, 7
-        };
-        m_physicsColliderBox->build(boxColliderData, Mesh::DrawMode::LINES);
-
-        // TODO(tgalaj): make the below ugly code look better !!
-        // 
-        m_physicsColliderSphere = createRef<Mesh>();
-        VertexData sphereColliderData;
-        // XY plane
-        uint32_t samples = 32;
-        float deltaTheta = glm::two_pi<float>() / samples;
-        float radius = 1.0f;
-        for (uint32_t s = 0; s < samples; ++s)
-        {
-            float x = radius * glm::cos(s * deltaTheta);
-            float y = radius * glm::sin(s * deltaTheta);
-
-            sphereColliderData.positions.emplace_back(glm::vec3(x, y, 0.0f));
-        }
-        // XZ plane
-        for (uint32_t s = 0; s < samples; ++s)
-        {
-            float x = radius * glm::cos(s * deltaTheta);
-            float z = radius * glm::sin(s * deltaTheta);
-
-            sphereColliderData.positions.emplace_back(glm::vec3(x, 0.0f, z));
-        }
-
-        // YZ plane
-        for (uint32_t s = 0; s < samples; ++s)
-        {
-            float y = radius * glm::cos(s * deltaTheta);
-            float z = radius * glm::sin(s * deltaTheta);
-
-            sphereColliderData.positions.emplace_back(glm::vec3(0.0f, y, z));
-        }
-
-        // indices
-        for (uint32_t i = 0; i < samples; ++i)
-        {
-            sphereColliderData.indices.emplace_back(i);
-
-            if (i < samples - 1) sphereColliderData.indices.emplace_back((i + 1));
-            else                 sphereColliderData.indices.emplace_back(0);
-        }
-
-        for (uint32_t i = samples; i < samples * 2; ++i)
-        {
-            sphereColliderData.indices.emplace_back(i);
-            
-            if (i < samples * 2 - 1) sphereColliderData.indices.emplace_back((i + 1));
-            else                     sphereColliderData.indices.emplace_back(samples);
-        }
-
-        for (uint32_t i = samples * 2; i < samples * 3; ++i)
-        {
-            sphereColliderData.indices.emplace_back(i);
-            
-            if (i < samples * 3 - 1) sphereColliderData.indices.emplace_back((i + 1));
-            else                     sphereColliderData.indices.emplace_back(samples * 2);
-        }
-        m_physicsColliderSphere->build(sphereColliderData, Mesh::DrawMode::LINES);
-        
-        m_physicsColliderCapsule = createRef<Mesh>();
-        VertexData capsuleColliderData;
-        {
-            float radius  = 0.5f;
-            float depth   = 1.0f;
-            float circleY = depth / 2.0f;
-
-            // two XZ circles
-            uint32_t samples    = 32;
-            float    deltaTheta = glm::two_pi<float>() / samples;
-
-            for (uint32_t s = 0; s < samples; ++s)
-            {
-                float x = radius * glm::cos(s * deltaTheta);
-                float z = radius * glm::sin(s * deltaTheta);
-
-                capsuleColliderData.positions.emplace_back(glm::vec3(x, circleY, z));
-            }
-
-            for (uint32_t s = 0; s < samples; ++s)
-            {
-                float x = radius * glm::cos(s * deltaTheta);
-                float z = radius * glm::sin(s * deltaTheta);
-
-                capsuleColliderData.positions.emplace_back(glm::vec3(x, -circleY, z));
-            }
-
-            // indices
-            for (uint32_t i = 0; i < samples; ++i)
-            {
-                capsuleColliderData.indices.emplace_back(i);
-
-                if (i < samples - 1) capsuleColliderData.indices.emplace_back((i + 1));
-                else                 capsuleColliderData.indices.emplace_back(0);
-            }
-
-            for (uint32_t i = samples; i < samples * 2; ++i)
-            {
-                capsuleColliderData.indices.emplace_back(i);
-
-                if (i < samples * 2 - 1) capsuleColliderData.indices.emplace_back((i + 1));
-                else                     capsuleColliderData.indices.emplace_back(samples);
-            }
-
-            // XY plane capsule 2D
-            deltaTheta = glm::pi<float>() / samples;
-
-            for (uint32_t s = 0; s < samples; ++s)
-            {
-                float x = radius * glm::cos(s * deltaTheta);
-                float y = radius * glm::sin(s * deltaTheta);
-
-                capsuleColliderData.positions.emplace_back(glm::vec3(x, y + circleY, 0.0f));
-            }
-
-            for (uint32_t s = 0; s < samples; ++s)
-            {
-                float x = radius * glm::cos(s * deltaTheta);
-                float y = radius * glm::sin(s * deltaTheta);
-
-                capsuleColliderData.positions.emplace_back(glm::vec3(x, -y - circleY, 0.0f));
-            }
-
-            // indices
-            for (uint32_t i = samples * 2; i < samples * 3 - 1; ++i)
-            {
-                capsuleColliderData.indices.emplace_back(i);
-                capsuleColliderData.indices.emplace_back((i + 1));
-            }
-
-            for (uint32_t i = samples * 3; i < samples * 4 - 1; ++i)
-            {
-                capsuleColliderData.indices.emplace_back(i);
-                capsuleColliderData.indices.emplace_back((i + 1));
-            }
-
-            // Create two lines connecting the upper and lower half-circles
-            capsuleColliderData.indices.emplace_back(samples * 2);
-            capsuleColliderData.indices.emplace_back(samples * 3);
-
-            capsuleColliderData.indices.emplace_back(samples * 3 - 1);
-            capsuleColliderData.indices.emplace_back(samples * 4 - 1);
-            
-            // YZ plane capsule 2D
-            deltaTheta = glm::pi<float>() / samples;
-
-            for (uint32_t s = 0; s < samples; ++s)
-            {
-                float z = radius * glm::cos(s * deltaTheta);
-                float y = radius * glm::sin(s * deltaTheta);
-
-                capsuleColliderData.positions.emplace_back(glm::vec3(0.0f, y + circleY, z));
-            }
-
-            for (uint32_t s = 0; s < samples; ++s)
-            {
-                float z = radius * glm::cos(s * deltaTheta);
-                float y = radius * glm::sin(s * deltaTheta);
-
-                capsuleColliderData.positions.emplace_back(glm::vec3(0.0f, -y - circleY, z));
-            }
-
-            // indices
-            for (uint32_t i = samples * 4; i < samples * 5 - 1; ++i)
-            {
-                capsuleColliderData.indices.emplace_back(i);
-                capsuleColliderData.indices.emplace_back((i + 1));
-            }
-
-            for (uint32_t i = samples * 5; i < samples * 6 - 1; ++i)
-            {
-                capsuleColliderData.indices.emplace_back(i);
-                capsuleColliderData.indices.emplace_back((i + 1));
-            }
-
-            // Create two lines connecting the upper and lower half-circles
-            capsuleColliderData.indices.emplace_back(samples * 4);
-            capsuleColliderData.indices.emplace_back(samples * 5);
-
-            capsuleColliderData.indices.emplace_back(samples * 5 - 1);
-            capsuleColliderData.indices.emplace_back(samples * 6 - 1);
-
-            m_physicsColliderCapsule->build(capsuleColliderData, Mesh::DrawMode::LINES);
-        }
+        m_physicsColliderBox     = DebugMesh::createDebugBox();
+        m_physicsColliderSphere  = DebugMesh::createDebugSphere();
+        m_physicsColliderCapsule = DebugMesh::createDebugCapsule();
 
         int width  = m_mainWindow->getWidth();
         int height = m_mainWindow->getHeight();
@@ -891,10 +676,10 @@ namespace mango
 
                 m_debugMeshShader->bind();
                 m_debugMeshShader->setUniform("g_mvp", projection * view * model);
-                m_debugMeshShader->setUniform("color", glm::vec4(1.0f, 1.0, 1.0, 1.0f));
+                m_debugMeshShader->setUniform("color", pointLight.color);
 
-                m_lightBoundingSphere->bind();
-                m_lightBoundingSphere->render();
+                m_physicsColliderSphere->bind();
+                m_physicsColliderSphere->render();
             }
             m_lightBoundingSphere->setDrawMode(Mesh::DrawMode::TRIANGLES);
         }
@@ -918,7 +703,7 @@ namespace mango
 
                 m_debugMeshShader->bind();
                 m_debugMeshShader->setUniform("g_mvp", projection * view * model);
-                m_debugMeshShader->setUniform("color", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
+                m_debugMeshShader->setUniform("color", spotLight.color);
 
                 m_lightBoundingCone->bind();
                 m_lightBoundingCone->render();
