@@ -11,6 +11,7 @@ namespace mango
     class PhysicsSystem;
     class Scene;
     class SceneManager;
+    class SelectionManager;
     class Window;
 
     struct ApplicationCommandLineArgs
@@ -65,7 +66,9 @@ namespace mango
     private:
         ApplicationConfiguration m_config;
 
-        ref<Window> m_window;
+        ref<Window>           m_window;
+        ref<SelectionManager> m_selectionManager;
+
         SystemManager  m_runtimeSystems;
         SystemManager  m_editorSystems;
         SystemManager  m_renderingSystems;

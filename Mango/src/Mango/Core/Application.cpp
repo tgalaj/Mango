@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "CVars.h"
 #include "Mango/Scene/SceneManager.h"
+#include "Mango/Scene/SelectionManager.h"
 #include "Mango/Systems/AudioSystem.h"
 #include "Mango/Systems/ImGuiSystem.h"
 #include "Mango/Systems/PhysicsSystem.h"
@@ -108,6 +109,8 @@ namespace mango
         Input::init(m_window->getNativeWindow());
         Log::init();
         VFI::init(appSettings.commandLineArgs.argsValues[0]);
+
+        m_selectionManager = SelectionManager::create();
 
         // Add Mango Engine shaders directory to the search path
         // It shouldn't be compiled in the distribution build,

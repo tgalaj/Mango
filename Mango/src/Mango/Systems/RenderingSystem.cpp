@@ -8,13 +8,11 @@
 #include "Mango/Rendering/SSAO.h"
 #include "Mango/Rendering/ShaderGlobals.h"
 #include "Mango/Scene/Components.h"
+#include "Mango/Scene/SelectionManager.h"
 #include "Mango/Window/Window.h"
 
 namespace mango
 {
-    bool         RenderingSystem::DEBUG_RENDERING    = false;
-    unsigned int RenderingSystem::DEBUG_WINDOW_WIDTH = 0;
-
     RenderingSystem::RenderingSystem()
         : System("RenderingSystem")
     {
@@ -79,16 +77,16 @@ namespace mango
         m_deferredDirectional = AssetManager::createShader("Deferred-Directional", "FSQ.vert", "Deferred-Directional.frag");
         m_deferredDirectional->link();
 
-        m_deferredPoint = AssetManager::createShader("Deferred-Point", "DebugObjectGeometry.vert", "Deferred-Point.frag");
+        m_deferredPoint = AssetManager::createShader("Deferred-Point", "DebugMesh.vert", "Deferred-Point.frag");
         m_deferredPoint->link();
 
-        m_deferredSpot = AssetManager::createShader("Deferred-Spot", "DebugObjectGeometry.vert", "Deferred-Spot.frag");
+        m_deferredSpot = AssetManager::createShader("Deferred-Spot", "DebugMesh.vert", "Deferred-Spot.frag");
         m_deferredSpot->link();
 
-        m_boundingboxShader = AssetManager::createShader("DebugRenderBB", "DebugObjectGeometry.vert", "DebugObjectGeometry.frag");
-        m_boundingboxShader->link();
+        m_debugMeshShader = AssetManager::createShader("DebugMesh", "DebugMesh.vert", "DebugMesh.frag");
+        m_debugMeshShader->link();
 
-        m_nullShader = AssetManager::createShader("NullShader", "DebugObjectGeometry.vert", "Shadow-Map-Gen.frag");
+        m_nullShader = AssetManager::createShader("NullShader", "DebugMesh.vert", "Shadow-Map-Gen.frag");
         m_nullShader->link();
 
         m_lightBoundingSphere = createRef<Mesh>();
@@ -97,11 +95,231 @@ namespace mango
         m_lightBoundingCone = createRef<Mesh>();
         m_lightBoundingCone->genCone(1.1f, 1.1f, 12, 1);
 
+        // TODO(tgalaj): Move below generation functions somewhere else (like DebugMesh)!!
+        //
+        m_physicsColliderBox = createRef<Mesh>();
+        VertexData boxColliderData;
+        boxColliderData.positions =
+        {
+            glm::vec3(-1.0f, -1.0f, +1.0f),
+            glm::vec3(+1.0f, -1.0f, +1.0f),
+            glm::vec3(+1.0f, +1.0f, +1.0f),
+            glm::vec3(-1.0f, +1.0f, +1.0f),
+
+            glm::vec3(-1.0f, -1.0f, -1.0f),
+            glm::vec3(+1.0f, -1.0f, -1.0f),
+            glm::vec3(+1.0f, +1.0f, -1.0f),
+            glm::vec3(-1.0f, +1.0f, -1.0f)
+        };
+
+        boxColliderData.indices =
+        {
+            0, 1, 
+            1, 2,
+            2, 3,
+            3, 0,
+
+            4, 5,
+            5, 6,
+            6, 7,
+            7, 4,
+
+            0, 4,
+            1, 5,
+            2, 6,
+            3, 7
+        };
+        m_physicsColliderBox->build(boxColliderData, Mesh::DrawMode::LINES);
+
+        // TODO(tgalaj): make the below ugly code look better !!
+        // 
+        m_physicsColliderSphere = createRef<Mesh>();
+        VertexData sphereColliderData;
+        // XY plane
+        uint32_t samples = 32;
+        float deltaTheta = glm::two_pi<float>() / samples;
+        float radius = 1.0f;
+        for (uint32_t s = 0; s < samples; ++s)
+        {
+            float x = radius * glm::cos(s * deltaTheta);
+            float y = radius * glm::sin(s * deltaTheta);
+
+            sphereColliderData.positions.emplace_back(glm::vec3(x, y, 0.0f));
+        }
+        // XZ plane
+        for (uint32_t s = 0; s < samples; ++s)
+        {
+            float x = radius * glm::cos(s * deltaTheta);
+            float z = radius * glm::sin(s * deltaTheta);
+
+            sphereColliderData.positions.emplace_back(glm::vec3(x, 0.0f, z));
+        }
+
+        // YZ plane
+        for (uint32_t s = 0; s < samples; ++s)
+        {
+            float y = radius * glm::cos(s * deltaTheta);
+            float z = radius * glm::sin(s * deltaTheta);
+
+            sphereColliderData.positions.emplace_back(glm::vec3(0.0f, y, z));
+        }
+
+        // indices
+        for (uint32_t i = 0; i < samples; ++i)
+        {
+            sphereColliderData.indices.emplace_back(i);
+
+            if (i < samples - 1) sphereColliderData.indices.emplace_back((i + 1));
+            else                 sphereColliderData.indices.emplace_back(0);
+        }
+
+        for (uint32_t i = samples; i < samples * 2; ++i)
+        {
+            sphereColliderData.indices.emplace_back(i);
+            
+            if (i < samples * 2 - 1) sphereColliderData.indices.emplace_back((i + 1));
+            else                     sphereColliderData.indices.emplace_back(samples);
+        }
+
+        for (uint32_t i = samples * 2; i < samples * 3; ++i)
+        {
+            sphereColliderData.indices.emplace_back(i);
+            
+            if (i < samples * 3 - 1) sphereColliderData.indices.emplace_back((i + 1));
+            else                     sphereColliderData.indices.emplace_back(samples * 2);
+        }
+        m_physicsColliderSphere->build(sphereColliderData, Mesh::DrawMode::LINES);
+        
+        m_physicsColliderCapsule = createRef<Mesh>();
+        VertexData capsuleColliderData;
+        {
+            float radius  = 0.5f;
+            float depth   = 1.0f;
+            float circleY = depth / 2.0f;
+
+            // two XZ circles
+            uint32_t samples    = 32;
+            float    deltaTheta = glm::two_pi<float>() / samples;
+
+            for (uint32_t s = 0; s < samples; ++s)
+            {
+                float x = radius * glm::cos(s * deltaTheta);
+                float z = radius * glm::sin(s * deltaTheta);
+
+                capsuleColliderData.positions.emplace_back(glm::vec3(x, circleY, z));
+            }
+
+            for (uint32_t s = 0; s < samples; ++s)
+            {
+                float x = radius * glm::cos(s * deltaTheta);
+                float z = radius * glm::sin(s * deltaTheta);
+
+                capsuleColliderData.positions.emplace_back(glm::vec3(x, -circleY, z));
+            }
+
+            // indices
+            for (uint32_t i = 0; i < samples; ++i)
+            {
+                capsuleColliderData.indices.emplace_back(i);
+
+                if (i < samples - 1) capsuleColliderData.indices.emplace_back((i + 1));
+                else                 capsuleColliderData.indices.emplace_back(0);
+            }
+
+            for (uint32_t i = samples; i < samples * 2; ++i)
+            {
+                capsuleColliderData.indices.emplace_back(i);
+
+                if (i < samples * 2 - 1) capsuleColliderData.indices.emplace_back((i + 1));
+                else                     capsuleColliderData.indices.emplace_back(samples);
+            }
+
+            // XY plane capsule 2D
+            deltaTheta = glm::pi<float>() / samples;
+
+            for (uint32_t s = 0; s < samples; ++s)
+            {
+                float x = radius * glm::cos(s * deltaTheta);
+                float y = radius * glm::sin(s * deltaTheta);
+
+                capsuleColliderData.positions.emplace_back(glm::vec3(x, y + circleY, 0.0f));
+            }
+
+            for (uint32_t s = 0; s < samples; ++s)
+            {
+                float x = radius * glm::cos(s * deltaTheta);
+                float y = radius * glm::sin(s * deltaTheta);
+
+                capsuleColliderData.positions.emplace_back(glm::vec3(x, -y - circleY, 0.0f));
+            }
+
+            // indices
+            for (uint32_t i = samples * 2; i < samples * 3 - 1; ++i)
+            {
+                capsuleColliderData.indices.emplace_back(i);
+                capsuleColliderData.indices.emplace_back((i + 1));
+            }
+
+            for (uint32_t i = samples * 3; i < samples * 4 - 1; ++i)
+            {
+                capsuleColliderData.indices.emplace_back(i);
+                capsuleColliderData.indices.emplace_back((i + 1));
+            }
+
+            // Create two lines connecting the upper and lower half-circles
+            capsuleColliderData.indices.emplace_back(samples * 2);
+            capsuleColliderData.indices.emplace_back(samples * 3);
+
+            capsuleColliderData.indices.emplace_back(samples * 3 - 1);
+            capsuleColliderData.indices.emplace_back(samples * 4 - 1);
+            
+            // YZ plane capsule 2D
+            deltaTheta = glm::pi<float>() / samples;
+
+            for (uint32_t s = 0; s < samples; ++s)
+            {
+                float z = radius * glm::cos(s * deltaTheta);
+                float y = radius * glm::sin(s * deltaTheta);
+
+                capsuleColliderData.positions.emplace_back(glm::vec3(0.0f, y + circleY, z));
+            }
+
+            for (uint32_t s = 0; s < samples; ++s)
+            {
+                float z = radius * glm::cos(s * deltaTheta);
+                float y = radius * glm::sin(s * deltaTheta);
+
+                capsuleColliderData.positions.emplace_back(glm::vec3(0.0f, -y - circleY, z));
+            }
+
+            // indices
+            for (uint32_t i = samples * 4; i < samples * 5 - 1; ++i)
+            {
+                capsuleColliderData.indices.emplace_back(i);
+                capsuleColliderData.indices.emplace_back((i + 1));
+            }
+
+            for (uint32_t i = samples * 5; i < samples * 6 - 1; ++i)
+            {
+                capsuleColliderData.indices.emplace_back(i);
+                capsuleColliderData.indices.emplace_back((i + 1));
+            }
+
+            // Create two lines connecting the upper and lower half-circles
+            capsuleColliderData.indices.emplace_back(samples * 4);
+            capsuleColliderData.indices.emplace_back(samples * 5);
+
+            capsuleColliderData.indices.emplace_back(samples * 5 - 1);
+            capsuleColliderData.indices.emplace_back(samples * 6 - 1);
+
+            m_physicsColliderCapsule->build(capsuleColliderData, Mesh::DrawMode::LINES);
+        }
+
         int width  = m_mainWindow->getWidth();
         int height = m_mainWindow->getHeight();
 
-        DEBUG_WINDOW_WIDTH = GLuint(width / 5.0f);
-        sceneAmbientColor = glm::vec3(0.18f);
+        s_DebugWindowWidth = GLuint(width / 5.0f);
+        sceneAmbientColor  = glm::vec3(0.18f);
 
         m_hdrFilter = createRef<PostprocessEffect>();
         m_hdrFilter->init("HDR_PS", "HDR_PS.frag");
@@ -167,7 +385,7 @@ namespace mango
 
         for (auto& e : view)
         {
-            Entity entity = { e, m_activeScene };
+             Entity entity = { e, m_activeScene };
 
             auto& smc = entity.getComponent<StaticMeshComponent>();
 
@@ -207,9 +425,8 @@ namespace mango
         {
             renderDeferred(m_activeScene);
 
-            if (DEBUG_RENDERING)
+            if (s_VisualizeLights)
             {
-                renderDebugLightsBoundingBoxes(m_activeScene);
                 renderDebug();
             }
         }
@@ -319,7 +536,7 @@ namespace mango
         m_ssao->create(width, height);
         m_picking->resize(width, height);
 
-        DEBUG_WINDOW_WIDTH = GLuint(width / 5.0f);
+        s_DebugWindowWidth = GLuint(width / 5.0f);
 
         if (m_camera)
         {
@@ -470,9 +687,14 @@ namespace mango
         renderEntitiesInQueue(m_blendingShader, m_alphaQueue);
         glEnable(GL_CULL_FACE);
 
-        if (DEBUG_RENDERING)
+        if (s_VisualizeLights)
         {
             renderDebugLightsBoundingBoxes(scene);
+        }
+
+        if (s_VisualizePhysicsColliders)
+        {
+            renderDebugPhysicsColliders(scene);
         }
 
         /* Render skybox */
@@ -511,7 +733,7 @@ namespace mango
         m_deferredRendering->bindGBuffer();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if (ShadingMode::SHADED == shadingMode || ShadingMode::SHADED_WIREFRAME == shadingMode)
+        if (ShadingMode::SHADED == s_ShadingMode || ShadingMode::SHADED_WIREFRAME == s_ShadingMode)
         {
             m_gbufferShader->bind();
             renderEntitiesInQueue(m_gbufferShader, m_opaqueQueue);
@@ -544,9 +766,17 @@ namespace mango
             glEnable(GL_DEPTH_TEST);
             glDepthMask(GL_TRUE);
 
-            if (DEBUG_RENDERING && renderingMode == RenderingMode::EDITOR)
+            if (renderingMode == RenderingMode::EDITOR)
             {
-                renderDebugLightsBoundingBoxes(scene);
+                if (s_VisualizeLights)
+                {
+                    renderDebugLightsBoundingBoxes(scene);
+                }
+
+                if (s_VisualizePhysicsColliders)
+                {
+                    renderDebugPhysicsColliders(scene);
+                }
             }
 
             /* Sort transparent objects back to front */
@@ -578,9 +808,9 @@ namespace mango
             m_bloomFilter->blurGaussian(2);
         }
         
-        if (ShadingMode::WIREFRAME == shadingMode || ShadingMode::SHADED_WIREFRAME == shadingMode)
+        if (ShadingMode::WIREFRAME == s_ShadingMode || ShadingMode::SHADED_WIREFRAME == s_ShadingMode)
         {
-            if (ShadingMode::WIREFRAME == shadingMode)
+            if (ShadingMode::WIREFRAME == s_ShadingMode)
             {
                 m_bloomFilter->clearBuffers();
             }
@@ -620,20 +850,20 @@ namespace mango
 
         m_debugRendering->setSubroutine(Shader::Type::FRAGMENT, "debugColorTarget");
         m_deferredRendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::POSITION);
-        glViewport(DEBUG_WINDOW_WIDTH * 0, 0, DEBUG_WINDOW_WIDTH, DEBUG_WINDOW_WIDTH / m_mainWindow->getAspectRatio());
+        glViewport(s_DebugWindowWidth * 0, 0, s_DebugWindowWidth, s_DebugWindowWidth / m_mainWindow->getAspectRatio());
         m_deferredRendering->render();
 
         m_deferredRendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::ALBEDO_SPECULAR);
-        glViewport(DEBUG_WINDOW_WIDTH * 1, 0, DEBUG_WINDOW_WIDTH, DEBUG_WINDOW_WIDTH / m_mainWindow->getAspectRatio());
+        glViewport(s_DebugWindowWidth * 1, 0, s_DebugWindowWidth, s_DebugWindowWidth / m_mainWindow->getAspectRatio());
         m_deferredRendering->render();
 
         m_deferredRendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::NORMAL);
-        glViewport(DEBUG_WINDOW_WIDTH * 2, 0, DEBUG_WINDOW_WIDTH, DEBUG_WINDOW_WIDTH / m_mainWindow->getAspectRatio());
+        glViewport(s_DebugWindowWidth * 2, 0, s_DebugWindowWidth, s_DebugWindowWidth / m_mainWindow->getAspectRatio());
         m_deferredRendering->render();
 
         m_debugRendering->setSubroutine(Shader::Type::FRAGMENT, "debugDepthTarget");
         m_deferredRendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::DEPTH);
-        glViewport(DEBUG_WINDOW_WIDTH * 3, 0, DEBUG_WINDOW_WIDTH, DEBUG_WINDOW_WIDTH / m_mainWindow->getAspectRatio());
+        glViewport(s_DebugWindowWidth * 3, 0, s_DebugWindowWidth, s_DebugWindowWidth / m_mainWindow->getAspectRatio());
         m_deferredRendering->render();
 
         glEnable(GL_BLEND);
@@ -659,9 +889,9 @@ namespace mango
                 auto& view        = getCamera().getView();
                 auto& projection  = getCamera().getProjection();
 
-                m_boundingboxShader->bind();
-                m_boundingboxShader->setUniform("g_mvp", projection * view * model);
-                m_boundingboxShader->setUniform("color", glm::vec4(1.0f, 1.0, 1.0, 1.0f));
+                m_debugMeshShader->bind();
+                m_debugMeshShader->setUniform("g_mvp", projection * view * model);
+                m_debugMeshShader->setUniform("color", glm::vec4(1.0f, 1.0, 1.0, 1.0f));
 
                 m_lightBoundingSphere->bind();
                 m_lightBoundingSphere->render();
@@ -686,15 +916,90 @@ namespace mango
                 auto view       = getCamera().getView();
                 auto projection = getCamera().getProjection();
 
-                m_boundingboxShader->bind();
-                m_boundingboxShader->setUniform("g_mvp", projection * view * model);
-                m_boundingboxShader->setUniform("color", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
+                m_debugMeshShader->bind();
+                m_debugMeshShader->setUniform("g_mvp", projection * view * model);
+                m_debugMeshShader->setUniform("color", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
 
                 m_lightBoundingCone->bind();
                 m_lightBoundingCone->render();
             }
             m_lightBoundingCone->setDrawMode(Mesh::DrawMode::TRIANGLES);
         }
+        glEnable(GL_BLEND);
+    }
+
+    void RenderingSystem::renderDebugPhysicsColliders(Scene* scene)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+        MG_PROFILE_GL_ZONE("RenderingSystem::renderDebugPhysicsColliders");
+
+        glDisable(GL_BLEND);
+        
+        glEnable(GL_POLYGON_OFFSET_FILL);
+        glPolygonOffset(-1.0, -1.0);
+
+        Entity selectedEntity = SelectionManager::getSelectedEntity();
+
+        if (selectedEntity)
+        {
+            if (selectedEntity.hasComponent<BoxCollider3DComponent>()) 
+            {
+                auto& bc3d = selectedEntity.getComponent<BoxCollider3DComponent>();
+
+                auto model       = glm::translate(glm::mat4(1.0f), selectedEntity.getPosition() + bc3d.offset) *
+                                   glm::mat4_cast(selectedEntity.getOrientation()) * 
+                                   glm::scale(glm::mat4(1.0f), selectedEntity.getScale() * bc3d.halfExtent);
+                auto& view       = getCamera().getView();
+                auto& projection = getCamera().getProjection();
+
+                m_debugMeshShader->bind();
+                m_debugMeshShader->setUniform("g_mvp", projection * view * model);
+                m_debugMeshShader->setUniform("color", s_PhysicsCollidersColor);
+
+                m_physicsColliderBox->bind();
+                m_physicsColliderBox->render();
+            }
+            else if (selectedEntity.hasComponent<CapsuleColliderComponent>())
+            {
+                auto& cc = selectedEntity.getComponent<CapsuleColliderComponent>();
+
+                auto scale             = selectedEntity.getScale();
+                auto maxScaleComponent = glm::vec3(glm::max(scale.x, scale.z));
+                auto model             = glm::translate(glm::mat4(1.0f), selectedEntity.getPosition() + cc.offset) *
+                                         glm::mat4_cast(selectedEntity.getOrientation()) *
+                                         glm::scale(glm::mat4(1.0f), maxScaleComponent * 2.0f * glm::vec3(cc.radius, cc.halfHeight, cc.radius));
+                auto& view             = getCamera().getView();
+                auto& projection       = getCamera().getProjection();
+
+                m_debugMeshShader->bind();
+                m_debugMeshShader->setUniform("g_mvp", projection * view * model);
+                m_debugMeshShader->setUniform("color", s_PhysicsCollidersColor);
+
+                m_physicsColliderCapsule->bind();
+                m_physicsColliderCapsule->render();
+            }
+            else if (selectedEntity.hasComponent<SphereColliderComponent>())
+            {
+                auto& sc = selectedEntity.getComponent<SphereColliderComponent>();
+
+                auto scale             = selectedEntity.getScale();
+                auto maxScaleComponent = glm::vec3(glm::max(scale.x, glm::max(scale.y, scale.z)));
+                auto model             = glm::translate(glm::mat4(1.0f), selectedEntity.getPosition() + sc.offset) *
+                                         glm::mat4_cast(selectedEntity.getOrientation()) *
+                                         glm::scale(glm::mat4(1.0f), maxScaleComponent * sc.radius);
+                auto& view             = getCamera().getView();
+                auto& projection       = getCamera().getProjection();
+
+                m_debugMeshShader->bind();
+                m_debugMeshShader->setUniform("g_mvp", projection * view * model);
+                m_debugMeshShader->setUniform("color", s_PhysicsCollidersColor);
+
+                m_physicsColliderSphere->bind();
+                m_physicsColliderSphere->render();
+            }
+        }
+
+        glDisable(GL_POLYGON_OFFSET_FILL);
         glEnable(GL_BLEND);
     }
 

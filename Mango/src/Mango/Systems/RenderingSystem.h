@@ -57,7 +57,6 @@ namespace mango
         uint32_t getOutputOffscreenTextureID() const;
 
         void setRenderingMode(RenderingMode mode, Camera* editorCamera = nullptr, const glm::vec3& editorCameraPosition = glm::vec3(0.0f));
-        void setShadingMode(ShadingMode mode) { shadingMode = mode; }
 
         Camera& getCamera() const;
         glm::vec3 getCameraPosition() const { return m_cameraPosition; }
@@ -69,10 +68,13 @@ namespace mango
         glm::vec3 sceneAmbientColor{};
 
         RenderingMode renderingMode = RenderingMode::GAME;
-        ShadingMode   shadingMode   = ShadingMode::SHADED;
 
-        static bool         DEBUG_RENDERING;
-        static unsigned int DEBUG_WINDOW_WIDTH;
+        inline static bool         s_VisualizeLights           = false;
+        inline static bool         s_VisualizePhysicsColliders = true;
+        inline static ShadingMode  s_ShadingMode               = ShadingMode::SHADED;
+        inline static unsigned int s_DebugWindowWidth          = 0;
+
+        inline static glm::vec4 s_PhysicsCollidersColor = glm::vec4(0.247f, 0.629f, 0.208f, 1.0f);
 
     private:
         static void initRenderingStates();
@@ -84,10 +86,11 @@ namespace mango
 
         void applyPostprocess(ref<PostprocessEffect>& effect, ref<RenderTarget>* src, ref<RenderTarget>* dst);
 
-        void renderForward(Scene* scene);
+        void renderForward (Scene* scene);
         void renderDeferred(Scene* scene);
         void renderDebug();
         void renderDebugLightsBoundingBoxes(Scene* scene);
+        void renderDebugPhysicsColliders   (Scene* scene);
 
         void renderEntitiesInQueue(ref<Shader>& shader, std::vector<Entity>& queue);
 
@@ -122,10 +125,14 @@ namespace mango
         ref<Shader> m_deferredPoint;
         ref<Shader> m_deferredSpot;
 
-        ref<Shader> m_boundingboxShader;
+        ref<Shader> m_debugMeshShader;
         ref<Shader> m_nullShader;
         ref<Mesh>   m_lightBoundingSphere;
         ref<Mesh>   m_lightBoundingCone;
+
+        ref<Mesh> m_physicsColliderBox;
+        ref<Mesh> m_physicsColliderSphere;
+        ref<Mesh> m_physicsColliderCapsule;
 
         ref<PostprocessEffect> m_hdrFilter;
         ref<PostprocessEffect> m_fxaaFilter;

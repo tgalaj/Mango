@@ -176,4 +176,20 @@ namespace mango
         }
         return {};
     }
+
+    mango::Entity Scene::findEntityByName(const std::string_view& name)
+    {
+        auto view = getEntitiesWithComponent<TagComponent>();
+
+        for (auto entity : view)
+        {
+            auto [tag] = view.get(entity);
+
+            if (tag.name == name)
+            {
+                return Entity(entity, this);
+            }
+        }
+    }
+
 }

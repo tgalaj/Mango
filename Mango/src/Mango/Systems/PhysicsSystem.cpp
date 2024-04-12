@@ -14,7 +14,8 @@
 #include "Jolt/Physics/PhysicsSystem.h"
 #include "Jolt/Physics/Collision/Shape/BoxShape.h"
 #include "Jolt/Physics/Collision/Shape/SphereShape.h"
-#include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h"
+#include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
+#include "Jolt/Physics/Collision/Shape/MeshShape.h"
 #include "Jolt/Physics/Body/BodyCreationSettings.h"
 #include "Jolt/Physics/Body/BodyActivationListener.h"
 
@@ -166,13 +167,28 @@ namespace mango
 
                     if (bodyInterface.IsActive(bodyID))
                     {
-                        MG_CORE_TRACE("Physics System: Updating entity: {}", entity.getName());
+                        glm::vec3 offset(0.0f);
+                        if (entity.hasComponent<BoxCollider3DComponent>())
+                        {
+                            auto& bc3d   = entity.getComponent<BoxCollider3DComponent>();
+                                  offset = bc3d.offset;
+                        }
+                        else if (entity.hasComponent<SphereColliderComponent>())
+                        {
+                            auto& sc3d   = entity.getComponent<SphereColliderComponent>();
+                                  offset = sc3d.offset;
+                        }
+                        else if (entity.hasComponent<CapsuleColliderComponent>())
+                        {
+                            auto& cc3d   = entity.getComponent<CapsuleColliderComponent>();
+                                  offset = cc3d.offset;
+                        }
 
                         JPH::RVec3 p = bodyInterface.GetCenterOfMassPosition(bodyID);
                         JPH::Quat  r = bodyInterface.GetRotation(bodyID);
 
                         // TODO: should take into account parent transform !! p is treated as world pos in global world space!!
-                        entity.setPosition(glm::vec3(p.GetX(), p.GetY(), p.GetZ()));
+                        entity.setPosition   (glm::vec3(p.GetX(), p.GetY(), p.GetZ()) - offset);
                         entity.setOrientation(glm::quat(r.GetW(), r.GetX(), r.GetY(), r.GetZ()));
                     }
                 }
@@ -213,26 +229,28 @@ namespace mango
         auto view = m_scene->getEntitiesWithComponent<RigidBody3DComponent>();
         for (auto e : view)
         {
-                  Entity      entity         = { e, m_scene.get() };
-                  auto        scale          = entity.getScale();
-            const JPH::Shape* collisionShape = nullptr;
+            Entity                    entity         = { e, m_scene.get() };
+            auto                      scale          = entity.getScale();
+            JPH::RefConst<JPH::Shape> collisionShape = nullptr;
 
-            MG_CORE_TRACE("Physics System: Initialized body for entity: {}", entity.getName());
-
+            glm::vec3 offset(0.0f);
             if (entity.hasComponent<BoxCollider3DComponent>())
             {
                 auto& bc3d           = entity.getComponent<BoxCollider3DComponent>();
-                      collisionShape = new JPH::RotatedTranslatedShape({ bc3d.offset.x, bc3d.offset.y, bc3d.offset.z }, 
-                                                                       JPH::Quat::sIdentity(), 
-                                                                       new JPH::BoxShape(glmVec3ToJoltVec3(bc3d.halfExtent * scale)));
+                      offset         = bc3d.offset;
+                      collisionShape = new JPH::BoxShape(glmVec3ToJoltVec3(bc3d.halfExtent * scale));
             }
-
-            if (entity.hasComponent<SphereColliderComponent>())
+            else if (entity.hasComponent<SphereColliderComponent>())
             {
                 auto& sc3d           = entity.getComponent<SphereColliderComponent>();
-                collisionShape       = new JPH::RotatedTranslatedShape({ sc3d.offset.x, sc3d.offset.y, sc3d.offset.z },
-                                                                       JPH::Quat::sIdentity(), 
-                                                                       new JPH::SphereShape(sc3d.radius * scale.x));
+                      offset         = sc3d.offset;
+                      collisionShape = new JPH::SphereShape(sc3d.radius * glm::max(scale.x, glm::max(scale.y, scale.z)));
+            }
+            else if (entity.hasComponent<CapsuleColliderComponent>())
+            {
+                auto& cc3d           = entity.getComponent<CapsuleColliderComponent>();
+                      offset         = cc3d.offset;
+                      collisionShape = new JPH::CapsuleShape(cc3d.halfHeight * scale.y, cc3d.radius * glm::max(scale.x, scale.z));
             }
 
             if (!collisionShape)
@@ -246,7 +264,7 @@ namespace mango
             auto& rb3d = entity.getComponent<RigidBody3DComponent>();
 
             // TODO: should take into account parent transform !! p is treated as world pos in global world space!!
-            auto position    = entity.getPosition();
+            auto position    = entity.getPosition() + offset;
             auto orientation = entity.getOrientation();
 
             JPH::BodyCreationSettings bodySettings(collisionShape,

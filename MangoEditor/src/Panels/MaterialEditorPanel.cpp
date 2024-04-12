@@ -1,12 +1,10 @@
 #include "MaterialEditorPanel.h"
 #include "DragDropPayloadTypes.h"
 #include "IconsMaterialDesignIcons.h"
-#include "SelectionManager.h"
+#include "Mango/Scene/SelectionManager.h"
 
 #include "Mango/Core/Assertions.h"
 #include "Mango/Core/AssetManager.h"
-//#include "Mango/ImGui/ImGuiUtils.h"
-//#include "Mango/Scene/Components.h"
 #include "Mango/Systems/ImGuiSystem.h"
 
 #include <imgui.h>

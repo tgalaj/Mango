@@ -210,6 +210,32 @@ Materials:
     BlendMode: None
     RenderQueue: StaticEnvMapping
 Entities:
+  - Entity: 8452382116024351579
+    TagComponent:
+      Name: Capsule
+    TransformComponent:
+      Position: [3.05683947, 2.71855044, -10.5923376]
+      Rotation: [-15.3503485, -0.177450001, -2.53287244]
+      Orientation: [0.990793347, -0.133557916, 0.00141753117, -0.0221104193]
+      Scale: [1, 1, 0.999999642]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Capsule
+      Materials:
+        {}
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    CapsuleColliderComponent:
+      Offset: [0, 0, 0]
+      HalfHeight: 0.5
+      Radius: 0.5
   - Entity: 6374000167384504475
     TagComponent:
       Name: MainCamera
@@ -402,7 +428,7 @@ Entities:
         0: window
   - Entity: 15581571294204918080
     TagComponent:
-      Name: Entity
+      Name: WallBodyXY
     TransformComponent:
       Position: [5, 3, -14]
       Rotation: [0, 0, 0]
@@ -427,11 +453,11 @@ Entities:
       Extent: [2.5, 2.5, 0.100000001]
   - Entity: 809506919725630732
     TagComponent:
-      Name: Entity2
+      Name: WallBodyXZ
     TransformComponent:
       Position: [5, 0.5, -11.5]
-      Rotation: [-89.5, 0, 0]
-      Orientation: [0.710185409, -0.704014719, 0, 0]
+      Rotation: [-90, 0, 0]
+      Orientation: [0.707106829, -0.707106829, 0, 0]
       Scale: [5, 5, 1]
       ParentID: 0
       Children:
@@ -448,16 +474,16 @@ Entities:
       AngularDamping: 0.0500000007
       Activated: true
     BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [2.5, 2.5, 0.100000001]
+      Offset: [0, -0.5, 0]
+      Extent: [0.5, 0.5, 0.5]
   - Entity: 18179586025720236209
     TagComponent:
-      Name: Entity
+      Name: CubeBody
     TransformComponent:
-      Position: [5, 20, -12.1550598]
-      Rotation: [54.7196465, 29.9801636, 35.2321396]
-      Orientation: [0.853658497, 0.353598505, 0.353298187, 0.146340907]
-      Scale: [0.5, 0.500000298, 0.500000238]
+      Position: [5, 3.56588173, -12.1550598]
+      Rotation: [54.7196426, 29.9801655, 35.2321396]
+      Orientation: [0.853658497, 0.353598505, 0.353298187, 0.146340892]
+      Scale: [0.49999997, 0.500000298, 0.500000238]
       ParentID: 0
       Children:
         []
@@ -2114,7 +2140,7 @@ Entities:
       CastsShadows: true
   - Entity: 16982291332808380782
     TagComponent:
-      Name: Entity
+      Name: SphereBody
     TransformComponent:
       Position: [5, 17.8475056, -11.1820078]
       Rotation: [0, 0, 0]

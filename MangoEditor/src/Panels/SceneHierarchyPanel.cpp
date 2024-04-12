@@ -2,13 +2,13 @@
 
 #include "DragDropPayloadTypes.h"
 #include "IconsMaterialDesignIcons.h"
-#include "SelectionManager.h"
 
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Core/VFI.h"
 #include "Mango/ImGui/ImGuiUtils.h"
 #include "Mango/Project/Project.h"
 #include "Mango/Scene/Components.h"
+#include "Mango/Scene/SelectionManager.h"
 #include "Mango/Systems/ImGuiSystem.h"
 
 #include <glm/gtc/type_ptr.hpp>
@@ -408,6 +408,7 @@ namespace mango
             displayAddComponentEntry<StaticMeshComponent>("Static Mesh");
             displayAddComponentEntry<RigidBody3DComponent>("Rigidbody 3D");
             displayAddComponentEntry<BoxCollider3DComponent>("Box Collider 3D");
+            displayAddComponentEntry<CapsuleColliderComponent>("Capsule Collider 3D");
             displayAddComponentEntry<SphereColliderComponent>("Sphere Collider");
 
             ImGui::EndPopup();
@@ -819,14 +820,21 @@ namespace mango
 
         drawComponent<BoxCollider3DComponent>("BOX COLLIDER 3D", entity, [](auto& component)
         {
-            ImGui::Utils::TableDragFloat3("Offset", &component.offset[0]);
-            ImGui::Utils::TableDragFloat3("Extent", &component.halfExtent[0]);
+            ImGui::Utils::TableDragFloat3("Offset", &component.offset[0],     0.01f);
+            ImGui::Utils::TableDragFloat3("Extent", &component.halfExtent[0], 0.01f);
+        });
+
+        drawComponent<CapsuleColliderComponent>("CAPSULE COLLIDER 3D", entity, [](auto& component)
+        {
+            ImGui::Utils::TableDragFloat3("Offset",      &component.offset[0],  0.01f);
+            ImGui::Utils::TableDragFloat ("Half height", &component.halfHeight, 0.01f);
+            ImGui::Utils::TableDragFloat ("Radius",      &component.radius,     0.01f);
         });
 
         drawComponent<SphereColliderComponent>("SPHERE COLLIDER", entity, [](auto& component)
         {
-            ImGui::Utils::TableDragFloat3("Offset", &component.offset[0]);
-            ImGui::Utils::TableDragFloat ("Radius", &component.radius);
+            ImGui::Utils::TableDragFloat3("Offset", &component.offset[0], 0.01f);
+            ImGui::Utils::TableDragFloat ("Radius", &component.radius,    0.01f);
         });
     }
 

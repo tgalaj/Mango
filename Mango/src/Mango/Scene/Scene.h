@@ -4,6 +4,7 @@
 #include <entt.hpp>
 
 #include <string>
+#include <string_view>
 
 namespace mango
 {
@@ -27,6 +28,8 @@ namespace mango
 
         Entity getEntity(UUID uuid);
         Entity getPrimaryCamera();
+
+        Entity findEntityByName(const std::string_view& name);
 
         template<typename... Components>
         auto getEntitiesWithComponent()

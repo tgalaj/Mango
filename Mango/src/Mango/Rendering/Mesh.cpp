@@ -116,6 +116,14 @@ namespace mango
         }
     }
 
+    void Mesh::build(VertexData& data, DrawMode drawMode /*= DrawMode::TRIANGLES*/, bool calcTangents /*= false*/)
+    {
+        MG_CORE_ASSERT_MSG(!data.indices.empty(), "You must specify indices!");
+
+        setDrawMode(drawMode);
+        genPrimitive(data, calcTangents);
+    }
+
     void Mesh::calcTangentSpace(VertexData& vertexData)
     {
         MG_PROFILE_ZONE_SCOPED;
@@ -177,7 +185,7 @@ namespace mango
         submesh.indicesCount  = vertexData.indices.size();
         submesh.materialIndex = 0;
 
-        if(!m_materialTable.empty()) m_materialTable.clear();
+        if (!m_materialTable.empty()) m_materialTable.clear();
         
         m_materialTable.emplace_back(AssetManager::getMaterial("DefaultMaterial"));
 
@@ -235,7 +243,7 @@ namespace mango
 
         switch (profile)
         {
-            case CapsuleUvProfile::Aspect :
+            case CapsuleUvProfile::Aspect:
                 vtAspectRatio = radius / (depth + radius + radius);
                 break;
 
@@ -754,13 +762,13 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         VertexData vertexData;
 
-        float halfHeight = height * 0.5f;
-        glm::vec3 p1 = glm::vec3(0.0f, halfHeight, 0.0f);
-        glm::vec3 p2 = -p1;
+        float     halfHeight = height * 0.5f;
+        glm::vec3 p1         = glm::vec3(0.0f, halfHeight, 0.0f);
+        glm::vec3 p2         = -p1;
 
-        float thetaInc = glm::two_pi<float>() / float(slices);
-        float theta = 0.0f;
-        float sign = -1.0f;
+        float thetaInc =  glm::two_pi<float>() / float(slices);
+        float theta    =  0.0f;
+        float sign     = -1.0f;
 
         /* Center bottom */
         vertexData.positions.push_back(p2);

@@ -320,6 +320,19 @@ namespace mango
             out << YAML::EndMap;
         }
 
+        if (entity.hasComponent<CapsuleColliderComponent>())
+        {
+            out << YAML::Key << "CapsuleColliderComponent";
+            out << YAML::BeginMap;
+            {
+                auto& cc = entity.getComponent<CapsuleColliderComponent>();
+                out << YAML::Key << "Offset"     << YAML::Value << cc.offset;
+                out << YAML::Key << "HalfHeight" << YAML::Value << cc.halfHeight;
+                out << YAML::Key << "Radius"     << YAML::Value << cc.radius;
+            }
+            out << YAML::EndMap;
+        }
+
         if (entity.hasComponent<SphereColliderComponent>())
         {
             out << YAML::Key << "SphereColliderComponent";
@@ -763,15 +776,24 @@ namespace mango
                 auto boxCollider3DComponent = entity["BoxCollider3DComponent"];
                 if (boxCollider3DComponent)
                 {
-                    auto& bc3d = deserializedEntity.addComponent<BoxCollider3DComponent>();
+                    auto& bc3d      = deserializedEntity.addComponent<BoxCollider3DComponent>();
                     bc3d.offset     = boxCollider3DComponent["Offset"].as<glm::vec3>();
                     bc3d.halfExtent = boxCollider3DComponent["Extent"].as<glm::vec3>();
+                }
+
+                auto capsuleColliderComponent = entity["CapsuleColliderComponent"];
+                if (capsuleColliderComponent)
+                {
+                    auto& cc      = deserializedEntity.addComponent<CapsuleColliderComponent>();
+                    cc.offset     = capsuleColliderComponent["Offset"].as<glm::vec3>();
+                    cc.halfHeight = capsuleColliderComponent["HalfHeight"].as<float>();
+                    cc.radius     = capsuleColliderComponent["Radius"].as<float>();
                 }
 
                 auto sphereColliderComponent = entity["SphereColliderComponent"];
                 if (sphereColliderComponent)
                 {
-                    auto& sc = deserializedEntity.addComponent<SphereColliderComponent>();
+                    auto& sc  = deserializedEntity.addComponent<SphereColliderComponent>();
                     sc.offset = sphereColliderComponent["Offset"].as<glm::vec3>();
                     sc.radius = sphereColliderComponent["Radius"].as<float>();
                 }

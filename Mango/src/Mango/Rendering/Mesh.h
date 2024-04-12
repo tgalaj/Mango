@@ -98,7 +98,8 @@ namespace mango
         void render(uint32_t submeshIndex = 0, uint32_t instancesCount = 0);
 
         void addAttributeBuffer(GLuint attribIndex, GLuint bindingIndex, GLint formatSize, GLenum dataType, GLuint bufferID, GLsizei stride, GLuint divisor = 0);
-        
+        void build(VertexData& data, DrawMode drawMode = DrawMode::TRIANGLES, bool calcTangents = false);
+
         void     setDrawMode(DrawMode mode) { m_drawMode = mode; }
         DrawMode getDrawMode()              { return m_drawMode; }
 

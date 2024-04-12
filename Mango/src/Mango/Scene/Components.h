@@ -405,18 +405,6 @@ namespace mango
         friend class PhysicsSystem;
     };
 
-    struct SphereColliderComponent
-    {
-        SphereColliderComponent() = default;
-        SphereColliderComponent(float            radius, 
-                                const glm::vec3& offset = { 0.0f, 0.0f, 0.0f }) 
-            : radius(radius),
-              offset(offset) {}
-
-        glm::vec3 offset = { 0.0f, 0.0f, 0.0f };
-        float     radius = 0.5f;
-    };
-
     struct BoxCollider3DComponent
     {
         BoxCollider3DComponent() = default;
@@ -429,6 +417,35 @@ namespace mango
         glm::vec3 halfExtent = { 0.5f, 0.5f, 0.5f };
     };
 
+    struct CapsuleColliderComponent
+    {
+        CapsuleColliderComponent() = default;
+        CapsuleColliderComponent(      float      halfHeight,
+                                       float      radius,
+                                 const glm::vec3& offset = { 0.0f, 0.0f, 0.0f })
+            : offset    (offset),
+              halfHeight(halfHeight),
+              radius    (radius)
+        {}
+
+        glm::vec3 offset     = { 0.0f, 0.0f, 0.0f };
+        float     halfHeight = 0.5f;
+        float     radius     = 0.5f;
+    };
+
+    struct SphereColliderComponent
+    {
+        SphereColliderComponent() = default;
+        SphereColliderComponent(      float      radius,
+                                const glm::vec3& offset = { 0.0f, 0.0f, 0.0f })
+            : radius(radius),
+              offset(offset)
+        {}
+
+        glm::vec3 offset = { 0.0f, 0.0f, 0.0f };
+        float     radius = 0.5f;
+    };
+
     // Components Registry
     template<typename... Component>
     struct ComponentsGroup
@@ -438,5 +455,5 @@ namespace mango
     // Except: IDComponent, TagComponent which are special case components
     using ComponentsRegistry = ComponentsGroup<DirectionalLightComponent, PointLightComponent, SpotLightComponent, 
                                                CameraComponent, StaticMeshComponent, /*AnimatedMeshComponent,*/ TransformComponent, 
-                                               RigidBody3DComponent, SphereColliderComponent, BoxCollider3DComponent>;
+                                               RigidBody3DComponent, BoxCollider3DComponent, CapsuleColliderComponent, SphereColliderComponent>;
 }

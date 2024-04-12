@@ -3,12 +3,12 @@
 #include "EditorSystem.h"
 #include "DragDropPayloadTypes.h"
 #include "IconsMaterialDesignIcons.h"
-#include "SelectionManager.h"
 
 #include "Mango/ImGui/ImGuiUtils.h"
 #include "Mango/Math/Math.h"
 #include "Mango/Project/ProjectSerializer.h"
 #include "Mango/Scene/SceneSerializer.h"
+#include "Mango/Scene/SelectionManager.h"
 #include "Mango/Systems/PhysicsSystem.h"
 
 #include <glm/gtc/type_ptr.hpp>
@@ -56,8 +56,6 @@ namespace mango
 
     void EditorSystem::onInit()
     {
-        SelectionManager::create();
-
         auto appConfig = Services::application()->getConfig();
         if (!appConfig.projectPath.empty())
         {
@@ -755,10 +753,11 @@ namespace mango
     {
         ImGui::Begin("Rendering Settings");
         {
-            ImGui::Checkbox("Visualize Lights", &RenderingSystem::DEBUG_RENDERING);
+            ImGui::Checkbox("Visualize Lights",    &RenderingSystem::s_VisualizeLights);
+            ImGui::Checkbox("Visualize Colliders", &RenderingSystem::s_VisualizePhysicsColliders);
 
             const  char* drawModeItems[]      = { "Shaded", "Wireframe", "Shaded Wireframe" };
-            static auto  drawModeCurrentIndex = (int)Services::renderer()->shadingMode;
+            static auto  drawModeCurrentIndex = (int)RenderingSystem::s_ShadingMode;
 
             if (ImGui::BeginCombo("Draw Mode", drawModeItems[drawModeCurrentIndex]))
             {
@@ -768,7 +767,7 @@ namespace mango
                     if (ImGui::Selectable(drawModeItems[n], isSelected))
                     {
                         drawModeCurrentIndex = n;
-                        Services::renderer()->setShadingMode((ShadingMode)drawModeCurrentIndex);
+                        RenderingSystem::s_ShadingMode = (ShadingMode)drawModeCurrentIndex;
                     }
 
                     // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
