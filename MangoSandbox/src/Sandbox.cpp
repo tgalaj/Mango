@@ -272,9 +272,7 @@ void Sandbox::onDestroy()
 }
 
 void Sandbox::onUpdate(float dt)
-{
-    static bool isDebugRender = false;
-    
+{    
     if (Input::getKeyUp(KeyCode::Escape) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::BACK))
     {
         Services::application()->close();
@@ -282,8 +280,7 @@ void Sandbox::onUpdate(float dt)
 
     if (Input::getKeyUp(KeyCode::H) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::Y))
     {
-        isDebugRender = !isDebugRender;
-        RenderingSystem::DEBUG_RENDERING = isDebugRender;
+        RenderingSystem::s_VisualizeLights = !RenderingSystem::s_VisualizeLights;
     }
 
     static bool fullscreen = Services::application()->getWindow()->isFullscreen();
