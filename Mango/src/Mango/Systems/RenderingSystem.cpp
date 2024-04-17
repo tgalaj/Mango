@@ -42,6 +42,10 @@ namespace mango
         //Services::eventBus()->subscribe<ComponentRemovedEvent<StaticMeshComponent>>(MG_BIND_EVENT(RenderingSystem::receive));
         Services::eventBus()->subscribe<ActiveSceneChangedEvent>(MG_BIND_EVENT(RenderingSystem::receive));
 
+        // Init debug views
+        addDebugTexture("None", nullptr);
+        m_currentDebugView = getDebugView("None");
+
         m_opaqueQueue.reserve(50);
         m_alphaQueue.reserve(5);
 
@@ -209,11 +213,7 @@ namespace mango
         if (renderingMode == RenderingMode::EDITOR)
         {
             renderDeferred(m_activeScene);
-
-            if (s_VisualizeLights)
-            {
-                renderDebug();
-            }
+            renderDebugView();
         }
     }
 
@@ -381,6 +381,26 @@ namespace mango
     Camera& RenderingSystem::getCamera() const
     {
         return *(m_camera);
+    }
+
+    void RenderingSystem::addDebugTexture(const std::string& viewName, const ref<Texture>& texture)
+    {
+        m_debugViews[viewName] = texture;
+    }
+
+    void RenderingSystem::setCurrentDebugView(const std::string& viewName)
+    {
+            m_currentDebugView = getDebugView(viewName);
+    }
+
+    DebugView RenderingSystem::getDebugView(const std::string& viewName) const
+    {
+        if (m_debugViews.contains(viewName))
+        {
+            return { viewName, m_debugViews.at(viewName)};
+        }
+
+        return { "None", nullptr };
     }
 
     void RenderingSystem::initRenderingStates()
@@ -623,32 +643,43 @@ namespace mango
         applyPostprocess(m_fxaaFilter, &m_helperRenderTarget, m_outputToOffscreenTexture ? &m_mainRenderTarget : 0);
     }
 
-    void RenderingSystem::renderDebug()
+    void RenderingSystem::renderDebugView()
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderingSystem::renderDebug");
+
+        auto debugViewTexture = m_currentDebugView.second;
+        if (!debugViewTexture) return; // early exit
 
         glDisable(GL_BLEND);
         glClear(GL_DEPTH_BUFFER_BIT);
 
         m_debugRendering->bind();
 
-        m_debugRendering->setSubroutine(Shader::Type::FRAGMENT, "debugColorTarget");
-        m_deferredRendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::POSITION);
-        glViewport(s_DebugWindowWidth * 0, 0, s_DebugWindowWidth, s_DebugWindowWidth / m_mainWindow->getAspectRatio());
-        m_deferredRendering->render();
+        // Note: editor camera is always set to perspective
+        m_debugRendering->setUniform("nearZ", getCamera().getPerspectiveNearClip());
+        m_debugRendering->setUniform("farZ",  getCamera().getPerspectiveFarClip());
 
-        m_deferredRendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::ALBEDO_SPECULAR);
-        glViewport(s_DebugWindowWidth * 1, 0, s_DebugWindowWidth, s_DebugWindowWidth / m_mainWindow->getAspectRatio());
-        m_deferredRendering->render();
+        auto format = debugViewTexture->getDescriptor().format;
+        bool isDepth  = (RenderTarget::DepthInternalFormat)format == RenderTarget::DepthInternalFormat::DEPTH16;
+             isDepth |= (RenderTarget::DepthInternalFormat)format == RenderTarget::DepthInternalFormat::DEPTH24;
+             isDepth |= (RenderTarget::DepthInternalFormat)format == RenderTarget::DepthInternalFormat::DEPTH32;
+             isDepth |= (RenderTarget::DepthInternalFormat)format == RenderTarget::DepthInternalFormat::DEPTH32F;
+             isDepth |= (RenderTarget::DepthInternalFormat)format == RenderTarget::DepthInternalFormat::DEPTH24_STENCIL8;
+             isDepth |= (RenderTarget::DepthInternalFormat)format == RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8;
+             isDepth |= (RenderTarget::DepthInternalFormat)format == RenderTarget::DepthInternalFormat::STENCIL_INDEX8;
 
-        m_deferredRendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::NORMAL);
-        glViewport(s_DebugWindowWidth * 2, 0, s_DebugWindowWidth, s_DebugWindowWidth / m_mainWindow->getAspectRatio());
-        m_deferredRendering->render();
-
-        m_debugRendering->setSubroutine(Shader::Type::FRAGMENT, "debugDepthTarget");
-        m_deferredRendering->bindGBufferTexture(0, (GLuint)DeferredRendering::GBufferPropertyName::DEPTH);
-        glViewport(s_DebugWindowWidth * 3, 0, s_DebugWindowWidth, s_DebugWindowWidth / m_mainWindow->getAspectRatio());
+        if (isDepth)
+        {
+            m_debugRendering->setSubroutine(Shader::Type::FRAGMENT, "debugDepthTarget");
+        }
+        else
+        {
+            m_debugRendering->setSubroutine(Shader::Type::FRAGMENT, "debugColorTarget");
+        }
+ 
+        debugViewTexture->bind(0);
+        glViewport(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_deferredRendering->render();
 
         glEnable(GL_BLEND);
@@ -1329,5 +1360,4 @@ namespace mango
                 break;
         }
     }
-
 }

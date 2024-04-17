@@ -32,6 +32,8 @@ namespace mango
         std::string glslVersion   = "";
     };
 
+    using DebugView = std::pair<std::string, ref<Texture>>;
+
     class RenderingSystem : public System
     {
     public:
@@ -50,7 +52,8 @@ namespace mango
 
         void setSkybox(const ref<Skybox> & skybox);
         void resize(unsigned width, unsigned height);
-
+        
+        // Get the ID of the entity that was picked by the mouse
         int getSelectedEntityID(int mouseX, int mouseY);
 
         void setOutputToOffscreenTexture(bool enabled) { m_outputToOffscreenTexture = enabled; }
@@ -63,6 +66,12 @@ namespace mango
 
         RendererStatistics getStatistics() const { return m_statistics; }
         glm::uvec2 getMainFramebufferSize() const { return m_mainFramebufferSize; }
+
+        void      addDebugTexture    (const std::string& viewName, const ref<Texture>& texture);
+        DebugView getDebugView       (const std::string& viewName) const;
+        void      setCurrentDebugView(const std::string& viewName);
+        DebugView getCurrentDebugView() const { return m_currentDebugView; }
+        auto      getDebugViewsMap   () const { return m_debugViews; }
 
     public:
         glm::vec3 sceneAmbientColor{};
@@ -88,7 +97,7 @@ namespace mango
 
         void renderForward (Scene* scene);
         void renderDeferred(Scene* scene);
-        void renderDebug();
+        void renderDebugView();
         void renderDebugLightsBoundingBoxes(Scene* scene);
         void renderDebugPhysicsColliders   (Scene* scene);
 
@@ -103,6 +112,10 @@ namespace mango
 
     private:
         enum TextureMaps { SHADOW_MAP = 5 }; //TODO: move to Material class
+
+        // map that holds textures that we'd like to visualize
+        std::unordered_map<std::string, ref<Texture>> m_debugViews;
+        DebugView m_currentDebugView;
 
         std::vector<Entity> m_opaqueQueue;
         std::vector<Entity> m_alphaQueue;

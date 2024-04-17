@@ -170,7 +170,7 @@ namespace mango
                     glFramebufferTexture2D(GL_FRAMEBUFFER, drawBuffers[i], m_type, m_textureID[i], 0);
                 }
 
-                if(m_type == GLenum(RenderTargetType::TexCube))
+                if (m_type == GLenum(RenderTargetType::TexCube))
                 {
                     glFramebufferTexture(GL_FRAMEBUFFER, drawBuffers[i], m_textureID[i], 0);
                 }

@@ -5,8 +5,8 @@ out vec4 fragColor;
 
 layout(binding = 0) uniform sampler2D filterTexture;
 
-const float NEAR = 1.0f;
-const float FAR  = 500.0f;
+uniform float nearZ;
+uniform float farZ;
 
 subroutine vec4 debugRendering();
 layout(location = 0) subroutine uniform debugRendering debug_func;
@@ -20,7 +20,7 @@ layout(index = 0) subroutine(debugRendering) vec4 debugColorTarget()
 float linearizeDepth(vec2 uv)
 {
     float z = texture(filterTexture, uv).x;
-    return (2.0 * NEAR) / (FAR + NEAR - z * (FAR - NEAR));
+    return (2.0 * nearZ) / (farZ + nearZ - z * (farZ - nearZ));
 }
 
 layout(index = 1) subroutine(debugRendering) vec4 debugDepthTarget()

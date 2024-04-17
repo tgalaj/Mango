@@ -756,6 +756,7 @@ namespace mango
             ImGui::Checkbox("Visualize Lights",    &RenderingSystem::s_VisualizeLights);
             ImGui::Checkbox("Visualize Colliders", &RenderingSystem::s_VisualizePhysicsColliders);
 
+            // Shading mode
             const  char* drawModeItems[]      = { "Shaded", "Wireframe", "Shaded Wireframe" };
             static auto  drawModeCurrentIndex = (int)RenderingSystem::s_ShadingMode;
 
@@ -768,6 +769,26 @@ namespace mango
                     {
                         drawModeCurrentIndex = n;
                         RenderingSystem::s_ShadingMode = (ShadingMode)drawModeCurrentIndex;
+                    }
+
+                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                    if (isSelected) ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
+
+            // Debug Views
+            auto debugViews                                       = Services::renderer()->getDebugViewsMap();
+            auto [currentDebugViewName, currentDebugViewTexture ] = Services::renderer()->getCurrentDebugView();
+
+            if (ImGui::BeginCombo("Debug View", currentDebugViewName.c_str()))
+            {
+                for (auto [name, texture] : debugViews)
+                {
+                    const bool isSelected = (currentDebugViewName == name);
+                    if (ImGui::Selectable(name.c_str(), isSelected))
+                    {
+                        Services::renderer()->setCurrentDebugView(name);
                     }
 
                     // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
