@@ -368,7 +368,7 @@ namespace mango
 
     uint32_t RenderingSystem::getOutputOffscreenTextureID() const
     {
-        return m_mainRenderTarget->m_textureID[0];
+        return m_mainRenderTarget->m_textures[0]->getRendererID();
     }
 
     void RenderingSystem::setRenderingMode(RenderingMode mode, Camera* editorCamera /*= nullptr*/, const glm::vec3& editorCameraPosition /*= glm::vec3(0.0f)*/)
@@ -679,7 +679,7 @@ namespace mango
         }
  
         debugViewTexture->bind(0);
-        glViewport(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
+        glViewport(0, 0, m_mainFramebufferSize.x, m_mainFramebufferSize.y);
         m_deferredRendering->render();
 
         glEnable(GL_BLEND);

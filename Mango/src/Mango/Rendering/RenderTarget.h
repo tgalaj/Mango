@@ -136,12 +136,12 @@ namespace mango
         unsigned getWidth()  const { return m_width;  }
         unsigned getHeight() const { return m_height; }
 
-    private:
-        GLuint m_fbo;
-        
-        GLuint * m_textureID;
-        GLuint   m_numTextures;
+        ref<Texture> getTexture(GLuint renderTargetID) { return m_textures[renderTargetID]; }
 
+    private:
+        std::vector<ref<Texture>> m_textures;
+        
+        GLuint m_fbo;
         GLuint m_depthRBO;
 
         GLuint m_width, m_height;

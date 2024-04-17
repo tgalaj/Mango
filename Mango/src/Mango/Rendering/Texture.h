@@ -174,5 +174,8 @@ namespace mango
         std::string       m_filename   {};
         TextureDescriptor m_descriptor {};
         GLuint            m_id         {};
+
+    private:
+        friend class RenderTarget;
     };
 }

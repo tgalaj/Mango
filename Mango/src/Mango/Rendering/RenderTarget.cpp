@@ -6,8 +6,6 @@ namespace mango
 {
     RenderTarget::RenderTarget()
         : m_fbo        (0),
-          m_textureID  (nullptr),
-          m_numTextures(0),
           m_depthRBO   (0),
           m_width      (0),
           m_height     (0),
@@ -45,13 +43,14 @@ namespace mango
         m_height = height;
         m_type   = GLenum(rtType);
 
-        m_numTextures = 1;
-        m_textureID = new GLuint[m_numTextures];
+        m_textures.reserve(1);
+        auto texture = m_textures.emplace_back(createRef<Texture>());
 
-        glGenTextures(m_numTextures, m_textureID);
-        glBindTexture(m_type, m_textureID[0]);
+        glGenTextures(1, &texture->m_id);
+        glBindTexture(m_type, texture->m_id);
 
-        GLuint depthFormat = GLuint(depth);
+        auto depthFormat = GLuint(depth);
+        texture->m_descriptor.format = GLenum(depthFormat);
 
         glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, useFiltering ? GL_LINEAR : GL_NEAREST);
         glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, useFiltering ? GL_LINEAR : GL_NEAREST);
@@ -69,7 +68,7 @@ namespace mango
             glTexParameterfv(m_type, GL_TEXTURE_BORDER_COLOR, border_color);
 
             glTexStorage2D(m_type, 1 /* levels */, depthFormat, m_width, m_height);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_type, m_textureID[0], 0);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_type, texture->m_id, 0);
         }
 
         if (m_type == GLenum(RenderTargetType::TexCube))
@@ -79,7 +78,7 @@ namespace mango
             glTexParameteri(m_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
             glTexStorage2D(m_type, 1 /* levels */, depthFormat, m_width, m_height);
-            glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_textureID[0], 0);
+            glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture->m_id, 0);
         }
 
         glDrawBuffer(GL_NONE);
@@ -94,14 +93,14 @@ namespace mango
         m_height = height;
         m_type   = GLenum(rtType);
 
-        m_numTextures = mrtEntries.size();
-        m_textureID   = new GLuint[m_numTextures];
-
-        glGenTextures(m_numTextures, m_textureID);
+        m_textures.reserve(mrtEntries.size());
 
         for (unsigned i = 0; i < mrtEntries.size(); ++i)
         {
-            glBindTexture(m_type, m_textureID[i]);
+            auto texture = m_textures.emplace_back(createRef<Texture>());
+
+            glGenTextures(1, &texture->m_id);
+            glBindTexture(m_type, texture->m_id);
 
             if (mrtEntries[i].attachmentType == AttachmentType::Color)
             {
@@ -130,7 +129,8 @@ namespace mango
             else
             if (mrtEntries[i].attachmentType == AttachmentType::Depth)
             {
-                GLuint depthFormat = GLuint(mrtEntries[i].depthInternalFormat);
+                GLuint depthFormat           = GLuint(mrtEntries[i].depthInternalFormat);
+                texture->m_descriptor.format = GLenum(mrtEntries[i].depthInternalFormat);
 
                 glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, useFiltering ? GL_LINEAR : GL_NEAREST);
                 glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, useFiltering ? GL_LINEAR : GL_NEAREST);
@@ -157,22 +157,23 @@ namespace mango
         glGenFramebuffers(1, &m_fbo);
         glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 
-        auto drawBuffers = new GLenum[m_numTextures];
+        auto drawBuffers = new GLenum[m_textures.size()];
 
         bool hasDepth = false;
         for (unsigned i = 0; i < mrtEntries.size(); ++i)
         {
+            auto& texture = m_textures[i];
             if (mrtEntries[i].attachmentType == AttachmentType::Color)
             {
                 drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
                 if (m_type == GLenum(RenderTargetType::Tex2D))
                 {
-                    glFramebufferTexture2D(GL_FRAMEBUFFER, drawBuffers[i], m_type, m_textureID[i], 0);
+                    glFramebufferTexture2D(GL_FRAMEBUFFER, drawBuffers[i], m_type, texture->m_id, 0);
                 }
 
                 if (m_type == GLenum(RenderTargetType::TexCube))
                 {
-                    glFramebufferTexture(GL_FRAMEBUFFER, drawBuffers[i], m_textureID[i], 0);
+                    glFramebufferTexture(GL_FRAMEBUFFER, drawBuffers[i], texture->m_id, 0);
                 }
             }
             else
@@ -181,8 +182,9 @@ namespace mango
                 hasDepth       = true;
                 drawBuffers[i] = GL_NONE;
 
-                GLenum attachmentType = GL_DEPTH_ATTACHMENT;
-                GLuint depthFormat    = GLuint(mrtEntries[i].depthInternalFormat);
+                GLenum attachmentType        = GL_DEPTH_ATTACHMENT;
+                GLuint depthFormat           = GLuint(mrtEntries[i].depthInternalFormat);
+                texture->m_descriptor.format = GLenum(mrtEntries[i].depthInternalFormat);
 
                 switch(depthFormat)
                 {
@@ -197,12 +199,12 @@ namespace mango
 
                 if (m_type == GLenum(RenderTargetType::Tex2D))
                 {
-                    glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, m_type, m_textureID[i], 0);
+                    glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, m_type, texture->m_id, 0);
                 }
 
                 if(m_type == GLenum(RenderTargetType::TexCube))
                 {
-                    glFramebufferTexture(GL_FRAMEBUFFER, attachmentType, m_textureID[i], 0);
+                    glFramebufferTexture(GL_FRAMEBUFFER, attachmentType, texture->m_id, 0);
                 }
             }
         }
@@ -212,13 +214,13 @@ namespace mango
             glGenRenderbuffers(1, &m_depthRBO);
             glBindRenderbuffer(GL_RENDERBUFFER, m_depthRBO);
 
-            GLuint depthFormat = GLuint(defaultRenderbufferFormat);
+            auto depthFormat = GLuint(defaultRenderbufferFormat);
 
             glRenderbufferStorage(GL_RENDERBUFFER, depthFormat, m_width, m_height);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRBO);
         }
 
-        glDrawBuffers(m_numTextures, drawBuffers);
+        glDrawBuffers(m_textures.size(), drawBuffers);
 
         delete[] drawBuffers;
     }
@@ -228,13 +230,7 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderTarget::clear");
 
-        if (m_textureID != nullptr)
-        {
-            glDeleteTextures(m_numTextures, m_textureID);
-
-            delete[] m_textureID;
-            m_textureID = nullptr;
-        }
+        m_textures.clear();
 
         if (m_depthRBO != 0)
         {
@@ -279,8 +275,7 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderTarget::bindTexture");
 
-        glActiveTexture(GL_TEXTURE0 + textureUnit);
-        glBindTexture  (m_type, m_textureID[renderTargetID]);
+        m_textures[renderTargetID]->bind(textureUnit);
     }
 
     bool RenderTarget::validate() const

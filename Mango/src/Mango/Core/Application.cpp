@@ -144,11 +144,11 @@ namespace mango
         RenderingSystem* renderingSystem = new RenderingSystem();
                          m_imGuiSystem   = new ImGuiSystem();
 
+        Services::provide(renderingSystem);
+
         m_renderingSystems.add(renderingSystem);
         m_renderingSystems.add(m_imGuiSystem);
         m_renderingSystems.configure();
-
-        Services::provide(renderingSystem);
     }
 
     Application::~Application()

@@ -2,6 +2,8 @@
 
 #include "DeferredRendering.h"
 #include "Mango/Core/AssetManager.h"
+#include "Mango/Core/Services.h"
+#include "Mango/Systems/RenderingSystem.h"
 
 namespace mango
 {
@@ -27,6 +29,11 @@ namespace mango
 
         m_gbuffer = createRef<RenderTarget>();
         m_gbuffer->createMRT(mrtEntries, width, height);
+
+        Services::renderer()->addDebugTexture("GBuffer_Position",       m_gbuffer->getTexture((GLuint)DeferredRendering::GBufferPropertyName::POSITION));
+        Services::renderer()->addDebugTexture("GBuffer_Normal",         m_gbuffer->getTexture((GLuint)DeferredRendering::GBufferPropertyName::NORMAL));
+        Services::renderer()->addDebugTexture("GBuffer_AlbedoSpecular", m_gbuffer->getTexture((GLuint)DeferredRendering::GBufferPropertyName::ALBEDO_SPECULAR));
+        Services::renderer()->addDebugTexture("GBuffer_Depth",          m_gbuffer->getTexture((GLuint)DeferredRendering::GBufferPropertyName::DEPTH));
     }
 
     void DeferredRendering::clearGBuffer()
