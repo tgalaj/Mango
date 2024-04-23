@@ -14,6 +14,7 @@ namespace mango
     class Shader;
     class BloomPS;
     class Picking;
+    class JFAOutline;
     class SSAO;
     class DeferredRendering;
     class StaticMeshComponent;
@@ -77,6 +78,9 @@ namespace mango
         glm::vec3 sceneAmbientColor{};
 
         RenderingMode renderingMode = RenderingMode::GAME;
+
+        glm::vec3 outlineColor = glm::vec3(0.9569, 0.7333, 0.2667);
+        float     outlineWidth = 3.5f;
 
         inline static bool         s_VisualizeLights           = false;
         inline static bool         s_VisualizePhysicsColliders = true;
@@ -153,6 +157,7 @@ namespace mango
         ref<BloomPS>           m_bloomFilter;
         ref<SSAO>              m_ssao;
         ref<Picking>           m_picking;
+        ref<JFAOutline>        m_jfaOutline;
 
         ref<RenderTarget> m_mainRenderTarget;
         ref<RenderTarget> m_helperRenderTarget;

@@ -216,8 +216,20 @@ namespace mango
 
             auto depthFormat = GLuint(defaultRenderbufferFormat);
 
+            GLenum attachmentType = GL_DEPTH_ATTACHMENT;
+            switch (depthFormat)
+            {
+                case GLuint(DepthInternalFormat::DEPTH24_STENCIL8):
+                case GLuint(DepthInternalFormat::DEPTH32F_STENCIL8):
+                    attachmentType = GL_DEPTH_STENCIL_ATTACHMENT;
+                    break;
+                case GLuint(DepthInternalFormat::STENCIL_INDEX8):
+                    attachmentType = GL_STENCIL_ATTACHMENT;
+                    break;
+            }
+
             glRenderbufferStorage(GL_RENDERBUFFER, depthFormat, m_width, m_height);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRBO);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachmentType, GL_RENDERBUFFER, m_depthRBO);
         }
 
         glDrawBuffers(m_textures.size(), drawBuffers);

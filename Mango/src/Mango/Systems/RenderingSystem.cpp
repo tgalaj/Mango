@@ -8,6 +8,7 @@
 #include "Mango/Rendering/Picking.h"
 #include "Mango/Rendering/SSAO.h"
 #include "Mango/Rendering/ShaderGlobals.h"
+#include "Mango/Rendering/JFAOutline.h"
 #include "Mango/Scene/Components.h"
 #include "Mango/Scene/SelectionManager.h"
 #include "Mango/Window/Window.h"
@@ -133,6 +134,9 @@ namespace mango
         m_picking = createRef<Picking>();
         m_picking->init(width, height);
 
+        m_jfaOutline = createRef<JFAOutline>();
+        m_jfaOutline->init(width, height);
+
         m_mainRenderTarget = createRef<RenderTarget>();
         m_mainRenderTarget->create(width, height, RenderTarget::ColorInternalFormat::RGBA16F, RenderTarget::DepthInternalFormat::DEPTH32F_STENCIL8);
 
@@ -158,12 +162,12 @@ namespace mango
 
         if (!m_activeScene)
         {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             return;
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, m_outputToOffscreenTexture ? m_mainRenderTarget->m_fbo : 0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         m_opaqueQueue.clear();
         m_alphaQueue.clear();
@@ -206,13 +210,20 @@ namespace mango
 
             m_camera->setView(cameraRotation * cameraTranslation);
 
-            //renderForward(m_activeScene);
             renderDeferred(m_activeScene);
         }
 
         if (renderingMode == RenderingMode::EDITOR)
         {
             renderDeferred(m_activeScene);
+
+            auto entity = SelectionManager::getSelectedEntity();
+            //auto entity = m_activeScene->findEntityByName("Cyborg");
+            if (entity)
+            {
+                m_jfaOutline->render(m_mainRenderTarget, entity, outlineColor, outlineWidth);
+            }
+
             renderDebugView();
         }
     }
@@ -320,6 +331,7 @@ namespace mango
         m_bloomFilter->create(width, height);
         m_ssao->create(width, height);
         m_picking->resize(width, height);
+        m_jfaOutline->resize(width, height);
 
         s_DebugWindowWidth = GLuint(width / 5.0f);
 
@@ -547,25 +559,20 @@ namespace mango
             m_ssao->computeSSAO(m_deferredRendering, getCamera().getView(), getCamera().getProjection());
             m_ssao->blurSSAO();
 
-            /* Light Pass - compute lighting */
             glDepthMask(GL_FALSE);
-            glDisable(GL_DEPTH_TEST);
 
-            glEnable(GL_BLEND);
-            glBlendEquation(GL_FUNC_ADD);
-            glBlendFunc(GL_ONE, GL_ONE);
-
+            /* Light Pass - compute lighting */
             m_mainRenderTarget->bind();
-            glClear(GL_COLOR_BUFFER_BIT);
-
-            m_ssao->bindBlurredSSAOTexture(9); //TODO: replace magic number with a variable
-            renderLightsDeferred(scene);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
             m_deferredRendering->bindGBufferReadOnly();
             m_mainRenderTarget->bindWriteOnly();
             glBlitFramebuffer(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight(),
                               0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight(),
                               GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+            m_ssao->bindBlurredSSAOTexture(9); //TODO: replace magic number with a variable
+            renderLightsDeferred(scene);
 
             m_mainRenderTarget->bind();
             glEnable(GL_DEPTH_TEST);
@@ -831,6 +838,7 @@ namespace mango
             auto& mesh = smc.mesh;
 
             mesh->bind();
+            shader->bind();
             shader->updateGlobalUniforms(tc);
 
             auto& submeshes = mesh->getSubmeshes();
@@ -1140,21 +1148,18 @@ namespace mango
 
                 /* Stencil pass */
                 m_nullShader->bind();
-                glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
                 glEnable(GL_DEPTH_TEST);
                 glDisable(GL_CULL_FACE);
 
                 glClear(GL_STENCIL_BUFFER_BIT);
-                glStencilFunc(GL_ALWAYS, 0, 0);
+                glStencilFunc(GL_ALWAYS, 0, 0xFF);
                 glStencilOpSeparate(GL_BACK, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
                 glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 
                 m_nullShader->setUniform("g_mvp", mvp);
                 m_lightBoundingSphere->bind();
                 m_lightBoundingSphere->render();
-
-                glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
                 /* Lighting pass */
                 glStencilFunc(GL_NOTEQUAL, 0, 0xFF);
@@ -1239,7 +1244,6 @@ namespace mango
 
                 /* Stencil pass */
                 m_nullShader->bind();
-                glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
                 glEnable(GL_DEPTH_TEST);
                 glDisable(GL_CULL_FACE);
@@ -1252,8 +1256,6 @@ namespace mango
                 m_nullShader->setUniform("g_mvp", mvp);
                 m_lightBoundingCone->bind();
                 m_lightBoundingCone->render();
-
-                glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
                 /* Lighting pass */
                 glStencilFunc(GL_NOTEQUAL, 0, 0xFF);

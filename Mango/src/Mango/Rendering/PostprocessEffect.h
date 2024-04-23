@@ -15,6 +15,8 @@ namespace mango
         virtual void bind() const;
         virtual void render() const;
 
+        virtual ref<Shader> getShader() { return m_postprocess; }
+
     protected:
         ref<Shader> m_postprocess;
         GLuint m_dummyVao;

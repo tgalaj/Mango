@@ -1,6 +1,6 @@
-#version 450
+#version 460 core
 
-out vec2 texcoord;
+layout(location = 0) out vec2 texcoord;
 
 void main()
 {
