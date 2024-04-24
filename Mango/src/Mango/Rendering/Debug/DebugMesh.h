@@ -11,11 +11,13 @@ namespace mango
         static ref<Mesh> createDebugCapsule();
         static ref<Mesh> createDebugSphere();
         static ref<Mesh> createDebugCone();
+        static ref<Mesh> createDebugDirLight();
 
     private:
-        inline static ref<Mesh> s_debugBox     = nullptr;
-        inline static ref<Mesh> s_debugCapsule = nullptr;
-        inline static ref<Mesh> s_debugSphere  = nullptr;
-        inline static ref<Mesh> s_debugCone    = nullptr;
+        inline static ref<Mesh> s_debugBox      = nullptr;
+        inline static ref<Mesh> s_debugCapsule  = nullptr;
+        inline static ref<Mesh> s_debugSphere   = nullptr;
+        inline static ref<Mesh> s_debugCone     = nullptr;
+        inline static ref<Mesh> s_debugDirLight = nullptr;
     };
 }

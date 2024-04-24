@@ -175,6 +175,11 @@ namespace mango
     void JFAOutline::renderEntity(Entity entity, const ref<Shader> shader)
     {
         // render entity
+        if (!entity.hasComponent<StaticMeshComponent>())
+        {
+            return;
+        }
+
         auto& smc = entity.getComponent<StaticMeshComponent>();
         auto& tc = entity.getComponent<TransformComponent>();
         auto& mesh = smc.mesh;

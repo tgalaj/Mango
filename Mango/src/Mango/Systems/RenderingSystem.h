@@ -151,6 +151,7 @@ namespace mango
         ref<Mesh> m_physicsColliderBox;
         ref<Mesh> m_physicsColliderSphere;
         ref<Mesh> m_physicsColliderCapsule;
+        ref<Mesh> m_debugSpotLightMesh;
 
         ref<PostprocessEffect> m_hdrFilter;
         ref<PostprocessEffect> m_fxaaFilter;

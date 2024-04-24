@@ -104,6 +104,7 @@ namespace mango
         m_physicsColliderBox     = DebugMesh::createDebugBox();
         m_physicsColliderSphere  = DebugMesh::createDebugSphere();
         m_physicsColliderCapsule = DebugMesh::createDebugCapsule();
+        m_debugSpotLightMesh     = DebugMesh::createDebugCone();
 
         int width  = m_mainWindow->getWidth();
         int height = m_mainWindow->getHeight();
@@ -701,7 +702,6 @@ namespace mango
 
         /* Point Lights */
         {
-            m_lightBoundingSphere->setDrawMode(Mesh::DrawMode::LINES);
             auto view = scene->getEntitiesWithComponent<PointLightComponent, TransformComponent>();
             for (auto entity : view)
             {
@@ -719,12 +719,10 @@ namespace mango
                 m_physicsColliderSphere->bind();
                 m_physicsColliderSphere->render();
             }
-            m_lightBoundingSphere->setDrawMode(Mesh::DrawMode::TRIANGLES);
         }
 
         /* Spot Lights */
         {
-            m_lightBoundingCone->setDrawMode(Mesh::DrawMode::LINES);
             auto view = scene->getEntitiesWithComponent<SpotLightComponent, TransformComponent>();
             for (auto entity : view)
             {
@@ -734,7 +732,7 @@ namespace mango
                 float radiusScale = spotLight.getRange() * glm::tan(spotLight.getCutOffAngle());
 
                 auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition() + transform.getDirection() * heightScale * 0.5f) *
-                                  glm::mat4_cast(glm::inverse(transform.getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
+                                  glm::mat4_cast(glm::inverse(transform.getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(-1.0f, 0.0f, 0.0f))) *
                                   glm::scale(glm::mat4(1.0f), glm::vec3(radiusScale, heightScale, radiusScale));
                 auto view       = getCamera().getView();
                 auto projection = getCamera().getProjection();
@@ -743,10 +741,9 @@ namespace mango
                 m_debugMeshShader->setUniform("g_mvp", projection * view * model);
                 m_debugMeshShader->setUniform("color", spotLight.color);
 
-                m_lightBoundingCone->bind();
-                m_lightBoundingCone->render();
+                m_debugSpotLightMesh->bind();
+                m_debugSpotLightMesh->render();
             }
-            m_lightBoundingCone->setDrawMode(Mesh::DrawMode::TRIANGLES);
         }
         glEnable(GL_BLEND);
     }

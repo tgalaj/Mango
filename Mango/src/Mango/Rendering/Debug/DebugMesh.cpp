@@ -242,8 +242,53 @@ namespace mango
 
     ref<Mesh> DebugMesh::createDebugCone()
     {
-        MG_CORE_ASSERT_FAIL("DebugMesh::createDebugCone() is not yet implemented!");
+        if (s_debugCone)
+        {
+            return s_debugCone;
+        }
+
+        s_debugCone = createRef<Mesh>();
+
+        VertexData data;
+
+        uint32_t samples    = 32;
+        float    deltaTheta = glm::two_pi<float>() / samples;
+        float    radius     = 1.0f;
+        float    height     = 1.0f;
+        float    halfHeight = height * 0.5f;
+
+        // XZ plane
+        for (uint32_t s = 0; s < samples; ++s)
+        {
+            float x = radius * glm::cos(s * deltaTheta);
+            float z = radius * glm::sin(s * deltaTheta);
+
+            data.positions.emplace_back(glm::vec3(x, halfHeight, z));
+        }
+
+        // indices
+        uint32_t currentBeginIndex = 0;
+        uint32_t currentEndIndex = samples;
+
+        for (uint32_t i = currentBeginIndex; i < currentEndIndex; ++i)
+        {
+            data.indices.emplace_back(i);
+
+            if (i < currentEndIndex - 1) data.indices.emplace_back((i + 1));
+            else                         data.indices.emplace_back(currentBeginIndex);
+        }
+
+        currentBeginIndex += samples;
+
+        s_debugCone->build(data, Mesh::DrawMode::LINES);
+
         return s_debugCone;
+    }
+
+    ref<Mesh> DebugMesh::createDebugDirLight()
+    {
+        MG_CORE_ASSERT_FAIL("DebugMesh::createDebugDirLight() is not yet implemented!");
+        return s_debugDirLight;
     }
 
 }
