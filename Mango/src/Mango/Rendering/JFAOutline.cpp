@@ -46,13 +46,13 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
         m_objectsMaskRT = createRef<RenderTarget>();
-        m_objectsMaskRT->create(width, height, RenderTarget::ColorInternalFormat::R16F, RenderTarget::DepthInternalFormat::DEPTH24, RenderTarget::RenderTargetType::Tex2D, false);
+        m_objectsMaskRT->create(width, height, RenderTarget::ColorInternalFormat::R16F, RenderTarget::DepthInternalFormat::DEPTH24, RenderTarget::RenderTargetType::Tex2D, true);
 
         m_jumpFloodBufferA = createRef<RenderTarget>();
-        m_jumpFloodBufferA->create(width, height, RenderTarget::ColorInternalFormat::RG16F, RenderTarget::DepthInternalFormat::NoDepth, RenderTarget::RenderTargetType::Tex2D, false);
+        m_jumpFloodBufferA->create(width, height, RenderTarget::ColorInternalFormat::RG16F, RenderTarget::DepthInternalFormat::NoDepth, RenderTarget::RenderTargetType::Tex2D, true);
 
         m_jumpFloodBufferB = createRef<RenderTarget>();
-        m_jumpFloodBufferB->create(width, height, RenderTarget::ColorInternalFormat::RG16F, RenderTarget::DepthInternalFormat::NoDepth, RenderTarget::RenderTargetType::Tex2D, false);
+        m_jumpFloodBufferB->create(width, height, RenderTarget::ColorInternalFormat::RG16F, RenderTarget::DepthInternalFormat::NoDepth, RenderTarget::RenderTargetType::Tex2D, true);
 
         Services::renderer()->addDebugTexture("JfaObjectsMask", m_objectsMaskRT->getTexture(0));
         Services::renderer()->addDebugTexture("JfaBufferA",     m_jumpFloodBufferA->getTexture(0));

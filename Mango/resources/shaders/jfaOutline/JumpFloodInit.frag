@@ -17,8 +17,8 @@ void main()
     {   
         for (int v = -1; v <= 1; ++v)
         {
-            vec2 sample_uv = uv + texelSize * vec2(u, v);
-            values[u][v] = texture(object_mask_tex, sample_uv).r;
+            vec2 sample_uv            = uv + texelSize * vec2(u, v);
+                 values[u + 1][v + 1] = texture(object_mask_tex, sample_uv).r;
         }
     }
 

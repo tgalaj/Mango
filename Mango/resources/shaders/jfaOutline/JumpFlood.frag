@@ -17,7 +17,7 @@ void main()
     vec2  texture_size = textureSize(jfa_tex, 0 /* lod */);
 
     float closest_distance = FLT_MAX;
-    vec2  closest_coord    = vec2(0.0);
+    vec2  closest_coord    = JFA_NULL_POS;
 
     vec2 offset_pos = JFA_NULL_POS;
     for (int u = -1; u <= 1; ++u)
@@ -28,11 +28,11 @@ void main()
                  offset_pos   = texture(jfa_tex, sample_coord / texture_size).xy;
 
             vec2  displacement = frag_coord - offset_pos * texture_size;
-            float distance     = dot(displacement, displacement);
+            float dist         = dot(displacement, displacement);
 
-            if (offset_pos != JFA_NULL_POS && distance < closest_distance)
+            if (offset_pos != JFA_NULL_POS && dist < closest_distance)
             {
-                closest_distance = distance;
+                closest_distance = dist;
                 closest_coord    = offset_pos;
             }
         }
