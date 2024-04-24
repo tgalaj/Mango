@@ -13,7 +13,6 @@ uniform float step_width;
 
 void main()
 {
-    ivec2 frag_coord   = ivec2(gl_FragCoord);
     vec2  texture_size = textureSize(jfa_tex, 0 /* lod */);
 
     float closest_distance = FLT_MAX;
@@ -24,10 +23,10 @@ void main()
     {
         for (int v = -1; v <= 1; ++v)
         {
-            vec2 sample_coord = frag_coord + vec2(u, v) * step_width;
-                 offset_pos   = texture(jfa_tex, sample_coord / texture_size).xy;
+            vec2 sample_coord = uv + vec2(u, v) * step_width / texture_size;
+                 offset_pos   = texture(jfa_tex, sample_coord).xy;
 
-            vec2  displacement = frag_coord - offset_pos * texture_size;
+            vec2  displacement = uv - offset_pos;
             float dist         = dot(displacement, displacement);
 
             if (offset_pos != JFA_NULL_POS && dist < closest_distance)

@@ -80,7 +80,7 @@ namespace mango
         RenderingMode renderingMode = RenderingMode::GAME;
 
         glm::vec3 outlineColor                  = glm::vec3(0.9569, 0.7333, 0.2667);
-        float     outlineWidth                  = 4.0f;
+        float     outlineWidth                  = 1.0f;
         bool      outlineUseSeparableAxisMethod = true;
 
         inline static bool         s_VisualizeLights           = false;

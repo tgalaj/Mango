@@ -13,10 +13,7 @@ uniform float outline_width;
 
 void main()
 {
-    ivec2 frag_coord  = ivec2(gl_FragCoord);
-    vec2 texture_size = textureSize(jfa_tex, 0 /* lod */);
-
-    ivec2 closest_pos = ivec2(texture(jfa_tex, uv).xy * texture_size);
+    vec2 closest_pos = texture(jfa_tex, uv).xy;
 
     if (closest_pos == JFA_NULL_POS)
     {
@@ -24,7 +21,7 @@ void main()
         return;
     }
 
-    float dist = length(closest_pos - frag_coord);
+    float dist = length(closest_pos - uv);
 
     // calculate outline
     // + 1.0 is because encoded nearest position is half a pixel inset
