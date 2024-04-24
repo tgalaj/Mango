@@ -200,6 +200,20 @@ namespace mango
     {
         auto& name = entity.getComponent<TagComponent>().name;
         
+        // NOTE(tgalaj): might be slow... probably we should cache the "path" to the entity
+        if (entity.findChild(m_selectedEntity))
+        {
+            ImGui::SetNextItemOpen(true);
+        }
+
+        static bool   wasTreeNodeClicked = false;
+        static Entity lastSelectedEntity = {};
+        if (lastSelectedEntity != m_selectedEntity && !wasTreeNodeClicked && entity == m_selectedEntity)
+        {
+            ImGui::SetScrollHereY();
+            lastSelectedEntity = m_selectedEntity;
+        }
+
         ImGuiTreeNodeFlags flags  = ((m_selectedEntity == entity) ? ImGuiTreeNodeFlags_Selected : 0);
                            flags |= ImGuiTreeNodeFlags_OpenOnArrow;
                            flags |= ImGuiTreeNodeFlags_OpenOnDoubleClick;
@@ -241,6 +255,16 @@ namespace mango
         if ((ImGui::IsMouseDown(ImGuiMouseButton_Left) || ImGui::IsMouseDown(ImGuiMouseButton_Right)) && ImGui::IsItemHovered())
         {
             SelectionManager::selectEntity(entity);
+            
+            // Disable scrolling to the selected entity
+            // when selecting entities in the Scene Hierarchy Panel
+            wasTreeNodeClicked = true;
+        }
+        
+        // Re-enable scrolling to the selected entity via mouse picking
+        if (wasTreeNodeClicked && !ImGui::IsWindowFocused())
+        {
+            wasTreeNodeClicked = false;
         }
 
         // Right click on empty space
