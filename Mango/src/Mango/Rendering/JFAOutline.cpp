@@ -30,6 +30,9 @@ namespace mango
         m_jumpFloodPS = createRef<PostprocessEffect>();
         m_jumpFloodPS->init("JumpFlood", "jfaOutline/JumpFlood.frag");
 
+        m_jumpFloodSingleAxisPS = createRef<PostprocessEffect>();
+        m_jumpFloodSingleAxisPS->init("JumpFloodSingleAxis", "jfaOutline/JumpFloodSingleAxis.frag");
+
         m_jumpFloodOutlinePS = createRef<PostprocessEffect>();
         m_jumpFloodOutlinePS->init("JfaOutline", "jfaOutline/JumpFloodOutline.frag");
     }
@@ -59,7 +62,7 @@ namespace mango
         Services::renderer()->addDebugTexture("JfaBufferB",     m_jumpFloodBufferB->getTexture(0));
     }
 
-    void JFAOutline::render(ref<RenderTarget>& dstRT, Entity entity, const glm::vec3& outlineColor, float outlineWidth)
+    void JFAOutline::render(ref<RenderTarget>& dstRT, Entity entity, const glm::vec3& outlineColor, float outlineWidth, bool useSeparableAxisMethod /* = true*/)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -79,47 +82,77 @@ namespace mango
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         renderEntity(entity, m_maskFillShader);
 
-        // 2. Jump flood init pass
         // calculate the number of jump flood passes needed for the current outline width
         // + 1.0f to handle half pixel inset of the init pass and antialiasing
         int numSteps      = glm::ceil(glm::log2(outlineWidth + 1.0f));
         int jfaIterations = numSteps - 1;
 
-        // Choose a starting buffer so we always finish on the same buffer (A)
-        auto startRT = (jfaIterations % 2 == 0) ? m_jumpFloodBufferB : m_jumpFloodBufferA;
-
         glDisable(GL_DEPTH_TEST);
 
-        startRT->bind();
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        m_objectsMaskRT->bindTexture();
-        m_jumpFloodInitPS->bind();
-        m_jumpFloodInitPS->render();
-
-        // 3. Jump flood pass
-        // TODO: Single axis 
-        m_jumpFloodPS->bind();
-
-        for (int i = jfaIterations; i >= 0; --i)
+        if (useSeparableAxisMethod)
         {
-            float stepWidth = glm::pow(2, i);
-            m_jumpFloodPS->getShader()->setUniform("step_width", stepWidth);
+            // 2. Jump flood init pass
+            m_jumpFloodBufferA->bind();
+            glClear(GL_COLOR_BUFFER_BIT);
 
-            // Ping-pong buffers A and B
-            if (i % 2 == 1)
+            m_objectsMaskRT->bindTexture();
+            m_jumpFloodInitPS->bind();
+            m_jumpFloodInitPS->render();
+
+            // 3. Jump flood pass
+            m_jumpFloodSingleAxisPS->bind();
+
+            for (int i = jfaIterations; i >= 0; --i)
             {
-                m_jumpFloodBufferB->bind();
+                float stepWidth = glm::pow(2, i) + 0.5f;
 
+                m_jumpFloodSingleAxisPS->getShader()->setUniform("axis_width", glm::vec2(stepWidth, 0.0f));
+                m_jumpFloodBufferB->bind();
                 m_jumpFloodBufferA->bindTexture();
                 m_jumpFloodPS->render();
-            }
-            else
-            {
-                m_jumpFloodBufferA->bind();
 
+                m_jumpFloodSingleAxisPS->getShader()->setUniform("axis_width", glm::vec2(0.0f, stepWidth));
+                m_jumpFloodBufferA->bind();
                 m_jumpFloodBufferB->bindTexture();
                 m_jumpFloodPS->render();
+            }
+        }
+        else
+        {
+            // 2. Jump flood init pass
+            // Choose a starting buffer so we always finish on the same buffer (A)
+            auto startRT = (jfaIterations % 2 == 0) ? m_jumpFloodBufferB : m_jumpFloodBufferA;
+
+            startRT->bind();
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            m_objectsMaskRT->bindTexture();
+            m_jumpFloodInitPS->bind();
+            m_jumpFloodInitPS->render();
+
+            // 3. Jump flood pass
+            m_jumpFloodPS->bind();
+
+            for (int i = jfaIterations; i >= 0; --i)
+            {
+                float stepWidth = glm::pow(2, i) + 0.5f;
+                m_jumpFloodPS->getShader()->setUniform("step_width", stepWidth);
+
+                // Ping-pong buffers A and B
+                if (i % 2 == 1)
+                {
+                    m_jumpFloodBufferB->bind();
+
+                    m_jumpFloodBufferA->bindTexture();
+                    m_jumpFloodPS->render();
+                }
+                else
+                {
+                    m_jumpFloodBufferA->bind();
+
+                    m_jumpFloodBufferB->bindTexture();
+                    m_jumpFloodPS->render();
+                }
             }
         }
 

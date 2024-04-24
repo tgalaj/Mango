@@ -18,7 +18,7 @@ namespace mango
         void init(int width, int height);
         void clear();
         void resize(int width, int height);
-        void render(ref<RenderTarget>& dstRT, Entity entity, const glm::vec3& outlineColor, float outlineWidth);
+        void render(ref<RenderTarget>& dstRT, Entity entity, const glm::vec3& outlineColor, float outlineWidth, bool useSeparableAxisMethod = true);
 
     private:
         void renderEntity(Entity entity, const ref<Shader> shader);
@@ -32,7 +32,7 @@ namespace mango
         ref<Shader> m_maskFillShader;
         ref<PostprocessEffect> m_jumpFloodInitPS;
         ref<PostprocessEffect> m_jumpFloodPS;
-        // ref<PostprocessEffect> m_jumpFloodSingleAxisPS;
+        ref<PostprocessEffect> m_jumpFloodSingleAxisPS;
         ref<PostprocessEffect> m_jumpFloodOutlinePS;
     };
 }

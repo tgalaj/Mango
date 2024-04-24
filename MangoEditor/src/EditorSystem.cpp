@@ -796,6 +796,11 @@ namespace mango
                 }
                 ImGui::EndCombo();
             }
+
+            // JFA Outline
+            ImGui::Checkbox  ("Outline Use Single Axis Method", &Services::renderer()->outlineUseSeparableAxisMethod);
+            ImGui::ColorEdit3("Outline Color",                  &Services::renderer()->outlineColor[0]);
+            ImGui::DragFloat ("Outline Width",                  &Services::renderer()->outlineWidth, 1.0f, 1.0f, 500.0f);
         }
         ImGui::End();
     }
