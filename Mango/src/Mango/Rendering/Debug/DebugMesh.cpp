@@ -301,7 +301,62 @@ namespace mango
 
     ref<Mesh> DebugMesh::createDebugDirLight()
     {
-        MG_CORE_ASSERT_FAIL("DebugMesh::createDebugDirLight() is not yet implemented!");
+        if (s_debugDirLight)
+        {
+            return s_debugDirLight;
+        }
+
+        s_debugDirLight = createRef<Mesh>();
+
+        VertexData data;
+
+        uint32_t samples    = 32;
+        float    deltaTheta = glm::two_pi<float>() / samples;
+        float    radius     = 1.0f;
+        float    height     = 1.618f * 3.0f;
+
+        // XY plane
+        for (uint32_t s = 0; s < samples; ++s)
+        {
+            float x = radius * glm::cos(s * deltaTheta);
+            float y = radius * glm::sin(s * deltaTheta);
+
+            data.positions.emplace_back(glm::vec3(x, y, 0.0f));
+        }
+
+        // add "rays"
+        deltaTheta = deltaTheta * 2.0f;
+        for (uint32_t s = 0; s < samples / 2; ++s)
+        {
+            float x = radius * glm::cos(s * deltaTheta);
+            float y = radius * glm::sin(s * deltaTheta);
+
+            data.positions.emplace_back(glm::vec3(x, y, height));
+        }
+
+        // indices of the base
+        uint32_t currentBeginIndex = 0;
+        uint32_t currentEndIndex = samples;
+
+        for (uint32_t i = currentBeginIndex; i < currentEndIndex; ++i)
+        {
+            data.indices.emplace_back(i);
+
+            if (i < currentEndIndex - 1) data.indices.emplace_back((i + 1));
+            else                         data.indices.emplace_back(currentBeginIndex);
+        }
+
+        // indices of the "rays"
+        currentBeginIndex += samples;
+        currentEndIndex   += samples / 2;
+        for (uint32_t i = currentBeginIndex, j = 0; i < currentEndIndex; ++i, j += 2)
+        {
+            data.indices.emplace_back(j);
+            data.indices.emplace_back(i);
+        }
+
+        s_debugDirLight->build(data, Mesh::DrawMode::LINES);
+
         return s_debugDirLight;
     }
 

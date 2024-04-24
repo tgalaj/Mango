@@ -105,6 +105,7 @@ namespace mango
         m_physicsColliderSphere  = DebugMesh::createDebugSphere();
         m_physicsColliderCapsule = DebugMesh::createDebugCapsule();
         m_debugSpotLightMesh     = DebugMesh::createDebugCone();
+        m_debugDirLightMesh      = DebugMesh::createDebugDirLight();
 
         int width  = m_mainWindow->getWidth();
         int height = m_mainWindow->getHeight();
@@ -745,6 +746,31 @@ namespace mango
                 m_debugSpotLightMesh->render();
             }
         }
+
+        /* Directional Lights */
+        {
+            auto view = scene->getEntitiesWithComponent<DirectionalLightComponent, TransformComponent>();
+            for (auto entity : view)
+            {
+                auto [dirLight, transform] = view.get(entity);
+
+                float scaleFactor = length(transform.getPosition() - m_cameraPosition) * m_camera->getPerspectiveVerticalFieldOfView() * 0.05f;
+
+                auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
+                                  glm::mat4_cast(glm::inverse(transform.getOrientation())) *
+                                  glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor));
+                auto view       = getCamera().getView();
+                auto projection = getCamera().getProjection();
+
+                m_debugMeshShader->bind();
+                m_debugMeshShader->setUniform("g_mvp", projection * view * model);
+                m_debugMeshShader->setUniform("color", dirLight.color);
+
+                m_debugDirLightMesh->bind();
+                m_debugDirLightMesh->render();
+            }
+        }
+
         glEnable(GL_BLEND);
     }
 
