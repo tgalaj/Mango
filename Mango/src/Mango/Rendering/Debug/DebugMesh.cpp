@@ -263,7 +263,7 @@ namespace mango
             float x = radius * glm::cos(s * deltaTheta);
             float z = radius * glm::sin(s * deltaTheta);
 
-            data.positions.emplace_back(glm::vec3(x, halfHeight, z));
+            data.positions.emplace_back(glm::vec3(x, -halfHeight, z));
         }
 
         // indices
@@ -279,6 +279,20 @@ namespace mango
         }
 
         currentBeginIndex += samples;
+
+        // top vertex
+        data.positions.emplace_back(glm::vec3(0.0, halfHeight, 0.0f));
+
+        // add four vertices around the cone base
+        deltaTheta = glm::half_pi<float>();
+        for (uint32_t i = 0; i < 4; ++i)
+        {
+            data.positions.emplace_back(glm::vec3(radius * glm::cos(deltaTheta * i), -halfHeight, radius * glm::sin(deltaTheta * i)));
+            
+            // add indices for a line segment
+            data.indices.emplace_back(currentBeginIndex);
+            data.indices.emplace_back(currentBeginIndex + i + 1);
+        }
 
         s_debugCone->build(data, Mesh::DrawMode::LINES);
 
