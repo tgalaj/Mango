@@ -31,15 +31,15 @@ void Sandbox::onInit()
     });
 
     m_camera1 = m_mainScene->createEntity("MainCamera");
-    m_camera1.setPosition(0, 4, 30);
+    m_camera1.setLocalPosition(0, 4, 30);
     auto& cc1 = m_camera1.addComponent<CameraComponent>();
     cc1.camera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
     cc1.isPrimary = true;
     
     m_camera2 = m_mainScene->createEntity("MainCamera2");
     m_camera2.addComponent<CameraComponent>().camera.setPerspective(glm::radians(45.0f), Services::application()->getWindow()->getAspectRatio(), 0.1f, 1000.0f);
-    m_camera2.setPosition(0, 4, -30);
-    m_camera2.setOrientation({ 0, 1, 0 }, glm::radians(180.0f));
+    m_camera2.setLocalPosition(0, 4, -30);
+    m_camera2.setLocalOrientation({ 0, 1, 0 }, glm::radians(180.0f));
 
     m_freeCameraController = createRef<FreeCameraController>();
 
@@ -104,75 +104,75 @@ void Sandbox::onInit()
 
     auto cyborg = m_mainScene->createEntity();
     cyborg.addComponent<StaticMeshComponent>(cyborgModel);
-    cyborg.setPosition(0.0f, 0.0f, 0.0f);
-    cyborg.setScale(1.0f);
+    cyborg.setLocalPosition(0.0f, 0.0f, 0.0f);
+    cyborg.setLocalScale(1.0f);
 
     auto zen3c = m_mainScene->createEntity();
     zen3c.addComponent<StaticMeshComponent>(zen3cModel);
-    zen3c.setPosition(-3.0f, -2.3f, 0.0f);
-    zen3c.setScale(0.018f);
+    zen3c.setLocalPosition(-3.0f, -2.3f, 0.0f);
+    zen3c.setLocalScale(0.018f);
 
     auto damagedHelmet = m_mainScene->createEntity();
     damagedHelmet.addComponent<StaticMeshComponent>(damagedHelmetModel);
-    damagedHelmet.setPosition(3.0f, 2.5f, 0.0f);
-    damagedHelmet.setScale(1.0f);
+    damagedHelmet.setLocalPosition(3.0f, 2.5f, 0.0f);
+    damagedHelmet.setLocalScale(1.0f);
 
     auto sponza = m_mainScene->createEntity();
     {
         auto& smc = sponza.addComponent<StaticMeshComponent>(sponzaModel);
-        sponza.setPosition(-1.5f, 0.0f, 10.0f);
-        sponza.setRotation(0.0f, -90.0f, 0.0f);
-        sponza.setScale(6.0f);
+        sponza.setLocalPosition(-1.5f, 0.0f, 10.0f);
+        sponza.setLocalRotation(0.0f, -90.0f, 0.0f);
+        sponza.setLocalScale(6.0f);
     }
 
     auto wall = m_mainScene->createEntity();
     wall.addComponent<StaticMeshComponent>(wallMesh);
     wall.getComponent<StaticMeshComponent>().materials[0] = brickwallMaterial;
-    wall.setScale(5.0f);
-    wall.setPosition(0, 2.0, -9);
+    wall.setLocalScale(5.0f);
+    wall.setLocalPosition(0, 2.0, -9);
 
     auto wall2 = m_mainScene->createEntity();
     wall2.addComponent<StaticMeshComponent>(wallMesh);
     wall2.getComponent<StaticMeshComponent>().materials[0] = bricksMaterial;
-    wall2.setScale(5.0f);
-    wall2.setPosition(-5, 2.0, -9);
+    wall2.setLocalScale(5.0f);
+    wall2.setLocalPosition(-5, 2.0, -9);
 
     auto grass = m_mainScene->createEntity();
     grass.addComponent<StaticMeshComponent>(wallMesh);
     grass.getComponent<StaticMeshComponent>().materials[0] = grassMaterial;
-    grass.setScale(2.5f);
-    grass.setPosition(-5, 1.2, 9);
+    grass.setLocalScale(2.5f);
+    grass.setLocalPosition(-5, 1.2, 9);
 
     auto window1 = m_mainScene->createEntity();
     window1.addComponent<StaticMeshComponent>(wallMesh);
     window1.getComponent<StaticMeshComponent>().materials[0] = windowMaterial;
-    window1.setScale(2.5f);
-    window1.setPosition(0, 1.2, 9);
+    window1.setLocalScale(2.5f);
+    window1.setLocalPosition(0, 1.2, 9);
 
     auto window3 = m_mainScene->createEntity();
     window3.addComponent<StaticMeshComponent>(wallMesh);
     window3.getComponent<StaticMeshComponent>().materials[0] = windowMaterial;
-    window3.setScale(2.5f);
-    window3.setPosition(3, 1.2, 13);
+    window3.setLocalScale(2.5f);
+    window3.setLocalPosition(3, 1.2, 13);
 
     auto window2 = m_mainScene->createEntity();
     window2.addComponent<StaticMeshComponent>(wallMesh);
     window2.getComponent<StaticMeshComponent>().materials[0] = windowMaterial;
-    window2.setScale(2.5f);
-    window2.setPosition(5, 1.2, 9);
+    window2.setLocalScale(2.5f);
+    window2.setLocalPosition(5, 1.2, 9);
 
     auto plane1 = m_mainScene->createEntity();
     plane1.addComponent<StaticMeshComponent>(wallMesh);
     plane1.getComponent<StaticMeshComponent>().materials[0] = bricks2Material;
-    plane1.setScale(5.0f);
-    plane1.setPosition(5, 3.0, -14);
+    plane1.setLocalScale(5.0f);
+    plane1.setLocalPosition(5, 3.0, -14);
 
     auto plane2 = m_mainScene->createEntity();
     plane2.addComponent<StaticMeshComponent>(wallMesh);
     plane2.getComponent<StaticMeshComponent>().materials[0] = bricks2Material;
-    plane2.setScale(5.0f);
-    plane2.setRotation(-89.5f, 0.0f, 0.0f);
-    plane2.setPosition(5, 0.5, -11.5);
+    plane2.setLocalScale(5.0f);
+    plane2.setLocalRotation(-89.5f, 0.0f, 0.0f);
+    plane2.setLocalPosition(5, 0.5, -11.5);
     plane2.addComponent<BoxCollider3DComponent>(glm::vec3(2.5f, 0.1f, 2.5f), glm::vec3(0.0f, -0.1f, 0.0f));
     plane2.addComponent<RigidBody3DComponent>();
 
@@ -180,8 +180,8 @@ void Sandbox::onInit()
     {
         auto& smc = sphere1.addComponent<StaticMeshComponent>(sphereMesh);
         smc.materials[0] = reflectiveSphereMaterial;
-        sphere1.setPosition(5, 20, -11.5);
-        sphere1.setScale(0.5f);
+        sphere1.setLocalPosition(5, 20, -11.5);
+        sphere1.setLocalScale(0.5f);
         sphere1.addComponent<SphereColliderComponent>(0.5f);
 
         auto& rb3dSphere1                      = sphere1.addComponent<RigidBody3DComponent>();
@@ -194,8 +194,8 @@ void Sandbox::onInit()
 
     auto sphere2 = m_mainScene->createEntity();
     sphere2.addComponent<StaticMeshComponent>(sphereMesh);
-    sphere2.setPosition(5, 3, -12.5);
-    sphere2.setScale(0.5f);
+    sphere2.setLocalPosition(5, 3, -12.5);
+    sphere2.setLocalScale(0.5f);
 
     float offset = 15.0f / 10.0f;
     float numObjects = 10;
@@ -208,15 +208,15 @@ void Sandbox::onInit()
         {
             auto object = m_mainScene->createEntity();
             object.addComponent<StaticMeshComponent>(sphereMesh);
-            object.setScale(0.75f);
+            object.setLocalScale(0.75f);
             
             float zPos = 15.0f / -2.0f + (j * offset);
-            object.setPosition(xPos + 0.5f * offset, 0.5f, zPos + 0.5f * offset);
+            object.setLocalPosition(xPos + 0.5f * offset, 0.5f, zPos + 0.5f * offset);
 
             if (i == 2 && j == 2)
             {
                 cyborg.addChild(object);
-                object.setScale(1.0f);
+                object.setLocalScale(1.0f);
                 object.getComponent<StaticMeshComponent>().materials[0] = AssetManager::getMaterial("window");
             }
         }
@@ -225,7 +225,7 @@ void Sandbox::onInit()
     /* Lights */
     auto dirLight = m_mainScene->createEntity();
     dirLight.addComponent<DirectionalLightComponent>(glm::vec3(1.0f, 1.0f, 1.0f), 4.0f, 200.0f, true);
-    dirLight.setRotation(45.0f, 180.0f, 0.0f);
+    dirLight.setLocalRotation(45.0f, 180.0f, 0.0f);
 
     float d = 8;
     glm::vec3 positions[4]
@@ -251,7 +251,7 @@ void Sandbox::onInit()
         pointLight.getComponent<PointLightComponent>().setAttenuation(3.0f, 4.0f, 10.0f);
         pointLight.getComponent<PointLightComponent>().color = colors[i];
         pointLight.getComponent<PointLightComponent>().intensity = 200.0f;
-        pointLight.setPosition(positions[i].x, positions[i].y, positions[i].z);
+        pointLight.setLocalPosition(positions[i].x, positions[i].y, positions[i].z);
 
         //if (i == 0)
         //    pointLight.getComponent<TransformComponent>()->addChild(nanobot.getComponent<TransformComponent>());
@@ -262,8 +262,8 @@ void Sandbox::onInit()
     spotLight.getComponent<SpotLightComponent>().color = glm::vec3(255, 206, 250) / 255.0f;
     spotLight.getComponent<SpotLightComponent>().intensity = 1000.0f;
     spotLight.getComponent<SpotLightComponent>().setCutOffAngle(30.0f);
-    spotLight.setPosition(1.5, 5, 1.5);
-    spotLight.setRotation(-45, 45, 45);
+    spotLight.setLocalPosition(1.5, 5, 1.5);
+    spotLight.setLocalRotation(-45, 45, 45);
     spotLight.getComponent<SpotLightComponent>().setCastsShadows(true);
 }
 
