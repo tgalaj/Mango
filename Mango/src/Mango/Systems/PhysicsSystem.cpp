@@ -188,8 +188,8 @@ namespace mango
                         JPH::Quat  r = bodyInterface.GetRotation(bodyID);
 
                         // TODO: should take into account parent transform !! p is treated as world pos in global world space!!
-                        entity.setPosition   (glm::vec3(p.GetX(), p.GetY(), p.GetZ()) - offset);
-                        entity.setOrientation(glm::quat(r.GetW(), r.GetX(), r.GetY(), r.GetZ()));
+                        entity.setLocalPosition   (glm::vec3(p.GetX(), p.GetY(), p.GetZ()) - offset);
+                        entity.setLocalOrientation(glm::quat(r.GetW(), r.GetX(), r.GetY(), r.GetZ()));
                     }
                 }
             }
@@ -230,7 +230,7 @@ namespace mango
         for (auto e : view)
         {
             Entity                    entity         = { e, m_scene.get() };
-            auto                      scale          = entity.getScale();
+            auto                      scale          = entity.getLocalScale();
             JPH::RefConst<JPH::Shape> collisionShape = nullptr;
 
             glm::vec3 offset(0.0f);
@@ -264,8 +264,8 @@ namespace mango
             auto& rb3d = entity.getComponent<RigidBody3DComponent>();
 
             // TODO: should take into account parent transform !! p is treated as world pos in global world space!!
-            auto position    = entity.getPosition() + offset;
-            auto orientation = entity.getOrientation();
+            auto position    = entity.getLocalPosition() + offset;
+            auto orientation = entity.getLocalOrientation();
 
             JPH::BodyCreationSettings bodySettings(collisionShape,
                                                    JPH::RVec3(position.x, position.y, position.z),

@@ -261,82 +261,82 @@ namespace mango
         explicit TransformComponent(const glm::vec3 & position = glm::vec3(0.0f),
                                     const glm::vec3 & rotation = glm::vec3(0.0f, 0.0f, 0.0f),
                                     const glm::vec3 & scale    = glm::vec3(1.0f))
-            : m_orientation (rotation),
-              m_position    (position),
-              m_rotation    (rotation),
-              m_scale       (scale),
+            : m_localOrientation (rotation),
+              m_localPosition    (position),
+              m_localRotation    (rotation),
+              m_localScale       (scale),
               m_dirty     (true),
               m_worldMatrix (glm::mat4(1.0f)),
               m_normalMatrix(glm::mat3(1.0f)),
-              m_direction   (glm::vec3(0.0f, 0.0f, -1.0f))
+              m_localDirection   (glm::vec3(0.0f, 0.0f, -1.0f))
         {}
 
-        void setPosition(float x, float y, float z)
+        void setLocalPosition(float x, float y, float z)
         {
-            m_position = glm::vec3(x, y, z);
+            m_localPosition = glm::vec3(x, y, z);
             m_dirty    = true;
         }
 
-        void setPosition(const glm::vec3 & position)
+        void setLocalPosition(const glm::vec3 & position)
         {
-            m_position = position;
+            m_localPosition = position;
             m_dirty    = true;
         }
 
         /*
          * Set rotation using Euler Angles in radians
          */
-        void setRotation(const glm::vec3& euler)
+        void setLocalRotation(const glm::vec3& euler)
         {
-            m_rotation    = euler;
-            m_orientation = glm::quat(m_rotation);
-            m_orientation = glm::normalize(m_orientation);
-            m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
+            m_localRotation    = euler;
+            m_localOrientation = glm::quat(m_localRotation);
+            m_localOrientation = glm::normalize(m_localOrientation);
+            m_localDirection   = glm::normalize(glm::conjugate(m_localOrientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_dirty       = true;
         }
 
         /*
          * Set rotation using Euler Angles in degrees
          */
-        void setRotation(float x, float y, float z)
+        void setLocalRotation(float x, float y, float z)
         {
-            setRotation(glm::radians(glm::vec3(x, y, z)));
+            setLocalRotation(glm::radians(glm::vec3(x, y, z)));
         }
 
         /*
         * Set orientation using axis and angle in radians
         */
-        void setRotation(const glm::vec3 & axis, float angle)
+        void setLocalRotation(const glm::vec3 & axis, float angle)
         {
-            m_orientation = glm::normalize(glm::angleAxis(angle, glm::normalize(axis)));
-            m_rotation    = glm::eulerAngles(m_orientation);
-            m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
+            m_localOrientation = glm::normalize(glm::angleAxis(angle, glm::normalize(axis)));
+            m_localRotation    = glm::eulerAngles(m_localOrientation);
+            m_localDirection   = glm::normalize(glm::conjugate(m_localOrientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_dirty       = true;
         }
 
-        void setRotation(const glm::quat & quat)
+        void setLocalRotation(const glm::quat & quat)
         {
-            m_orientation = glm::normalize(quat);
-            m_rotation    = glm::eulerAngles(m_orientation);
-            m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
+            m_localOrientation = glm::normalize(quat);
+            m_localRotation    = glm::eulerAngles(m_localOrientation);
+            m_localDirection   = glm::normalize(glm::conjugate(m_localOrientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_dirty       = true;
         }
 
-        void setScale(float x, float y, float z)
+        void setLocalScale(float x, float y, float z)
         {
-            m_scale = glm::vec3(x, y, z);
+            m_localScale = glm::vec3(x, y, z);
             m_dirty = true;
         }
 
-        void setScale(float uniformScale)
+        void setLocalScale(float uniformScale)
         {
-            m_scale = glm::vec3(uniformScale);
+            m_localScale = glm::vec3(uniformScale);
             m_dirty = true;
         }
 
-        void setScale(const glm::vec3 & scale)
+        void setLocalScale(const glm::vec3 & scale)
         {
-            m_scale = scale;
+            m_localScale = scale;
             m_dirty = true;
         }
 
@@ -353,12 +353,13 @@ namespace mango
         glm::mat4 getLocalWorldMatrix () const { return m_localWorldMatrix;  }
         glm::mat4 getParentWorldMatrix() const { return m_parentWorldMatrix; }
         glm::mat3 getNormalMatrix     () const { return m_normalMatrix;      }
-        glm::vec3 getPosition         () const { return m_position;          }
-        glm::quat getOrientation      () const { return m_orientation;       }
+
+        glm::vec3 getLocalPosition    () const { return m_localPosition;     }
+        glm::quat getLocalOrientation () const { return m_localOrientation;  }
         /** Returns rotation in radians. */
-        glm::vec3 getRotation         () const { return m_rotation;          }
-        glm::vec3 getScale            () const { return m_scale;             }
-        glm::vec3 getDirection        () const { return m_direction;         }
+        glm::vec3 getLocalRotation    () const { return m_localRotation;     }
+        glm::vec3 getLocalScale       () const { return m_localScale;        }
+        glm::vec3 getLocalDirection   () const { return m_localDirection;    }
 
     private:
         glm::mat4 getUpdatedWorldMatrix() const;
@@ -369,14 +370,18 @@ namespace mango
 
         glm::mat4 m_worldMatrix      { 1.0f };
         glm::mat4 m_localWorldMatrix { 1.0f };
+
         glm::mat4 m_parentWorldMatrix{ 1.0f };
         glm::mat3 m_normalMatrix     { 1.0f };
 
-        glm::quat m_orientation{};
-        glm::vec3 m_position   {};
-        glm::vec3 m_rotation   {};
-        glm::vec3 m_scale      { 1.0f };
-        glm::vec3 m_direction  {};
+        // local - relative to the parent's transform
+        glm::quat m_localOrientation{};
+        glm::vec3 m_localPosition   {};
+        glm::vec3 m_localRotation   {};
+        glm::vec3 m_localScale      { 1.0f };
+        glm::vec3 m_localDirection  {};
+
+        // world
         
         bool m_dirty = true;
     

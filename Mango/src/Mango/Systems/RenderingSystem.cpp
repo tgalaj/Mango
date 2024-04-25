@@ -204,11 +204,11 @@ namespace mango
             auto& tc = primaryCameraEntity.getComponent<TransformComponent>();
             
             m_camera         = &cc.camera;
-            m_cameraPosition = tc.getPosition();
+            m_cameraPosition = tc.getLocalPosition();
 
             // Update the view matrix of the primary camera
-            glm::mat4 cameraRotation    = glm::mat4_cast(tc.getOrientation());
-            glm::mat4 cameraTranslation = glm::translate(glm::mat4(1.0f), -tc.getPosition());
+            glm::mat4 cameraRotation    = glm::mat4_cast(tc.getLocalOrientation());
+            glm::mat4 cameraTranslation = glm::translate(glm::mat4(1.0f), -tc.getLocalPosition());
 
             m_camera->setView(cameraRotation * cameraTranslation);
 
@@ -708,7 +708,7 @@ namespace mango
             {
                 auto [pointLight, transform] = view.get(entity);
 
-                auto model        = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
+                auto model        = glm::translate(glm::mat4(1.0f), transform.getLocalPosition()) *
                                     glm::scale(glm::mat4(1.0f), glm::vec3(pointLight.getRange()));
                 auto& view        = getCamera().getView();
                 auto& projection  = getCamera().getProjection();
@@ -732,8 +732,8 @@ namespace mango
                 float heightScale = spotLight.getRange();
                 float radiusScale = spotLight.getRange() * glm::tan(spotLight.getCutOffAngle());
 
-                auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition() + transform.getDirection() * heightScale * 0.5f) *
-                                  glm::mat4_cast(glm::inverse(transform.getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
+                auto model      = glm::translate(glm::mat4(1.0f), transform.getLocalPosition() + transform.getLocalDirection() * heightScale * 0.5f) *
+                                  glm::mat4_cast(glm::inverse(transform.getLocalOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
                                   glm::scale(glm::mat4(1.0f), glm::vec3(radiusScale, heightScale, radiusScale));
                 auto view       = getCamera().getView();
                 auto projection = getCamera().getProjection();
@@ -754,10 +754,10 @@ namespace mango
             {
                 auto [dirLight, transform] = view.get(entity);
 
-                float scaleFactor = length(transform.getPosition() - m_cameraPosition) * m_camera->getPerspectiveVerticalFieldOfView() * 0.05f;
+                float scaleFactor = length(transform.getLocalPosition() - m_cameraPosition) * m_camera->getPerspectiveVerticalFieldOfView() * 0.05f;
 
-                auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
-                                  glm::mat4_cast(glm::inverse(transform.getOrientation())) *
+                auto model      = glm::translate(glm::mat4(1.0f), transform.getLocalPosition()) *
+                                  glm::mat4_cast(glm::inverse(transform.getLocalOrientation())) *
                                   glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor));
                 auto view       = getCamera().getView();
                 auto projection = getCamera().getProjection();
@@ -792,9 +792,9 @@ namespace mango
             {
                 auto& bc3d = selectedEntity.getComponent<BoxCollider3DComponent>();
 
-                auto model       = glm::translate(glm::mat4(1.0f), selectedEntity.getPosition() + bc3d.offset) *
-                                   glm::mat4_cast(selectedEntity.getOrientation()) * 
-                                   glm::scale(glm::mat4(1.0f), selectedEntity.getScale() * bc3d.halfExtent);
+                auto model       = glm::translate(glm::mat4(1.0f), selectedEntity.getLocalPosition() + bc3d.offset) *
+                                   glm::mat4_cast(selectedEntity.getLocalOrientation()) * 
+                                   glm::scale(glm::mat4(1.0f), selectedEntity.getLocalScale() * bc3d.halfExtent);
                 auto& view       = getCamera().getView();
                 auto& projection = getCamera().getProjection();
 
@@ -809,10 +809,10 @@ namespace mango
             {
                 auto& cc = selectedEntity.getComponent<CapsuleColliderComponent>();
 
-                auto scale             = selectedEntity.getScale();
+                auto scale             = selectedEntity.getLocalScale();
                 auto maxScaleComponent = glm::vec3(glm::max(scale.x, scale.z));
-                auto model             = glm::translate(glm::mat4(1.0f), selectedEntity.getPosition() + cc.offset) *
-                                         glm::mat4_cast(selectedEntity.getOrientation()) *
+                auto model             = glm::translate(glm::mat4(1.0f), selectedEntity.getLocalPosition() + cc.offset) *
+                                         glm::mat4_cast(selectedEntity.getLocalOrientation()) *
                                          glm::scale(glm::mat4(1.0f), maxScaleComponent * 2.0f * glm::vec3(cc.radius, cc.halfHeight, cc.radius));
                 auto& view             = getCamera().getView();
                 auto& projection       = getCamera().getProjection();
@@ -828,10 +828,10 @@ namespace mango
             {
                 auto& sc = selectedEntity.getComponent<SphereColliderComponent>();
 
-                auto scale             = selectedEntity.getScale();
+                auto scale             = selectedEntity.getLocalScale();
                 auto maxScaleComponent = glm::vec3(glm::max(scale.x, glm::max(scale.y, scale.z)));
-                auto model             = glm::translate(glm::mat4(1.0f), selectedEntity.getPosition() + sc.offset) *
-                                         glm::mat4_cast(selectedEntity.getOrientation()) *
+                auto model             = glm::translate(glm::mat4(1.0f), selectedEntity.getLocalPosition() + sc.offset) *
+                                         glm::mat4_cast(selectedEntity.getLocalOrientation()) *
                                          glm::scale(glm::mat4(1.0f), maxScaleComponent * sc.radius);
                 auto& view             = getCamera().getView();
                 auto& projection       = getCamera().getProjection();
@@ -929,7 +929,7 @@ namespace mango
                     m_dirShadowMap->bind();
                     glClear(GL_DEPTH_BUFFER_BIT);
 
-                    lightMatrix = shadowInfo.getProjection() * glm::lookAt(-transform.getDirection(), glm::vec3(0.0f), glm::vec3(0, 1, 0));
+                    lightMatrix = shadowInfo.getProjection() * glm::lookAt(-transform.getLocalDirection(), glm::vec3(0.0f), glm::vec3(0, 1, 0));
                     m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                     glCullFace(GL_FRONT);
@@ -945,7 +945,7 @@ namespace mango
 
                 m_forwardDirectional->setUniform(S_DIRECTIONAL_LIGHT ".base.color",     directionalLight.color);
                 m_forwardDirectional->setUniform(S_DIRECTIONAL_LIGHT ".base.intensity", directionalLight.intensity);
-                m_forwardDirectional->setUniform(S_DIRECTIONAL_LIGHT ".direction",      transform.getDirection());
+                m_forwardDirectional->setUniform(S_DIRECTIONAL_LIGHT ".direction",      transform.getLocalDirection());
                 m_forwardDirectional->setUniform("s_light_matrix", lightMatrix);
 
                 beginForwardRendering();
@@ -973,15 +973,15 @@ namespace mango
                     m_omniShadowMap->bind();
                     glClear(GL_DEPTH_BUFFER_BIT);
 
-                    lightMatrices[0] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3( 1,  0,  0), glm::vec3(0, -1,  0));
-                    lightMatrices[1] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3(-1,  0,  0), glm::vec3(0, -1,  0));
-                    lightMatrices[2] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3( 0,  1,  0), glm::vec3(0,  0,  1));
-                    lightMatrices[3] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3( 0, -1,  0), glm::vec3(0,  0, -1));
-                    lightMatrices[4] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3( 0,  0,  1), glm::vec3(0, -1,  0));
-                    lightMatrices[5] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3( 0,  0, -1), glm::vec3(0, -1,  0));
+                    lightMatrices[0] = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + glm::vec3( 1,  0,  0), glm::vec3(0, -1,  0));
+                    lightMatrices[1] = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + glm::vec3(-1,  0,  0), glm::vec3(0, -1,  0));
+                    lightMatrices[2] = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + glm::vec3( 0,  1,  0), glm::vec3(0,  0,  1));
+                    lightMatrices[3] = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + glm::vec3( 0, -1,  0), glm::vec3(0,  0, -1));
+                    lightMatrices[4] = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + glm::vec3( 0,  0,  1), glm::vec3(0, -1,  0));
+                    lightMatrices[5] = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + glm::vec3( 0,  0, -1), glm::vec3(0, -1,  0));
 
                     m_omniShadowMapGenerator->setUniform("s_light_matrices", lightMatrices, 6);
-                    m_omniShadowMapGenerator->setUniform("s_light_pos",      transform.getPosition());
+                    m_omniShadowMapGenerator->setUniform("s_light_pos",      transform.getLocalPosition());
                     m_omniShadowMapGenerator->setUniform("s_far_plane",      100.0f);
 
                     glCullFace(GL_FRONT);
@@ -1000,7 +1000,7 @@ namespace mango
                 m_forwardPoint->setUniform(S_POINT_LIGHT ".atten.constant",  pointLight.getAttenuation().constant);
                 m_forwardPoint->setUniform(S_POINT_LIGHT ".atten.linear",    pointLight.getAttenuation().linear);
                 m_forwardPoint->setUniform(S_POINT_LIGHT ".atten.quadratic", pointLight.getAttenuation().quadratic);
-                m_forwardPoint->setUniform(S_POINT_LIGHT ".position",        transform.getPosition());
+                m_forwardPoint->setUniform(S_POINT_LIGHT ".position",        transform.getLocalPosition());
                 m_forwardPoint->setUniform(S_POINT_LIGHT ".range",           pointLight.getRange());
                 m_forwardPoint->setUniform("s_far_plane", 100.0f);
 
@@ -1028,7 +1028,7 @@ namespace mango
                     m_spotShadowMap->bind();
                     glClear(GL_DEPTH_BUFFER_BIT);
 
-                    lightMatrix = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + transform.getDirection(), glm::vec3(0, 1, 0));
+                    lightMatrix = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + transform.getLocalDirection(), glm::vec3(0, 1, 0));
                     m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                     glCullFace(GL_FRONT);
@@ -1047,9 +1047,9 @@ namespace mango
                 m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spotLight.getAttenuation().constant);
                 m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spotLight.getAttenuation().linear);
                 m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spotLight.getAttenuation().quadratic);
-                m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.position",        transform.getPosition());
+                m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.position",        transform.getLocalPosition());
                 m_forwardSpot->setUniform(S_SPOT_LIGHT ".point.range",           spotLight.getRange());
-                m_forwardSpot->setUniform(S_SPOT_LIGHT ".direction",             transform.getDirection());
+                m_forwardSpot->setUniform(S_SPOT_LIGHT ".direction",             transform.getLocalDirection());
                 m_forwardSpot->setUniform(S_SPOT_LIGHT ".cutoff",                glm::cos(spotLight.getCutOffAngle()));
                 m_forwardSpot->setUniform("s_light_matrix",                      lightMatrix);
 
@@ -1087,7 +1087,7 @@ namespace mango
                     m_dirShadowMap->bind();
                     glClear(GL_DEPTH_BUFFER_BIT);
 
-                    lightMatrix = shadowInfo.getProjection() * glm::lookAt(-transform.getDirection(), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+                    lightMatrix = shadowInfo.getProjection() * glm::lookAt(-transform.getLocalDirection(), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
                     m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                     glCullFace(GL_FRONT);
@@ -1108,7 +1108,7 @@ namespace mango
                 m_deferredDirectional->setUniform("s_scene_ambient", sceneAmbientColor);
                 m_deferredDirectional->setUniform(S_DIRECTIONAL_LIGHT ".base.color",     directionalLight.color);
                 m_deferredDirectional->setUniform(S_DIRECTIONAL_LIGHT ".base.intensity", directionalLight.intensity);
-                m_deferredDirectional->setUniform(S_DIRECTIONAL_LIGHT ".direction",      transform.getDirection());
+                m_deferredDirectional->setUniform(S_DIRECTIONAL_LIGHT ".direction",      transform.getLocalDirection());
                 m_deferredDirectional->setUniform("s_light_matrix", lightMatrix);
 
                 m_deferredRendering->render();
@@ -1139,15 +1139,15 @@ namespace mango
                     glClear(GL_DEPTH_BUFFER_BIT);
                     
                     glm::mat4 lightMatrices[6]{};
-                    lightMatrices[0] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3( 1,  0,  0), glm::vec3(0, -1,  0));
-                    lightMatrices[1] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3(-1,  0,  0), glm::vec3(0, -1,  0));
-                    lightMatrices[2] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3( 0,  1,  0), glm::vec3(0,  0,  1));
-                    lightMatrices[3] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3( 0, -1,  0), glm::vec3(0,  0, -1));
-                    lightMatrices[4] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3( 0,  0,  1), glm::vec3(0, -1,  0));
-                    lightMatrices[5] = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + glm::vec3( 0,  0, -1), glm::vec3(0, -1,  0));
+                    lightMatrices[0] = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + glm::vec3( 1,  0,  0), glm::vec3(0, -1,  0));
+                    lightMatrices[1] = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + glm::vec3(-1,  0,  0), glm::vec3(0, -1,  0));
+                    lightMatrices[2] = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + glm::vec3( 0,  1,  0), glm::vec3(0,  0,  1));
+                    lightMatrices[3] = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + glm::vec3( 0, -1,  0), glm::vec3(0,  0, -1));
+                    lightMatrices[4] = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + glm::vec3( 0,  0,  1), glm::vec3(0, -1,  0));
+                    lightMatrices[5] = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + glm::vec3( 0,  0, -1), glm::vec3(0, -1,  0));
 
                     m_omniShadowMapGenerator->setUniform("s_light_matrices", lightMatrices, 6);
-                    m_omniShadowMapGenerator->setUniform("s_light_pos", transform.getPosition());
+                    m_omniShadowMapGenerator->setUniform("s_light_pos", transform.getLocalPosition());
                     m_omniShadowMapGenerator->setUniform("s_far_plane", 100.0f);
 
                     glCullFace(GL_FRONT);
@@ -1162,7 +1162,7 @@ namespace mango
                 bindMainRenderTarget();
 
                 /* Bounding sphere MVP matrix setup */
-                auto model = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
+                auto model = glm::translate(glm::mat4(1.0f), transform.getLocalPosition()) *
                              glm::scale    (glm::mat4(1.0f), glm::vec3(pointLight.getRange()));
 
                 auto& view       = getCamera().getView();
@@ -1203,7 +1203,7 @@ namespace mango
                 m_deferredPoint->setUniform(S_POINT_LIGHT ".atten.constant",  pointLight.getAttenuation().constant);
                 m_deferredPoint->setUniform(S_POINT_LIGHT ".atten.linear",    pointLight.getAttenuation().linear);
                 m_deferredPoint->setUniform(S_POINT_LIGHT ".atten.quadratic", pointLight.getAttenuation().quadratic);
-                m_deferredPoint->setUniform(S_POINT_LIGHT ".position",        transform.getPosition());
+                m_deferredPoint->setUniform(S_POINT_LIGHT ".position",        transform.getLocalPosition());
                 m_deferredPoint->setUniform(S_POINT_LIGHT ".range",           pointLight.getRange());
                 m_deferredPoint->setUniform("s_far_plane",                    pointLight.getShadowFarPlane());
 
@@ -1239,7 +1239,7 @@ namespace mango
                     m_spotShadowMap->bind();
                     glClear(GL_DEPTH_BUFFER_BIT);
 
-                    lightMatrix = shadowInfo.getProjection() * glm::lookAt(transform.getPosition(), transform.getPosition() + transform.getDirection(), glm::vec3(0, 1, 0));
+                    lightMatrix = shadowInfo.getProjection() * glm::lookAt(transform.getLocalPosition(), transform.getLocalPosition() + transform.getLocalDirection(), glm::vec3(0, 1, 0));
                     m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                     glCullFace(GL_FRONT);
@@ -1257,8 +1257,8 @@ namespace mango
                 float heightScale = spotLight.getRange();
                 float radiusScale = spotLight.getRange() * glm::tan(spotLight.getCutOffAngle());
 
-                auto model = glm::translate(glm::mat4(1.0f), transform.getPosition() + transform.getDirection() * heightScale * 0.5f) *
-                             glm::mat4_cast(glm::inverse(transform.getOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
+                auto model = glm::translate(glm::mat4(1.0f), transform.getLocalPosition() + transform.getLocalDirection() * heightScale * 0.5f) *
+                             glm::mat4_cast(glm::inverse(transform.getLocalOrientation()) * glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))) *
                              glm::scale    (glm::mat4(1.0f), glm::vec3(radiusScale, heightScale, radiusScale));
 
                 auto view       = getCamera().getView();
@@ -1299,9 +1299,9 @@ namespace mango
                 m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.atten.constant",  spotLight.getAttenuation().constant);
                 m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.atten.linear",    spotLight.getAttenuation().linear);
                 m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.atten.quadratic", spotLight.getAttenuation().quadratic);
-                m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.position",        transform.getPosition());
+                m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.position",        transform.getLocalPosition());
                 m_deferredSpot->setUniform(S_SPOT_LIGHT ".point.range",           spotLight.getRange());
-                m_deferredSpot->setUniform(S_SPOT_LIGHT ".direction",             transform.getDirection());
+                m_deferredSpot->setUniform(S_SPOT_LIGHT ".direction",             transform.getLocalDirection());
                 m_deferredSpot->setUniform(S_SPOT_LIGHT ".cutoff",                glm::cos(spotLight.getCutOffAngle()));
                 m_deferredSpot->setUniform("s_light_matrix",                      lightMatrix);
 
@@ -1323,8 +1323,8 @@ namespace mango
         std::sort(m_alphaQueue.begin(), m_alphaQueue.end(), 
                   [this](Entity & obj1, Entity & obj2)
                   {
-                     const auto pos1 = obj1.getComponent<TransformComponent>().getPosition();
-                     const auto pos2 = obj2.getComponent<TransformComponent>().getPosition();
+                     const auto pos1 = obj1.getComponent<TransformComponent>().getLocalPosition();
+                     const auto pos2 = obj2.getComponent<TransformComponent>().getLocalPosition();
 
                      return glm::length(m_cameraPosition - pos1) >= glm::length(m_cameraPosition - pos2);
                   });

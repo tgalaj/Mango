@@ -444,23 +444,23 @@ namespace mango
         {
             float columnWidth = ImGui::GetTextLineHeight() * 4.0f;
 
-            auto position = component.getPosition();
-            auto rotation = glm::degrees(component.getRotation());
-            auto scale    = component.getScale();
+            auto position = component.getLocalPosition();
+            auto rotation = glm::degrees(component.getLocalRotation());
+            auto scale    = component.getLocalScale();
 
             if (ImGui::Utils::TableCustomDragFloat3("Position", position, 0.0f, columnWidth))
             {
-                component.setPosition(position);
+                component.setLocalPosition(position);
             }
             
             if (ImGui::Utils::TableCustomDragFloat3("Rotation", rotation, 0.0f, columnWidth))
             {
-                component.setRotation(glm::radians(rotation));
+                component.setLocalRotation(glm::radians(rotation));
             }
 
             if (ImGui::Utils::TableCustomDragFloat3("Scale", scale, 1.0f, columnWidth))
             {
-                component.setScale(scale);
+                component.setLocalScale(scale);
             }
         });
 

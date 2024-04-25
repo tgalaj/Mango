@@ -15,64 +15,64 @@ namespace mango
         return getComponent<TagComponent>().name;
     }
 
-    void Entity::setPosition(float x, float y, float z)
+    void Entity::setLocalPosition(float x, float y, float z)
     {
-        getComponent<TransformComponent>().setPosition(x, y, z);
+        getComponent<TransformComponent>().setLocalPosition(x, y, z);
     }
 
-    void Entity::setPosition(const glm::vec3& position)
+    void Entity::setLocalPosition(const glm::vec3& position)
     {
-        getComponent<TransformComponent>().setPosition(position);
+        getComponent<TransformComponent>().setLocalPosition(position);
     }
     
-    void Entity::setRotation(const glm::vec3& rotation)
+    void Entity::setLocalRotation(const glm::vec3& rotation)
     {
-        getComponent<TransformComponent>().setRotation(rotation);
+        getComponent<TransformComponent>().setLocalRotation(rotation);
     }
 
-    void Entity::setRotation(float x, float y, float z)
+    void Entity::setLocalRotation(float x, float y, float z)
     {
-        getComponent<TransformComponent>().setRotation(x, y, z);
+        getComponent<TransformComponent>().setLocalRotation(x, y, z);
     }
 
-    void Entity::setOrientation(const glm::vec3& axis, float angle)
+    void Entity::setLocalOrientation(const glm::vec3& axis, float angle)
     {
-        getComponent<TransformComponent>().setRotation(axis, angle);
+        getComponent<TransformComponent>().setLocalRotation(axis, angle);
     }
 
-    void Entity::setOrientation(const glm::quat& quat)
+    void Entity::setLocalOrientation(const glm::quat& quat)
     {
-        getComponent<TransformComponent>().setRotation(quat);
+        getComponent<TransformComponent>().setLocalRotation(quat);
     }
 
-    void Entity::setScale(float x, float y, float z)
+    void Entity::setLocalScale(float x, float y, float z)
     {
-        getComponent<TransformComponent>().setScale(x, y, z);
+        getComponent<TransformComponent>().setLocalScale(x, y, z);
     }
 
-    void Entity::setScale(float uniformScale)
+    void Entity::setLocalScale(float uniformScale)
     {
-        getComponent<TransformComponent>().setScale(uniformScale);
+        getComponent<TransformComponent>().setLocalScale(uniformScale);
     }
 
-    glm::vec3 Entity::getPosition()
+    glm::vec3 Entity::getLocalPosition()
     {
-        return getComponent<TransformComponent>().getPosition();
+        return getComponent<TransformComponent>().getLocalPosition();
     }
 
-    glm::vec3 Entity::getScale()
+    glm::vec3 Entity::getLocalScale()
     {
-        return getComponent<TransformComponent>().getScale();
+        return getComponent<TransformComponent>().getLocalScale();
     }
 
-    glm::vec3 Entity::getRotation()
+    glm::vec3 Entity::getLocalRotation()
     {
-        return getComponent<TransformComponent>().getRotation();
+        return getComponent<TransformComponent>().getLocalRotation();
     }
 
-    glm::quat Entity::getOrientation()
+    glm::quat Entity::getLocalOrientation()
     {
-        return getComponent<TransformComponent>().getOrientation();
+        return getComponent<TransformComponent>().getLocalOrientation();
     }
 
     TransformComponent& Entity::getTransform()

@@ -17,9 +17,9 @@ namespace mango
         glm::vec3 T, R, S;
         math::decompose(toGlobalWorld, T, R, S);
 
-        childTransform.setPosition(T);
-        childTransform.setRotation(R);
-        childTransform.setScale   (S);
+        childTransform.setLocalPosition(T);
+        childTransform.setLocalRotation(R);
+        childTransform.setLocalScale   (S);
     }
 
     void TransformComponent::removeChild(Entity childEntity)
@@ -39,8 +39,8 @@ namespace mango
         m_parentWorldMatrix = glm::mat4(1.0f);
 
         glm::vec3 rotation;
-        math::decompose(m_worldMatrix, m_position, rotation, m_scale);
-        setRotation(rotation);
+        math::decompose(m_worldMatrix, m_localPosition, rotation, m_localScale);
+        setLocalRotation(rotation);
     }
 
     void TransformComponent::update(const glm::mat4& parentTransform, bool dirty)
@@ -65,9 +65,9 @@ namespace mango
 
     glm::mat4 TransformComponent::getUpdatedWorldMatrix() const
     {
-        glm::mat4 T = glm::translate(glm::mat4(1.0f), m_position);
-        glm::mat4 R = glm::mat4_cast(m_orientation);
-        glm::mat4 S = glm::scale(glm::mat4(1.0f), m_scale);
+        glm::mat4 T = glm::translate(glm::mat4(1.0f), m_localPosition);
+        glm::mat4 R = glm::mat4_cast(m_localOrientation);
+        glm::mat4 S = glm::scale(glm::mat4(1.0f), m_localScale);
 
         return T * R * S;
     }

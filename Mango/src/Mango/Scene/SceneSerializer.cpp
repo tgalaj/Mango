@@ -138,10 +138,10 @@ namespace mango
             out << YAML::BeginMap;
             {
                 auto& tc = entity.getComponent<TransformComponent>();
-                out << YAML::Key << "Position"    << YAML::Value << tc.getPosition();
-                out << YAML::Key << "Rotation"    << YAML::Value << glm::degrees(tc.getRotation());
-                out << YAML::Key << "Orientation" << YAML::Value << tc.getOrientation();
-                out << YAML::Key << "Scale"       << YAML::Value << tc.getScale();
+                out << YAML::Key << "Position"    << YAML::Value << tc.getLocalPosition();
+                out << YAML::Key << "Rotation"    << YAML::Value << glm::degrees(tc.getLocalRotation());
+                out << YAML::Key << "Orientation" << YAML::Value << tc.getLocalOrientation();
+                out << YAML::Key << "Scale"       << YAML::Value << tc.getLocalScale();
                 out << YAML::Key << "ParentID"    << YAML::Value << (tc.hasParent() ? tc.getParent().getUUID() : (UUID)0);
                 out << YAML::Key << "Children"    << YAML::Value;
                 out << YAML::BeginSeq;
@@ -644,9 +644,9 @@ namespace mango
                 {
                     // Entities always have transforms
                     auto& tc = deserializedEntity.getComponent<TransformComponent>();
-                    tc.setPosition(transformComponent["Position"].as<glm::vec3>());
-                    tc.setRotation(glm::radians(transformComponent["Rotation"].as<glm::vec3>()));
-                    tc.setScale   (transformComponent["Scale"].as<glm::vec3>());
+                    tc.setLocalPosition(transformComponent["Position"].as<glm::vec3>());
+                    tc.setLocalRotation(glm::radians(transformComponent["Rotation"].as<glm::vec3>()));
+                    tc.setLocalScale   (transformComponent["Scale"].as<glm::vec3>());
                 }
 
                 auto directionalLightComponent = entity["DirectionalLightComponent"];
@@ -819,18 +819,18 @@ namespace mango
 
                             // TODO(TG): figure out a better way to do this...
                             auto& childTc = childEntity.getTransform();
-                            auto position = childTc.getPosition();
-                            auto rotation = childTc.getRotation();
-                            auto scale    = childTc.getScale();
+                            auto position = childTc.getLocalPosition();
+                            auto rotation = childTc.getLocalRotation();
+                            auto scale    = childTc.getLocalScale();
 
-                            childTc.setPosition(0, 0, 0);
-                            childTc.setRotation(0, 0, 0);
-                            childTc.setScale   (1, 1, 1);
+                            childTc.setLocalPosition(0, 0, 0);
+                            childTc.setLocalRotation(0, 0, 0);
+                            childTc.setLocalScale   (1, 1, 1);
 
                             parentEntity.addChild(childEntity);
-                            childTc.setPosition(position);
-                            childTc.setRotation(rotation);
-                            childTc.setScale(scale);
+                            childTc.setLocalPosition(position);
+                            childTc.setLocalRotation(rotation);
+                            childTc.setLocalScale(scale);
                         }
                     }
                 }                

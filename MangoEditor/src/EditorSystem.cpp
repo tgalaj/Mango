@@ -218,6 +218,11 @@ namespace mango
                 {
                     m_gizmoMode = (m_gizmoMode == GizmoMode::LOCAL) ? GizmoMode::WORLD : GizmoMode::LOCAL;
                 }
+
+                if (Input::getKeyDown(KeyCode::Escape))
+                {
+                    SelectionManager::resetEntitySelection();
+                }
             }
 
             m_editorCamera.onUpdate(dt);
@@ -630,12 +635,12 @@ namespace mango
 
                         // Calculate delta rotation, to always add 
                         // small portion of the rotation to avoid the gimbal lock
-                        glm::vec3 currentRotation = tc.getRotation();
+                        glm::vec3 currentRotation = tc.getLocalRotation();
                         glm::vec3 deltaRotation   = rotation - currentRotation;
 
-                        tc.setPosition(translation);
-                        tc.setRotation(currentRotation + deltaRotation);
-                        tc.setScale(scale);
+                        tc.setLocalPosition(translation);
+                        tc.setLocalRotation(currentRotation + deltaRotation);
+                        tc.setLocalScale(scale);
                     }
                 }
 
@@ -1150,17 +1155,17 @@ namespace mango
             {
                 auto [transform, pointLight] = view.get(entity);
 
-                glm::vec3 delta = transform.getPosition() - glm::vec3(0.0f);
+                glm::vec3 delta = transform.getLocalPosition() - glm::vec3(0.0f);
 
                 float r = 8.0f * glm::abs(glm::sin(acc));
                 float currentAngle = atan2(delta.z, delta.x);
 
-                auto position = transform.getPosition();
+                auto position = transform.getLocalPosition();
                 position.x = r * glm::cos(currentAngle + dt);
                 position.y = r * (glm::cos(2.0f * (currentAngle + dt)) * 0.5f + 0.5f) * 0.5f;
                 position.z = r * glm::sin(currentAngle + dt);
 
-                transform.setPosition(position);
+                transform.setLocalPosition(position);
             }
         }
     
@@ -1170,10 +1175,10 @@ namespace mango
             {
                 auto [transform, spotLight] = view.get(entity);
 
-                glm::quat previousOrientation = transform.getOrientation();
+                glm::quat previousOrientation = transform.getLocalOrientation();
 
-                transform.setRotation(0.0f, 16.667f * dt, 0.0f);
-                transform.setRotation(previousOrientation * transform.getOrientation());
+                transform.setLocalRotation(0.0f, 16.667f * dt, 0.0f);
+                transform.setLocalRotation(previousOrientation * transform.getLocalOrientation());
             }
         }
     }

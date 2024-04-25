@@ -83,34 +83,34 @@ namespace mango
         }
 
         // Shortcuts
-        void setPosition(float x, float y, float z);
-        void setPosition(const glm::vec3& position);
+        void setLocalPosition(float x, float y, float z);
+        void setLocalPosition(const glm::vec3& position);
         
         /** Set rotation in degrees. */
-        void setRotation   (float x, float y, float z);
+        void setLocalRotation   (float x, float y, float z);
         /** Set rotation in radians. */
-        void setRotation   (const glm::vec3& rotation);
+        void setLocalRotation   (const glm::vec3& rotation);
         /** Angle in radians. */
-        void setOrientation(const glm::vec3& axis, float angle);
-        void setOrientation(const glm::quat& quat);
+        void setLocalOrientation(const glm::vec3& axis, float angle);
+        void setLocalOrientation(const glm::quat& quat);
         
-        void setScale(float x, float y, float z);
-        void setScale(float uniformScale);
+        void setLocalScale(float x, float y, float z);
+        void setLocalScale(float uniformScale);
 
-        UUID getUUID();
-        const std::string& getName();
-        glm::vec3 getPosition();
-        glm::vec3 getScale();
+        glm::vec3 getLocalPosition();
+        glm::vec3 getLocalScale();
         /** Returns rotation in radians. */
-        glm::vec3 getRotation();
-        glm::quat getOrientation();
+        glm::vec3 getLocalRotation();
+        glm::quat getLocalOrientation();
 
         TransformComponent& getTransform();
         /** Assumes that entity has a valid parent. */
         TransformComponent& getParentTransform();
 
-        Entity getParent();
-        bool   hasParent();
+              UUID         getUUID();
+        const std::string& getName();
+              Entity       getParent();
+              bool         hasParent();
         
         void                 addChild   (Entity child);
         void                 removeChild(Entity child);
