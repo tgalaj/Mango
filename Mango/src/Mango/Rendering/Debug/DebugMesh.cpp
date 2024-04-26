@@ -5,6 +5,8 @@ namespace mango
 
     ref<Mesh> DebugMesh::createDebugBox()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         if (s_debugBox)
         {
             return s_debugBox;
@@ -54,6 +56,8 @@ namespace mango
 
     ref<Mesh> DebugMesh::createDebugCapsule()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         if (s_debugCapsule)
         {
             return s_debugCapsule;
@@ -178,6 +182,8 @@ namespace mango
 
     ref<Mesh> DebugMesh::createDebugSphere()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         if (s_debugSphere)
         {
             return s_debugSphere;
@@ -242,6 +248,8 @@ namespace mango
 
     ref<Mesh> DebugMesh::createDebugCone()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         if (s_debugCone)
         {
             return s_debugCone;
@@ -255,15 +263,14 @@ namespace mango
         float    deltaTheta = glm::two_pi<float>() / samples;
         float    radius     = 1.0f;
         float    height     = 1.0f;
-        float    halfHeight = height * 0.5f;
 
         // XZ plane
         for (uint32_t s = 0; s < samples; ++s)
         {
             float x = radius * glm::cos(s * deltaTheta);
-            float z = radius * glm::sin(s * deltaTheta);
+            float y = radius * glm::sin(s * deltaTheta);
 
-            data.positions.emplace_back(glm::vec3(x, -halfHeight, z));
+            data.positions.emplace_back(glm::vec3(x, y, height));
         }
 
         // indices
@@ -281,13 +288,13 @@ namespace mango
         currentBeginIndex += samples;
 
         // top vertex
-        data.positions.emplace_back(glm::vec3(0.0, halfHeight, 0.0f));
+        data.positions.emplace_back(glm::vec3(0.0, 0.0f, 0.0f));
 
         // add four vertices around the cone base
         deltaTheta = glm::half_pi<float>();
         for (uint32_t i = 0; i < 4; ++i)
         {
-            data.positions.emplace_back(glm::vec3(radius * glm::cos(deltaTheta * i), -halfHeight, radius * glm::sin(deltaTheta * i)));
+            data.positions.emplace_back(glm::vec3(radius * glm::cos(deltaTheta * i), radius * glm::sin(deltaTheta * i), height));
             
             // add indices for a line segment
             data.indices.emplace_back(currentBeginIndex);
@@ -301,6 +308,8 @@ namespace mango
 
     ref<Mesh> DebugMesh::createDebugDirLight()
     {
+        MG_PROFILE_ZONE_SCOPED;
+
         if (s_debugDirLight)
         {
             return s_debugDirLight;
@@ -360,4 +369,67 @@ namespace mango
         return s_debugDirLight;
     }
 
+    ref<Mesh> DebugMesh::createDebugSpotLight()
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        if (s_debugSpotLight)
+        {
+            return s_debugSpotLight;
+        }
+
+        s_debugSpotLight = createRef<Mesh>();
+
+        VertexData data;
+
+        uint32_t slices = 32;
+
+        float thetaInc = glm::two_pi<float>() / float(slices);
+        float theta    = 0.0f;
+        float height   = 1.0f;
+        float radius   = 1.0f;
+
+        /* Center top*/
+        data.positions.emplace_back(glm::vec3(0.0f, 0.0f, 0.0f));
+
+        /* Center bottom */
+        data.positions.emplace_back(glm::vec3(0.0f, 0.0f, height));
+
+        /* Bottom */
+        for (uint32_t sideCount = 0; sideCount <= slices; ++sideCount, theta += thetaInc)
+        {
+            data.positions.emplace_back(glm::vec3(glm::cos(theta) * radius, -glm::sin(theta) * radius, height));
+        }
+
+        uint32_t centerTopIdx    = 0;
+        uint32_t centerBottomIdx = 1;
+        uint32_t idx             = 2;
+
+        /* Indices Bottom */
+        for (uint32_t sliceCount = 0; sliceCount < slices; ++sliceCount)
+        {
+            data.indices.emplace_back(centerBottomIdx);
+            data.indices.emplace_back(idx + 1);
+            data.indices.emplace_back(idx);
+
+            ++idx;
+        }
+        
+        // Reset idx
+        idx = 2;
+
+        /* Indices Sides */
+        for (uint32_t sliceCount = 0; sliceCount < slices; ++sliceCount)
+        {
+            data.indices.emplace_back(idx);
+            data.indices.emplace_back(idx + 1);
+            data.indices.emplace_back(centerTopIdx);
+
+            ++idx;
+        }
+
+        s_debugSpotLight->build(data);
+
+        return s_debugSpotLight;
+    }
 }
