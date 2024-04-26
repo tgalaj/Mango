@@ -19,6 +19,8 @@
 #include <format>
 #include <type_traits>
 
+#include <glm/gtx/string_cast.hpp>
+
 namespace mango
 {
     SceneHierarchyPanel::SceneHierarchyPanel(const ref<Scene>& scene)

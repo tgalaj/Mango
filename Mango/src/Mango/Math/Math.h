@@ -8,6 +8,10 @@ namespace mango::math
     // Rotation is specified in radians.
     void decompose(const glm::mat4& transform, glm::vec3& translation, glm::vec3& rotation, glm::vec3& scale);
 
+    glm::vec3 decomposeTranslation(const glm::mat4& transform);
+    glm::vec3 decomposeRotation   (const glm::mat4& transform);
+    glm::vec3 decomposeScale      (const glm::mat4& transform);
+
     using vec3 = glm::vec3;
 
     // Returns a unit vec3 designating forward direction 

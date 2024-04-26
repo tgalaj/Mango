@@ -75,6 +75,76 @@ namespace mango
         return getComponent<TransformComponent>().getLocalOrientation();
     }
 
+    void Entity::setPosition(float x, float y, float z)
+    {
+        getComponent<TransformComponent>().setPosition(x, y, z);
+    }
+
+    void Entity::setPosition(const glm::vec3& position)
+    {
+        getComponent<TransformComponent>().setPosition(position);
+    }
+
+    void Entity::setRotation(float x, float y, float z)
+    {
+        getComponent<TransformComponent>().setRotation(x, y, z);
+    }
+
+    void Entity::setRotation(const glm::vec3& rotation)
+    {
+        getComponent<TransformComponent>().setRotation(rotation);
+    }
+
+    void Entity::setOrientation(const glm::vec3& axis, float angle)
+    {
+        getComponent<TransformComponent>().setRotation(axis, angle);
+    }
+
+    void Entity::setOrientation(const glm::quat& quat)
+    {
+        getComponent<TransformComponent>().setRotation(quat);
+    }
+
+    glm::vec3 Entity::getPosition()
+    {
+        return getComponent<TransformComponent>().getPosition();
+    }
+
+    glm::vec3 Entity::getScale()
+    {
+        return getComponent<TransformComponent>().getScale();
+    }
+
+    glm::vec3 Entity::getRotation()
+    {
+        return getComponent<TransformComponent>().getRotation();
+    }
+
+    glm::quat Entity::getOrientation()
+    {
+        return getComponent<TransformComponent>().getOrientation();
+    }
+
+    glm::vec3 Entity::getForward()
+    {
+        return getComponent<TransformComponent>().getForward();
+    }
+
+    glm::vec3 Entity::getBackward()
+    {
+        return getComponent<TransformComponent>().getBackward();
+    }
+
+    glm::vec3 Entity::getRight()
+    {
+        return getComponent<TransformComponent>().getRight();
+    }
+
+    glm::vec3 Entity::getUp()
+    {
+        return getComponent<TransformComponent>().getUp();
+    }
+
     TransformComponent& Entity::getTransform()
     {
         return getComponent<TransformComponent>();

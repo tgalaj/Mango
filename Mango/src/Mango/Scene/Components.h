@@ -267,8 +267,7 @@ namespace mango
               m_localScale      (scale),
               m_dirty           (true),
               m_worldMatrix     (glm::mat4(1.0f)),
-              m_normalMatrix    (glm::mat3(1.0f)),
-              m_localDirection  (glm::vec3(0.0f, 0.0f, -1.0f))
+              m_normalMatrix    (glm::mat3(1.0f))
         {}
 
         //// Local Space Setters
@@ -292,7 +291,6 @@ namespace mango
             m_localRotation    = euler;
             m_localOrientation = glm::quat(m_localRotation);
             m_localOrientation = glm::normalize(m_localOrientation);
-            m_localDirection   = glm::normalize(glm::conjugate(m_localOrientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_dirty            = true;
         }
 
@@ -311,7 +309,6 @@ namespace mango
         {
             m_localOrientation = glm::normalize(glm::angleAxis(angle, glm::normalize(axis)));
             m_localRotation    = glm::eulerAngles(m_localOrientation);
-            m_localDirection   = glm::normalize(glm::conjugate(m_localOrientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_dirty            = true;
         }
 
@@ -319,7 +316,6 @@ namespace mango
         {
             m_localOrientation = glm::normalize(quat);
             m_localRotation    = glm::eulerAngles(m_localOrientation);
-            m_localDirection   = glm::normalize(glm::conjugate(m_localOrientation) * glm::vec3(0.0f, 0.0f, 1.0f));
             m_dirty            = true;
         }
 
@@ -345,8 +341,11 @@ namespace mango
 
         void setPosition(const glm::vec3 & position)
         {
-            m_position = position;
-            m_dirty    = true;
+            m_worldMatrix[3].x = position.x;
+            m_worldMatrix[3].y = position.y;
+            m_worldMatrix[3].z = position.z;
+
+            setLocalPosition(glm::inverse(m_parentWorldMatrix) * glm::vec4(position, 1.0));
         }
 
         void setPosition(float x, float y, float z)
@@ -359,11 +358,12 @@ namespace mango
          */
         void setRotation(const glm::vec3& euler)
         {
-            m_rotation    = euler;
-            m_orientation = glm::quat(m_rotation);
-            m_orientation = glm::normalize(m_orientation);
-            m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
-            m_dirty       = true;
+            m_worldMatrix = TRS(getPosition(), euler, getScale());
+
+            // TODO: it's ugly, maybe there's another, simpler way?
+            auto m   = glm::inverse(m_parentWorldMatrix) * m_worldMatrix;
+            auto rot = math::decomposeRotation(m);
+            setLocalRotation(rot);
         }
 
         /*
@@ -379,37 +379,26 @@ namespace mango
         */
         void setRotation(const glm::vec3 & axis, float angle)
         {
-            m_orientation = glm::normalize(glm::angleAxis(angle, glm::normalize(axis)));
-            m_rotation    = glm::eulerAngles(m_orientation);
-            m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
-            m_dirty       = true;
+            glm::quat rotation      = glm::angleAxis(angle, glm::normalize(axis));
+                      m_worldMatrix = TRS(getPosition(), rotation, getScale());
+
+            // TODO: it's ugly, maybe there's another, simpler way?
+            auto m   = glm::inverse(m_parentWorldMatrix) * m_worldMatrix;
+            auto rot = math::decomposeRotation(m);
+            setLocalRotation(rot);
         }
 
         void setRotation(const glm::quat & quat)
         {
-            m_orientation = glm::normalize(quat);
-            m_rotation    = glm::eulerAngles(m_orientation);
-            m_direction   = glm::normalize(glm::conjugate(m_orientation) * glm::vec3(0.0f, 0.0f, 1.0f));
-            m_dirty       = true;
+            m_worldMatrix = TRS(getPosition(), quat, getScale());
+            
+            // TODO: it's ugly, maybe there's another, simpler way?
+            auto m   = glm::inverse(m_parentWorldMatrix) * m_worldMatrix;
+            auto rot = math::decomposeRotation(m);
+            setLocalRotation(rot);
         }
 
-        void setScale(float x, float y, float z)
-        {
-            m_scale = glm::vec3(x, y, z);
-            m_dirty = true;
-        }
-
-        void setScale(float uniformScale)
-        {
-            m_scale = glm::vec3(uniformScale);
-            m_dirty = true;
-        }
-
-        void setScale(const glm::vec3 & scale)
-        {
-            m_scale = scale;
-            m_dirty = true;
-        }
+        //// Hierarchy
 
         auto&  getChildren()       { return m_children;                     }
         Entity getParent  () const { return m_parent;                       }
@@ -420,6 +409,8 @@ namespace mango
         void resetParent();
         void update     (const glm::mat4 & parentTransform, bool dirty);
         
+        //// Matrices
+
         glm::mat4 getWorldMatrix      () const { return m_worldMatrix;       }
         glm::mat4 getLocalWorldMatrix () const { return m_localWorldMatrix;  }
         glm::mat4 getParentWorldMatrix() const { return m_parentWorldMatrix; }
@@ -427,32 +418,41 @@ namespace mango
 
         //// Local Space Getters
 
-        glm::vec3 getLocalPosition    () const { return m_localPosition;     }
-        glm::quat getLocalOrientation () const { return m_localOrientation;  }
+        glm::vec3 getLocalPosition   () const { return m_localPosition;     }
+        glm::quat getLocalOrientation() const { return m_localOrientation;  }
         /** Returns rotation in radians. */
-        glm::vec3 getLocalRotation    () const { return m_localRotation;     }
-        glm::vec3 getLocalScale       () const { return m_localScale;        }
-        glm::vec3 getLocalDirection   () const { return m_localDirection;    }
+        glm::vec3 getLocalRotation   () const { return m_localRotation;     }
+        glm::vec3 getLocalScale      () const { return m_localScale;        }
 
         //// World Space Getters
 
-        glm::vec3 getPosition         () const { return m_position;          }
-        glm::quat getOrientation      () const { return m_orientation;       }
+        glm::vec3 getPosition   () const { return m_worldMatrix[3]; }
+        glm::quat getOrientation() const { return glm::normalize(glm::quat(getRotation())); }
         /** Returns rotation in radians. */
-        glm::vec3 getRotation         () const { return m_rotation;          }
-        glm::vec3 getScale            () const { return m_scale;             }
-        glm::vec3 getDirection        () const { return m_direction;         }
+        glm::vec3 getRotation   () const { return  math::decomposeRotation(m_worldMatrix);  }
+        glm::vec3 getScale      () const 
+        { 
+            return  { glm::length(m_worldMatrix[0]), glm::length(m_worldMatrix[1]), glm::length(m_worldMatrix[2]) };
+        }
+        
+        //// Directions
+
+        glm::vec3 getForward () const { return glm::normalize( m_worldMatrix[2]); }
+        glm::vec3 getBackward() const { return glm::normalize(-m_worldMatrix[2]); }
+        glm::vec3 getRight   () const { return glm::normalize( m_worldMatrix[0]); }
+        glm::vec3 getUp      () const { return glm::normalize( m_worldMatrix[1]); }
+
+        //// Helpers
+
+        glm::mat4 TRS(const glm::vec3& translation, const glm::vec3& euler,    const glm::vec3& scale);
+        glm::mat4 TRS(const glm::vec3& translation, const glm::quat& rotation, const glm::vec3& scale);
 
     private:
-        glm::mat4 getUpdatedWorldMatrix() const;
-
-    private:
-        std::vector<Entity> m_children;
-        Entity m_parent = Entity::nullEntity;
+        std::vector<Entity> m_children = {};
+        Entity              m_parent   = Entity::nullEntity;
 
         glm::mat4 m_worldMatrix      { 1.0f };
         glm::mat4 m_localWorldMatrix { 1.0f };
-
         glm::mat4 m_parentWorldMatrix{ 1.0f };
         glm::mat3 m_normalMatrix     { 1.0f };
 
@@ -461,14 +461,6 @@ namespace mango
         glm::vec3 m_localPosition   {};
         glm::vec3 m_localRotation   {};
         glm::vec3 m_localScale      { 1.0f };
-        glm::vec3 m_localDirection  {};
-
-        // World Space
-        glm::quat m_orientation{};
-        glm::vec3 m_position   {};
-        glm::vec3 m_rotation   {};
-        glm::vec3 m_scale      { 1.0f };
-        glm::vec3 m_direction  {};
 
         bool m_dirty = true;
     

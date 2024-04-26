@@ -103,6 +103,30 @@ namespace mango
         glm::vec3 getLocalRotation();
         glm::quat getLocalOrientation();
 
+        // World space
+
+        void setPosition(float x, float y, float z);
+        void setPosition(const glm::vec3& position);
+
+        /** Set rotation in degrees. */
+        void setRotation(float x, float y, float z);
+        /** Set rotation in radians. */
+        void setRotation(const glm::vec3& rotation);
+        /** Angle in radians. */
+        void setOrientation(const glm::vec3& axis, float angle);
+        void setOrientation(const glm::quat& quat);
+
+        glm::vec3 getPosition();
+        glm::vec3 getScale();
+        /** Returns rotation in radians. */
+        glm::vec3 getRotation();
+        glm::quat getOrientation();
+
+        glm::vec3 getForward();
+        glm::vec3 getBackward();
+        glm::vec3 getRight();
+        glm::vec3 getUp();
+
         TransformComponent& getTransform();
         /** Assumes that entity has a valid parent. */
         TransformComponent& getParentTransform();

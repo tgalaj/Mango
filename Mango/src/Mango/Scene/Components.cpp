@@ -10,7 +10,7 @@ namespace mango
         m_children.push_back(childEntity);
 
         // Calculate new position for the attached child
-        // so it's world space position is the same
+        // so it's world space position stays the same
         auto& parentTransform = parentEntity.getComponent<TransformComponent>();
         auto  toGlobalWorld   = glm::inverse(parentTransform.m_worldMatrix) * childTransform.m_worldMatrix;
 
@@ -38,9 +38,8 @@ namespace mango
         m_parent            = Entity::nullEntity;
         m_parentWorldMatrix = glm::mat4(1.0f);
 
-        glm::vec3 rotation;
-        math::decompose(m_worldMatrix, m_localPosition, rotation, m_localScale);
-        setLocalRotation(rotation);
+        math::decompose(m_worldMatrix, m_localPosition, m_localRotation, m_localScale);
+        setLocalRotation(m_localRotation);
     }
 
     void TransformComponent::update(const glm::mat4& parentTransform, bool dirty)
@@ -50,7 +49,7 @@ namespace mango
         if (dirty)
         {
             m_parentWorldMatrix = parentTransform;
-            m_localWorldMatrix  = getUpdatedWorldMatrix();
+            m_localWorldMatrix  = TRS(m_localPosition, m_localOrientation, m_localScale);
             m_worldMatrix       = m_parentWorldMatrix * m_localWorldMatrix;
             m_normalMatrix      = glm::mat3(glm::transpose(glm::inverse(m_worldMatrix)));
 
@@ -63,11 +62,16 @@ namespace mango
         }
     }
 
-    glm::mat4 TransformComponent::getUpdatedWorldMatrix() const
+    glm::mat4 TransformComponent::TRS(const glm::vec3& translation, const glm::vec3& euler, const glm::vec3& scale)
     {
-        glm::mat4 T = glm::translate(glm::mat4(1.0f), m_localPosition);
-        glm::mat4 R = glm::mat4_cast(m_localOrientation);
-        glm::mat4 S = glm::scale(glm::mat4(1.0f), m_localScale);
+        return TRS(translation, glm::quat(euler), scale);
+    }
+
+    glm::mat4 TransformComponent::TRS(const glm::vec3& translation, const glm::quat& rotation, const glm::vec3& scale)
+    {
+        glm::mat4 T = glm::translate(glm::mat4(1.0f), translation);
+        glm::mat4 R = glm::mat4_cast(glm::normalize(rotation));
+        glm::mat4 S = glm::scale(glm::mat4(1.0f), scale);
 
         return T * R * S;
     }
