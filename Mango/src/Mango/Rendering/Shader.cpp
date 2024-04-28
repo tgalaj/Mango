@@ -355,6 +355,23 @@ namespace mango
                     {
                         setUniform(G_MODEL_MATRIX, transform.getWorldMatrix());
                     }
+                    else
+                    if (G_MODEL_VIEW_MATRIX == uniformName)
+                    {
+                        auto view = Services::renderer()->getCamera().getView();
+
+                        setUniform(G_MODEL_VIEW_MATRIX, view * transform.getWorldMatrix());
+                    }
+                    else
+                    if (G_VIEW_MATRIX == uniformName)
+                    {
+                        setUniform(G_VIEW_MATRIX, Services::renderer()->getCamera().getView());
+                    }
+                    else
+                    if (G_PROJECTION_MATRIX == uniformName)
+                    {
+                        setUniform(G_PROJECTION_MATRIX, Services::renderer()->getCamera().getProjection());
+                    }
                     break;
                 }
                 case GL_FLOAT_MAT3:

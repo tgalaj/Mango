@@ -137,6 +137,7 @@ namespace mango
         ref<Shader> m_enviroMappingShader;
         ref<Shader> m_debugRendering;
         ref<Shader> m_wireframeShader;
+        ref<Shader> m_pointBillboardShader;
 
         ref<Shader> m_gbufferShader;
         ref<Shader> m_deferredDirectional;
@@ -169,6 +170,7 @@ namespace mango
         ref<RenderTarget> m_omniShadowMap;
 
         ref<Skybox> m_skybox;
+        ref<Texture> m_pointLightSpriteTexture;
 
         glm::uvec2 m_mainFramebufferSize = {};
 

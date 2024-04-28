@@ -68,6 +68,9 @@ namespace mango
         m_wireframeShader = AssetManager::createShader("Wireframe", "Wireframe.vert", "Wireframe.frag");
         m_wireframeShader->link();
 
+        m_pointBillboardShader = AssetManager::createShader("PointBillboard", "PointBillboard.vert", "PointBillboard.frag", "PointBillboard.geom");
+        m_pointBillboardShader->link();
+
         m_shadowMapGenerator = AssetManager::createShader("Shadow-Map-Gen", "Shadow-Map-Gen.vert", "Shadow-Map-Gen.frag");
         m_shadowMapGenerator->link();
 
@@ -152,6 +155,9 @@ namespace mango
         m_omniShadowMap = createRef<RenderTarget>();
         m_omniShadowMap->create(512, 512, RenderTarget::DepthInternalFormat::DEPTH24, RenderTarget::RenderTargetType::TexCube);
 
+        m_pointLightSpriteTexture = createRef<Texture>();
+        m_pointLightSpriteTexture->createTexture2d("textures/PointLightSprite.png", false, 8);
+
         initRenderingStates();
     }
 
@@ -222,6 +228,19 @@ namespace mango
             if (entity)
             {
                 m_jfaOutline->render(m_mainRenderTarget, entity, outlineColor, outlineWidth);
+            }
+
+            // Draw the lights' sprites
+            auto view = m_activeScene->getEntitiesWithComponent<PointLightComponent, TransformComponent>();
+            for (auto& e : view)
+            {
+                auto [pointLight, transform] = view.get(e);
+                m_pointBillboardShader->bind();
+                m_pointBillboardShader->updateGlobalUniforms(transform);
+                m_pointBillboardShader->setUniform("position", transform.getPosition());
+                m_pointBillboardShader->setUniform("half_quad_width_vs", 0.5f);
+                m_pointLightSpriteTexture->bind(0);
+                glDrawArrays(GL_POINTS, 0, 1);
             }
 
             renderDebugView();

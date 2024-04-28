@@ -14,9 +14,12 @@ namespace mango
     #define SKIP_UNIFORM_PREFIX     "s_"
 
     /* Matrices */
-    #define G_MVP           "g_mvp"
-    #define G_MODEL_MATRIX  "g_model"
-    #define G_NORMAL_MATRIX "g_normal_matrix"
+    #define G_MVP               "g_mvp"
+    #define G_MODEL_MATRIX      "g_model"
+    #define G_MODEL_VIEW_MATRIX "g_model_view"
+    #define G_VIEW_MATRIX       "g_view"
+    #define G_PROJECTION_MATRIX "g_projection"
+    #define G_NORMAL_MATRIX     "g_normal_matrix"
 
     /* Camera */
     #define G_CAM_POS "g_cam_pos"
