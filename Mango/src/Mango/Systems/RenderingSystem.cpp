@@ -69,8 +69,8 @@ namespace mango
         m_wireframeShader = AssetManager::createShader("Wireframe", "Wireframe.vert", "Wireframe.frag");
         m_wireframeShader->link();
 
-        m_pointBillboardShader = AssetManager::createShader("PointBillboard", "PointBillboard.vert", "PointBillboard.frag", "PointBillboard.geom");
-        m_pointBillboardShader->link();
+        m_lightBillboardEditorShader = AssetManager::createShader("LightBillboard", "LightBillboard.vert", "LightBillboard.frag", "LightBillboard.geom");
+        m_lightBillboardEditorShader->link();
 
         m_shadowMapGenerator = AssetManager::createShader("Shadow-Map-Gen", "Shadow-Map-Gen.vert", "Shadow-Map-Gen.frag");
         m_shadowMapGenerator->link();
@@ -156,8 +156,14 @@ namespace mango
         m_omniShadowMap = createRef<RenderTarget>();
         m_omniShadowMap->create(512, 512, RenderTarget::DepthInternalFormat::DEPTH24, RenderTarget::RenderTargetType::TexCube);
 
+        m_dirLightSpriteTexture = createRef<Texture>();
+        m_dirLightSpriteTexture->createTexture2d("textures/DirLightSprite.png", false, 8);
+        
         m_pointLightSpriteTexture = createRef<Texture>();
         m_pointLightSpriteTexture->createTexture2d("textures/PointLightSprite.png", false, 8);
+
+        m_spotLightSpriteTexture = createRef<Texture>();
+        m_spotLightSpriteTexture->createTexture2d("textures/SpotLightSprite.png", false, 8);
 
         initRenderingStates();
     }
@@ -597,22 +603,7 @@ namespace mango
                     renderDebugPhysicsColliders(scene);
                 }
 
-                MG_BEGIN_GL_MARKER("Draw light's sprites");
-                // Draw the lights' sprites
-                auto view = m_activeScene->getEntitiesWithComponent<PointLightComponent, TransformComponent>();
-                for (auto& e : view)
-                {
-                    auto [pointLight, transform] = view.get(e);
-                    m_pointBillboardShader->bind();
-                    m_pointBillboardShader->updateGlobalUniforms(transform);
-                    m_pointBillboardShader->setUniform("position", transform.getPosition());
-                    m_pointBillboardShader->setUniform("half_quad_width_vs", 0.5f);
-                    m_pointLightSpriteTexture->bind(0);
-
-                    m_debugSpotLightMesh->bind();
-                    glDrawArrays(GL_POINTS, 0, 1);
-                }
-                MG_END_GL_MARKER;
+                renderLightBillboards(scene);
             }
 
             /* Sort transparent objects back to front */
@@ -869,6 +860,62 @@ namespace mango
 
         glDisable(GL_POLYGON_OFFSET_FILL);
         glEnable(GL_BLEND);
+    }
+
+    void RenderingSystem::renderLightBillboards(Scene* scene)
+    {
+        MG_BEGIN_GL_MARKER("Draw light billboards");
+
+        // Draw the lights' sprites 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        m_lightBillboardEditorShader->bind();
+        m_lightBillboardEditorShader->setUniform("half_quad_width_vs", 0.5f);
+
+        // Directional Lights
+        {
+            auto view = m_activeScene->getEntitiesWithComponent<DirectionalLightComponent, TransformComponent>();
+
+            m_dirLightSpriteTexture->bind(0);
+            for (auto& e : view)
+            {
+                auto& transform = view.get<TransformComponent>(e);
+                m_lightBillboardEditorShader->updateGlobalUniforms(transform);
+                m_lightBillboardEditorShader->setUniform("position", transform.getPosition());
+                glDrawArrays(GL_POINTS, 0, 1);
+            }
+        }
+
+        // Point Lights
+        {
+            auto view = m_activeScene->getEntitiesWithComponent<PointLightComponent, TransformComponent>();
+
+            m_pointLightSpriteTexture->bind(0);
+            for (auto& e : view)
+            {
+                auto& transform = view.get<TransformComponent>(e);
+                m_lightBillboardEditorShader->updateGlobalUniforms(transform);
+                m_lightBillboardEditorShader->setUniform("position", transform.getPosition());
+                glDrawArrays(GL_POINTS, 0, 1);
+            }
+        }
+
+        // Spot Lights
+        {
+            auto view = m_activeScene->getEntitiesWithComponent<SpotLightComponent, TransformComponent>();
+
+            m_spotLightSpriteTexture->bind(0);
+            for (auto& e : view)
+            {
+                auto& transform = view.get<TransformComponent>(e);
+                m_lightBillboardEditorShader->updateGlobalUniforms(transform);
+                m_lightBillboardEditorShader->setUniform("position", transform.getPosition());
+                glDrawArrays(GL_POINTS, 0, 1);
+            }
+        }
+
+        glDisable(GL_BLEND);
+        MG_END_GL_MARKER;
     }
 
     void RenderingSystem::renderEntitiesInQueue(ref<Shader>& shader, std::vector<Entity>& queue)

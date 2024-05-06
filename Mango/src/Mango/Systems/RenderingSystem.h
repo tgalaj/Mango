@@ -105,6 +105,7 @@ namespace mango
         void renderDebugView();
         void renderDebugLightsBoundingBoxes(Scene* scene);
         void renderDebugPhysicsColliders   (Scene* scene);
+        void renderLightBillboards         (Scene* scene);
 
         void renderEntitiesInQueue(ref<Shader>& shader, std::vector<Entity>& queue);
 
@@ -137,7 +138,7 @@ namespace mango
         ref<Shader> m_enviroMappingShader;
         ref<Shader> m_debugRendering;
         ref<Shader> m_wireframeShader;
-        ref<Shader> m_pointBillboardShader;
+        ref<Shader> m_lightBillboardEditorShader;
 
         ref<Shader> m_gbufferShader;
         ref<Shader> m_deferredDirectional;
@@ -170,7 +171,9 @@ namespace mango
         ref<RenderTarget> m_omniShadowMap;
 
         ref<Skybox> m_skybox;
+        ref<Texture> m_dirLightSpriteTexture;
         ref<Texture> m_pointLightSpriteTexture;
+        ref<Texture> m_spotLightSpriteTexture;
 
         glm::uvec2 m_mainFramebufferSize = {};
 
