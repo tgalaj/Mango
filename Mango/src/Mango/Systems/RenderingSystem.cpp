@@ -3,6 +3,7 @@
 #include "RenderingSystem.h"
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Rendering/BloomPS.h"
+#include "Mango/Rendering/Debug/DebugMarkersGL.h"
 #include "Mango/Rendering/Debug/DebugMesh.h"
 #include "Mango/Rendering/DeferredRendering.h"
 #include "Mango/Rendering/Picking.h"
@@ -223,24 +224,11 @@ namespace mango
         {
             renderDeferred(m_activeScene);
 
+            // Draw the outline of the selected entity
             auto entity = SelectionManager::getSelectedEntity();
-            //auto entity = m_activeScene->findEntityByName("Cyborg");
             if (entity)
             {
                 m_jfaOutline->render(m_mainRenderTarget, entity, outlineColor, outlineWidth);
-            }
-
-            // Draw the lights' sprites
-            auto view = m_activeScene->getEntitiesWithComponent<PointLightComponent, TransformComponent>();
-            for (auto& e : view)
-            {
-                auto [pointLight, transform] = view.get(e);
-                m_pointBillboardShader->bind();
-                m_pointBillboardShader->updateGlobalUniforms(transform);
-                m_pointBillboardShader->setUniform("position", transform.getPosition());
-                m_pointBillboardShader->setUniform("half_quad_width_vs", 0.5f);
-                m_pointLightSpriteTexture->bind(0);
-                glDrawArrays(GL_POINTS, 0, 1);
             }
 
             renderDebugView();
@@ -608,6 +596,23 @@ namespace mango
                 {
                     renderDebugPhysicsColliders(scene);
                 }
+
+                MG_BEGIN_GL_MARKER("Draw light's sprites");
+                // Draw the lights' sprites
+                auto view = m_activeScene->getEntitiesWithComponent<PointLightComponent, TransformComponent>();
+                for (auto& e : view)
+                {
+                    auto [pointLight, transform] = view.get(e);
+                    m_pointBillboardShader->bind();
+                    m_pointBillboardShader->updateGlobalUniforms(transform);
+                    m_pointBillboardShader->setUniform("position", transform.getPosition());
+                    m_pointBillboardShader->setUniform("half_quad_width_vs", 0.5f);
+                    m_pointLightSpriteTexture->bind(0);
+
+                    m_debugSpotLightMesh->bind();
+                    glDrawArrays(GL_POINTS, 0, 1);
+                }
+                MG_END_GL_MARKER;
             }
 
             /* Sort transparent objects back to front */

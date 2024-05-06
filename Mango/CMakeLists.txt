@@ -36,8 +36,12 @@ set_target_properties(Mango PROPERTIES
 
 target_precompile_headers(Mango PRIVATE "src/mgpch.h")
 
-if (MG_PROFILE_ENABLE)
-    target_compile_definitions(Mango PRIVATE MG_PROFILE_ENABLE)
+if (MG_ENABLE_PROFILING)
+    target_compile_definitions(Mango PRIVATE MG_ENABLE_PROFILING)
+endif()
+
+if (MG_ENABLE_GL_DEBUG_MARKERS)
+    target_compile_definitions(Mango PRIVATE MG_ENABLE_GL_DEBUG_MARKERS)
 endif()
 
 # Definitions
@@ -85,5 +89,6 @@ endmacro()
 message(STATUS "Mango will be built with the following options:")
 message_option(MG_BUILD_MANGO_SANDBOX)
 message_option(MG_BUILD_MANGO_EDITOR)
-message_option(MG_PROFILE_ENABLE)
+message_option(MG_ENABLE_PROFILING)
+message_option(MG_ENABLE_GL_DEBUG_MARKERS)
 message_option(MG_USE_STATIC_MSVC_RUNTIME_LIBRARY)

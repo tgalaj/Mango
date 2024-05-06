@@ -4,7 +4,7 @@
 #include "Input.h"
 #include "Mango/Core/Services.h"
 #include "Mango/Events/GamepadEvents.h"
-#include "Mango/Rendering/DebugOutputGL.h"
+#include "Mango/Rendering/Debug/DebugOutputGL.h"
 #include "Mango/Systems/ImGuiSystem.h"
 #include "Mango/Systems/RenderingSystem.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef MG_PROFILE_ENABLE
+#ifdef MG_ENABLE_PROFILING
     #include "tracy/Tracy.hpp"
     #include "common/TracyColor.hpp"
     

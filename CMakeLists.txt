@@ -17,7 +17,8 @@ option(MG_BUILD_MANGO_EDITOR
        "Build Mango Editor."
        ON)
 
-option(MG_PROFILE_ENABLE "Enable profiling with Tracy profiler for Mango" OFF)
+option(MG_ENABLE_PROFILING "Enable profiling with Tracy profiler for Mango" OFF)
+option(MG_ENABLE_GL_DEBUG_MARKERS "Enable OpenGL debug markers for debugging with tools like RenderDoc" OFF)
 
 # Ability to toggle between the static and DLL versions of the MSVC runtime library
 # Windows Store only supports the DLL version
