@@ -69,8 +69,8 @@ namespace mango
         m_wireframeShader = AssetManager::createShader("Wireframe", "Wireframe.vert", "Wireframe.frag");
         m_wireframeShader->link();
 
-        m_lightBillboardEditorShader = AssetManager::createShader("LightBillboard", "LightBillboard.vert", "LightBillboard.frag", "LightBillboard.geom");
-        m_lightBillboardEditorShader->link();
+        m_billboardSpriteEditorShader = AssetManager::createShader("BillboardSprite", "BillboardSprite.vert", "BillboardSprite.frag", "BillboardSprite.geom");
+        m_billboardSpriteEditorShader->link();
 
         m_shadowMapGenerator = AssetManager::createShader("Shadow-Map-Gen", "Shadow-Map-Gen.vert", "Shadow-Map-Gen.frag");
         m_shadowMapGenerator->link();
@@ -164,6 +164,9 @@ namespace mango
 
         m_spotLightSpriteTexture = createRef<Texture>();
         m_spotLightSpriteTexture->createTexture2d("textures/SpotLightSprite.png", false, 8);
+
+        m_cameraSpriteTexture = createRef<Texture>();
+        m_cameraSpriteTexture->createTexture2d("textures/CameraSprite.png", false, 8);
 
         initRenderingStates();
     }
@@ -866,11 +869,10 @@ namespace mango
     {
         MG_BEGIN_GL_MARKER("Draw light billboards");
 
-        // Draw the lights' sprites 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        m_lightBillboardEditorShader->bind();
-        m_lightBillboardEditorShader->setUniform("half_quad_width_vs", 0.5f);
+        m_billboardSpriteEditorShader->bind();
+        m_billboardSpriteEditorShader->setUniform("half_quad_width_vs", 0.5f);
 
         // Directional Lights
         {
@@ -879,9 +881,10 @@ namespace mango
             m_dirLightSpriteTexture->bind(0);
             for (auto& e : view)
             {
-                auto& transform = view.get<TransformComponent>(e);
-                m_lightBillboardEditorShader->updateGlobalUniforms(transform);
-                m_lightBillboardEditorShader->setUniform("position", transform.getPosition());
+                auto [light, transform] = view.get(e);
+                m_billboardSpriteEditorShader->updateGlobalUniforms(transform);
+                m_billboardSpriteEditorShader->setUniform("position", transform.getPosition());
+                m_billboardSpriteEditorShader->setUniform("color", light.color);
                 glDrawArrays(GL_POINTS, 0, 1);
             }
         }
@@ -893,9 +896,10 @@ namespace mango
             m_pointLightSpriteTexture->bind(0);
             for (auto& e : view)
             {
-                auto& transform = view.get<TransformComponent>(e);
-                m_lightBillboardEditorShader->updateGlobalUniforms(transform);
-                m_lightBillboardEditorShader->setUniform("position", transform.getPosition());
+                auto [light, transform] = view.get(e);
+                m_billboardSpriteEditorShader->updateGlobalUniforms(transform);
+                m_billboardSpriteEditorShader->setUniform("position", transform.getPosition());
+                m_billboardSpriteEditorShader->setUniform("color", light.color);
                 glDrawArrays(GL_POINTS, 0, 1);
             }
         }
@@ -907,9 +911,26 @@ namespace mango
             m_spotLightSpriteTexture->bind(0);
             for (auto& e : view)
             {
+                auto [light, transform] = view.get(e);
+                m_billboardSpriteEditorShader->updateGlobalUniforms(transform);
+                m_billboardSpriteEditorShader->setUniform("position", transform.getPosition());
+                m_billboardSpriteEditorShader->setUniform("color", light.color);
+                glDrawArrays(GL_POINTS, 0, 1);
+            }
+        }
+
+        // Cameras
+        {
+            auto view = m_activeScene->getEntitiesWithComponent<CameraComponent, TransformComponent>();
+
+            m_cameraSpriteTexture->bind(0);
+            m_billboardSpriteEditorShader->setUniform("color", glm::vec3(1.0f));
+
+            for (auto& e : view)
+            {
                 auto& transform = view.get<TransformComponent>(e);
-                m_lightBillboardEditorShader->updateGlobalUniforms(transform);
-                m_lightBillboardEditorShader->setUniform("position", transform.getPosition());
+                m_billboardSpriteEditorShader->updateGlobalUniforms(transform);
+                m_billboardSpriteEditorShader->setUniform("position", transform.getPosition());
                 glDrawArrays(GL_POINTS, 0, 1);
             }
         }

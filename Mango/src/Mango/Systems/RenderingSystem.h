@@ -138,7 +138,7 @@ namespace mango
         ref<Shader> m_enviroMappingShader;
         ref<Shader> m_debugRendering;
         ref<Shader> m_wireframeShader;
-        ref<Shader> m_lightBillboardEditorShader;
+        ref<Shader> m_billboardSpriteEditorShader;
 
         ref<Shader> m_gbufferShader;
         ref<Shader> m_deferredDirectional;
@@ -174,6 +174,7 @@ namespace mango
         ref<Texture> m_dirLightSpriteTexture;
         ref<Texture> m_pointLightSpriteTexture;
         ref<Texture> m_spotLightSpriteTexture;
+        ref<Texture> m_cameraSpriteTexture;
 
         glm::uvec2 m_mainFramebufferSize = {};
 
