@@ -366,6 +366,7 @@ namespace mango
         m_picking->bindFramebuffer();
         m_picking->setPickingRegion(mouseX, mouseY);
 
+        // Regular objects
         auto pickingShader = m_picking->getShader();
         pickingShader->bind();
 
@@ -386,6 +387,76 @@ namespace mango
             }
         }
         glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+
+        // Light and camera billboards
+        auto pickingBillboardShader = m_picking->getBillboardShader();
+        pickingBillboardShader->bind();
+        pickingBillboardShader->setUniform("half_quad_width_vs", 0.5f);
+
+        {
+            auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, DirectionalLightComponent>();
+            for (auto entity : view)
+            {
+                auto& tc = view.get<TransformComponent>(entity);
+
+                pickingBillboardShader->updateGlobalUniforms(tc);
+                int id = (int)entity;
+                pickingBillboardShader->setUniform("position", tc.getPosition());
+                pickingBillboardShader->setUniform("objectID", (int)id);
+
+                glDrawArrays(GL_POINTS, 0, 1);
+            }
+            glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+        }
+
+        {
+            auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, PointLightComponent>();
+            for (auto entity : view)
+            {
+                auto& tc = view.get<TransformComponent>(entity);
+
+                pickingBillboardShader->updateGlobalUniforms(tc);
+                int id = (int)entity;
+                pickingBillboardShader->setUniform("position", tc.getPosition());
+                pickingBillboardShader->setUniform("objectID", (int)id);
+
+                glDrawArrays(GL_POINTS, 0, 1);
+            }
+            glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+        }
+
+        {
+            auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, SpotLightComponent>();
+            for (auto entity : view)
+            {
+                auto& tc = view.get<TransformComponent>(entity);
+
+                pickingBillboardShader->updateGlobalUniforms(tc);
+                int id = (int)entity;
+                pickingBillboardShader->setUniform("position", tc.getPosition());
+                pickingBillboardShader->setUniform("objectID", (int)id);
+
+                glDrawArrays(GL_POINTS, 0, 1);
+            }
+            glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+        }
+
+        {
+            auto view = m_activeScene->getEntitiesWithComponent<TransformComponent, CameraComponent>();
+            for (auto entity : view)
+            {
+                auto& tc = view.get<TransformComponent>(entity);
+
+                pickingBillboardShader->updateGlobalUniforms(tc);
+                int id = (int)entity;
+                pickingBillboardShader->setUniform("position", tc.getPosition());
+                pickingBillboardShader->setUniform("objectID", (int)id);
+
+                glDrawArrays(GL_POINTS, 0, 1);
+            }
+            glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+        }
+
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_SCISSOR_TEST);
 

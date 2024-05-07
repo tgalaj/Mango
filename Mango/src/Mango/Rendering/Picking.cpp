@@ -22,6 +22,9 @@ namespace mango
 
         m_pickingShader = AssetManager::createShader("PickingShader", "Picking.vert", "Picking.frag");
         m_pickingShader->link();
+
+        m_pickingBillboardShader = AssetManager::createShader("PickingBillboardSprite", "PickingBillboardSprite.vert", "PickingBillboardSprite.frag", "PickingBillboardSprite.geom");
+        m_pickingBillboardShader->link();
     }
 
     void Picking::clear()
@@ -44,6 +47,11 @@ namespace mango
     ref<Shader> Picking::getShader() const
     {
         return m_pickingShader;
+    }
+
+    ref<Shader> Picking::getBillboardShader() const
+    {
+        return m_pickingBillboardShader;
     }
 
     int Picking::getPickedID()

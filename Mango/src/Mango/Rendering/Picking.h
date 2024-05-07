@@ -15,6 +15,7 @@ namespace mango
         void resize(int width, int height);
         void setPickingRegion(int x, int y, uint32_t width = 1, uint32_t height = 1);
         ref<Shader> getShader() const;
+        ref<Shader> getBillboardShader() const;
 
         int getPickedID();
 
@@ -29,6 +30,7 @@ namespace mango
 
         ref<RenderTarget> m_pickingBuffer;
         ref<Shader>       m_pickingShader;
+        ref<Shader>       m_pickingBillboardShader;
         GLuint            m_ssbo;
     };
 }
