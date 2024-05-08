@@ -12,6 +12,7 @@ namespace mango
         TRANSLATE,
         ROTATE,
         SCALE,
+        TRANSFORM,
         NONE
     };
 
@@ -49,7 +50,8 @@ namespace mango
         void onSceneStop();
 
         void onGuiViewport();
-        void onGuiToolbar();
+        void onOverlayPlayPauseSim();
+        void onOverlayGizmoManipulators();
         void onGuiStats();
         void onGuiRenderingSettings();
         void onGuiProjectSettings();

@@ -25,6 +25,7 @@ namespace
             case mango::GizmoType::TRANSLATE: return ImGuizmo::OPERATION::TRANSLATE;
             case mango::GizmoType::ROTATE:    return ImGuizmo::OPERATION::ROTATE;
             case mango::GizmoType::SCALE:     return ImGuizmo::OPERATION::SCALE;
+            case mango::GizmoType::TRANSFORM: return ImGuizmo::OPERATION::UNIVERSAL;
         }
 
         MG_ASSERT_FAIL("Unknown GizmoType!");
@@ -355,10 +356,13 @@ namespace mango
             ImGui::End(); // CVars Editor
 
             onGuiViewport();
+            onOverlayPlayPauseSim();
+            onOverlayGizmoManipulators();
+
             m_sceneHierarchyPanel.onGui();
             m_assetsBrowserPanel->onGui();
             m_materialEditorPanel.onGui();
-            onGuiToolbar();
+
             onGuiStats();
             onGuiRenderingSettings();
             onGuiProjectSettings();
@@ -543,6 +547,12 @@ namespace mango
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
         ImGui::Begin("Viewport");
         {
+            auto node = ImGui::GetWindowDockNode();
+            node->LocalFlags |= ImGuiDockNodeFlags_NoWindowMenuButton | 
+                                ImGuiDockNodeFlags_NoCloseButton      | 
+                                ImGuiDockNodeFlags_NoUndocking        | 
+                                ImGuiDockNodeFlags_NoTabBar;
+
             if (SceneState::Edit == m_sceneState || SceneState::Simulate == m_sceneState)
             {
                 Services::renderer()->setRenderingMode(RenderingMode::EDITOR, &m_editorCamera, m_editorCamera.getPosition());
@@ -552,9 +562,9 @@ namespace mango
                 Services::renderer()->setRenderingMode(RenderingMode::GAME);
             }
             
-            auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
-            auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
-            auto viewportOffset    = ImGui::GetWindowPos();
+            auto viewportMinRegion  = ImGui::GetWindowContentRegionMin();
+            auto viewportMaxRegion  = ImGui::GetWindowContentRegionMax();
+            auto viewportOffset     = ImGui::GetWindowPos();
 
             m_viewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
             m_viewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
@@ -570,7 +580,7 @@ namespace mango
 
             ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
                    m_viewportSize    = { viewportPanelSize.x, viewportPanelSize.y };
-
+                   
             uint32_t outputTextureID = Services::renderer()->getOutputOffscreenTextureID();
 
             ImGui::Image((ImTextureID)outputTextureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
@@ -667,27 +677,39 @@ namespace mango
         ImGui::PopStyleVar();
     }
 
-    void EditorSystem::onGuiToolbar()
-    {        
-        constexpr ImVec2 iconSize    (48.0f, 48.0f);
-        constexpr ImVec2 itemSpacing (0.0f, 5.0f);
-        constexpr int    middleIconsCount = 4;
+    void EditorSystem::onOverlayPlayPauseSim()
+    {
+        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration       |
+                                       ImGuiWindowFlags_NoDocking          |
+                                       ImGuiWindowFlags_AlwaysAutoResize   |
+                                       ImGuiWindowFlags_NoSavedSettings    |
+                                       ImGuiWindowFlags_NoFocusOnAppearing |
+                                       ImGuiWindowFlags_NoNav              |
+                                       ImGuiWindowFlags_NoMove;
 
-        beginDockingToolbar("SceneState", ImGuiAxis_X, iconSize);
+        // Center window
+        float  paddingY          = m_viewportSize.y * 0.005f;
+        ImVec2 viewportTopCenter = { m_viewportBounds[0].x + m_viewportSize.x * 0.5f, m_viewportBounds[0].y + paddingY };
+        ImGui::SetNextWindowPos(viewportTopCenter, ImGuiCond_Always, ImVec2(0.5f, 0.0f));
+        ImGui::SetNextWindowBgAlpha(0.75f); // Transparent background
+
+        constexpr ImVec2 iconSize   (40.0f, 40.0f);
+        constexpr ImVec2 itemSpacing(0.0f,  5.0f);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(1.0f, 1.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        if (ImGui::Begin("Play Pause Sim Overlay", nullptr, windowFlags))
         {
-            auto toolbarWidth = ImGui::GetContentRegionAvail().x;
-
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing,  itemSpacing);
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
 
-            auto&       colors        = ImGui::GetStyle().Colors;
+                  auto& colors        = ImGui::GetStyle().Colors;
             const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
             const auto& buttonActive  = colors[ImGuiCol_ButtonActive];
+
             ImGui::PushStyleColor(ImGuiCol_Button,        ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive,  ImVec4(buttonActive.x,  buttonActive.y,  buttonActive.z,  0.5f));
-
-            ImGui::SetCursorPosX((toolbarWidth - (float)middleIconsCount * (iconSize.x + itemSpacing.x)) * 0.5f);
 
             auto playIcon = (SceneState::Play == m_sceneState) ? m_playPressedIcon : m_playIcon;
             if (ImGui::ImageButton("playButton", (ImTextureID)playIcon->getRendererID(), iconSize))
@@ -701,7 +723,7 @@ namespace mango
                     onScenePlay();
                 }
             }
-            
+
             ImGui::SameLine();
             auto simulateIcon = (SceneState::Simulate == m_sceneState) ? m_simulatePressedIcon : m_simulateIcon;
             if (ImGui::ImageButton("simulateButton", (ImTextureID)simulateIcon->getRendererID(), iconSize))
@@ -716,7 +738,7 @@ namespace mango
                 }
             }
 
-            bool isPaused  = Services::application()->isPaused();
+            bool isPaused = Services::application()->isPaused();
             auto pauseIcon = isPaused ? m_pausePressedIcon : m_pauseIcon;
 
             ImGui::SameLine();
@@ -738,7 +760,90 @@ namespace mango
             ImGui::PopStyleColor(3);
             ImGui::PopStyleVar(2);
         }
-        endDockingToolbar();
+        ImGui::PopStyleVar(2);
+        ImGui::End();
+    }
+
+    void EditorSystem::onOverlayGizmoManipulators()
+    {
+        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration       |
+                                       ImGuiWindowFlags_NoDocking          |
+                                       ImGuiWindowFlags_AlwaysAutoResize   |
+                                       ImGuiWindowFlags_NoSavedSettings    |
+                                       ImGuiWindowFlags_NoFocusOnAppearing |
+                                       ImGuiWindowFlags_NoNav              |
+                                       ImGuiWindowFlags_NoMove;
+
+        // Center window
+        float  paddingX           = m_viewportSize.x * 0.01f;
+        float  paddingY           = m_viewportSize.y * 0.005f;
+        ImVec2 viewportLeftCenter = { m_viewportBounds[0].x + paddingX, m_viewportBounds[0].y + paddingY };
+        ImGui::SetNextWindowPos(viewportLeftCenter, ImGuiCond_Always, ImVec2(0.0f, 0.0f));
+        ImGui::SetNextWindowBgAlpha(0.75f); // Transparent background
+
+        constexpr ImVec2 iconSize         (40.0f, 40.0f);
+        constexpr ImVec2 itemSpacing      (0.0f,  5.0f);
+        constexpr ImVec4 selectedTextColor(0.9569, 0.7333, 0.2667, 1.0);
+        
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(1.0f, 1.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        if (ImGui::Begin("Gizmo Manipulators Overlay", nullptr, windowFlags))
+        {
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing,  itemSpacing);
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
+
+                  auto& colors        = ImGui::GetStyle().Colors;
+            const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
+            const auto& buttonActive  = colors[ImGuiCol_ButtonActive];
+
+            ImGui::PushStyleColor(ImGuiCol_Button,        ImVec4(0, 0, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive,  ImVec4(buttonActive.x,  buttonActive.y,  buttonActive.z,  0.5f));
+
+            if (GizmoType::NONE == m_gizmoType) ImGui::PushStyleColor(ImGuiCol_Text, selectedTextColor);
+            if (ImGui::Button(ICON_MDI_CURSOR_DEFAULT, iconSize))
+            {
+                m_gizmoType = GizmoType::NONE;
+            }
+            else if (GizmoType::NONE == m_gizmoType) ImGui::PopStyleColor();
+
+            ImGui::SameLine();
+            if (GizmoType::TRANSLATE == m_gizmoType) ImGui::PushStyleColor(ImGuiCol_Text, selectedTextColor);
+            if (ImGui::Button(ICON_MDI_CURSOR_MOVE, iconSize))
+            {
+                m_gizmoType = GizmoType::TRANSLATE;
+            }
+            else if (GizmoType::TRANSLATE == m_gizmoType) ImGui::PopStyleColor();
+
+            ImGui::SameLine();
+            if (GizmoType::ROTATE == m_gizmoType) ImGui::PushStyleColor(ImGuiCol_Text, selectedTextColor);
+            if (ImGui::Button(ICON_MDI_AUTORENEW, iconSize))
+            {
+                m_gizmoType = GizmoType::ROTATE;
+            }
+            else if (GizmoType::ROTATE == m_gizmoType) ImGui::PopStyleColor();
+
+            ImGui::SameLine();
+            if (GizmoType::SCALE == m_gizmoType) ImGui::PushStyleColor(ImGuiCol_Text, selectedTextColor);
+            if (ImGui::Button(ICON_MDI_RESIZE, iconSize))
+            {
+                m_gizmoType = GizmoType::SCALE;
+            }
+            else if (GizmoType::SCALE == m_gizmoType) ImGui::PopStyleColor();
+
+            ImGui::SameLine();
+            if (GizmoType::TRANSFORM == m_gizmoType) ImGui::PushStyleColor(ImGuiCol_Text, selectedTextColor);
+            if (ImGui::Button(ICON_MDI_ROTATE_ORBIT, iconSize))
+            {
+                m_gizmoType = GizmoType::TRANSFORM;
+            }
+            else if (GizmoType::TRANSFORM == m_gizmoType) ImGui::PopStyleColor();
+
+            ImGui::PopStyleColor(3);
+            ImGui::PopStyleVar(2);
+        }
+        ImGui::PopStyleVar(2);
+        ImGui::End();
     }
 
     void EditorSystem::onGuiStats()
