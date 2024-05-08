@@ -428,8 +428,44 @@ namespace mango
             ++idx;
         }
 
-        s_debugSpotLight->build(data);
+        s_debugSpotLight->build(data, Mesh::DrawMode::LINES);
 
         return s_debugSpotLight;
     }
+
+    ref<Mesh> DebugMesh::createDebugCameraFrustum()
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        if (s_debugCameraFrustum)
+        {
+            return s_debugCameraFrustum;
+        }
+
+        s_debugCameraFrustum = createRef<Mesh>();
+
+        VertexData data;
+
+        data.positions = {
+                { -1, -1, -1 },  // NDC cube vertices
+                {  1, -1, -1 },
+                { -1,  1, -1 },
+                {  1,  1, -1 },
+                { -1, -1,  1 },
+                {  1, -1,  1 },
+                { -1,  1,  1 },
+                {  1,  1,  1 }
+        };
+
+        data.indices = {
+                0, 1, 1, 3, 3, 2, 2, 0, // NDC cube indices
+                4, 5, 5, 7, 7, 6, 6, 4,
+                0, 4, 1, 5, 3, 7, 2, 6
+        };
+
+        s_debugCameraFrustum->build(data, Mesh::DrawMode::LINES);
+
+        return s_debugCameraFrustum;
+    }
+
 }

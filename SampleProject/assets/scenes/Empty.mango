@@ -406,10 +406,10 @@ Entities:
     TagComponent:
       Name: Camera
     TransformComponent:
-      Position: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
+      Position: [-8.80589676, -0.712330699, 11.111187]
+      Rotation: [-2.06364942, -21.3746758, 0.752439141]
+      Orientation: [0.982495308, -0.0164775141, -0.185531601, 0.00311182044]
+      Scale: [1.00001407, 1, 1.00000465]
       ParentID: 0
       Children:
         []
@@ -417,18 +417,18 @@ Entities:
       ProjectionType: Perspective
       PerspectiveFOV: 60.0000038
       PerspectiveNear: 0.00999999978
-      PerspectiveFar: 1000
+      PerspectiveFar: 36
       OrthographicSize: 10
       OrthographicNear: 0.00999999978
       OrthographicFar: 1000
-      IsPrimary: false
+      IsPrimary: true
   - Entity: 6632387626144946747
     TagComponent:
       Name: Capsule
     TransformComponent:
-      Position: [0.593112946, -3.9484024, -6.26922703]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
+      Position: [-8.39027309, 9.91488075, 0.0353426337]
+      Rotation: [30.9624977, 1.92099069e-05, -22.4000187]
+      Orientation: [0.945363998, 0.261839509, -0.0518454947, -0.187187314]
       Scale: [1, 1, 1]
       ParentID: 0
       Children:
@@ -437,6 +437,17 @@ Entities:
       Filename: Capsule
       Materials:
         {}
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    CapsuleColliderComponent:
+      Offset: [0, 0, 0]
+      HalfHeight: 0.5
+      Radius: 0.5
   - Entity: 15938850309003129920
     TagComponent:
       Name: Plane
@@ -460,8 +471,8 @@ Entities:
       AngularDamping: 0.0500000007
       Activated: true
     BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [2.55999994, 0.100000001, 2.55999994]
+      Offset: [0, -0.256000012, 0]
+      Extent: [5, 0.100000001, 5]
   - Entity: 14182566828014702131
     TagComponent:
       Name: Cone
@@ -481,10 +492,10 @@ Entities:
     TagComponent:
       Name: Directional Light
     TransformComponent:
-      Position: [0, 0, 0]
-      Rotation: [-52.4000015, 15.8000002, 0]
-      Orientation: [0.888742983, -0.437315792, 0.123323277, 0.0606825799]
-      Scale: [1, 1, 1]
+      Position: [-0.912820101, -5.3162438e-08, 0.258302122]
+      Rotation: [55, 15.800005, 3.54919007e-06]
+      Orientation: [0.87859261, 0.457366347, 0.121914849, -0.0634648129]
+      Scale: [1, 1.00000012, 1.00000012]
       ParentID: 0
       Children:
         []

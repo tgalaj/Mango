@@ -108,6 +108,7 @@ namespace mango
         m_physicsColliderCapsule = DebugMesh::createDebugCapsule();
         m_debugSpotLightMesh     = DebugMesh::createDebugCone();
         m_debugDirLightMesh      = DebugMesh::createDebugDirLight();
+        m_debugCameraFrustumMesh = DebugMesh::createDebugCameraFrustum();
 
         int width  = m_mainWindow->getWidth();
         int height = m_mainWindow->getHeight();
@@ -855,6 +856,30 @@ namespace mango
 
                 m_debugDirLightMesh->bind();
                 m_debugDirLightMesh->render();
+            }
+        }
+
+        /* Camera Frustum */
+        {
+            auto view = scene->getEntitiesWithComponent<CameraComponent, TransformComponent>();
+            m_debugMeshShader->setUniform("color", glm::vec3(1.0f, 1.0f, 1.0f));
+
+            for (auto entity : view)
+            {
+                auto [camera, transform] = view.get(entity);
+
+                auto model = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
+                             glm::mat4_cast(glm::inverse(transform.getOrientation())) * 
+                             glm::inverse(camera.camera.getProjection());
+
+                auto view       = getCamera().getView();
+                auto projection = getCamera().getProjection();
+
+                m_debugMeshShader->bind();
+                m_debugMeshShader->setUniform("g_mvp", projection * view * model);
+
+                m_debugCameraFrustumMesh->bind();
+                m_debugCameraFrustumMesh->render();
             }
         }
 
