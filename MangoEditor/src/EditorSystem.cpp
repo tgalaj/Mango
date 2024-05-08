@@ -696,8 +696,9 @@ namespace mango
         constexpr ImVec2 iconSize   (40.0f, 40.0f);
         constexpr ImVec2 itemSpacing(0.0f,  5.0f);
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(1.0f, 1.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,    ImVec2(1.0f, 1.0f));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding,   5.0f);
         if (ImGui::Begin("Play Pause Sim Overlay", nullptr, windowFlags))
         {
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing,  itemSpacing);
@@ -760,7 +761,7 @@ namespace mango
             ImGui::PopStyleColor(3);
             ImGui::PopStyleVar(2);
         }
-        ImGui::PopStyleVar(2);
+        ImGui::PopStyleVar(3);
         ImGui::End();
     }
 
@@ -785,8 +786,9 @@ namespace mango
         constexpr ImVec2 itemSpacing      (0.0f,  5.0f);
         constexpr ImVec4 selectedTextColor(0.9569, 0.7333, 0.2667, 1.0);
         
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(1.0f, 1.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,    ImVec2(1.0f, 1.0f));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding,   5.0f);
         if (ImGui::Begin("Gizmo Manipulators Overlay", nullptr, windowFlags))
         {
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing,  itemSpacing);
@@ -842,7 +844,7 @@ namespace mango
             ImGui::PopStyleColor(3);
             ImGui::PopStyleVar(2);
         }
-        ImGui::PopStyleVar(2);
+        ImGui::PopStyleVar(3);
         ImGui::End();
     }
 
