@@ -592,9 +592,14 @@ namespace mango
         renderEntitiesInQueue(m_blendingShader, m_alphaQueue);
         glEnable(GL_CULL_FACE);
 
-        if (s_VisualizeLights)
+        if (s_VisualizeLight)
         {
-            renderDebugLightsBoundingBoxes(scene);
+            renderDebugLightMesh(SelectionManager::getSelectedEntity());
+        }
+
+        if (s_VisualizeCamera)
+        {
+            renderDebugCameraFrustumMesh(SelectionManager::getSelectedEntity());
         }
 
         if (s_VisualizePhysicsColliders)
@@ -668,9 +673,14 @@ namespace mango
 
             if (renderingMode == RenderingMode::EDITOR)
             {
-                if (s_VisualizeLights)
+                if (s_VisualizeLight)
                 {
-                    renderDebugLightsBoundingBoxes(scene);
+                    renderDebugLightMesh(SelectionManager::getSelectedEntity());
+                }
+
+                if (s_VisualizeCamera)
+                {
+                    renderDebugCameraFrustumMesh(SelectionManager::getSelectedEntity());
                 }
 
                 if (s_VisualizePhysicsColliders)
@@ -782,108 +792,110 @@ namespace mango
         glEnable(GL_BLEND);
     }
 
-    void RenderingSystem::renderDebugLightsBoundingBoxes(Scene* scene)
+    void RenderingSystem::renderDebugLightMesh(Entity entity)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("RenderingSystem::renderDebugLightsBoundingBoxes");
 
+        if (!entity)
+        {
+            return;
+        }
+
         glDisable(GL_BLEND);
 
         /* Point Lights */
+        if (entity.hasComponent<PointLightComponent>())
         {
-            auto view = scene->getEntitiesWithComponent<PointLightComponent, TransformComponent>();
-            for (auto entity : view)
-            {
-                auto [pointLight, transform] = view.get(entity);
+            auto& pointLight = entity.getComponent<PointLightComponent>();
+            auto& transform  = entity.getComponent<TransformComponent>();
 
-                auto model        = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
-                                    glm::scale(glm::mat4(1.0f), glm::vec3(pointLight.getRange()));
-                auto& view        = getCamera().getView();
-                auto& projection  = getCamera().getProjection();
+            auto model       = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
+                               glm::scale(glm::mat4(1.0f), glm::vec3(pointLight.getRange()));
+            auto& view       = getCamera().getView();
+            auto& projection = getCamera().getProjection();
 
-                m_debugMeshShader->bind();
-                m_debugMeshShader->setUniform("g_mvp", projection * view * model);
-                m_debugMeshShader->setUniform("color", pointLight.color);
+            m_debugMeshShader->bind();
+            m_debugMeshShader->setUniform("g_mvp", projection * view * model);
+            m_debugMeshShader->setUniform("color", pointLight.color);
 
-                m_physicsColliderSphere->bind();
-                m_physicsColliderSphere->render();
-            }
+            m_physicsColliderSphere->bind();
+            m_physicsColliderSphere->render();
         }
 
         /* Spot Lights */
+        if (entity.hasComponent<SpotLightComponent>())
         {
-            auto view = scene->getEntitiesWithComponent<SpotLightComponent, TransformComponent>();
-            for (auto entity : view)
-            {
-                auto [spotLight, transform] = view.get(entity);
+            auto& spotLight = entity.getComponent<SpotLightComponent>();
+            auto& transform = entity.getComponent<TransformComponent>();
 
-                float heightScale = spotLight.getRange();
-                float radiusScale = spotLight.getRange() * glm::tan(spotLight.getCutOffAngle()); 
+            float heightScale = spotLight.getRange();
+            float radiusScale = spotLight.getRange() * glm::tan(spotLight.getCutOffAngle()); 
 
-                auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
-                                  glm::mat4_cast(transform.getOrientation()) *
-                                  glm::scale(glm::mat4(1.0f), glm::vec3(radiusScale, radiusScale, heightScale));
-                auto view       = getCamera().getView();
-                auto projection = getCamera().getProjection();
+            auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
+                              glm::mat4_cast(transform.getOrientation()) *
+                              glm::scale(glm::mat4(1.0f), glm::vec3(radiusScale, radiusScale, heightScale));
+            auto view       = getCamera().getView();
+            auto projection = getCamera().getProjection();
 
-                m_debugMeshShader->bind();
-                m_debugMeshShader->setUniform("g_mvp", projection * view * model);
-                m_debugMeshShader->setUniform("color", spotLight.color);
+            m_debugMeshShader->bind();
+            m_debugMeshShader->setUniform("g_mvp", projection * view * model);
+            m_debugMeshShader->setUniform("color", spotLight.color);
 
-                m_debugSpotLightMesh->bind();
-                m_debugSpotLightMesh->render();
-            }
+            m_debugSpotLightMesh->bind();
+            m_debugSpotLightMesh->render();
         }
 
         /* Directional Lights */
+        if (entity.hasComponent<DirectionalLightComponent>())
         {
-            auto view = scene->getEntitiesWithComponent<DirectionalLightComponent, TransformComponent>();
-            for (auto entity : view)
-            {
-                auto [dirLight, transform] = view.get(entity);
+            auto& dirLight  = entity.getComponent<DirectionalLightComponent>();
+            auto& transform = entity.getComponent<TransformComponent>();
 
-                float scaleFactor = length(transform.getPosition() - m_cameraPosition) * m_camera->getPerspectiveVerticalFieldOfView() * 0.05f;
+            float scaleFactor = length(transform.getPosition() - m_cameraPosition) * m_camera->getPerspectiveVerticalFieldOfView() * 0.05f;
 
-                auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
-                                  glm::mat4_cast(glm::inverse(transform.getOrientation())) *
-                                  glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor));
-                auto view       = getCamera().getView();
-                auto projection = getCamera().getProjection();
+            auto model      = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
+                              glm::mat4_cast(glm::inverse(transform.getOrientation())) *
+                              glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor));
+            auto view       = getCamera().getView();
+            auto projection = getCamera().getProjection();
 
-                m_debugMeshShader->bind();
-                m_debugMeshShader->setUniform("g_mvp", projection * view * model);
-                m_debugMeshShader->setUniform("color", dirLight.color);
+            m_debugMeshShader->bind();
+            m_debugMeshShader->setUniform("g_mvp", projection * view * model);
+            m_debugMeshShader->setUniform("color", dirLight.color);
 
-                m_debugDirLightMesh->bind();
-                m_debugDirLightMesh->render();
-            }
+            m_debugDirLightMesh->bind();
+            m_debugDirLightMesh->render();
         }
 
         /* Camera Frustum */
+        if (entity.hasComponent<CameraComponent>())
         {
-            auto view = scene->getEntitiesWithComponent<CameraComponent, TransformComponent>();
             m_debugMeshShader->setUniform("color", glm::vec3(1.0f, 1.0f, 1.0f));
 
-            for (auto entity : view)
-            {
-                auto [camera, transform] = view.get(entity);
+            auto& camera    = entity.getComponent<CameraComponent>();
+            auto& transform = entity.getComponent<TransformComponent>();
 
-                auto model = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
-                             glm::mat4_cast(glm::inverse(transform.getOrientation())) * 
-                             glm::inverse(camera.camera.getProjection());
+            auto model = glm::translate(glm::mat4(1.0f), transform.getPosition()) *
+                         glm::mat4_cast(glm::inverse(transform.getOrientation())) * 
+                         glm::inverse(camera.camera.getProjection());
 
-                auto view       = getCamera().getView();
-                auto projection = getCamera().getProjection();
+            auto view       = getCamera().getView();
+            auto projection = getCamera().getProjection();
 
-                m_debugMeshShader->bind();
-                m_debugMeshShader->setUniform("g_mvp", projection * view * model);
+            m_debugMeshShader->bind();
+            m_debugMeshShader->setUniform("g_mvp", projection * view * model);
 
-                m_debugCameraFrustumMesh->bind();
-                m_debugCameraFrustumMesh->render();
-            }
+            m_debugCameraFrustumMesh->bind();
+            m_debugCameraFrustumMesh->render();
         }
 
         glEnable(GL_BLEND);
+    }
+
+    void RenderingSystem::renderDebugCameraFrustumMesh(Entity entity)
+    {
+
     }
 
     void RenderingSystem::renderDebugPhysicsColliders(Scene* scene)

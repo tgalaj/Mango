@@ -758,7 +758,8 @@ namespace mango
     {
         ImGui::Begin("Rendering Settings");
         {
-            ImGui::Checkbox("Visualize Lights",    &RenderingSystem::s_VisualizeLights);
+            ImGui::Checkbox("Visualize Light",     &RenderingSystem::s_VisualizeLight);
+            ImGui::Checkbox("Visualize Camera",    &RenderingSystem::s_VisualizeCamera);
             ImGui::Checkbox("Visualize Colliders", &RenderingSystem::s_VisualizePhysicsColliders);
 
             // Shading mode

@@ -428,7 +428,7 @@ namespace mango
             ++idx;
         }
 
-        s_debugSpotLight->build(data, Mesh::DrawMode::LINES);
+        s_debugSpotLight->build(data);
 
         return s_debugSpotLight;
     }

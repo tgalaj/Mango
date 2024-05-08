@@ -83,7 +83,8 @@ namespace mango
         float     outlineWidth                  = 1.0f;
         bool      outlineUseSeparableAxisMethod = true;
 
-        inline static bool         s_VisualizeLights           = false;
+        inline static bool         s_VisualizeLight            = true;
+        inline static bool         s_VisualizeCamera           = true;
         inline static bool         s_VisualizePhysicsColliders = true;
         inline static ShadingMode  s_ShadingMode               = ShadingMode::SHADED;
         inline static unsigned int s_DebugWindowWidth          = 0;
@@ -103,9 +104,10 @@ namespace mango
         void renderForward (Scene* scene);
         void renderDeferred(Scene* scene);
         void renderDebugView();
-        void renderDebugLightsBoundingBoxes(Scene* scene);
-        void renderDebugPhysicsColliders   (Scene* scene);
-        void renderLightBillboards         (Scene* scene);
+        void renderDebugLightMesh        (Entity entity);
+        void renderDebugCameraFrustumMesh(Entity entity);
+        void renderDebugPhysicsColliders (Scene* scene);
+        void renderLightBillboards       (Scene* scene);
 
         void renderEntitiesInQueue(ref<Shader>& shader, std::vector<Entity>& queue);
 
