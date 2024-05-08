@@ -280,7 +280,7 @@ void Sandbox::onUpdate(float dt)
 
     if (Input::getKeyUp(KeyCode::H) || Input::getGamepadButtonDown(GamepadID::PAD_1, GamepadButton::Y))
     {
-        RenderingSystem::s_VisualizeLights = !RenderingSystem::s_VisualizeLights;
+        RenderingSystem::s_VisualizeLight = !RenderingSystem::s_VisualizeLight;
     }
 
     static bool fullscreen = Services::application()->getWindow()->isFullscreen();
