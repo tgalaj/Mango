@@ -1285,7 +1285,7 @@ namespace mango
                     m_dirShadowMap->bind();
                     glClear(GL_DEPTH_BUFFER_BIT);
 
-                    lightMatrix = shadowInfo.getProjection() * glm::lookAt(-transform.getForward(), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+                    lightMatrix = shadowInfo.getProjection() * glm::lookAt(-transform.getOrientationVector(), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
                     m_shadowMapGenerator->setUniform("s_light_matrix", lightMatrix);
 
                     glCullFace(GL_FRONT);
@@ -1306,7 +1306,7 @@ namespace mango
                 m_deferredDirectional->setUniform("s_scene_ambient", sceneAmbientColor);
                 m_deferredDirectional->setUniform(S_DIRECTIONAL_LIGHT ".base.color",     directionalLight.color);
                 m_deferredDirectional->setUniform(S_DIRECTIONAL_LIGHT ".base.intensity", directionalLight.intensity);
-                m_deferredDirectional->setUniform(S_DIRECTIONAL_LIGHT ".direction",      transform.getForward());
+                m_deferredDirectional->setUniform(S_DIRECTIONAL_LIGHT ".direction", transform.getOrientationVector());
                 m_deferredDirectional->setUniform("s_light_matrix", lightMatrix);
 
                 m_deferredRendering->render();

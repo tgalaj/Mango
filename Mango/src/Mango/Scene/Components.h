@@ -437,10 +437,12 @@ namespace mango
         
         //// Directions
 
-        glm::vec3 getForward () const { return glm::normalize( m_worldMatrix[2]); }
-        glm::vec3 getBackward() const { return glm::normalize(-m_worldMatrix[2]); }
-        glm::vec3 getRight   () const { return glm::normalize( m_worldMatrix[0]); }
-        glm::vec3 getUp      () const { return glm::normalize( m_worldMatrix[1]); }
+        glm::vec3 getForward               () const { return glm::normalize( m_worldMatrix[2]); }
+        glm::vec3 getBackward              () const { return glm::normalize(-m_worldMatrix[2]); }
+        glm::vec3 getRight                 () const { return glm::normalize( m_worldMatrix[0]); }
+        glm::vec3 getUp                    () const { return glm::normalize( m_worldMatrix[1]); }
+        glm::vec3 getLocalOrientationVector() const { return glm::normalize(glm::conjugate(m_localOrientation) * glm::vec3(0.0f, 0.0f, 1.0f)); }
+        glm::vec3 getOrientationVector     () const { return glm::normalize(glm::conjugate(getOrientation())   * glm::vec3(0.0f, 0.0f, 1.0f)); }
 
         //// Helpers
 

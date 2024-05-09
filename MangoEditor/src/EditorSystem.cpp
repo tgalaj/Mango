@@ -783,7 +783,7 @@ namespace mango
         ImGui::SetNextWindowBgAlpha(0.75f); // Transparent background
 
         constexpr ImVec2 iconSize         (40.0f, 40.0f);
-        constexpr ImVec2 itemSpacing      (0.0f,  5.0f);
+        constexpr ImVec2 itemSpacing      (-5.0f,  5.0f);
         constexpr ImVec4 selectedTextColor(0.9569, 0.7333, 0.2667, 1.0);
         
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,    ImVec2(1.0f, 1.0f));

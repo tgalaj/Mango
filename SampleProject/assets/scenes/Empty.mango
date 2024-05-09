@@ -2,19 +2,75 @@ Scene: Empty
 Materials:
   []
 Entities:
-  - Entity: 10302950126657686356
+  - Entity: 11450204355375485186
     TagComponent:
-      Name: Cube
+      Name: Directional Light
     TransformComponent:
-      Position: [-5.07940865, 6.8711257, 0]
+      Position: [-0.912820101, 19.4071407, 0.258302122]
+      Rotation: [-63.5920792, 0, 0]
+      Orientation: [0.849929094, -0.526897073, 0, 0]
+      Scale: [0.999999762, 1.0000056, 1.00000107]
+      ParentID: 0
+      Children:
+        []
+    DirectionalLightComponent:
+      Color: [1, 1, 1]
+      Intensity: 1
+      Size: 30
+      CastsShadows: true
+  - Entity: 14182566828014702131
+    TagComponent:
+      Name: Cone
+    TransformComponent:
+      Position: [-16.7655792, 2.90329075, 0]
+      Rotation: [-37.9562836, 0, 0]
+      Orientation: [0.94564271, -0.325207412, 0, 0]
+      Scale: [8, 8, 8]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Cone
+      Materials:
+        {}
+  - Entity: 15938850309003129920
+    TagComponent:
+      Name: Plane
+    TransformComponent:
+      Position: [-9.58921623, -4.89427948, 0]
       Rotation: [0, 0, 0]
       Orientation: [1, 0, 0, 0]
+      Scale: [2.55999994, 2.55999994, 2.55999994]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Plane
+      Materials:
+        {}
+    RigidBody3DComponent:
+      MotionType: Static
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, -0.256000012, 0]
+      Extent: [5, 0.100000001, 5]
+  - Entity: 6632387626144946747
+    TagComponent:
+      Name: Capsule
+    TransformComponent:
+      Position: [-8.39027309, 9.91488075, 0.0353426337]
+      Rotation: [30.9624977, 1.92099069e-05, -22.4000187]
+      Orientation: [0.945363998, 0.261839509, -0.0518454947, -0.187187314]
       Scale: [1, 1, 1]
       ParentID: 0
       Children:
         []
     StaticMeshComponent:
-      Filename: Cube
+      Filename: Capsule
       Materials:
         {}
     RigidBody3DComponent:
@@ -24,314 +80,35 @@ Entities:
       LinearDamping: 0.0500000007
       AngularDamping: 0.0500000007
       Activated: true
-    BoxCollider3DComponent:
+    CapsuleColliderComponent:
       Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 11664357774790602948
+      HalfHeight: 0.5
+      Radius: 0.5
+  - Entity: 11005014603006867482
     TagComponent:
-      Name: Cube
+      Name: Camera
     TransformComponent:
-      Position: [-7.49535179, 8.05906677, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
+      Position: [-8.80589676, -0.712330699, 11.111187]
+      Rotation: [-2.06364942, -21.3746758, 0.752439141]
+      Orientation: [0.982495308, -0.0164775141, -0.185531601, 0.00311182044]
+      Scale: [1.00001407, 1, 1.00000465]
       ParentID: 0
       Children:
         []
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 868587421163069377
+    CameraComponent:
+      ProjectionType: Perspective
+      PerspectiveFOV: 60.0000038
+      PerspectiveNear: 0.00999999978
+      PerspectiveFar: 36
+      OrthographicSize: 10
+      OrthographicNear: 0.00999999978
+      OrthographicFar: 1000
+      IsPrimary: true
+  - Entity: 10885679988424911546
     TagComponent:
       Name: Cube
     TransformComponent:
-      Position: [-6.133811, 6.30877018, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-      ParentID: 0
-      Children:
-        []
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 16668429274767388530
-    TagComponent:
-      Name: Cube
-    TransformComponent:
-      Position: [-8.10958576, 6.30877018, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-      ParentID: 0
-      Children:
-        []
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 7824761145461708823
-    TagComponent:
-      Name: Cube
-    TransformComponent:
-      Position: [-8.10958576, 5.10029697, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-      ParentID: 0
-      Children:
-        []
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 14062660775749728956
-    TagComponent:
-      Name: Cube
-    TransformComponent:
-      Position: [-5.92345619, 5.10029697, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-      ParentID: 0
-      Children:
-        []
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 11775051455483788531
-    TagComponent:
-      Name: Cube
-    TransformComponent:
-      Position: [-5.92345619, 3.48594809, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-      ParentID: 0
-      Children:
-        []
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 14586285956199275882
-    TagComponent:
-      Name: Cube
-    TransformComponent:
-      Position: [-7.37984943, 3.48594809, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-      ParentID: 0
-      Children:
-        []
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 16751302212040685765
-    TagComponent:
-      Name: Cube
-    TransformComponent:
-      Position: [-7.37984943, 1.0437398, 0]
-      Rotation: [22.7169247, 8.64474297, -19.7493935]
-      Orientation: [0.96059674, 0.206149042, 0.039118126, -0.18228057]
-      Scale: [0.999999881, 1, 1]
-      ParentID: 0
-      Children:
-        []
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 2853602796222207631
-    TagComponent:
-      Name: Cube
-    TransformComponent:
-      Position: [-8.76786995, 1.0437398, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [1, 1, 1]
-      ParentID: 0
-      Children:
-        []
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 17858075111916470794
-    TagComponent:
-      Name: Cube
-    TransformComponent:
-      Position: [-8.76786995, 2.78202343, 0]
-      Rotation: [-4.47699213, 6.40430737, -35.0667877]
-      Orientation: [0.951983511, -0.0203710664, 0.0649719238, -0.298481256]
-      Scale: [1.00000024, 0.999999762, 1]
-      ParentID: 0
-      Children:
-        []
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 2056466195521039417
-    TagComponent:
-      Name: Cube
-    TransformComponent:
-      Position: [-10.0456553, 1.00663042, 0]
-      Rotation: [-28.612999, 0, 0]
-      Orientation: [0.968987703, -0.247108936, 0, 0]
-      Scale: [1, 0.99999994, 0.99999994]
-      ParentID: 0
-      Children:
-        []
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 3873397069757542925
-    TagComponent:
-      Name: Cube
-    TransformComponent:
-      Position: [-10.0456553, 3.24587154, 0]
-      Rotation: [45.9743614, 0, 0]
-      Orientation: [0.920592248, 0.390525162, 0, 0]
-      Scale: [1, 1, 1]
-      ParentID: 0
-      Children:
-        []
-    StaticMeshComponent:
-      Filename: Cube
-      Materials:
-        {}
-    RigidBody3DComponent:
-      MotionType: Dynamic
-      Friction: 0.200000003
-      Restitution: 0
-      LinearDamping: 0.0500000007
-      AngularDamping: 0.0500000007
-      Activated: true
-    BoxCollider3DComponent:
-      Offset: [0, 0, 0]
-      Extent: [0.5, 0.5, 0.5]
-  - Entity: 11290757863596597817
-    TagComponent:
-      Name: Cube
-    TransformComponent:
-      Position: [-4.91303158, 3.24587154, 0]
+      Position: [-6.98342752, 0, 0]
       Rotation: [0, 0, 0]
       Orientation: [1, 0, 0, 0]
       Scale: [1, 1, 1]
@@ -377,11 +154,11 @@ Entities:
     BoxCollider3DComponent:
       Offset: [0, 0, 0]
       Extent: [0.5, 0.5, 0.5]
-  - Entity: 10885679988424911546
+  - Entity: 11290757863596597817
     TagComponent:
       Name: Cube
     TransformComponent:
-      Position: [-6.98342752, 0, 0]
+      Position: [-4.91303158, 3.24587154, 0]
       Rotation: [0, 0, 0]
       Orientation: [1, 0, 0, 0]
       Scale: [1, 1, 1]
@@ -402,39 +179,19 @@ Entities:
     BoxCollider3DComponent:
       Offset: [0, 0, 0]
       Extent: [0.5, 0.5, 0.5]
-  - Entity: 11005014603006867482
+  - Entity: 3873397069757542925
     TagComponent:
-      Name: Camera
+      Name: Cube
     TransformComponent:
-      Position: [-8.80589676, -0.712330699, 11.111187]
-      Rotation: [-2.06364942, -21.3746758, 0.752439141]
-      Orientation: [0.982495308, -0.0164775141, -0.185531601, 0.00311182044]
-      Scale: [1.00001407, 1, 1.00000465]
-      ParentID: 0
-      Children:
-        []
-    CameraComponent:
-      ProjectionType: Perspective
-      PerspectiveFOV: 60.0000038
-      PerspectiveNear: 0.00999999978
-      PerspectiveFar: 36
-      OrthographicSize: 10
-      OrthographicNear: 0.00999999978
-      OrthographicFar: 1000
-      IsPrimary: true
-  - Entity: 6632387626144946747
-    TagComponent:
-      Name: Capsule
-    TransformComponent:
-      Position: [-8.39027309, 9.91488075, 0.0353426337]
-      Rotation: [30.9624977, 1.92099069e-05, -22.4000187]
-      Orientation: [0.945363998, 0.261839509, -0.0518454947, -0.187187314]
+      Position: [-10.0456553, 3.24587154, 0]
+      Rotation: [45.9743614, 0, 0]
+      Orientation: [0.920592248, 0.390525162, 0, 0]
       Scale: [1, 1, 1]
       ParentID: 0
       Children:
         []
     StaticMeshComponent:
-      Filename: Capsule
+      Filename: Cube
       Materials:
         {}
     RigidBody3DComponent:
@@ -444,63 +201,306 @@ Entities:
       LinearDamping: 0.0500000007
       AngularDamping: 0.0500000007
       Activated: true
-    CapsuleColliderComponent:
+    BoxCollider3DComponent:
       Offset: [0, 0, 0]
-      HalfHeight: 0.5
-      Radius: 0.5
-  - Entity: 15938850309003129920
+      Extent: [0.5, 0.5, 0.5]
+  - Entity: 2056466195521039417
     TagComponent:
-      Name: Plane
+      Name: Cube
     TransformComponent:
-      Position: [-9.58921623, -4.89427948, 0]
-      Rotation: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-      Scale: [2.55999994, 2.55999994, 2.55999994]
+      Position: [-10.0456553, 1.00663042, 0]
+      Rotation: [-28.612999, 0, 0]
+      Orientation: [0.968987703, -0.247108936, 0, 0]
+      Scale: [1, 0.99999994, 0.99999994]
       ParentID: 0
       Children:
         []
     StaticMeshComponent:
-      Filename: Plane
+      Filename: Cube
       Materials:
         {}
     RigidBody3DComponent:
-      MotionType: Static
+      MotionType: Dynamic
       Friction: 0.200000003
       Restitution: 0
       LinearDamping: 0.0500000007
       AngularDamping: 0.0500000007
       Activated: true
     BoxCollider3DComponent:
-      Offset: [0, -0.256000012, 0]
-      Extent: [5, 0.100000001, 5]
-  - Entity: 14182566828014702131
+      Offset: [0, 0, 0]
+      Extent: [0.5, 0.5, 0.5]
+  - Entity: 17858075111916470794
     TagComponent:
-      Name: Cone
+      Name: Cube
     TransformComponent:
-      Position: [-16.7655792, 2.90329075, 0]
-      Rotation: [-37.9562836, 0, 0]
-      Orientation: [0.94564271, -0.325207412, 0, 0]
-      Scale: [8, 8, 8]
+      Position: [-8.76786995, 2.78202343, 0]
+      Rotation: [-4.47699213, 6.40430737, -35.0667877]
+      Orientation: [0.951983511, -0.0203710664, 0.0649719238, -0.298481256]
+      Scale: [1.00000024, 0.999999762, 1]
       ParentID: 0
       Children:
         []
     StaticMeshComponent:
-      Filename: Cone
+      Filename: Cube
       Materials:
         {}
-  - Entity: 11450204355375485186
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, 0, 0]
+      Extent: [0.5, 0.5, 0.5]
+  - Entity: 2853602796222207631
     TagComponent:
-      Name: Directional Light
+      Name: Cube
     TransformComponent:
-      Position: [-0.912820101, -5.3162438e-08, 0.258302122]
-      Rotation: [55, 15.800005, 3.54919007e-06]
-      Orientation: [0.87859261, 0.457366347, 0.121914849, -0.0634648129]
-      Scale: [1, 1.00000012, 1.00000012]
+      Position: [-8.76786995, 1.0437398, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
       ParentID: 0
       Children:
         []
-    DirectionalLightComponent:
-      Color: [1, 1, 1]
-      Intensity: 1
-      Size: 20
-      CastsShadows: true
+    StaticMeshComponent:
+      Filename: Cube
+      Materials:
+        {}
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, 0, 0]
+      Extent: [0.5, 0.5, 0.5]
+  - Entity: 16751302212040685765
+    TagComponent:
+      Name: Cube
+    TransformComponent:
+      Position: [-7.37984943, 1.0437398, 0]
+      Rotation: [22.7169247, 8.64474297, -19.7493935]
+      Orientation: [0.96059674, 0.206149042, 0.039118126, -0.18228057]
+      Scale: [0.999999881, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Cube
+      Materials:
+        {}
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, 0, 0]
+      Extent: [0.5, 0.5, 0.5]
+  - Entity: 14586285956199275882
+    TagComponent:
+      Name: Cube
+    TransformComponent:
+      Position: [-7.37984943, 3.48594809, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Cube
+      Materials:
+        {}
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, 0, 0]
+      Extent: [0.5, 0.5, 0.5]
+  - Entity: 11775051455483788531
+    TagComponent:
+      Name: Cube
+    TransformComponent:
+      Position: [-5.92345619, 3.48594809, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Cube
+      Materials:
+        {}
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, 0, 0]
+      Extent: [0.5, 0.5, 0.5]
+  - Entity: 14062660775749728956
+    TagComponent:
+      Name: Cube
+    TransformComponent:
+      Position: [-5.92345619, 5.10029697, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Cube
+      Materials:
+        {}
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, 0, 0]
+      Extent: [0.5, 0.5, 0.5]
+  - Entity: 7824761145461708823
+    TagComponent:
+      Name: Cube
+    TransformComponent:
+      Position: [-8.10958576, 5.10029697, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Cube
+      Materials:
+        {}
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, 0, 0]
+      Extent: [0.5, 0.5, 0.5]
+  - Entity: 16668429274767388530
+    TagComponent:
+      Name: Cube
+    TransformComponent:
+      Position: [-8.10958576, 6.30877018, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Cube
+      Materials:
+        {}
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, 0, 0]
+      Extent: [0.5, 0.5, 0.5]
+  - Entity: 868587421163069377
+    TagComponent:
+      Name: Cube
+    TransformComponent:
+      Position: [-6.133811, 6.30877018, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Cube
+      Materials:
+        {}
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, 0, 0]
+      Extent: [0.5, 0.5, 0.5]
+  - Entity: 11664357774790602948
+    TagComponent:
+      Name: Cube
+    TransformComponent:
+      Position: [-7.49535179, 8.05906677, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Cube
+      Materials:
+        {}
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, 0, 0]
+      Extent: [0.5, 0.5, 0.5]
+  - Entity: 10302950126657686356
+    TagComponent:
+      Name: Cube
+    TransformComponent:
+      Position: [-5.07940865, 6.8711257, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Cube
+      Materials:
+        {}
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, 0, 0]
+      Extent: [0.5, 0.5, 0.5]
