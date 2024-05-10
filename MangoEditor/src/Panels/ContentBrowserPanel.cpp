@@ -139,6 +139,13 @@ namespace mango
                 {
                     itemPopupOpened = true;
                     
+                    if (ImGui::MenuItem("Open"))
+                    {
+                        std::filesystem::path relativePath = std::filesystem::relative(path, m_basePath);
+
+                        Services::eventBus()->emit(RequestSceneLoadEvent(relativePath));
+                    }
+
                     if (ImGui::MenuItem("Rename"))
                     {
                         m_currentRenameEntry = path;
