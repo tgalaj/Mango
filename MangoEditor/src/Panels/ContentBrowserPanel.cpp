@@ -1,7 +1,9 @@
 #include "ContentBrowserPanel.h"
 #include "DragDropPayloadTypes.h"
+#include "EditorEvents.h"
 #include "IconsMaterialDesignIcons.h"
 
+#include "Mango/Core/Services.h"
 #include "Mango/Core/VFI.h"
 #include "Mango/Project/Project.h"
 
@@ -123,7 +125,9 @@ namespace mango
                     }
                     else
                     {
-                        cmdOpenExternally(path);
+                        std::filesystem::path relativePath = std::filesystem::relative(path, m_basePath);
+
+                        Services::eventBus()->emit(RequestSceneLoadEvent(relativePath));
                     }
                 }
                 else if (ImGui::IsMouseClicked(ImGuiMouseButton_Right) && ImGui::IsItemHovered())

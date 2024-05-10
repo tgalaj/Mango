@@ -53,6 +53,9 @@ namespace mango
         // Set CVars
         CVarFloat CVarCameraRotationSpeed("editor.camera.rotationSpeed", "rotation speed of the editor camera", 0.2f);
         CVarFloat CVarCameraMoveSpeed    ("editor.camera.moveSpeed",     "movement speed of the editor camera", 10.0f);
+
+        // Listen to the events
+        Services::eventBus()->subscribe<RequestSceneLoadEvent>(MG_BIND_EVENT(EditorSystem::onReceiveSceneLoadEvent));
     }
 
     void EditorSystem::onInit()
@@ -1290,4 +1293,10 @@ namespace mango
             }
         }
     }
+
+    void EditorSystem::onReceiveSceneLoadEvent(const RequestSceneLoadEvent& event)
+    {
+        openScene(event.scenePath);
+    }
+
 }

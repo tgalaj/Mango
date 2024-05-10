@@ -1,6 +1,7 @@
 #pragma once
 #include "Mango.h"
 #include "EditorCamera.h"
+#include "EditorEvents.h"
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/MaterialEditorPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
@@ -63,6 +64,9 @@ namespace mango
         void onDuplicateEntity();
 
         void moveLights(float dt);
+
+    private:
+        void onReceiveSceneLoadEvent(const RequestSceneLoadEvent& event);
 
     private:
         std::filesystem::path  m_editorScenePath;
