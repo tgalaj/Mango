@@ -7,13 +7,13 @@ namespace mango
 {
     namespace
     {
-        std::random_device                      randomDevice;
-        std::mt19937_64                         engine(randomDevice());
-        std::uniform_int_distribution<uint64_t> uniformDistribution;
+        static std::random_device                      s_randomDevice;
+        static std::mt19937_64                         s_engine(s_randomDevice());
+        static std::uniform_int_distribution<uint64_t> s_uniformDistribution;
     }
 
     UUID::UUID()
-        : m_uuid(uniformDistribution(engine))
+        : m_uuid(s_uniformDistribution(s_engine))
     {
 
     }

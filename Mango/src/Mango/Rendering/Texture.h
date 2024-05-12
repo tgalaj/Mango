@@ -1,4 +1,6 @@
 #pragma once
+#include "Mango/Asset/Asset.h"
+
 #include <cmath>
 #include <string>
 
@@ -99,7 +101,7 @@ namespace mango
         bool               compressed     = false;
     };
 
-    class Texture final
+    class Texture final : public Asset
     {
     public:
         Texture() : m_id(0) {}
@@ -156,6 +158,9 @@ namespace mango
             uint8_t num_levels = 1 + std::floor(std::log2(std::max(width, std::max(height, depth))));
             return  num_levels;
         }
+
+        static  AssetType getStaticAssetType() { return AssetType::Texture; };
+        virtual AssetType getAssetType()       { return getStaticAssetType(); };
 
     private:
         void setDescriptor(int width, int height, int channelsCount, bool isSrgb);

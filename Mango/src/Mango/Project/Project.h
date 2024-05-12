@@ -1,9 +1,12 @@
 #pragma once
 
-#include "Mango/Core/Assertions.h"
-
 #include <filesystem>
 #include <string>
+
+#include "Mango/Core/Base.h"
+
+#include "Mango/Asset/EditorAssetManager.h"
+#include "Mango/Asset/RuntimeAssetManager.h"
 
 namespace mango
 {
@@ -37,10 +40,19 @@ namespace mango
         static ref<Project> createNew(const std::string& name, const std::filesystem::path& path);
         static ref<Project> load(const std::filesystem::path& filepath);
         static bool saveActive(const std::filesystem::path& filepath);
+        
+        ref<AssetManagerBase>    getAssetManager()        { return m_assetManager; }
+
+        // Use only for the Editor!
+        ref<EditorAssetManager>  getEditorAssetManager()  { return std::static_pointer_cast<EditorAssetManager>(m_assetManager); }
+
+        // Use only for the Runtime!
+        ref<RuntimeAssetManager> getRuntimeAssetManager() { return std::static_pointer_cast<RuntimeAssetManager>(m_assetManager); }
 
     private:
         ProjectConfig m_config;
         std::filesystem::path m_projectDirectory;
+        ref<AssetManagerBase> m_assetManager;
 
         inline static ref<Project> s_activeProject;
 

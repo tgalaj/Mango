@@ -1,7 +1,7 @@
 #include "mgpch.h"
 #include "AssetManager.h"
 
-#include "Mango/Assets/AssimpMeshImporter.h"
+#include "Mango/AssetManager/AssimpMeshImporter.h"
 
 namespace mango
 {
