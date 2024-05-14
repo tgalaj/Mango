@@ -14,6 +14,7 @@ namespace mango
 
         virtual bool       isAssetHandleValid(AssetHandle handle) const = 0;
         virtual bool       isAssetLoaded     (AssetHandle handle) const = 0;
+        virtual AssetType  getAssetType      (AssetHandle handle) const = 0
 
     };
 }

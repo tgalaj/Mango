@@ -15,6 +15,5 @@ namespace mango
             ref<Asset> asset = Project::getActive()->getAssetManager()->getAsset(handle);
             return std::static_pointer_cast<T>(asset);
         }
-
     };
 }

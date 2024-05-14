@@ -13,8 +13,8 @@ namespace mango
     {
         if (s_activeProject)
         {
-            VFI::removeFromSearchPath(getProjectDirectory());
-            VFI::removeFromSearchPath(getAssetDirectory());
+            VFI::removeFromSearchPath(getActiveProjectDirectory());
+            VFI::removeFromSearchPath(getActiveAssetDirectory());
         }
         
         s_activeProject = createRef<Project>();
@@ -45,8 +45,8 @@ namespace mango
     {
         if (s_activeProject)
         {
-            VFI::removeFromSearchPath(getProjectDirectory());
-            VFI::removeFromSearchPath(getAssetDirectory());
+            VFI::removeFromSearchPath(getActiveProjectDirectory());
+            VFI::removeFromSearchPath(getActiveAssetDirectory());
         }
 
         s_activeProject = ProjectSerializer::deserialize(filepath);
@@ -54,6 +54,9 @@ namespace mango
         if (s_activeProject)
         {
             s_activeProject->m_projectDirectory = filepath.parent_path();
+            ref<EditorAssetManager> editorAssetManager = createRef<EditorAssetManager>();
+            s_activeProject->m_assetManager = editorAssetManager;
+            editorAssetManager->deserializeAssetRegistry();
         }
 
         return s_activeProject;

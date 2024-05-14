@@ -1,9 +1,8 @@
 #include "mgpch.h"
 #include "ProjectSerializer.h"
 
-#include <yaml-cpp/yaml.h>
-
 #include <fstream>
+#include <yaml-cpp/yaml.h>
 
 namespace mango
 {
@@ -17,9 +16,10 @@ namespace mango
             out << YAML::Key << "Project"  << YAML::Value;
             out << YAML::BeginMap;
             {
-                out << YAML::Key << "Name"            << YAML::Value << config.name;
-                out << YAML::Key << "StartScene"      << YAML::Value << config.startScene;
-                out << YAML::Key << "AssetDirectory"  << YAML::Value << config.assetDirectory.string();
+                out << YAML::Key << "Name"              << YAML::Value << config.name;
+                out << YAML::Key << "StartScene"        << YAML::Value << config.startScene;
+                out << YAML::Key << "AssetDirectory"    << YAML::Value << config.assetDirectory.string();
+                out << YAML::Key << "AssetRegistryPath" << YAML::Value << config.assetRegistryPath.string();
             }
             out << YAML::EndMap;
         }
@@ -57,9 +57,12 @@ namespace mango
         auto project = Project::getActive();
         auto& config = project->getConfig();
 
-        config.name           = projectNode["Name"].as<std::string>();
-        config.startScene     = projectNode["StartScene"].as<std::string>();
-        config.assetDirectory = projectNode["AssetDirectory"].as<std::string>();
+        config.name              = projectNode["Name"].as<std::string>();
+        config.startScene        = projectNode["StartScene"].as<std::string>();
+        config.assetDirectory    = projectNode["AssetDirectory"].as<std::string>();
+
+        if (projectNode["AssetRegistryPath"])
+            config.assetRegistryPath = projectNode["AssetRegistryPath"].as<std::string>();
 
         return project;
     }

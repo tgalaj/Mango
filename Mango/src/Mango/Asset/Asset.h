@@ -1,18 +1,31 @@
 #pragma once
 
+#include "Mango/Core/Base.h"
 #include "Mango/Core/UUID.h"
 
 namespace mango
 {
     using AssetHandle = UUID;
 
-    enum class AssetType
+    enum class AssetType : uint16_t
     {
         None = 0,
         Scene,
+        MeshData,
+        Mesh, // aka dynamic, animated mesh
+        StaticMesh,
+        Material,
         Texture,
-        Mesh // TODO(tgalaj): list
+        EnvMap,
+        Prefab,
+        PhysicsMaterial,
+        Audio,
+        SoundConfig,
+        Script,
     };
+
+    const char* assetTypeToString  (AssetType type);
+    AssetType   assetTypeFromString(const char* type);
 
     class Asset
     {

@@ -128,6 +128,7 @@ namespace mango
             return *this;
         }
 
+        void create           (const TextureDescriptor& desc, void* data);
         void bind             (uint32_t unit) const { glBindTextureUnit(unit, m_id); }
         void setFiltering     (TextureFiltering type, TextureFilteringParam param);
         void setMinLod        (float min);
@@ -159,15 +160,15 @@ namespace mango
             return  num_levels;
         }
 
+        static  TextureDescriptor createDescriptor(int width, int height, int channelsCount, bool isSrgb);
+
         static  AssetType getStaticAssetType() { return AssetType::Texture; };
         virtual AssetType getAssetType()       { return getStaticAssetType(); };
 
     private:
-        void setDescriptor(int width, int height, int channelsCount, bool isSrgb);
-
-        uint8_t* load(const std::string& filename, bool isSrgb, bool flip = true);
-        uint8_t* load(uint8_t* memoryData, uint64_t dataSize, bool isSrgb);
-        float*   loadf(const std::string& filename, bool flip = true);
+        // uint8_t* load(const std::string& filename, bool isSrgb, bool flip = true);
+        // uint8_t* load(uint8_t* memoryData, uint64_t dataSize, bool isSrgb);
+        // float*   loadf(const std::string& filename, bool flip = true);
 
         void release()
         {
