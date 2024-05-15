@@ -171,64 +171,64 @@ namespace mango
 
     // --------------------- Texture creation methods -------------------------
 
-    uint8_t* Texture::load(const std::string& filename, bool isSrgb, bool flip /*= true*/)
-    {
-        MG_PROFILE_ZONE_SCOPED;
+    //uint8_t* Texture::load(const std::string& filename, bool isSrgb, bool flip /*= true*/)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
 
-        auto filepath = VFI::getFilepath(filename);
-        
-        if (flip) stbi_set_flip_vertically_on_load(true);
+    //    auto filepath = VFI::getFilepath(filename);
+    //    
+    //    if (flip) stbi_set_flip_vertically_on_load(true);
 
-        int width, height, channelsCount;
-        uint8_t* data = stbi_load(filepath.string().c_str(), &width, &height, &channelsCount, 0);
-        
-        if (flip) stbi_set_flip_vertically_on_load(false);
+    //    int width, height, channelsCount;
+    //    uint8_t* data = stbi_load(filepath.string().c_str(), &width, &height, &channelsCount, 0);
+    //    
+    //    if (flip) stbi_set_flip_vertically_on_load(false);
 
-        if (data)
-        {
-            setDescriptor(width, height, channelsCount, isSrgb);
-        }
+    //    if (data)
+    //    {
+    //        setDescriptor(width, height, channelsCount, isSrgb);
+    //    }
 
-        return data;
-    }
+    //    return data;
+    //}
 
-    uint8_t* Texture::load(uint8_t* memoryData, uint64_t dataSize, bool isSrgb)
-    {
-        MG_PROFILE_ZONE_SCOPED;
+    //uint8_t* Texture::load(uint8_t* memoryData, uint64_t dataSize, bool isSrgb)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
 
-        int width, height, channelsCount;
-        uint8_t* data = stbi_load_from_memory(memoryData, dataSize, &width, &height, &channelsCount, 0);
+    //    int width, height, channelsCount;
+    //    uint8_t* data = stbi_load_from_memory(memoryData, dataSize, &width, &height, &channelsCount, 0);
 
-        if (data)
-        {
-            setDescriptor(width, height, channelsCount, isSrgb);
-        }
+    //    if (data)
+    //    {
+    //        setDescriptor(width, height, channelsCount, isSrgb);
+    //    }
 
-        return data;
-    }
+    //    return data;
+    //}
 
-    float* Texture::loadf(const std::string& filename, bool flip /*= true*/)
-    {
-        MG_PROFILE_ZONE_SCOPED;
+    //float* Texture::loadf(const std::string& filename, bool flip /*= true*/)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
 
-        auto filepath = VFI::getFilepath(filename);
-        if (flip) stbi_set_flip_vertically_on_load(true);
+    //    auto filepath = VFI::getFilepath(filename);
+    //    if (flip) stbi_set_flip_vertically_on_load(true);
 
-        int width, height, channelsCount;
-        float* data = stbi_loadf(filepath.string().c_str(), &width, &height, &channelsCount, 3);
+    //    int width, height, channelsCount;
+    //    float* data = stbi_loadf(filepath.string().c_str(), &width, &height, &channelsCount, 3);
 
-        if (flip) stbi_set_flip_vertically_on_load(false);
+    //    if (flip) stbi_set_flip_vertically_on_load(false);
 
-        if (data)
-        {
-            m_descriptor.width          = width;
-            m_descriptor.height         = height;
-            m_descriptor.format         = GL_RGB;
-            m_descriptor.internalFormat = GL_RGB32F;
-        }
+    //    if (data)
+    //    {
+    //        m_descriptor.width          = width;
+    //        m_descriptor.height         = height;
+    //        m_descriptor.format         = GL_RGB;
+    //        m_descriptor.internalFormat = GL_RGB32F;
+    //    }
 
-        return data;
-    }
+    //    return data;
+    //}
 
     bool Texture::createTexture2d(const std::string& filename, bool isSrgb, uint32_t mipmapLevels)
     {
@@ -236,7 +236,7 @@ namespace mango
         MG_PROFILE_GL_ZONE("Texture::createTexture2d");
 
         m_filename = filename;
-        auto data = load(filename, isSrgb);
+        auto data = nullptr;//load(filename, isSrgb);
 
         if (!data)
         {
@@ -258,7 +258,7 @@ namespace mango
         setWraping   (TextureWrapingCoordinate::T, TextureWrapingParam::REPEAT);
         setAnisotropy(16.0f);
 
-        stbi_image_free(data);
+        //stbi_image_free(data);
 
         return true;
     }
@@ -311,7 +311,7 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::createTexture2dFromMemory");
 
-        auto data = load(memoryData, dataSize, isSrgb);
+        auto data = nullptr;//load(memoryData, dataSize, isSrgb);
 
         if (!data)
         {
@@ -333,7 +333,7 @@ namespace mango
         setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::REPEAT);
         setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::REPEAT);
 
-        stbi_image_free(data);
+        //stbi_image_free(data);
 
         return true;
     }
@@ -344,7 +344,7 @@ namespace mango
         MG_PROFILE_GL_ZONE("Texture::createTexture2dHDR");
 
         m_filename = filename;
-        float* data = loadf(filename);
+        float* data = 0;//loadf(filename);
 
         if (!data)
         {
@@ -365,7 +365,7 @@ namespace mango
         setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::CLAMP_TO_EDGE);
         setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::CLAMP_TO_EDGE);
         
-        stbi_image_free(data);
+        //stbi_image_free(data);
 
         return true;
     }
@@ -375,7 +375,7 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::createTextureDDS");
 
-        m_filename = filename;
+        /*m_filename = filename;
         auto filepath = VFI::getFilepath(filename);
 
         DDSFile dds;
@@ -486,7 +486,7 @@ namespace mango
                     break;
                 }
             }
-        }
+        }*/
 
         return true;
     }
@@ -502,7 +502,7 @@ namespace mango
 
         for (int i = 0; i < NUM_FACES; ++i)
         {
-            images_data[i] = load(filenames[i], isSrgb, false);
+            images_data[i] = nullptr;//load(filenames[i], isSrgb, false);
 
             if (!images_data[i])
             {
@@ -542,7 +542,7 @@ namespace mango
 
         for (int i = 0; i < NUM_FACES; ++i)
         {
-            stbi_image_free(images_data[i]);
+            //stbi_image_free(images_data[i]);
         }
 
         return true;
@@ -569,6 +569,8 @@ namespace mango
             desc.format = GL_RGBA;
             desc.internalFormat = isSrgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
         }
+
+        return desc;
     }
 
 }

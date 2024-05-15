@@ -106,7 +106,7 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        std::string pathStr = metadata.filepath.string();
+        /*std::string pathStr = metadata.filepath.string();
 
         auto filepath = VFI::getFilepath(filename);
 
@@ -122,7 +122,9 @@ namespace mango
             setDescriptor(width, height, channelsCount, isSrgb);
         }
 
-        return data;
+        return data;*/
+
+        return nullptr;
     }
 
 }

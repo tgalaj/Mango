@@ -152,7 +152,7 @@ namespace mango
                 materialName = std::filesystem::path(mesh->getName()).stem().string() + "_" + std::to_string(i+1);
             }
 
-            auto mangoMaterial = AssetManager::createMaterial(materialName);
+            auto mangoMaterial = AssetManagerOld::createMaterial(materialName);
 
             // NOTE(TG): Leaving parts of code commented as we'll need it when moving to PBR workflow
             

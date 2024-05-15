@@ -20,10 +20,10 @@ namespace mango
         glNamedBufferData(m_ssbo, sizeof(initialValues), &initialValues, GL_DYNAMIC_COPY);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ssbo);
 
-        m_pickingShader = AssetManager::createShader("PickingShader", "Picking.vert", "Picking.frag");
+        m_pickingShader = AssetManagerOld::createShader("PickingShader", "Picking.vert", "Picking.frag");
         m_pickingShader->link();
 
-        m_pickingBillboardShader = AssetManager::createShader("PickingBillboardSprite", "PickingBillboardSprite.vert", "PickingBillboardSprite.frag", "PickingBillboardSprite.geom");
+        m_pickingBillboardShader = AssetManagerOld::createShader("PickingBillboardSprite", "PickingBillboardSprite.vert", "PickingBillboardSprite.frag", "PickingBillboardSprite.geom");
         m_pickingBillboardShader->link();
     }
 

@@ -187,7 +187,7 @@ namespace mango
 
         if (!m_materialTable.empty()) m_materialTable.clear();
         
-        m_materialTable.emplace_back(AssetManager::getMaterial("DefaultMaterial"));
+        m_materialTable.emplace_back(AssetManagerOld::getMaterial("DefaultMaterial"));
 
         m_submeshes.emplace_back(submesh);
     }

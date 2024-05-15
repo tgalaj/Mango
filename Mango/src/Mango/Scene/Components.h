@@ -224,7 +224,7 @@ namespace mango
         {
             if (materials.empty())
             {
-                materials.emplace_back(AssetManager::getMaterial("DefaultMaterial"));
+                materials.emplace_back(AssetManagerOld::getMaterial("DefaultMaterial"));
             }
         }
 

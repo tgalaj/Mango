@@ -25,10 +25,10 @@ namespace mango
             skyboxDirectory + "/" + frontFace,
             skyboxDirectory + "/" + backFace
         };
-        m_cubeMapTexture = AssetManager::createCubeMapTexture(filenames, true);
+        m_cubeMapTexture = AssetManagerOld::createCubeMapTexture(filenames, true);
 
         /* Create skybox shader object */
-        m_skyboxShader = AssetManager::createShader("Skybox", "Skybox.vert", "Skybox.frag");
+        m_skyboxShader = AssetManagerOld::createShader("Skybox", "Skybox.vert", "Skybox.frag");
         m_skyboxShader->link();
 
         m_skyboxMesh = createRef<Mesh>();

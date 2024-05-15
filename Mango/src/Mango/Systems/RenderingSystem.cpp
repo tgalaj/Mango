@@ -51,52 +51,52 @@ namespace mango
         m_opaqueQueue.reserve(50);
         m_alphaQueue.reserve(5);
 
-        m_forwardAmbient = AssetManager::createShader("Forward-Ambient", "Forward-Light.vert", "Forward-Ambient.frag");
+        m_forwardAmbient = AssetManagerOld::createShader("Forward-Ambient", "Forward-Light.vert", "Forward-Ambient.frag");
         m_forwardAmbient->link();
 
-        m_forwardDirectional = AssetManager::createShader("Forward-Directional", "Forward-Light.vert", "Forward-Directional.frag");
+        m_forwardDirectional = AssetManagerOld::createShader("Forward-Directional", "Forward-Light.vert", "Forward-Directional.frag");
         m_forwardDirectional->link();
 
-        m_forwardPoint = AssetManager::createShader("Forward-Point", "Forward-Light.vert", "Forward-Point.frag");
+        m_forwardPoint = AssetManagerOld::createShader("Forward-Point", "Forward-Light.vert", "Forward-Point.frag");
         m_forwardPoint->link();
 
-        m_forwardSpot = AssetManager::createShader("Forward-Spot", "Forward-Light.vert", "Forward-Spot.frag");
+        m_forwardSpot = AssetManagerOld::createShader("Forward-Spot", "Forward-Light.vert", "Forward-Spot.frag");
         m_forwardSpot->link();
 
-        m_debugRendering = AssetManager::createShader("Debug-Rendering", "FSQ.vert", "DebugRendering.frag");
+        m_debugRendering = AssetManagerOld::createShader("Debug-Rendering", "FSQ.vert", "DebugRendering.frag");
         m_debugRendering->link();
 
-        m_wireframeShader = AssetManager::createShader("Wireframe", "Wireframe.vert", "Wireframe.frag");
+        m_wireframeShader = AssetManagerOld::createShader("Wireframe", "Wireframe.vert", "Wireframe.frag");
         m_wireframeShader->link();
 
-        m_billboardSpriteEditorShader = AssetManager::createShader("BillboardSprite", "BillboardSprite.vert", "BillboardSprite.frag", "BillboardSprite.geom");
+        m_billboardSpriteEditorShader = AssetManagerOld::createShader("BillboardSprite", "BillboardSprite.vert", "BillboardSprite.frag", "BillboardSprite.geom");
         m_billboardSpriteEditorShader->link();
 
-        m_shadowMapGenerator = AssetManager::createShader("Shadow-Map-Gen", "Shadow-Map-Gen.vert", "Shadow-Map-Gen.frag");
+        m_shadowMapGenerator = AssetManagerOld::createShader("Shadow-Map-Gen", "Shadow-Map-Gen.vert", "Shadow-Map-Gen.frag");
         m_shadowMapGenerator->link();
 
-        m_omniShadowMapGenerator = AssetManager::createShader("Omni-Shadow-Map-Gen", "Omni-Shadow-Map-Gen.vert", "Omni-Shadow-Map-Gen.frag", "Omni-Shadow-Map-Gen.geom");
+        m_omniShadowMapGenerator = AssetManagerOld::createShader("Omni-Shadow-Map-Gen", "Omni-Shadow-Map-Gen.vert", "Omni-Shadow-Map-Gen.frag", "Omni-Shadow-Map-Gen.geom");
         m_omniShadowMapGenerator->link();
 
-        m_blendingShader = AssetManager::createShader("Blending-Shader", "Blending.vert", "Blending.frag");
+        m_blendingShader = AssetManagerOld::createShader("Blending-Shader", "Blending.vert", "Blending.frag");
         m_blendingShader->link();
 
-        m_enviroMappingShader = AssetManager::createShader("EnviroMapping", "EnviroMapping.vert", "EnviroMapping.frag");
+        m_enviroMappingShader = AssetManagerOld::createShader("EnviroMapping", "EnviroMapping.vert", "EnviroMapping.frag");
         m_enviroMappingShader->link();
 
-        m_deferredDirectional = AssetManager::createShader("Deferred-Directional", "FSQ.vert", "Deferred-Directional.frag");
+        m_deferredDirectional = AssetManagerOld::createShader("Deferred-Directional", "FSQ.vert", "Deferred-Directional.frag");
         m_deferredDirectional->link();
 
-        m_deferredPoint = AssetManager::createShader("Deferred-Point", "DebugMesh.vert", "Deferred-Point.frag");
+        m_deferredPoint = AssetManagerOld::createShader("Deferred-Point", "DebugMesh.vert", "Deferred-Point.frag");
         m_deferredPoint->link();
 
-        m_deferredSpot = AssetManager::createShader("Deferred-Spot", "DebugMesh.vert", "Deferred-Spot.frag");
+        m_deferredSpot = AssetManagerOld::createShader("Deferred-Spot", "DebugMesh.vert", "Deferred-Spot.frag");
         m_deferredSpot->link();
 
-        m_debugMeshShader = AssetManager::createShader("DebugMesh", "DebugMesh.vert", "DebugMesh.frag");
+        m_debugMeshShader = AssetManagerOld::createShader("DebugMesh", "DebugMesh.vert", "DebugMesh.frag");
         m_debugMeshShader->link();
 
-        m_nullShader = AssetManager::createShader("NullShader", "DebugMesh.vert", "Shadow-Map-Gen.frag");
+        m_nullShader = AssetManagerOld::createShader("NullShader", "DebugMesh.vert", "Shadow-Map-Gen.frag");
         m_nullShader->link();
 
         m_lightBoundingSphere = createRef<Mesh>();
@@ -126,7 +126,7 @@ namespace mango
         m_deferredRendering->init();
         m_deferredRendering->createGBuffer(width, height);
 
-        m_gbufferShader = AssetManager::getShader("GBuffer");
+        m_gbufferShader = AssetManagerOld::getShader("GBuffer");
 
         m_bloomFilter = createRef<BloomPS>();
         m_bloomFilter->init("Bloom_PS", "Bloom_PS.frag");

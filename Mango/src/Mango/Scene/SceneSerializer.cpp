@@ -565,7 +565,7 @@ namespace mango
                 
                 MG_CORE_TRACE("\tDeserializing material {}", materialName);
                 
-                auto mangoMaterial = AssetManager::createMaterial(materialName);
+                auto mangoMaterial = AssetManagerOld::createMaterial(materialName);
 
                 auto blendModeString = material["BlendMode"].as<std::string>();
                 auto blendMode       = stringToMaterialBlendMode(blendModeString);
@@ -585,7 +585,7 @@ namespace mango
                         if (!textureFilename.empty())
                         {
                             auto textureType = stringToMaterialTextureType(it->first.as<std::string>());
-                            auto texture     = AssetManager::createTexture2D(textureFilename, (textureType == Material::TextureType::DIFFUSE) ? true : false);
+                            auto texture     = AssetManagerOld::createTexture2D(textureFilename, (textureType == Material::TextureType::DIFFUSE) ? true : false);
 
                             mangoMaterial->addTexture(textureType, texture);
                         }
@@ -730,11 +730,11 @@ namespace mango
                     ref<Mesh> staticMesh = nullptr;
                     if (filename.has_extension())
                     {
-                        staticMesh = AssetManager::createMeshFromFile(filename.string());
+                        staticMesh = AssetManagerOld::createMeshFromFile(filename.string());
                     }
                     else
                     {
-                        staticMesh = AssetManager::getMesh(filename.string());
+                        staticMesh = AssetManagerOld::getMesh(filename.string());
                     }
 
                     auto& smc = deserializedEntity.addComponent<StaticMeshComponent>(staticMesh);
@@ -746,7 +746,7 @@ namespace mango
                         {
                             auto materialIndex = it->first.as<uint32_t>();
                             auto materialName  = it->second.as<std::string>();
-                            smc.materials[materialIndex] = AssetManager::getMaterial(materialName);
+                            smc.materials[materialIndex] = AssetManagerOld::getMaterial(materialName);
                         }
                     }
                 }

@@ -12,7 +12,7 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("DeferredRendering::init");
 
-        m_postprocess = AssetManager::createShader("GBuffer", "GBuffer.vert", "GBuffer.frag");
+        m_postprocess = AssetManagerOld::createShader("GBuffer", "GBuffer.vert", "GBuffer.frag");
         m_postprocess->link();
     }
 

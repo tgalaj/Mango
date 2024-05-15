@@ -162,8 +162,8 @@ namespace mango
 
         static  TextureDescriptor createDescriptor(int width, int height, int channelsCount, bool isSrgb);
 
-        static  AssetType getStaticAssetType() { return AssetType::Texture; };
-        virtual AssetType getAssetType()       { return getStaticAssetType(); };
+        static  AssetType getStaticAssetType()          { return AssetType::Texture; };
+        virtual AssetType getAssetType() const override { return getStaticAssetType(); };
 
     private:
         // uint8_t* load(const std::string& filename, bool isSrgb, bool flip = true);

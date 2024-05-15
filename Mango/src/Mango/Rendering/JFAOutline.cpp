@@ -18,10 +18,10 @@ namespace mango
 
         resize(width, height);
 
-        m_stencilFillShader = AssetManager::createShader("JfaStencilFill", "jfaOutline/JumpFloodMaskFill.vert", "jfaOutline/JumpFloodStencilFill.frag");
+        m_stencilFillShader = AssetManagerOld::createShader("JfaStencilFill", "jfaOutline/JumpFloodMaskFill.vert", "jfaOutline/JumpFloodStencilFill.frag");
         m_stencilFillShader->link();
 
-        m_maskFillShader = AssetManager::createShader("JfaMaskFill", "jfaOutline/JumpFloodMaskFill.vert", "jfaOutline/JumpFloodMaskFill.frag");
+        m_maskFillShader = AssetManagerOld::createShader("JfaMaskFill", "jfaOutline/JumpFloodMaskFill.vert", "jfaOutline/JumpFloodMaskFill.frag");
         m_maskFillShader->link();
 
         m_jumpFloodInitPS = createRef<PostprocessEffect>();

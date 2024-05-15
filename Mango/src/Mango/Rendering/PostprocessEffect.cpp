@@ -23,7 +23,7 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        m_postprocess = AssetManager::createShader(filterName, "FSQ.vert", fragmentShaderFilename);
+        m_postprocess = AssetManagerOld::createShader(filterName, "FSQ.vert", fragmentShaderFilename);
         m_postprocess->link();
     }
 
