@@ -114,7 +114,7 @@ namespace mango
                     auto newEntity = m_scene->createEntity(objectString);
                     auto& smc = newEntity.addComponent<StaticMeshComponent>();
 
-                    auto mesh = AssetManager::getMesh(objectString);
+                    auto mesh = AssetManagerOld::getMesh(objectString);
 
                     smc.mesh      = mesh;
                     smc.materials = mesh->getMaterials();
@@ -713,7 +713,7 @@ namespace mango
             {
                 // 1. get list of all loaded meshes from AssetManager and list them
                 // 2. if item selected -> change the mesh for the component.mesh
-                for (auto [name, staticMesh] : AssetManager::getStaticMeshList())
+                for (auto [name, staticMesh] : AssetManagerOld::getStaticMeshList())
                 {
                     auto rx = std::regex(searchPattern, std::regex_constants::icase);
                     if (std::regex_search(name, rx))
@@ -790,7 +790,7 @@ namespace mango
                     // 1. get list of all loaded materials from AssetManager and list them
                     // 2. if item selected -> change the material for the component
                     int32_t id = 0;
-                    for (auto [name, material] : AssetManager::getMaterialList())
+                    for (auto [name, material] : AssetManagerOld::getMaterialList())
                     {
                         auto rx = std::regex(searchPattern, std::regex_constants::icase);
                         if (std::regex_search(name, rx))

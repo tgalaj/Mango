@@ -43,7 +43,7 @@ void Sandbox::onInit()
 
     m_freeCameraController = createRef<FreeCameraController>();
 
-    auto font = AssetManager::createFont("Droid48", "fonts/Roboto-Regular.ttf", 48.0f);
+    auto font = AssetManagerOld::createFont("Droid48", "fonts/Roboto-Regular.ttf", 48.0f);
 
     /*auto skybox = createRef<Skybox>("skyboxes/stormydays/",
                                       "stormydays_lf.tga",
@@ -61,45 +61,45 @@ void Sandbox::onInit()
                                     "back.jpg" );
     Services::renderer()->setSkybox(skybox);
 
-    auto sphereMesh = AssetManager::getMesh("Sphere");
-    auto wallMesh   = AssetManager::getMesh("Quad");
+    auto sphereMesh = AssetManagerOld::getMesh("Sphere");
+    auto wallMesh   = AssetManagerOld::getMesh("Quad");
 
-    auto cyborgModel        = AssetManager::createMeshFromFile("models/cyborg/cyborg.obj");
-    auto zen3cModel         = AssetManager::createMeshFromFile("models/Zen3C/Zen3C.X");
-    auto damagedHelmetModel = AssetManager::createMeshFromFile("models/damaged_helmet/DamagedHelmet.gltf");
-    auto sponzaModel        = AssetManager::createMeshFromFile("models/sponza/Sponza.gltf");
+    auto cyborgModel        = AssetManagerOld::createMeshFromFile("models/cyborg/cyborg.obj");
+    auto zen3cModel         = AssetManagerOld::createMeshFromFile("models/Zen3C/Zen3C.X");
+    auto damagedHelmetModel = AssetManagerOld::createMeshFromFile("models/damaged_helmet/DamagedHelmet.gltf");
+    auto sponzaModel        = AssetManagerOld::createMeshFromFile("models/sponza/Sponza.gltf");
 
-    auto groundTex           = AssetManager::createTexture2D("textures/trak_tile_g.jpg", true);
-    auto brickwallTex        = AssetManager::createTexture2D("textures/brickwall.dds", true);
-    auto brickwallNormalTex  = AssetManager::createTexture2D("textures/brickwall_normal.jpg");
-    auto bricks2             = AssetManager::createTexture2D("textures/bricks2.jpg", true);
-    auto bricks2Depth        = AssetManager::createTexture2D("textures/bricks2_disp.jpg");
-    auto bricks2Normal       = AssetManager::createTexture2D("textures/bricks2_normal.jpg");
-    auto windowTex           = AssetManager::createTexture2D("textures/window.png", true);
-    auto grassTex            = AssetManager::createTexture2D("textures/grass.png", true);
-    auto openglLogo          = AssetManager::createTexture2D("textures/opengl.png", true);
+    auto groundTex           = AssetManagerOld::createTexture2D("textures/trak_tile_g.jpg", true);
+    auto brickwallTex        = AssetManagerOld::createTexture2D("textures/brickwall.dds", true);
+    auto brickwallNormalTex  = AssetManagerOld::createTexture2D("textures/brickwall_normal.jpg");
+    auto bricks2             = AssetManagerOld::createTexture2D("textures/bricks2.jpg", true);
+    auto bricks2Depth        = AssetManagerOld::createTexture2D("textures/bricks2_disp.jpg");
+    auto bricks2Normal       = AssetManagerOld::createTexture2D("textures/bricks2_normal.jpg");
+    auto windowTex           = AssetManagerOld::createTexture2D("textures/window.png", true);
+    auto grassTex            = AssetManagerOld::createTexture2D("textures/grass.png", true);
+    auto openglLogo          = AssetManagerOld::createTexture2D("textures/opengl.png", true);
 
-    auto brickwallMaterial = AssetManager::createMaterial("brickwall");
+    auto brickwallMaterial = AssetManagerOld::createMaterial("brickwall");
     brickwallMaterial->addTexture(Material::TextureType::DIFFUSE, brickwallTex);
     brickwallMaterial->addTexture(Material::TextureType::NORMAL,  brickwallNormalTex);
 
-    auto bricksMaterial = AssetManager::createMaterial("bricks");
+    auto bricksMaterial = AssetManagerOld::createMaterial("bricks");
     bricksMaterial->addTexture(Material::TextureType::DIFFUSE, bricks2);
     bricksMaterial->addTexture(Material::TextureType::NORMAL, bricks2Normal);
     bricksMaterial->addTexture(Material::TextureType::DISPLACEMENT, bricks2Depth); 
     
-    auto grassMaterial = AssetManager::createMaterial("grass");
+    auto grassMaterial = AssetManagerOld::createMaterial("grass");
     grassMaterial->addTexture(Material::TextureType::DIFFUSE, grassTex);
     grassMaterial->addFloat("alpha_cutoff", 0.1f);
 
-    auto windowMaterial = AssetManager::createMaterial("window");
+    auto windowMaterial = AssetManagerOld::createMaterial("window");
     windowMaterial->addTexture(Material::TextureType::DIFFUSE, windowTex);
     windowMaterial->setRenderQueue(Material::RenderQueue::RQ_TRANSPARENT);
 
-    auto bricks2Material = AssetManager::createMaterial("bricks2");
+    auto bricks2Material = AssetManagerOld::createMaterial("bricks2");
     bricks2Material->addTexture(Material::TextureType::DIFFUSE, bricks2);
 
-    auto reflectiveSphereMaterial = AssetManager::createMaterial("reflectiveSphere");
+    auto reflectiveSphereMaterial = AssetManagerOld::createMaterial("reflectiveSphere");
     reflectiveSphereMaterial->setRenderQueue(Material::RenderQueue::RQ_ENVIRO_MAPPING_STATIC);
 
     auto cyborg = m_mainScene->createEntity();
@@ -217,7 +217,7 @@ void Sandbox::onInit()
             {
                 cyborg.addChild(object);
                 object.setLocalScale(1.0f);
-                object.getComponent<StaticMeshComponent>().materials[0] = AssetManager::getMaterial("window");
+                object.getComponent<StaticMeshComponent>().materials[0] = AssetManagerOld::getMaterial("window");
             }
         }
     }
@@ -354,11 +354,11 @@ void Sandbox::onGui()
 
     #if 0
     ImGuiSystem::circleFilled({ ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f}, 2.0f, glm::vec4(0.0, 1.0, 0.0, 1.0));
-    auto pos = ImGuiSystem::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo!", { ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f + 100.0f}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, true);
-    ImGuiSystem::text(AssetManager::getFont("Droid48"), "Hello ImGUI Text Demo2!", { ImGui::GetIO().DisplaySize.x / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
+    auto pos = ImGuiSystem::text(AssetManagerOld::getFont("Droid48"), "Hello ImGUI Text Demo!", { ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f + 100.0f}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, true);
+    ImGuiSystem::text(AssetManagerOld::getFont("Droid48"), "Hello ImGUI Text Demo2!", { ImGui::GetIO().DisplaySize.x / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
     #endif
     auto window = Services::application()->getWindow();
-    ImGuiSystem::image(AssetManager::getTexture2D("textures/opengl.png"), { window->getWidth() - 200, 0 }, { window->getWidth(), 100 }, { 1.0f, 1.0f, 1.0f, 0.5f });
+    ImGuiSystem::image(AssetManagerOld::getTexture2D("textures/opengl.png"), { window->getWidth() - 200, 0 }, { window->getWidth(), 100 }, { 1.0f, 1.0f, 1.0f, 0.5f });
 
     ImGuiSystem::endHUD();
 }

@@ -66,7 +66,7 @@ namespace mango
                 // 1. get list of all loaded materials from AssetManager and list them
                 // 2. if item selected -> change the material to edit
                 int32_t id = 0;
-                for (auto [name, material] : AssetManager::getMaterialList())
+                for (auto [name, material] : AssetManagerOld::getMaterialList())
                 {
                     auto rx = std::regex(searchPattern, std::regex_constants::icase);
                     if (std::regex_search(name, rx))
@@ -176,7 +176,7 @@ namespace mango
                                 const auto* path = (const wchar_t*)payload->Data;
 
                                 bool isSrgb = (type == Material::TextureType::DIFFUSE) || (type == Material::TextureType::EMISSION);
-                                texture = AssetManager::createTexture2D(std::filesystem::path(path).string(), isSrgb);
+                                texture = AssetManagerOld::createTexture2D(std::filesystem::path(path).string(), isSrgb);
                             }
                             ImGui::EndDragDropTarget();
                         }
@@ -196,7 +196,7 @@ namespace mango
 
                             if (ImGui::Button("X"))
                             {
-                                texture = AssetManager::getTexture2D(defaultTextureName);
+                                texture = AssetManagerOld::getTexture2D(defaultTextureName);
                             }
 
                             ImGui::PopID();

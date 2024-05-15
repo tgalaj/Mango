@@ -384,8 +384,8 @@ namespace mango
         if (Project::load(path))
         {
             // Populate VFI search path
-            VFI::addToSearchPath(Project::getProjectDirectory());
-            VFI::addToSearchPath(Project::getAssetDirectory());
+            VFI::addToSearchPath(Project::getActiveProjectDirectory());
+            VFI::addToSearchPath(Project::getActiveAssetDirectory());
 
             auto searchpath = VFI::getSearchPath();
             for (auto& p : searchpath)
@@ -394,7 +394,7 @@ namespace mango
             }
 
             // Unload previous resources
-            AssetManager::unload();
+            AssetManagerOld::unload();
 
             // Open start scene
             openScene(Project::getActive()->getConfig().startScene);
@@ -418,7 +418,7 @@ namespace mango
     void EditorSystem::saveProject()
     {
         auto projectName      = Project::getActive()->getConfig().name + MG_PROJECT_EXTENSION;
-        auto projectDirectory = Project::getProjectDirectory();
+        auto projectDirectory = Project::getActiveProjectDirectory();
 
         Project::saveActive(projectDirectory / projectName);
     }
@@ -435,13 +435,13 @@ namespace mango
 
     void EditorSystem::openScene()
     {
-        auto file = pfd::open_file("", Project::getProjectDirectory().string(), {"Mango Scene (*" MG_SCENE_EXTENSION ")", "*" MG_SCENE_EXTENSION}, false);
+        auto file = pfd::open_file("", Project::getActiveProjectDirectory().string(), {"Mango Scene (*" MG_SCENE_EXTENSION ")", "*" MG_SCENE_EXTENSION}, false);
         
         if (!file.result().empty())
         {
             // Check relative path; if the scene file is not in a child directory of project path
             // don't load this scene file.
-            auto relativeFilepath = std::filesystem::relative(file.result()[0], Project::getAssetDirectory());
+            auto relativeFilepath = std::filesystem::relative(file.result()[0], Project::getActiveAssetDirectory());
 
             if (!relativeFilepath.empty())
             {
