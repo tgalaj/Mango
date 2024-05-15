@@ -7,6 +7,8 @@
 #include "Mango/Scene/SceneManager.h";
 #include "Mango/Scene/SceneSerializer.h"
 
+#include <fstream>
+
 namespace mango
 {
     ref<Project> Project::createNew(const std::string& name, const std::filesystem::path& path)
@@ -21,10 +23,11 @@ namespace mango
         
         s_activeProject->m_projectDirectory = path / name;
 
-        auto& config          = s_activeProject->getConfig();
-        config.name           = name;
-        config.assetDirectory = "Assets";
-        config.startScene     = "Scenes/SampleScene.mango";
+        auto& config             = s_activeProject->getConfig();
+        config.name              = name;
+        config.assetDirectory    = "Assets";
+        config.startScene        = "Scenes/SampleScene.mango";
+        config.assetRegistryPath = "AssetRegistry.mr";
 
         auto startScenePath = std::filesystem::path(config.startScene);
 
@@ -33,7 +36,9 @@ namespace mango
         
         auto startSceneName = startScenePath.stem().string();
         auto scene          = Services::sceneManager()->createScene(startSceneName);
-        
+
+        std::ofstream assetRegistryFile(getActiveAssetRegistryPath());
+
         Services::sceneManager()->setActiveScene(scene);
 
         SceneSerializer::serialize(scene, path / name / config.assetDirectory / config.startScene);

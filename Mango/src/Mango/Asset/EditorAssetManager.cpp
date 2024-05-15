@@ -143,7 +143,7 @@ namespace mango
     }
 
     bool EditorAssetManager::deserializeAssetRegistry()
-{
+    {
         auto path = Project::getActiveAssetRegistryPath();
 
         YAML::Node data;

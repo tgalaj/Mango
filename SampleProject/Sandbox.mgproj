@@ -2,3 +2,4 @@ Project:
   Name: Sandbox
   StartScene: scenes/Sandbox.mango
   AssetDirectory: assets
+  AssetRegistryPath: AssetRegistry.mr

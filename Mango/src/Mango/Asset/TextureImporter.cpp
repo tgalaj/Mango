@@ -124,7 +124,7 @@ namespace mango
 
         return data;*/
 
-        return nullptr;
+        return createRef<Texture>();
     }
 
 }
