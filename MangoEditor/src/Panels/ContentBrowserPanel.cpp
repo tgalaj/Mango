@@ -15,7 +15,6 @@
 
 namespace mango
 {
-
     ContentBrowserPanel::ContentBrowserPanel()
     {        
         m_baseDirectory    = Project::getActiveAssetDirectory();
@@ -106,6 +105,7 @@ namespace mango
         auto  columnsCount = glm::max((int)(panelWidth / cellSize), 1);
 
         bool itemPopupOpened = false;
+
         if (ImGui::BeginTable("Thumbnails", columnsCount))
         {
             if (Mode::Asset == m_currentMode)
@@ -121,7 +121,7 @@ namespace mango
                         break;
                     }
 
-                    if (!node->children.contains(p))
+                    if (node->children.contains(p))
                     {
                         node = &m_treeNodes[node->children[p]];
                         continue;
@@ -373,15 +373,18 @@ namespace mango
     {
         const auto& assetRegistry = Project::getActive()->getEditorAssetManager()->getAssetRegistry();
 
+        m_treeNodes.reserve(assetRegistry.size()); // Reserve space in advance to avoid reallocations
+
         for (const auto& [handle, metadata] : assetRegistry)
         {
             uint32_t currentNodeIndex = 0;
 
             for (const auto& p : metadata.filepath)
             {
-                auto it = m_treeNodes[currentNodeIndex].children.find(p.generic_string());
+                auto& currentNode = m_treeNodes[currentNodeIndex];
+                auto it = currentNode.children.find(p.generic_string());
 
-                if (it != m_treeNodes[currentNodeIndex].children.end())
+                if (it != currentNode.children.end())
                 {
                     currentNodeIndex = it->second;
                 }
@@ -389,14 +392,14 @@ namespace mango
                 {
                     // add node
                     TreeNode newNode(p, handle);
-                    newNode.parent = currentNodeIndex;
-                    m_treeNodes.emplace_back(newNode);
 
-                    m_treeNodes[currentNodeIndex].children[p] = m_treeNodes.size() - 1;
-                    currentNodeIndex                          = m_treeNodes.size() - 1;
+                    newNode.parent          = currentNodeIndex;
+                    currentNodeIndex        = m_treeNodes.size();
+                    currentNode.children[p] = currentNodeIndex;
+
+                    m_treeNodes.push_back(std::move(newNode));
                 }
             }
         }
     }
-
 }

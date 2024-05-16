@@ -34,11 +34,11 @@ namespace ImGui::Utils
 
         MG_ASSERT(boldFont);
 
-        bool ret = false;
+        bool modified = false;
 
         ImGui::PushID(label.c_str());
 
-        if (ImGui::BeginTable("##TabulatedDragFloat3", 2, ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_BordersInnerV))
+        if (ImGui::BeginTable(("##TabulatedDragFloat3" + label).c_str(), 2, ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_NoClip))
         {
             ImGui::TableSetupColumn("x", ImGuiTableColumnFlags_WidthFixed, columnWidth);
             ImGui::TableSetupColumn("y", ImGuiTableColumnFlags_WidthStretch);
@@ -47,6 +47,10 @@ namespace ImGui::Utils
             ImGui::Text(label.c_str());
 
             ImGui::TableNextColumn();
+
+            ImGui::BeginChild(("##Child" + label).c_str(),
+                              ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetFrameHeightWithSpacing()),
+                              0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
             ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth() * 1.1f);
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
@@ -59,17 +63,19 @@ namespace ImGui::Utils
             ImGui::PushStyleColor(ImGuiCol_ButtonActive,  { 0.8f, 0.1f, 0.15f, 1.0f });
             ImGui::PushFont(boldFont);
 
+            ImGui::PushAllowKeyboardFocus(false);
             if (ImGui::Button("X", buttonSize))
             {
-                values.x = defaultValue;
-                ret |= true;
+                values.x  = defaultValue;
+                modified |= true;
             }
+            ImGui::PopAllowKeyboardFocus();
 
             ImGui::PopFont();
             ImGui::PopStyleColor(3);
 
             ImGui::SameLine();
-            ret |= ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
+            modified |= ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f", 0);
             ImGui::PopItemWidth();
             ImGui::SameLine();
 
@@ -78,17 +84,19 @@ namespace ImGui::Utils
             ImGui::PushStyleColor(ImGuiCol_ButtonActive,  { 0.2f, 0.7f, 0.2f, 1.0f });
             ImGui::PushFont(boldFont);
 
+            ImGui::PushAllowKeyboardFocus(false);
             if (ImGui::Button("Y", buttonSize))
             {
                 values.y = defaultValue;
-                ret |= true;
+                modified |= true;
             }
+            ImGui::PopAllowKeyboardFocus();
 
             ImGui::PopFont();
             ImGui::PopStyleColor(3);
 
             ImGui::SameLine();
-            ret |= ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
+            modified |= ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f", 0);
             ImGui::PopItemWidth();
             ImGui::SameLine();
 
@@ -97,26 +105,29 @@ namespace ImGui::Utils
             ImGui::PushStyleColor(ImGuiCol_ButtonActive,  { 0.1f, 0.25f, 0.8f, 1.0f });
             ImGui::PushFont(boldFont);
 
+            ImGui::PushAllowKeyboardFocus(false);
             if (ImGui::Button("Z", buttonSize))
             {
                 values.z = defaultValue;
-                ret |= true;
+                modified |= true;
             }
+            ImGui::PopAllowKeyboardFocus();
 
             ImGui::PopFont();
             ImGui::PopStyleColor(3);
 
             ImGui::SameLine();
-            ret |= ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
+            modified |= ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f", 0);
             ImGui::PopItemWidth();
 
             ImGui::PopStyleVar();
+            ImGui::EndChild();
             ImGui::EndTable();
         }
 
         ImGui::PopID();
 
-        return ret;
+        return modified;
     }
 
     inline void TableDrawLabelAlignedLeft(const char* label)
