@@ -14,6 +14,11 @@ namespace mango
         static AssetMetadata s_nullMetadata;
     };
 
+    EditorAssetManager::EditorAssetManager()
+    {
+
+    }
+
     bool EditorAssetManager::isAssetHandleValid(AssetHandle handle) const
     {
         return handle != 0 && m_assetRegistry.contains(handle);
@@ -24,6 +29,11 @@ namespace mango
         return m_loadedAssets.contains(handle);
     }
 
+    bool EditorAssetManager::isMemoryOnlyAsset(AssetHandle handle) const
+    {
+        return m_assetRegistry.get(handle).isMemoryOnlyAsset;
+    }
+
     AssetType EditorAssetManager::getAssetType(AssetHandle handle) const
     {
         if (!isAssetHandleValid(handle))
@@ -32,6 +42,17 @@ namespace mango
         }
 
         return m_assetRegistry.get(handle).type;
+    }
+
+    void EditorAssetManager::addMemoryOnlyAsset(const ref<Asset>& asset, const std::string& assetName /*= ""*/)
+    {
+        AssetMetadata metadata;
+        metadata.isMemoryOnlyAsset = true;
+        metadata.filepath          = assetName;
+        metadata.type              = asset->getAssetType();
+
+        m_assetRegistry[asset->handle] = metadata;
+        m_memoryAssets [asset->handle] = asset;
     }
 
     void EditorAssetManager::removeAsset(AssetHandle handle)
@@ -46,6 +67,31 @@ namespace mango
             m_assetRegistry.remove(handle);
 
         serializeAssetRegistry();
+    }
+
+    std::unordered_set<AssetHandle> EditorAssetManager::getAllAssetsOfType(AssetType type) const
+    {
+        std::unordered_set<AssetHandle> result;
+
+        for (const auto& [handle, metadata] : m_assetRegistry)
+        {
+            if (metadata.type == type)
+            {
+                result.insert(handle);
+            }
+        }
+
+        return result;
+    }
+
+    const AssetMap& EditorAssetManager::getLoadedAssets() const
+    {
+        return m_loadedAssets;
+    }
+
+    const AssetMap& EditorAssetManager::getMemoryOnlyAssets() const
+    {
+        return m_memoryAssets;
     }
 
     void EditorAssetManager::importAsset(const std::filesystem::path& filepath)
@@ -82,7 +128,7 @@ namespace mango
         return getMetadata(handle).filepath;
     }
 
-    AssetHandle EditorAssetManager::getAssetHandleFromFilePath(const std::string& filepath) const
+    AssetHandle EditorAssetManager::getAssetHandleByFilePath(const std::string& filepath) const
     {
         auto relativePath = std::filesystem::relative(filepath, Project::getActiveAssetDirectory());
 
@@ -106,11 +152,6 @@ namespace mango
         }
 
         return s_assetExtensionMap.at(extension);
-    }
-
-    EditorAssetManager::EditorAssetManager()
-    {
-
     }
 
     ref<Asset> EditorAssetManager::getAsset(AssetHandle handle)

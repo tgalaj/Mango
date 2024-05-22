@@ -16,7 +16,7 @@ namespace mango
             return std::static_pointer_cast<T>(asset);
         }
         
-        static AssetType  getAssetType(AssetHandle handle)
+        static AssetType getAssetType(AssetHandle handle)
         {
             return  Project::getActive()->getAssetManager()->getAssetType(handle);
         }
@@ -32,6 +32,51 @@ namespace mango
 
         }
 
-        
+        static bool isMemoryOnlyAsset(AssetHandle handle)
+        {
+            return Project::getActive()->getAssetManager()->isMemoryOnlyAsset(handle);
+        }
+
+        void removeAsset(AssetHandle handle)
+        {
+            Project::getActive()->getAssetManager()->removeAsset(handle);
+        }
+
+        template<typename T>
+        static void addMemoryOnlyAsset(const ref<Asset>& asset, const std::string& assetName = "")
+        {
+            static_assert(std::is_base_of_v<Asset, T>, "T must be a subclass of Asset");
+
+            Project::getActive()->getAssetManager()->addMemoryOnlyAsset(asset, assetName);
+        }
+
+        static std::unordered_set<AssetHandle> getAllAssetsOfType(AssetType type)
+        {
+            return Project::getActive()->getAssetManager()->getAllAssetsOfType(type);
+        }
+
+        static const AssetMap& getLoadedAssets()
+        {
+            return Project::getActive()->getAssetManager()->getLoadedAssets();
+        }
+
+        static const AssetMap& getMemoryOnlyAssets()
+        {
+            return Project::getActive()->getAssetManager()->getMemoryOnlyAssets();
+        }
+
+        template<typename T, typename... Args>
+        static AssetHandle createMemoryOnlyAsset(Args&&... args)
+        {
+            static_assert(std::is_base_of_v<Asset, T>, "T must be a subclass of Asset");
+
+            ref<T> asset         = createRef<T>(std::forward<Args>(args)...);
+                   asset->handle = AssetHandle();
+
+            Project::getActive()->getAssetManager()->addMemoryOnlyAsset<T>(asset);
+
+            return asset->handle;
+        }
+
     };
 }

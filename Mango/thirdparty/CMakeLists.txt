@@ -58,7 +58,7 @@ endif()
 
 CPMAddPackage(
     GITHUB_REPOSITORY tgalaj/strutil
-    VERSION 1.1.2
+    VERSION 1.1.0
     GIT_SHALLOW TRUE
     DOWNLOAD_ONLY TRUE)
 
