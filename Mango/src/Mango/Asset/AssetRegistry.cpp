@@ -1,8 +1,9 @@
 #include "mgpch.h"
-#include "AssetManager.h"
+#include "AssetRegistry.h"
 
 namespace mango
 {
+    struct AssetMetadata;
 
     AssetMetadata& AssetRegistry::operator[](const AssetHandle handle)
     {

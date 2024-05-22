@@ -3,7 +3,8 @@
 #include "EditorEvents.h"
 #include "IconsMaterialDesignIcons.h"
 
-#include "Mango/Asset/Importer/TextureLoader.h"
+#include "Mango/Asset/Loader/TextureLoader.h"
+#include "Mango/Asset/Manager/EditorAssetManager.h"
 #include "Mango/Core/Services.h"
 #include "Mango/Core/VFI.h"
 #include "Mango/Project/Project.h"
@@ -25,10 +26,10 @@ namespace mango
         m_pathStack.reserve(10);
         m_pathStack.push_back(m_currentDirectory.filename().string());
 
-        m_directoryIcon = TextureImporter::loadTexture2D("icons/folder.png");//createRef<Texture>();
+        m_directoryIcon = TextureLoader::loadTexture2D("icons/folder.png");//createRef<Texture>();
         //m_directoryIcon->createTexture2d("icons/folder.png", false, 8);
 
-        m_fileIcon = TextureImporter::loadTexture2D("icons/file.png");//createRef<Texture>();
+        m_fileIcon = TextureLoader::loadTexture2D("icons/file.png");//createRef<Texture>();
         //m_fileIcon->createTexture2d("icons/file.png", false, 8);
 
         refreshAssetTree();

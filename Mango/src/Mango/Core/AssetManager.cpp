@@ -1,15 +1,15 @@
 #include "mgpch.h"
 #include "AssetManager.h"
 
-#include "Mango/Asset/Importer/AssimpMeshLoader.h"
+#include "Mango/Asset/Loader/AssimpMeshLoader.h"
 
 namespace mango
 {
-    std::unordered_map<std::string, ref<Font>>       AssetManagerOld::m_loadedFonts;
-    std::unordered_map<std::string, ref<Material>>   AssetManagerOld::m_loadedMaterials;
-    std::unordered_map<std::string, ref<Shader>>     AssetManagerOld::m_loadedShaders;
-    std::unordered_map<std::string, ref<Mesh>>       AssetManagerOld::m_loadedStaticMeshes;
-    std::unordered_map<std::string, ref<Texture>>    AssetManagerOld::m_loadedTextures;
+    std::unordered_map<std::string, ref<Font>>     AssetManagerOld::m_loadedFonts;
+    std::unordered_map<std::string, ref<Material>> AssetManagerOld::m_loadedMaterials;
+    std::unordered_map<std::string, ref<Shader>>   AssetManagerOld::m_loadedShaders;
+    std::unordered_map<std::string, ref<Mesh>>     AssetManagerOld::m_loadedStaticMeshes;
+    std::unordered_map<std::string, ref<Texture>>  AssetManagerOld::m_loadedTextures;
 
     ref<Font> AssetManagerOld::createFont(const std::string & fontNname, const std::string& filename, GLuint fontHeight)
     {

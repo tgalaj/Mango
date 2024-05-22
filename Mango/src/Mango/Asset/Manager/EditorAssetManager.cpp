@@ -1,7 +1,8 @@
 #include "mgpch.h"
+#include "EditorAssetManager.h"
 #include "Mango/Asset/AssetExtensions.h"
-#include "Mango/Asset/AssetImporter.h"
 #include "Mango/Asset/AssetManager.h"
+#include "Mango/Asset/AssetMetadata.h"
 
 #include <fstream>
 #include <yaml-cpp/yaml.h>
@@ -51,8 +52,8 @@ namespace mango
     {
         AssetHandle   handle; // automatically generates new handle
         AssetMetadata metadata;
-        metadata.filepath = filepath;
-        metadata.type     = getAssetTypeFromFileExtension(filepath.extension().string());
+                      metadata.filepath = filepath;
+                      metadata.type     = getAssetTypeFromFileExtension(filepath.extension().string());
         
         MG_CORE_ASSERT(metadata.type != AssetType::None);
 
@@ -60,7 +61,7 @@ namespace mango
         if (asset)
         {
             asset->handle           = handle;
-            m_loadedAssets[handle]  = asset;
+            m_loadedAssets [handle] = asset;
             m_assetRegistry[handle] = metadata;
             serializeAssetRegistry();
         }
@@ -76,21 +77,6 @@ namespace mango
         return m_assetRegistry.get(handle);
     }
 
-    const AssetMetadata& EditorAssetManager::getMetadata(const std::filesystem::path& filepath) const
-    {
-        auto relativePath = std::filesystem::relative(filepath, Project::getActiveAssetDirectory());
-
-        for (const auto& [handle, metadata] : m_assetRegistry)
-        {
-            if (metadata.filepath == relativePath)
-            {
-                return metadata;
-            }
-        }
-
-        return s_nullMetadata;
-    }
-
     const std::filesystem::path& EditorAssetManager::getFilePath(AssetHandle handle) const
     {
         return getMetadata(handle).filepath;
@@ -98,7 +84,17 @@ namespace mango
 
     AssetHandle EditorAssetManager::getAssetHandleFromFilePath(const std::string& filepath) const
     {
-        getMetadata(filepath).handle;
+        auto relativePath = std::filesystem::relative(filepath, Project::getActiveAssetDirectory());
+
+        for (const auto& [handle, metadata] : m_assetRegistry)
+        {
+            if (metadata.filepath == relativePath)
+            {
+                return handle;
+            }
+        }
+
+        return 0; // invalid handle
     }
 
     AssetType EditorAssetManager::getAssetTypeFromFileExtension(const std::string& extension)

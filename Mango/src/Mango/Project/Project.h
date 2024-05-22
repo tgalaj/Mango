@@ -1,15 +1,15 @@
 #pragma once
+#include "Mango/Core/Base.h"
 
 #include <filesystem>
 #include <string>
 
-#include "Mango/Core/Base.h"
-
-#include "Mango/Asset/Manager/EditorAssetManager.h"
-#include "Mango/Asset/Manager/RuntimeAssetManager.h"
-
 namespace mango
 {
+    class AssetManagerBase;
+    class EditorAssetManager;
+    class RuntimeAssetManager;
+
     struct ProjectConfig
     {
         std::string name = "Untitled";
@@ -56,11 +56,11 @@ namespace mango
         static ProjectConfig& getConfig() { return s_activeProject->m_config; }
         static ref<Project>   getActive() { return s_activeProject; }
 
-        ref<AssetManagerBase>    getAssetManager()        { return m_assetManager; }
+        ref<AssetManagerBase>    getAssetManager() { return m_assetManager; }
         // Use only for the Editor!
-        ref<EditorAssetManager>  getEditorAssetManager()  { return std::static_pointer_cast<EditorAssetManager>(m_assetManager); }
+        ref<EditorAssetManager>  getEditorAssetManager() const;
         // Use only for the Runtime!
-        ref<RuntimeAssetManager> getRuntimeAssetManager() { return std::static_pointer_cast<RuntimeAssetManager>(m_assetManager); }
+        ref<RuntimeAssetManager> getRuntimeAssetManager() const;
 
         static ref<Project> createNew (const std::string&           name, const std::filesystem::path& path);
         static ref<Project> load      (const std::filesystem::path& filepath);

@@ -10,10 +10,9 @@ namespace mango
     struct AssetMetadata
     {
         std::filesystem::path filepath       = "";
-        AssetHandle           handle         = 0;
         AssetType             type           = AssetType::None;
         bool                  isMemoryAsset  = false;
 
-        bool isValid() const { return handle != 0 && !isMemoryAsset; }
+        bool isValid() const { return type != AssetType::None && !isMemoryAsset; }
     };
 }

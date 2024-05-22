@@ -104,8 +104,8 @@ namespace mango
     class Texture final : public Asset
     {
     public:
-        Texture() : m_id(0) {}
-        ~Texture() { release(); };
+        Texture() {}
+        ~Texture() override { release(); };
 
         Texture(const Texture&) = delete;
         Texture& operator=(const Texture&) = delete;

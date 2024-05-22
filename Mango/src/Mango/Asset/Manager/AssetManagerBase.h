@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Mango/Asset/Asset.h"
-#include "Mango/Core/Base.h"
 
 #include <map>
 

@@ -24,35 +24,37 @@ namespace mango
         s_importers.at(metadata.type)->serialize(metadata, asset);
     }
 
-    bool AssetImporter::import(const AssetMetadata & metadata, ref<Asset> & asset)
+    ref<Asset> AssetImporter::import(AssetHandle handle, const AssetMetadata & metadata)
     {
         if (!s_importers.contains(metadata.type))
         {
             MG_CORE_ERROR("No importer available for the asset type: {}", assetTypeToString(metadata.type));
-            return false;
+            return nullptr;
         }
 
-        return s_importers.at(metadata.type)->import(metadata, asset);
+        return s_importers.at(metadata.type)->import(handle, metadata);
     }
 
     void TextureImporter::serialize(const AssetMetadata& metadata, const ref<Asset>& asset) const
     {
-        // no op
+        // mo op
     }
 
-    bool TextureImporter::import(const AssetMetadata & metadata, ref<Asset> & asset) const
+    ref<Asset> TextureImporter::import(AssetHandle handle, const AssetMetadata & metadata) const
     {
-        return false;
+        // TODO
+        return nullptr;
     }
 
     void SceneImporter::serialize(const AssetMetadata& metadata, const ref<Asset>& asset) const
     {
-
+        // TODO
     }
 
-    bool SceneImporter::import(const AssetMetadata & metadata, ref<Asset> & asset) const
+    ref<Asset> SceneImporter::import(AssetHandle handle, const AssetMetadata & metadata) const
     {
-        return false;
+        // TODO
+        return nullptr;
     }
 
 }

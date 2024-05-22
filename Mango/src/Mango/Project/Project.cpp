@@ -2,15 +2,28 @@
 #include "Project.h"
 #include "ProjectSerializer.h"
 
-#include "Mango/Core/Services.h";
+#include "Mango/Asset/Manager/EditorAssetManager.h"
+#include "Mango/Asset/Manager/RuntimeAssetManager.h"
+#include "Mango/Core/Services.h"
 #include "Mango/Core/VFI.h"
-#include "Mango/Scene/SceneManager.h";
+#include "Mango/Scene/SceneManager.h"
 #include "Mango/Scene/SceneSerializer.h"
 
 #include <fstream>
 
 namespace mango
 {
+
+    ref<EditorAssetManager> Project::getEditorAssetManager() const
+    {
+        return std::static_pointer_cast<EditorAssetManager>(m_assetManager);
+    }
+
+    ref<RuntimeAssetManager> Project::getRuntimeAssetManager() const
+    {
+        return std::static_pointer_cast<RuntimeAssetManager>(m_assetManager);
+    }
+
     ref<Project> Project::createNew(const std::string& name, const std::filesystem::path& path)
     {
         if (s_activeProject)

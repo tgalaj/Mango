@@ -2,12 +2,9 @@
 
 #include "AssetManagerBase.h"
 #include "Mango/Asset/AssetImporter.h"
-#include "Mango/Asset/AssetMetadata.h"
 #include "Mango/Asset/AssetRegistry.h"
 #include "Mango/Project/Project.h"
 #include "Mango/Utils/Hash.h"
-
-#include <unordered_map>
 
 namespace mango
 {
@@ -17,18 +14,17 @@ namespace mango
         EditorAssetManager();
         virtual ~EditorAssetManager() = default;
 
-        virtual ref<Asset> getAsset          (AssetHandle handle) override;
+        ref<Asset> getAsset          (AssetHandle handle) override;
 
-        virtual bool       isAssetHandleValid(AssetHandle handle) const override;
-        virtual bool       isAssetLoaded     (AssetHandle handle) const override;
-        virtual AssetType  getAssetType      (AssetHandle handle) const override;
-        virtual void       removeAsset       (AssetHandle handle) override;
+        bool       isAssetHandleValid(AssetHandle handle) const override;
+        bool       isAssetLoaded     (AssetHandle handle) const override;
+        AssetType  getAssetType      (AssetHandle handle) const override;
+        void       removeAsset       (AssetHandle handle) override;
 
         void importAsset(const std::filesystem::path& filepath);
 
-        const AssetMetadata&         getMetadata(      AssetHandle            handle)   const;
-        const AssetMetadata&         getMetadata(const std::filesystem::path& filepath) const;
-        const std::filesystem::path& getFilePath(      AssetHandle            handle)   const;
+        const AssetMetadata&         getMetadata(AssetHandle handle) const;
+        const std::filesystem::path& getFilePath(AssetHandle handle) const;
 
         AssetHandle getAssetHandleFromFilePath   (const std::string& filepath) const;
         AssetType   getAssetTypeFromFileExtension(const std::string& extension);
@@ -41,21 +37,22 @@ namespace mango
         template<typename T, typename... Args>
         ref<T> createAsset(const std::filesystem::path& filepath, Args&&... args)
         {
-            static_assert(std::is_base_of<Asset, T>::value, "T must be a subclass of Asset");
+            static_assert(std::is_base_of_v<Asset, T>, "T must be a subclass of Asset");
 
             // Create the asset's metadata
+            AssetHandle handle;
+
             AssetMetadata metadata;
-            metadata.handle   = AssetHandle();
             metadata.filepath = std::filesystem::relative(filepath, Project::getActiveAssetDirectory());
             metadata.type     = T::getStaticType();
 
             // Add the asset to the registry
-            m_assetRegistry[metadata.handle] = metadata;
+            m_assetRegistry[handle] = metadata;
             serializeAssetRegistry();
 
             // Create the new asset
             ref<T> asset  = createRef<T>(std::forward<Args>(args)...);
-            asset->handle = metadata.handle;
+            asset->handle = handle;
 
             m_loadedAssets[asset->handle] = asset;
             AssetImporter::serialize(metadata, asset);
@@ -66,21 +63,22 @@ namespace mango
         template<typename T, typename... Args>
         ref<T> createMemoryOnlyAsset(const std::string& name, Args&&... args)
         {
-            static_assert(std::is_base_of<Asset, T>::value, "T must be a subclass of Asset");
+            static_assert(std::is_base_of_v<Asset, T>, "T must be a subclass of Asset");
 
             // Create the asset's metadata
+            AssetHandle handle {StringHash64(name)};
+
             AssetMetadata metadata;
-            metadata.handle        = StringHash64(name);
             metadata.filepath      = name;
             metadata.type          = T::getStaticType();
             metadata.isMemoryAsset = true;
 
             // Add the asset to the registry
-            m_assetRegistry[metadata.handle] = metadata;
+            m_assetRegistry[handle] = metadata;
 
             // Create the new asset
             ref<T> asset  = createRef<T>(std::forward<Args>(args)...);
-            asset->handle = metadata.handle;
+            asset->handle = handle;
 
             m_memoryAssets[asset->handle] = asset;
 
@@ -88,7 +86,7 @@ namespace mango
         }
 
         template<typename T>
-        static ref<T> getAsset(const std::string& filepath)
+        ref<T> getAsset(const std::string& filepath)
         {
             ref<Asset> asset = getAsset(getAssetHandleFromFilePath(filepath));
             return std::static_pointer_cast<T>(asset);

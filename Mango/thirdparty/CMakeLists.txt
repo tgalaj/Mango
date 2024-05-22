@@ -58,7 +58,7 @@ endif()
 
 CPMAddPackage(
     GITHUB_REPOSITORY tgalaj/strutil
-    VERSION 2.0.0
+    VERSION 1.1.2
     GIT_SHALLOW TRUE
     DOWNLOAD_ONLY TRUE)
 
@@ -146,7 +146,7 @@ CPMAddPackage(
 CPMAddPackage(
     NAME JoltPhysics
     GITHUB_REPOSITORY jrouwe/JoltPhysics
-    VERSION 4.0.2
+    VERSION 5.0.0
     GIT_SHALLOW TRUE
     SOURCE_SUBDIR "Build"
     OPTIONS

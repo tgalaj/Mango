@@ -4,8 +4,6 @@
 #include "Mango/Core/Base.h"
 #include "Mango/Core/UUID.h"
 
-#include <string_view>
-
 namespace mango
 {
     using AssetHandle = UUID;
