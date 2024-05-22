@@ -1,7 +1,7 @@
 #include "mgpch.h"
 #include "AssetManager.h"
 
-#include "Mango/Asset/AssimpMeshImporter.h"
+#include "Mango/Asset/Importer/AssimpMeshLoader.h"
 
 namespace mango
 {
@@ -125,7 +125,7 @@ namespace mango
             return m_loadedStaticMeshes[filename];
         }
 
-        auto staticMesh = AssimpMeshImporter::load(filename);
+        auto staticMesh = AssimpMeshLoader::load(filename);
         m_loadedStaticMeshes[filename] = staticMesh;
 
         return staticMesh;

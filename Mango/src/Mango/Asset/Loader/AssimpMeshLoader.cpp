@@ -1,6 +1,6 @@
 #include "mgpch.h"
 
-#include "AssimpMeshImporter.h"
+#include "AssimpMeshLoader.h"
 #include "Mango/Core/AssetManager.h"
 #include "Mango/Core/Services.h"
 
@@ -9,7 +9,7 @@
 
 namespace mango
 {
-    ref<Mesh> AssimpMeshImporter::load(const std::string& filename)
+    ref<Mesh> AssimpMeshLoader::load(const std::string& filename)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -44,7 +44,7 @@ namespace mango
         return loadedMesh;
     }
 
-    bool AssimpMeshImporter::parseScene(ref<Mesh>& mesh, const aiScene* scene, const std::filesystem::path& parentDirectory)
+    bool AssimpMeshLoader::parseScene(ref<Mesh>& mesh, const aiScene* scene, const std::filesystem::path& parentDirectory)
     {
         MG_PROFILE_ZONE_SCOPED;
         mesh->m_submeshes.resize(scene->mNumMeshes);
@@ -100,7 +100,7 @@ namespace mango
         return true;
     }
 
-    void AssimpMeshImporter::loadMeshPart(const aiMesh* mesh, VertexData& vertexData)
+    void AssimpMeshLoader::loadMeshPart(const aiMesh* mesh, VertexData& vertexData)
     {
         MG_PROFILE_ZONE_SCOPED;
         for (uint32_t i = 0; i < mesh->mNumVertices; ++i)
@@ -128,7 +128,7 @@ namespace mango
         }
     }
 
-    bool AssimpMeshImporter::loadMaterials(ref<Mesh>& mesh, const aiScene* scene, const std::filesystem::path& parentDirectory)
+    bool AssimpMeshLoader::loadMaterials(ref<Mesh>& mesh, const aiScene* scene, const std::filesystem::path& parentDirectory)
     {
         MG_PROFILE_ZONE_SCOPED;
         bool ret = true;
@@ -215,7 +215,7 @@ namespace mango
         return ret;
     }
 
-    bool AssimpMeshImporter::loadMaterialTextures(const aiScene* scene, const aiMaterial* material, ref<Material>& mangoMaterial, aiTextureType aiType, Material::TextureType textureType, const std::filesystem::path& parentDirectory)
+    bool AssimpMeshLoader::loadMaterialTextures(const aiScene* scene, const aiMaterial* material, ref<Material>& mangoMaterial, aiTextureType aiType, Material::TextureType textureType, const std::filesystem::path& parentDirectory)
     {
         MG_PROFILE_ZONE_SCOPED;
         if (material->GetTextureCount(aiType) > 0)

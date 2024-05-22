@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Asset.h"
-#include "AssetMetadata.h"
+#include "Mango/Asset/Asset.h"
+#include "Mango/Asset/AssetMetadata.h"
 
 namespace mango
 {
-    class TextureImporter
+    class TextureLoader
     {
     public:
         // AssetMetadata filepath is relative to project asset directory

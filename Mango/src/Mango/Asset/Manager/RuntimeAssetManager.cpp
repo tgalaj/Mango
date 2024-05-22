@@ -1,5 +1,5 @@
 #include "mgpch.h"
-#include "AssetManager.h"
+#include "Mango/Asset/AssetManager.h"
 
 namespace mango
 {

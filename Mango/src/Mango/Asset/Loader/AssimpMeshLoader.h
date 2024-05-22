@@ -13,11 +13,11 @@
 
 namespace mango
 {
-    class AssimpMeshImporter
+    class AssimpMeshLoader
     {
     public:
-        AssimpMeshImporter()  = delete;
-        ~AssimpMeshImporter() = delete;
+        AssimpMeshLoader()  = delete;
+        ~AssimpMeshLoader() = delete;
 
         static ref<Mesh> load(const std::string& filename);
 

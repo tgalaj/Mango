@@ -1,6 +1,6 @@
 #include "mgpch.h"
 #include "mgpch.h"
-#include "TextureImporter.h"
+#include "TextureLoader.h"
 
 #include "Mango/Project/Project.h"
 
@@ -95,14 +95,14 @@ namespace
 namespace mango
 {
 
-    ref<Texture> TextureImporter::importTexture2D(AssetHandle handle, const AssetMetadata& metadata)
+    ref<Texture> TextureLoader::importTexture2D(AssetHandle handle, const AssetMetadata& metadata)
     {
         MG_PROFILE_ZONE_SCOPED;
 
         return loadTexture2D(Project::getActiveAssetDirectory() / metadata.filepath);
     }
 
-    ref<Texture> TextureImporter::loadTexture2D(const std::filesystem::path& path)
+    ref<Texture> TextureLoader::loadTexture2D(const std::filesystem::path& path)
     {
         MG_PROFILE_ZONE_SCOPED;
 

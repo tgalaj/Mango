@@ -1,4 +1,5 @@
 #pragma once
+#include "Mango/Asset/Asset.h"
 #include "Mango/Core/UUID.h"
 
 #include <entt.hpp>
@@ -10,7 +11,7 @@ namespace mango
 {
     class Entity;
 
-    class Scene
+    class Scene : public Asset
     {
     public:
         Scene(const std::string& name = "New Scene");
@@ -41,6 +42,9 @@ namespace mango
         {
             return other.m_name == m_name;
         }
+
+        static  AssetType getStaticType() { return AssetType::Scene; }
+        virtual AssetType getAssetType () const override { return getStaticType(); }
 
     private:
         entt::registry m_registry;

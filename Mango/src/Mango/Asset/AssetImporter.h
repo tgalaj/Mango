@@ -2,11 +2,37 @@
 
 #include "AssetMetadata.h"
 
+#include <unordered_map>
+
 namespace mango
 {
+    class AssetImporterBase
+    {
+    public:
+        virtual void       serialize(const AssetMetadata& metadata, const ref<Asset>& asset) const = 0;
+        virtual ref<Asset> import   (const AssetMetadata& metadata)                          const = 0;
+    };
+
     class AssetImporter
     {
     public:
-        static ref<Asset> importAsset(AssetHandle handle, const AssetMetadata& metadata);
+        static void       init();
+        static void       serialize(const AssetMetadata& metadata, const ref<Asset>& asset);
+        static ref<Asset> import   (const AssetMetadata& metadata);
+    
+    private:
+        static std::unordered_map<AssetType, scope<AssetImporterBase>> s_importers;
+    };
+
+    class TextureImporter : public AssetImporterBase
+    {
+        virtual void       serialize(const AssetMetadata& metadata, const ref<Asset>& asset) const override;
+        virtual ref<Asset> import   (const AssetMetadata& metadata)                          const override;
+    };
+
+    class SceneImporter : public AssetImporterBase
+    {
+        virtual void       serialize(const AssetMetadata& metadata, const ref<Asset>& asset) const override;
+        virtual ref<Asset> import   (const AssetMetadata& metadata)                          const override;
     };
 }

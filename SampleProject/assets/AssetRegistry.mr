@@ -1,0 +1,13 @@
+AssetRegistry:
+  - Handle: 8344456993626168423
+    FilePath: textures/stripes.png
+    Type: Texture
+  - Handle: 8047913494817325759
+    FilePath: textures/bricks2.jpg
+    Type: None
+  - Handle: 8056229132570238215
+    FilePath: textures/bricks2_normal.jpg
+    Type: None
+  - Handle: 17778564682383582963
+    FilePath: textures/grass.png
+    Type: None

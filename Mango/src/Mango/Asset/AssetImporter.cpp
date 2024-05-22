@@ -1,28 +1,58 @@
 #include "mgpch.h"
 #include "AssetImporter.h"
 
-#include "TextureImporter.h"
-
-#include <unordered_map>
-
 namespace mango
 {
-    using AssetImportFunction = std::function<ref<Asset>(AssetHandle, const AssetMetadata&)>;
+    std::unordered_map<mango::AssetType, mango::scope<mango::AssetImporterBase>> AssetImporter::s_importers;
 
-    static std::unordered_map<AssetType, AssetImportFunction> s_assetImportFunctions =
+    void AssetImporter::init()
     {
-        //{ AssetType::Scene,   nullptr },
-        { AssetType::Texture, TextureImporter::importTexture2D }
-    };
+        s_importers.clear();
 
-    ref<Asset> AssetImporter::importAsset(AssetHandle handle, const AssetMetadata& metadata)
+        s_importers[AssetType::Scene]   = createScope<SceneImporter>();
+        s_importers[AssetType::Texture] = createScope<TextureImporter>();
+    }
+    
+    void AssetImporter::serialize(const AssetMetadata& metadata, const ref<Asset>& asset)
     {
-        if (s_assetImportFunctions.find(metadata.type) == s_assetImportFunctions.end())
+        if (!s_importers.contains(metadata.type))
         {
-            MG_CORE_ERROR("No importer available for the asset type: {}", (uint16_t)metadata.type);
-            return nullptr;
+            MG_CORE_ERROR("No importer available for the asset type: {}", assetTypeToString(metadata.type));
+            return;
         }
 
-        return s_assetImportFunctions.at(metadata.type)(handle, metadata);
+        s_importers.at(metadata.type)->serialize(metadata, asset);
     }
+
+    bool AssetImporter::import(const AssetMetadata & metadata, ref<Asset> & asset)
+    {
+        if (!s_importers.contains(metadata.type))
+        {
+            MG_CORE_ERROR("No importer available for the asset type: {}", assetTypeToString(metadata.type));
+            return false;
+        }
+
+        return s_importers.at(metadata.type)->import(metadata, asset);
+    }
+
+    void TextureImporter::serialize(const AssetMetadata& metadata, const ref<Asset>& asset) const
+    {
+        // no op
+    }
+
+    bool TextureImporter::import(const AssetMetadata & metadata, ref<Asset> & asset) const
+    {
+        return false;
+    }
+
+    void SceneImporter::serialize(const AssetMetadata& metadata, const ref<Asset>& asset) const
+    {
+
+    }
+
+    bool SceneImporter::import(const AssetMetadata & metadata, ref<Asset> & asset) const
+    {
+        return false;
+    }
+
 }

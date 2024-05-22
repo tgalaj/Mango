@@ -1,62 +1,62 @@
 #include "mgpch.h"
-#include "AssetManager.h"
-
-#include "AssetImporter.h"
+#include "Mango/Asset/AssetExtensions.h"
+#include "Mango/Asset/AssetImporter.h"
+#include "Mango/Asset/AssetManager.h"
 
 #include <fstream>
 #include <yaml-cpp/yaml.h>
 
 namespace mango
 {
-    static std::map<std::filesystem::path, AssetType> s_assetExtensionMap =
+    namespace 
     {
-        { ".mango", AssetType::Scene   },
-        { ".png",   AssetType::Texture },
-        { ".jpg",   AssetType::Texture },
-        { ".jpeg",  AssetType::Texture },
+        static AssetMetadata s_nullMetadata;
     };
-
-    static AssetType getAssetTypeFromFileExtension(const std::filesystem::path& extension)
-    {
-        if (!s_assetExtensionMap.contains(extension))
-        {
-            MG_CORE_WARN("Could not find AssetType for {}", extension);
-            return AssetType::None;
-        }
-
-        return s_assetExtensionMap.at(extension);
-    }
 
     bool EditorAssetManager::isAssetHandleValid(AssetHandle handle) const
     {
-        return handle != 0 && m_assetRegistry.find(handle) != m_assetRegistry.end();
+        return handle != 0 && m_assetRegistry.contains(handle);
     }
 
     bool EditorAssetManager::isAssetLoaded(AssetHandle handle) const
     {
-        return m_loadedAssets.find(handle) != m_loadedAssets.end();
+        return m_loadedAssets.contains(handle);
     }
 
-    mango::AssetType EditorAssetManager::getAssetType(AssetHandle handle) const
+    AssetType EditorAssetManager::getAssetType(AssetHandle handle) const
     {
         if (!isAssetHandleValid(handle))
         {
             return AssetType::None;
         }
 
-        return m_assetRegistry.at(handle).type;
+        return m_assetRegistry.get(handle).type;
+    }
+
+    void EditorAssetManager::removeAsset(AssetHandle handle)
+    {
+        if (m_loadedAssets.contains(handle))
+            m_loadedAssets.erase(handle);
+
+        if (m_memoryAssets.contains(handle))
+            m_memoryAssets.erase(handle);
+
+        if (m_assetRegistry.contains(handle))
+            m_assetRegistry.remove(handle);
+
+        serializeAssetRegistry();
     }
 
     void EditorAssetManager::importAsset(const std::filesystem::path& filepath)
     {
-        AssetHandle handle; // automatically generates new handle
+        AssetHandle   handle; // automatically generates new handle
         AssetMetadata metadata;
         metadata.filepath = filepath;
-        metadata.type = getAssetTypeFromFileExtension(filepath.extension());
-
+        metadata.type     = getAssetTypeFromFileExtension(filepath.extension().string());
+        
         MG_CORE_ASSERT(metadata.type != AssetType::None);
 
-        ref<Asset> asset = AssetImporter::importAsset(handle, metadata);
+        ref<Asset> asset = AssetImporter::import(handle, metadata);
         if (asset)
         {
             asset->handle           = handle;
@@ -68,14 +68,27 @@ namespace mango
 
     const AssetMetadata& EditorAssetManager::getMetadata(AssetHandle handle) const
     {
-        static AssetMetadata s_nullMetadata;
-        auto it = m_assetRegistry.find(handle);
-        if (it == m_assetRegistry.end())
+        if (!m_assetRegistry.contains(handle))
         {
             return s_nullMetadata;
         }
 
-        return it->second;
+        return m_assetRegistry.get(handle);
+    }
+
+    const AssetMetadata& EditorAssetManager::getMetadata(const std::filesystem::path& filepath) const
+    {
+        auto relativePath = std::filesystem::relative(filepath, Project::getActiveAssetDirectory());
+
+        for (const auto& [handle, metadata] : m_assetRegistry)
+        {
+            if (metadata.filepath == relativePath)
+            {
+                return metadata;
+            }
+        }
+
+        return s_nullMetadata;
     }
 
     const std::filesystem::path& EditorAssetManager::getFilePath(AssetHandle handle) const
@@ -83,7 +96,28 @@ namespace mango
         return getMetadata(handle).filepath;
     }
 
-    ref<Asset> EditorAssetManager::getAsset(AssetHandle handle) const
+    AssetHandle EditorAssetManager::getAssetHandleFromFilePath(const std::string& filepath) const
+    {
+        getMetadata(filepath).handle;
+    }
+
+    AssetType EditorAssetManager::getAssetTypeFromFileExtension(const std::string& extension)
+    {
+        if (!s_assetExtensionMap.contains(extension))
+        {
+            MG_CORE_WARN("Could not find AssetType for {}", extension);
+            return AssetType::None;
+        }
+
+        return s_assetExtensionMap.at(extension);
+    }
+
+    EditorAssetManager::EditorAssetManager()
+    {
+
+    }
+
+    ref<Asset> EditorAssetManager::getAsset(AssetHandle handle)
     {
         // 1. check if handle is valid
         if (!isAssetHandleValid(handle)) 
@@ -100,11 +134,15 @@ namespace mango
             // load asset
             const AssetMetadata& metadata = getMetadata(handle);
 
-            asset = AssetImporter::importAsset(handle, metadata);
+            asset = AssetImporter::import(handle, metadata);
             if (!asset) 
             {
                 // import failed
                 MG_CORE_ERROR("EditorAssetManager::getAsset - asset import failed!");
+            }
+            else
+            {
+                m_loadedAssets[handle] = asset;
             }
         }
 

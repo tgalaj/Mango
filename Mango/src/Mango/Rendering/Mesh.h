@@ -177,6 +177,6 @@ namespace mango
         DrawMode    m_drawMode  = DrawMode::TRIANGLES;
 
     private:
-        friend class AssimpMeshImporter;
+        friend class AssimpMeshLoader;
     };
 }

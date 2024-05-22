@@ -3,7 +3,7 @@
 #include "EditorEvents.h"
 #include "IconsMaterialDesignIcons.h"
 
-#include "Mango/Asset/TextureImporter.h"
+#include "Mango/Asset/Importer/TextureLoader.h"
 #include "Mango/Core/Services.h"
 #include "Mango/Core/VFI.h"
 #include "Mango/Project/Project.h"

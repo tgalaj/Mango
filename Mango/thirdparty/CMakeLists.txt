@@ -58,7 +58,7 @@ endif()
 
 CPMAddPackage(
     GITHUB_REPOSITORY tgalaj/strutil
-    GIT_TAG master
+    VERSION 2.0.0
     GIT_SHALLOW TRUE
     DOWNLOAD_ONLY TRUE)
 

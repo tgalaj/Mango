@@ -5,8 +5,8 @@
 
 #include "Mango/Core/Base.h"
 
-#include "Mango/Asset/EditorAssetManager.h"
-#include "Mango/Asset/RuntimeAssetManager.h"
+#include "Mango/Asset/Manager/EditorAssetManager.h"
+#include "Mango/Asset/Manager/RuntimeAssetManager.h"
 
 namespace mango
 {
