@@ -1,6 +1,8 @@
 #include "mgpch.h"
 #include "AssetImporter.h"
 
+#include "Mango/Project/Project.h"
+
 namespace mango
 {
     std::unordered_map<mango::AssetType, mango::scope<mango::AssetImporterBase>> AssetImporter::s_importers;
@@ -37,13 +39,17 @@ namespace mango
 
     void TextureImporter::serialize(const AssetMetadata& metadata, const ref<Asset>& asset) const
     {
-        // mo op
+        // no op
     }
 
     ref<Asset> TextureImporter::import(AssetHandle handle, const AssetMetadata & metadata) const
     {
-        // TODO
-        return nullptr;
+        auto filepath = Project::getActiveAssetDirectory() / metadata.filepath;
+
+        ref<Texture> asset = createRef<Texture>();
+        asset->createTexture2d(filepath.string(), false, 0); // TODO: is srgb + miplevel
+
+        return asset;
     }
 
     void SceneImporter::serialize(const AssetMetadata& metadata, const ref<Asset>& asset) const

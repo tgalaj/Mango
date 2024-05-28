@@ -14,8 +14,9 @@ namespace mango
         EditorAssetManager();
         virtual ~EditorAssetManager() = default;
 
-        ref<Asset> getAsset          (AssetHandle handle)       override;
-        AssetType  getAssetType      (AssetHandle handle) const override;
+        ref<Asset> getAsset      (AssetHandle handle)           override;
+        ref<Asset> getAssetByName(const std::string& assetName) override;
+        AssetType  getAssetType  (AssetHandle handle) const     override;
 
         void       addMemoryOnlyAsset(const ref<Asset>& asset, const std::string& assetName = "") override;
 
@@ -35,6 +36,7 @@ namespace mango
 
         AssetHandle getAssetHandleByFilePath     (const std::string& filepath) const;
         AssetType   getAssetTypeFromFileExtension(const std::string& extension);
+
 
         const AssetRegistry& getAssetRegistry() const { return m_assetRegistry; }
 

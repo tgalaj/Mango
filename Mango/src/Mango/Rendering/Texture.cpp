@@ -4,6 +4,94 @@
 #include "glm/common.hpp"
 #include "glm/exponential.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+#define TINYDDSLOADER_IMPLEMENTATION
+#include "tinyddsloader.h"
+
+using namespace tinyddsloader;
+
+namespace
+{
+    struct GLFormat
+    {
+        DDSFile::DXGIFormat dxgiFormat;
+        GLenum              type;
+        GLenum              format;
+        GLenum              internalFormat;
+        glm::ivec4          swizzle;
+    };
+
+    bool translateDdsFormat(DDSFile::DXGIFormat fmt, GLFormat* outFormat)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        static const glm::ivec4 sws[] =
+        {
+            { GL_RED,  GL_GREEN, GL_BLUE, GL_ALPHA },
+            { GL_BLUE, GL_GREEN, GL_RED,  GL_ALPHA },
+            { GL_BLUE, GL_GREEN, GL_RED,  GL_ONE   },
+            { GL_RED,  GL_GREEN, GL_BLUE, GL_ONE   },
+            { GL_RED,  GL_ZERO,  GL_ZERO, GL_ZERO  },
+            { GL_RED,  GL_GREEN, GL_ZERO, GL_ZERO  },
+        };
+
+        using DXGIFmt = DDSFile::DXGIFormat;
+        static const GLFormat formats[] =
+        {
+            { DXGIFmt::R8G8B8A8_UNorm,      GL_UNSIGNED_BYTE, GL_RGBA,                                  GL_RGBA8UI,                               sws[0] },
+            { DXGIFmt::R8G8B8A8_UNorm_SRGB, GL_UNSIGNED_BYTE, GL_RGBA,                                  GL_SRGB8_ALPHA8,                          sws[0] },
+            { DXGIFmt::B8G8R8A8_UNorm,      GL_UNSIGNED_BYTE, GL_RGBA,                                  GL_RGBA8UI,                               sws[1] },
+            { DXGIFmt::B8G8R8X8_UNorm,      GL_UNSIGNED_BYTE, GL_RGBA,                                  GL_RGBA8UI,                               sws[2] },
+            { DXGIFmt::R32G32_Float,        GL_FLOAT,         GL_RG,                                    GL_RG32F,                                 sws[0] },
+            { DXGIFmt::R32G32B32A32_Float,  GL_FLOAT,         GL_RGBA,                                  GL_RGBA32F,                               sws[0] },
+            { DXGIFmt::BC1_UNorm,           0,                GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,         GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,         sws[0] },
+            { DXGIFmt::BC2_UNorm,           0,                GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,         GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,         sws[0] },
+            { DXGIFmt::BC3_UNorm,           0,                GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,         GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,         sws[0] },
+            { DXGIFmt::BC4_UNorm,           0,                GL_COMPRESSED_RED_RGTC1_EXT,              GL_COMPRESSED_RED_RGTC1_EXT,              sws[0] },
+            { DXGIFmt::BC4_SNorm,           0,                GL_COMPRESSED_SIGNED_RED_RGTC1_EXT,       GL_COMPRESSED_SIGNED_RED_RGTC1_EXT,       sws[0] },
+            { DXGIFmt::BC5_UNorm,           0,                GL_COMPRESSED_RED_GREEN_RGTC2_EXT,        GL_COMPRESSED_RED_GREEN_RGTC2_EXT,        sws[0] },
+            { DXGIFmt::BC5_SNorm,           0,                GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT, GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT, sws[0] },
+        };
+
+        for (const auto& format : formats)
+        {
+            if (format.dxgiFormat == fmt)
+            {
+                if (outFormat)
+                {
+                    *outFormat = format;
+                }
+                return true;
+            }
+        }
+
+        MG_CORE_ASSERT_MSG(false, "Format not supported.");
+        return false;
+    }
+
+    bool isDdsCompressed(GLenum fmt)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        switch (fmt)
+        {
+            case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+            case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+            case GL_COMPRESSED_RGBA_S3TC_DXT3_EXT:
+            case GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
+            case GL_COMPRESSED_RED_RGTC1_EXT:
+            case GL_COMPRESSED_SIGNED_RED_RGTC1_EXT:
+            case GL_COMPRESSED_RED_GREEN_RGTC2_EXT:
+            case GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT:
+                return true;
+            default:
+                return false;
+        }
+    }
+}
+
 namespace mango
 {
     // --------------------- Texture Sampler -------------------------
@@ -88,10 +176,6 @@ namespace mango
     }
 
     // --------------------- Texture -------------------------
-    void Texture::create(const TextureDescriptor& desc, void* data)
-    {
-
-    }
 
     void Texture::setFiltering(TextureFiltering type, TextureFilteringParam param)
     {
@@ -171,64 +255,64 @@ namespace mango
 
     // --------------------- Texture creation methods -------------------------
 
-    //uint8_t* Texture::load(const std::string& filename, bool isSrgb, bool flip /*= true*/)
-    //{
-    //    MG_PROFILE_ZONE_SCOPED;
+    uint8_t* Texture::load(const std::string& filename, bool isSrgb, bool flip /*= true*/)
+    {
+        MG_PROFILE_ZONE_SCOPED;
 
-    //    auto filepath = VFI::getFilepath(filename);
-    //    
-    //    if (flip) stbi_set_flip_vertically_on_load(true);
+        auto filepath = VFI::getFilepath(filename);
+        
+        if (flip) stbi_set_flip_vertically_on_load(true);
 
-    //    int width, height, channelsCount;
-    //    uint8_t* data = stbi_load(filepath.string().c_str(), &width, &height, &channelsCount, 0);
-    //    
-    //    if (flip) stbi_set_flip_vertically_on_load(false);
+        int width, height, channelsCount;
+        uint8_t* data = stbi_load(filepath.string().c_str(), &width, &height, &channelsCount, 0);
+        
+        if (flip) stbi_set_flip_vertically_on_load(false);
 
-    //    if (data)
-    //    {
-    //        setDescriptor(width, height, channelsCount, isSrgb);
-    //    }
+        if (data)
+        {
+            m_descriptor = createDescriptor(width, height, channelsCount, isSrgb);
+        }
 
-    //    return data;
-    //}
+        return data;
+    }
 
-    //uint8_t* Texture::load(uint8_t* memoryData, uint64_t dataSize, bool isSrgb)
-    //{
-    //    MG_PROFILE_ZONE_SCOPED;
+    uint8_t* Texture::load(uint8_t* memoryData, uint64_t dataSize, bool isSrgb)
+    {
+        MG_PROFILE_ZONE_SCOPED;
 
-    //    int width, height, channelsCount;
-    //    uint8_t* data = stbi_load_from_memory(memoryData, dataSize, &width, &height, &channelsCount, 0);
+        int width, height, channelsCount;
+        uint8_t* data = stbi_load_from_memory(memoryData, dataSize, &width, &height, &channelsCount, 0);
 
-    //    if (data)
-    //    {
-    //        setDescriptor(width, height, channelsCount, isSrgb);
-    //    }
+        if (data)
+        {
+            m_descriptor = createDescriptor(width, height, channelsCount, isSrgb);
+        }
 
-    //    return data;
-    //}
+        return data;
+    }
 
-    //float* Texture::loadf(const std::string& filename, bool flip /*= true*/)
-    //{
-    //    MG_PROFILE_ZONE_SCOPED;
+    float* Texture::loadf(const std::string& filename, bool flip /*= true*/)
+    {
+        MG_PROFILE_ZONE_SCOPED;
 
-    //    auto filepath = VFI::getFilepath(filename);
-    //    if (flip) stbi_set_flip_vertically_on_load(true);
+        auto filepath = VFI::getFilepath(filename);
+        if (flip) stbi_set_flip_vertically_on_load(true);
 
-    //    int width, height, channelsCount;
-    //    float* data = stbi_loadf(filepath.string().c_str(), &width, &height, &channelsCount, 3);
+        int width, height, channelsCount;
+        float* data = stbi_loadf(filepath.string().c_str(), &width, &height, &channelsCount, 3);
 
-    //    if (flip) stbi_set_flip_vertically_on_load(false);
+        if (flip) stbi_set_flip_vertically_on_load(false);
 
-    //    if (data)
-    //    {
-    //        m_descriptor.width          = width;
-    //        m_descriptor.height         = height;
-    //        m_descriptor.format         = GL_RGB;
-    //        m_descriptor.internalFormat = GL_RGB32F;
-    //    }
+        if (data)
+        {
+            m_descriptor.width          = width;
+            m_descriptor.height         = height;
+            m_descriptor.format         = GL_RGB;
+            m_descriptor.internalFormat = GL_RGB32F;
+        }
 
-    //    return data;
-    //}
+        return data;
+    }
 
     bool Texture::createTexture2d(const std::string& filename, bool isSrgb, uint32_t mipmapLevels)
     {
@@ -236,7 +320,7 @@ namespace mango
         MG_PROFILE_GL_ZONE("Texture::createTexture2d");
 
         m_filename = filename;
-        auto data = nullptr;//load(filename, isSrgb);
+        auto data = load(filename, isSrgb);
 
         if (!data)
         {
@@ -258,7 +342,7 @@ namespace mango
         setWraping   (TextureWrapingCoordinate::T, TextureWrapingParam::REPEAT);
         setAnisotropy(16.0f);
 
-        //stbi_image_free(data);
+        stbi_image_free(data);
 
         return true;
     }
@@ -311,7 +395,7 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::createTexture2dFromMemory");
 
-        auto data = nullptr;//load(memoryData, dataSize, isSrgb);
+        auto data = load(memoryData, dataSize, isSrgb);
 
         if (!data)
         {
@@ -333,7 +417,7 @@ namespace mango
         setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::REPEAT);
         setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::REPEAT);
 
-        //stbi_image_free(data);
+        stbi_image_free(data);
 
         return true;
     }
@@ -344,7 +428,7 @@ namespace mango
         MG_PROFILE_GL_ZONE("Texture::createTexture2dHDR");
 
         m_filename = filename;
-        float* data = 0;//loadf(filename);
+        float* data = loadf(filename);
 
         if (!data)
         {
@@ -365,7 +449,7 @@ namespace mango
         setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::CLAMP_TO_EDGE);
         setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::CLAMP_TO_EDGE);
         
-        //stbi_image_free(data);
+        stbi_image_free(data);
 
         return true;
     }
@@ -375,7 +459,7 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::createTextureDDS");
 
-        /*m_filename = filename;
+        m_filename = filename;
         auto filepath = VFI::getFilepath(filename);
 
         DDSFile dds;
@@ -486,7 +570,7 @@ namespace mango
                     break;
                 }
             }
-        }*/
+        }
 
         return true;
     }
@@ -502,7 +586,7 @@ namespace mango
 
         for (int i = 0; i < NUM_FACES; ++i)
         {
-            images_data[i] = nullptr;//load(filenames[i], isSrgb, false);
+            images_data[i] = load(filenames[i], isSrgb, false);
 
             if (!images_data[i])
             {
@@ -542,31 +626,31 @@ namespace mango
 
         for (int i = 0; i < NUM_FACES; ++i)
         {
-            //stbi_image_free(images_data[i]);
+            stbi_image_free(images_data[i]);
         }
 
         return true;
     }
 
-    mango::TextureDescriptor Texture::createDescriptor(int width, int height, int channelsCount, bool isSrgb)
+    TextureDescriptor Texture::createDescriptor(int width, int height, int channelsCount, bool isSrgb)
     {
-        TextureDescriptor desc = {};
-        desc.width = width;
-        desc.height = height;
+        TextureDescriptor desc        = {};
+                          desc.width  = width;
+                          desc.height = height;
 
         if (channelsCount == 1)
         {
-            desc.format = GL_RED;
+            desc.format         = GL_RED;
             desc.internalFormat = GL_R8;
         }
         else if (channelsCount == 3)
         {
-            desc.format = GL_RGB;
+            desc.format         = GL_RGB;
             desc.internalFormat = isSrgb ? GL_SRGB8 : GL_RGB8;
         }
         else if (channelsCount == 4)
         {
-            desc.format = GL_RGBA;
+            desc.format         = GL_RGBA;
             desc.internalFormat = isSrgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
         }
 

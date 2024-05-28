@@ -585,9 +585,11 @@ namespace mango
                         if (!textureFilename.empty())
                         {
                             auto textureType = stringToMaterialTextureType(it->first.as<std::string>());
-                            auto texture     = AssetManagerOld::createTexture2D(textureFilename, (textureType == Material::TextureType::DIFFUSE) ? true : false);
+                            
+                            // TOOD: this is the legacy code, now we should read AssetHandle and store this in the material
+                            //auto texture     = AssetManagerOld::createTexture2D(textureFilename, (textureType == Material::TextureType::DIFFUSE) ? true : false);
 
-                            mangoMaterial->addTexture(textureType, texture);
+                            //mangoMaterial->addTexture(textureType, texture);
                         }
                     }
                 }

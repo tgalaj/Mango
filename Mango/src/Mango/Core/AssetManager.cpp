@@ -39,31 +39,31 @@ namespace mango
         return material;
     }
 
-    ref<Texture> AssetManagerOld::createTexture2D(const std::string& filename, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
-    {
-        MG_PROFILE_ZONE_SCOPED;
+    //ref<Texture> AssetManagerOld::createTexture2D(const std::string& filename, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
 
-        if (m_loadedTextures.contains(filename))
-        {
-            return m_loadedTextures[filename];
-        }
+    //    if (m_loadedTextures.contains(filename))
+    //    {
+    //        return m_loadedTextures[filename];
+    //    }
 
-        auto extension = std::filesystem::path(filename).extension();
+    //    auto extension = std::filesystem::path(filename).extension();
 
-        auto texture2D = createRef<Texture>();
+    //    auto texture2D = createRef<Texture>();
 
-        if (extension == ".dds")
-        {
-            texture2D->createTextureDDS(filename);
-        }
-        else
-        {
-            texture2D->createTexture2d(filename, isSrgb, numMipmaps);
-        }
-        m_loadedTextures[filename] = texture2D;
+    //    if (extension == ".dds")
+    //    {
+    //        texture2D->createTextureDDS(filename);
+    //    }
+    //    else
+    //    {
+    //        texture2D->createTexture2d(filename, isSrgb, numMipmaps);
+    //    }
+    //    m_loadedTextures[filename] = texture2D;
 
-        return texture2D;
-    }
+    //    return texture2D;
+    //}
 
     ref<Texture> AssetManagerOld::createTexture2D1x1(const std::string& textureName, const glm::uvec4& color)
     {

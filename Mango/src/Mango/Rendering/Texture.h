@@ -104,8 +104,8 @@ namespace mango
     class Texture final : public Asset
     {
     public:
-        Texture() {}
-        ~Texture() override { release(); };
+        Texture() : m_id(0) {}
+        ~Texture() { release(); };
 
         Texture(const Texture&) = delete;
         Texture& operator=(const Texture&) = delete;
@@ -128,7 +128,6 @@ namespace mango
             return *this;
         }
 
-        void create           (const TextureDescriptor& desc, void* data);
         void bind             (uint32_t unit) const { glBindTextureUnit(unit, m_id); }
         void setFiltering     (TextureFiltering type, TextureFilteringParam param);
         void setMinLod        (float min);
@@ -162,13 +161,13 @@ namespace mango
 
         static  TextureDescriptor createDescriptor(int width, int height, int channelsCount, bool isSrgb);
 
-        static  AssetType getStaticAssetType()          { return AssetType::Texture; };
+        static  AssetType getStaticAssetType() { return AssetType::Texture; };
         virtual AssetType getAssetType() const override { return getStaticAssetType(); };
 
     private:
-        // uint8_t* load(const std::string& filename, bool isSrgb, bool flip = true);
-        // uint8_t* load(uint8_t* memoryData, uint64_t dataSize, bool isSrgb);
-        // float*   loadf(const std::string& filename, bool flip = true);
+        uint8_t* load(const std::string& filename, bool isSrgb, bool flip = true);
+        uint8_t* load(uint8_t* memoryData, uint64_t dataSize, bool isSrgb);
+        float*   loadf(const std::string& filename, bool flip = true);
 
         void release()
         {

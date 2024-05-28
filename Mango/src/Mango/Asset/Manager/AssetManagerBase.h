@@ -12,8 +12,9 @@ namespace mango
     class AssetManagerBase
     {
     public:
-        virtual ref<Asset> getAsset          (AssetHandle handle)       = 0;
-        virtual AssetType  getAssetType      (AssetHandle handle) const = 0;
+        virtual ref<Asset> getAsset          (AssetHandle handle)           = 0;
+        virtual ref<Asset> getAssetByName    (const std::string& assetName) = 0;
+        virtual AssetType  getAssetType      (AssetHandle handle) const     = 0;
 
         virtual void       addMemoryOnlyAsset(const ref<Asset>& asset, const std::string& assetName = "")  = 0;
 

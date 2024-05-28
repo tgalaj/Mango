@@ -15,7 +15,7 @@ namespace mango
             ref<Asset> asset = Project::getActive()->getAssetManager()->getAsset(handle);
             return std::static_pointer_cast<T>(asset);
         }
-        
+
         static AssetType getAssetType(AssetHandle handle)
         {
             return  Project::getActive()->getAssetManager()->getAssetType(handle);
@@ -43,6 +43,13 @@ namespace mango
         }
 
         template<typename T>
+        static ref<T> getAssetByName(const std::string& assetName)
+        {
+            //ref<Asset> asset = Project::getActive()->getAssetManager()->getAsset(handle);
+            //return std::static_pointer_cast<T>(asset);
+        }
+
+        template<typename T>
         static void addMemoryOnlyAsset(const ref<Asset>& asset, const std::string& assetName = "")
         {
             static_assert(std::is_base_of_v<Asset, T>, "T must be a subclass of Asset");
@@ -66,14 +73,14 @@ namespace mango
         }
 
         template<typename T, typename... Args>
-        static AssetHandle createMemoryOnlyAsset(Args&&... args)
+        static AssetHandle createMemoryOnlyAsset(Args&&... args, const std::string& assetName = "")
         {
             static_assert(std::is_base_of_v<Asset, T>, "T must be a subclass of Asset");
 
             ref<T> asset         = createRef<T>(std::forward<Args>(args)...);
                    asset->handle = AssetHandle();
 
-            Project::getActive()->getAssetManager()->addMemoryOnlyAsset<T>(asset);
+            Project::getActive()->getAssetManager()->addMemoryOnlyAsset<T>(asset, assetName);
 
             return asset->handle;
         }

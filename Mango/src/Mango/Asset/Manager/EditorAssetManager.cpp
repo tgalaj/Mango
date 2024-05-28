@@ -31,7 +31,7 @@ namespace mango
 
     bool EditorAssetManager::isMemoryOnlyAsset(AssetHandle handle) const
     {
-        return m_assetRegistry.get(handle).isMemoryOnlyAsset;
+        return m_memoryAssets.contains(handle);
     }
 
     AssetType EditorAssetManager::getAssetType(AssetHandle handle) const
@@ -156,6 +156,12 @@ namespace mango
 
     ref<Asset> EditorAssetManager::getAsset(AssetHandle handle)
     {
+        // 0. check if asset is memory only asset
+        if (isMemoryOnlyAsset(handle))
+        {
+            return m_memoryAssets[handle];
+        }
+
         // 1. check if handle is valid
         if (!isAssetHandleValid(handle)) 
             return nullptr;
@@ -185,6 +191,13 @@ namespace mango
 
         // 3. return asset
         return asset;
+    }
+
+    ref<Asset> EditorAssetManager::getAssetByName(const std::string& assetName)
+    {
+        AssetHandle handle = getAssetHandleByFilePath(assetName);
+        
+        return getAsset(handle);
     }
 
     void EditorAssetManager::serializeAssetRegistry()

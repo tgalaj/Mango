@@ -15,7 +15,7 @@ namespace mango
         static ref<Material>   createMaterial      (const std::string & materialName);
         static ref<Mesh>       createMesh          (const std::string & meshName);
         static ref<Mesh>       createMeshFromFile  (const std::string & filename);
-        static ref<Texture>    createTexture2D     (const std::string & filename, bool isSrgb = false, GLint numMipmaps = 1);
+        //static ref<Texture>    createTexture2D     (const std::string & filename, bool isSrgb = false, GLint numMipmaps = 1);
         static ref<Texture>    createTexture2D1x1  (const std::string & textureName, const glm::uvec4 & color);
         static ref<Texture>    createCubeMapTexture(const std::string * filenames, bool isSrgb = false, GLint numMipmaps = 1);
 
