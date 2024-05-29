@@ -1,5 +1,5 @@
 Project:
   Name: Sandbox
-  StartScene: scenes/Sandbox.mango
+  StartScene: scenes/Empty.mango
   AssetDirectory: assets
   AssetRegistryPath: AssetRegistry.mr

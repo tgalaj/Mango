@@ -29,7 +29,7 @@ namespace mango
         const AssetMap&                       getLoadedAssets()                  const override;
         const AssetMap&                       getMemoryOnlyAssets()              const override;
 
-        void importAsset(const std::filesystem::path& filepath);
+        AssetHandle importAsset(const std::filesystem::path& filepath);
 
         const AssetMetadata&         getMetadata(AssetHandle handle) const;
         const std::filesystem::path& getFilePath(AssetHandle handle) const;

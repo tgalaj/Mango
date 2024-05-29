@@ -51,8 +51,8 @@ namespace mango
         metadata.filepath          = assetName;
         metadata.type              = asset->getAssetType();
 
-        m_assetRegistry[asset->handle] = metadata;
-        m_memoryAssets [asset->handle] = asset;
+        m_assetRegistry[asset->assetHandle] = metadata;
+        m_memoryAssets [asset->assetHandle] = asset;
     }
 
     void EditorAssetManager::removeAsset(AssetHandle handle)
@@ -94,9 +94,14 @@ namespace mango
         return m_memoryAssets;
     }
 
-    void EditorAssetManager::importAsset(const std::filesystem::path& filepath)
+    AssetHandle EditorAssetManager::importAsset(const std::filesystem::path& filepath)
     {
-        AssetHandle   handle; // automatically generates new handle
+        AssetHandle handle = getAssetHandleByFilePath(filepath.string());
+
+        if (isAssetHandleValid(handle)) 
+            return handle;
+
+                      handle = AssetHandle{}; // generate new handle
         AssetMetadata metadata;
                       metadata.filepath = filepath;
                       metadata.type     = getAssetTypeFromFileExtension(filepath.extension().string());
@@ -106,11 +111,15 @@ namespace mango
         ref<Asset> asset = AssetImporter::import(handle, metadata);
         if (asset)
         {
-            asset->handle           = handle;
+            asset->assetHandle      = handle;
             m_loadedAssets [handle] = asset;
             m_assetRegistry[handle] = metadata;
             serializeAssetRegistry();
+
+            return handle;
         }
+
+        return 0; // invalid handle
     }
 
     const AssetMetadata& EditorAssetManager::getMetadata(AssetHandle handle) const

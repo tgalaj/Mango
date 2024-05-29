@@ -18,15 +18,15 @@ namespace mango
 
         virtual bool operator==(const Asset& other) const
         {
-            return handle == other.handle;
+            return assetHandle == other.assetHandle;
         }
 
         virtual bool operator!=(const Asset& other) const
         {
-            return handle != other.handle;
+            return assetHandle != other.assetHandle;
         }
 
     public:
-        AssetHandle handle; // automatically generate handle (see UUID constructor)
+        AssetHandle assetHandle; // automatically generate handle (see UUID constructor)
     };
 }

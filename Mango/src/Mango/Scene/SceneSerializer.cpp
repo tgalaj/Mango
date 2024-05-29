@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "SceneSerializer.h"
+#include "Mango/Asset/AssetManager.h"
 #include "Mango/Core/AssetManager.h"
 
 #include <yaml-cpp/yaml.h>
@@ -81,6 +82,23 @@ namespace YAML {
             rhs.y = node[1].as<float>();
             rhs.z = node[2].as<float>();
             rhs.w = node[3].as<float>();
+            return true;
+        }
+    };
+
+    template<>
+    struct convert<mango::AssetHandle>
+    {
+        static Node encode(const mango::AssetHandle& rhs)
+        {
+            Node node;
+            node.push_back(rhs);
+            return node;
+        }
+
+        static bool decode(const Node& node, mango::AssetHandle& rhs)
+        {
+            rhs = node[0].as<uint64_t>();
             return true;
         }
     };
@@ -266,7 +284,7 @@ namespace mango
                     {
                         for (uint32_t i = 0; i < smc.materials.size(); ++i)
                         {
-                            auto& material = smc.materials[i];
+                            ref<Material>& material = smc.materials[i];
 
                             if (material != originalMaterials[i])
                             {
@@ -423,7 +441,7 @@ namespace mango
                                 {
                                     for (auto& [type, texture] : material->getTextureMap())
                                     {
-                                        out << YAML::Key << materialTextureTypeToString(type) << YAML::Value << texture->getFilename();
+                                        out << YAML::Key << materialTextureTypeToString(type) << YAML::Value << texture->assetHandle;
                                     }
                                 }
                                 out << YAML::EndMap;
@@ -580,16 +598,14 @@ namespace mango
                 {
                     for (auto it = textureMap.begin(); it != textureMap.end(); ++it)
                     {
-                        auto textureFilename = it->second.as<std::string>();
+                        auto assetHandle = it->second.as<AssetHandle>();
 
-                        if (!textureFilename.empty())
+                        if (AssetManager::isAssetHandleValid(assetHandle))
                         {
                             auto textureType = stringToMaterialTextureType(it->first.as<std::string>());
-                            
-                            // TOOD: this is the legacy code, now we should read AssetHandle and store this in the material
-                            //auto texture     = AssetManagerOld::createTexture2D(textureFilename, (textureType == Material::TextureType::DIFFUSE) ? true : false);
 
-                            //mangoMaterial->addTexture(textureType, texture);
+                            auto texture = AssetManager::getAsset<Texture>(assetHandle);
+                            mangoMaterial->addTexture(textureType, texture);
                         }
                     }
                 }

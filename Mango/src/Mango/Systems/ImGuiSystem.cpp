@@ -69,11 +69,11 @@ namespace mango
         imguizmoStyle.Colors[ImGuizmo::COLOR::SELECTION] = { 0.8f, 0.666667f, 0.125490f, 1.0f };
 
         imguizmoStyle.TranslationLineThickness   = 5.0f;
-        imguizmoStyle.TranslationLineArrowSize   = imguizmoStyle.TranslationLineThickness * 2.0f;
+        imguizmoStyle.TranslationLineArrowSize   = imguizmoStyle.TranslationLineThickness * 1.5f;
         imguizmoStyle.RotationLineThickness      = 5.0f;
         imguizmoStyle.RotationOuterLineThickness = imguizmoStyle.RotationLineThickness + 1.0f;
         imguizmoStyle.ScaleLineThickness         = 5.0f;
-        imguizmoStyle.ScaleLineCircleSize        = imguizmoStyle.ScaleLineThickness * 2.0f;
+        imguizmoStyle.ScaleLineCircleSize        = imguizmoStyle.ScaleLineThickness * 1.5f;
         imguizmoStyle.HatchedAxisLineThickness   = 10.0f;
         imguizmoStyle.CenterCircleSize           = 10.0f;
 

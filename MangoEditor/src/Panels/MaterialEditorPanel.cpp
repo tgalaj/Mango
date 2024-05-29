@@ -1,15 +1,18 @@
 #include "MaterialEditorPanel.h"
 #include "DragDropPayloadTypes.h"
-#include "IconsMaterialDesignIcons.h"
 #include "Mango/Scene/SelectionManager.h"
 
+#include "Mango/Asset/AssetManager.h"
+#include "Mango/Asset/Manager/EditorAssetManager.h"
 #include "Mango/Core/Assertions.h"
 #include "Mango/Core/AssetManager.h"
+#include "Mango/Project/Project.h"
 #include "Mango/Systems/ImGuiSystem.h"
 
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
 #include <strutil.h>
+
 
 namespace mango
 {
@@ -175,8 +178,9 @@ namespace mango
                             {
                                 const auto* path = (const wchar_t*)payload->Data;
 
-                                bool isSrgb = (type == Material::TextureType::DIFFUSE) || (type == Material::TextureType::EMISSION);
-                                texture = AssetManagerOld::createTexture2D(std::filesystem::path(path).string(), isSrgb);
+                                //bool isSrgb = (type == Material::TextureType::DIFFUSE) || (type == Material::TextureType::EMISSION);
+                                AssetHandle assetHandle = Project::getActive()->getEditorAssetManager()->importAsset(path);
+                                            texture     = AssetManager::getAsset<Texture>(assetHandle);
                             }
                             ImGui::EndDragDropTarget();
                         }
