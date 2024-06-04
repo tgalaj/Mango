@@ -68,7 +68,7 @@ void Sandbox::onInit()
     auto zen3cModel         = AssetManagerOld::createMeshFromFile("models/Zen3C/Zen3C.X");
     auto damagedHelmetModel = AssetManagerOld::createMeshFromFile("models/damaged_helmet/DamagedHelmet.gltf");
     auto sponzaModel        = AssetManagerOld::createMeshFromFile("models/sponza/Sponza.gltf");
-
+    
     auto groundTex           = AssetManagerOld::createTexture2D("textures/trak_tile_g.jpg", true);
     auto brickwallTex        = AssetManagerOld::createTexture2D("textures/brickwall.dds", true);
     auto brickwallNormalTex  = AssetManagerOld::createTexture2D("textures/brickwall_normal.jpg");
@@ -265,6 +265,8 @@ void Sandbox::onInit()
     spotLight.setLocalPosition(1.5, 5, 1.5);
     spotLight.setLocalRotation(-45, 45, 45);
     spotLight.getComponent<SpotLightComponent>().setCastsShadows(true);
+
+    SceneSerializer::serialize(m_mainScene, "NewSandbox.mango");
 }
 
 void Sandbox::onDestroy()

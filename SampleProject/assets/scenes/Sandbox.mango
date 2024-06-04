@@ -21,11 +21,11 @@ Materials:
     RenderQueue: Opaque
   - Name: bricks
     Textures:
-      Diffuse: textures/bricks2.jpg
-      Specular: DefaultSpecular
-      Normal: textures/bricks2_normal.jpg
-      Emission: DefaultEmission
-      Displacement: textures/bricks2_disp.jpg
+      Diffuse: 8047913494817325759
+      Specular: 0
+      Normal: 8056229132570238215
+      Emission: 0
+      Displacement: 0
     Vec3Map:
       {}
     FloatMap:
