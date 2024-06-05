@@ -47,7 +47,15 @@ namespace mango
         auto filepath = Project::getActiveAssetDirectory() / metadata.filepath;
 
         ref<Texture> asset = createRef<Texture>();
-        asset->createTexture2d(filepath.string(), false, 0); // TODO: is srgb + miplevel
+
+        if (filepath.extension() == ".dds")
+        {
+            asset->createTextureDDS(filepath.string()); // TODO: is srgb + miplevel
+        }
+        else
+        {
+            asset->createTexture2d(filepath.string(), false, 0); // TODO: is srgb + miplevel
+        }
 
         return asset;
     }

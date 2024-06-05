@@ -21,6 +21,7 @@ namespace mango
         { ".png",  AssetType::Texture  },
         { ".jpg",  AssetType::Texture  },
         { ".jpeg", AssetType::Texture  },
+        { ".dds",  AssetType::Texture  },
         { ".hdr",  AssetType::Texture  },
         { ".exr",  AssetType::Texture  },
         

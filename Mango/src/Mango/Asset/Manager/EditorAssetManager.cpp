@@ -16,7 +16,7 @@ namespace mango
 
     EditorAssetManager::EditorAssetManager()
     {
-
+        AssetImporter::init();
     }
 
     bool EditorAssetManager::isAssetHandleValid(AssetHandle handle) const
@@ -211,7 +211,7 @@ namespace mango
 
     void EditorAssetManager::serializeAssetRegistry()
     {
-        auto path = Project::getActiveAssetRegistryPath();
+        // TODO: sorting asset registry when serializing!!
 
         YAML::Emitter out;
         out << YAML::BeginMap; // Root
@@ -231,6 +231,7 @@ namespace mango
         out << YAML::EndSeq;
         out << YAML::EndMap; // Root
 
+        auto path = Project::getActiveAssetRegistryPath().string();
         std::ofstream fout(path);
         if (fout.is_open())
         {

@@ -1,9 +1,16 @@
 #define GLFW_INCLUDE_NONE 
 
 #include "Sandbox.h"
+#include "Mango/Asset/AssetManager.h"
+#include "Mango/Asset/Manager/EditorAssetManager.h"
 #include "Mango/Scene/SceneSerializer.h"
 
 using namespace mango;
+
+namespace 
+{
+    AssetHandle openglLogo = 0;
+}
 
 Sandbox::Sandbox()
     : System("Sandbox")
@@ -12,6 +19,30 @@ Sandbox::Sandbox()
 
 void Sandbox::onInit()
 {
+    auto projectPath = MG_ROOT_DIR "SampleProject/Sandbox.mgproj";
+    if (Project::load(projectPath))
+    {
+        // Populate VFI search path
+        VFI::addToSearchPath(Project::getActiveProjectDirectory());
+        VFI::addToSearchPath(Project::getActiveAssetDirectory());
+
+        auto searchpath = VFI::getSearchPath();
+        for (auto& p : searchpath)
+        {
+            MG_TRACE(p);
+        }
+
+        // Unload previous resources
+        AssetManagerOld::unload();       
+    }
+    else
+    {
+        MG_ERROR("Could not load project {}", projectPath);
+        return;
+    }
+
+    auto scenePathString = Project::getActive()->getConfig().startScene;
+
     m_mainScene = Services::sceneManager()->createScene("Sandbox Scene");
     Services::sceneManager()->setActiveScene(m_mainScene);
 
@@ -69,35 +100,35 @@ void Sandbox::onInit()
     auto damagedHelmetModel = AssetManagerOld::createMeshFromFile("models/damaged_helmet/DamagedHelmet.gltf");
     auto sponzaModel        = AssetManagerOld::createMeshFromFile("models/sponza/Sponza.gltf");
     
-    auto groundTex           = AssetManagerOld::createTexture2D("textures/trak_tile_g.jpg", true);
-    auto brickwallTex        = AssetManagerOld::createTexture2D("textures/brickwall.dds", true);
-    auto brickwallNormalTex  = AssetManagerOld::createTexture2D("textures/brickwall_normal.jpg");
-    auto bricks2             = AssetManagerOld::createTexture2D("textures/bricks2.jpg", true);
-    auto bricks2Depth        = AssetManagerOld::createTexture2D("textures/bricks2_disp.jpg");
-    auto bricks2Normal       = AssetManagerOld::createTexture2D("textures/bricks2_normal.jpg");
-    auto windowTex           = AssetManagerOld::createTexture2D("textures/window.png", true);
-    auto grassTex            = AssetManagerOld::createTexture2D("textures/grass.png", true);
-    auto openglLogo          = AssetManagerOld::createTexture2D("textures/opengl.png", true);
-
+    auto groundTex          = Project::getActive()->getEditorAssetManager()->importAsset("textures/trak_tile_g.jpg");
+    auto brickwallTex       = Project::getActive()->getEditorAssetManager()->importAsset("textures/brickwall.dds");
+    auto brickwallNormalTex = Project::getActive()->getEditorAssetManager()->importAsset("textures/brickwall_normal.jpg");
+    auto bricks2            = Project::getActive()->getEditorAssetManager()->importAsset("textures/bricks2.jpg");
+    auto bricks2Depth       = Project::getActive()->getEditorAssetManager()->importAsset("textures/bricks2_disp.jpg");
+    auto bricks2Normal      = Project::getActive()->getEditorAssetManager()->importAsset("textures/bricks2_normal.jpg");
+    auto windowTex          = Project::getActive()->getEditorAssetManager()->importAsset("textures/window.png");
+    auto grassTex           = Project::getActive()->getEditorAssetManager()->importAsset("textures/grass.png");
+         openglLogo         = Project::getActive()->getEditorAssetManager()->importAsset("textures/opengl.png");
+    
     auto brickwallMaterial = AssetManagerOld::createMaterial("brickwall");
-    brickwallMaterial->addTexture(Material::TextureType::DIFFUSE, brickwallTex);
-    brickwallMaterial->addTexture(Material::TextureType::NORMAL,  brickwallNormalTex);
+    brickwallMaterial->addTexture(Material::TextureType::DIFFUSE, AssetManager::getAsset<Texture>(brickwallTex));
+    brickwallMaterial->addTexture(Material::TextureType::NORMAL, AssetManager::getAsset<Texture>(brickwallNormalTex));
 
     auto bricksMaterial = AssetManagerOld::createMaterial("bricks");
-    bricksMaterial->addTexture(Material::TextureType::DIFFUSE, bricks2);
-    bricksMaterial->addTexture(Material::TextureType::NORMAL, bricks2Normal);
-    bricksMaterial->addTexture(Material::TextureType::DISPLACEMENT, bricks2Depth); 
+    bricksMaterial->addTexture(Material::TextureType::DIFFUSE, AssetManager::getAsset<Texture>(bricks2));
+    bricksMaterial->addTexture(Material::TextureType::NORMAL, AssetManager::getAsset<Texture>(bricks2Normal));
+    bricksMaterial->addTexture(Material::TextureType::DISPLACEMENT, AssetManager::getAsset<Texture>(bricks2Depth));
     
     auto grassMaterial = AssetManagerOld::createMaterial("grass");
-    grassMaterial->addTexture(Material::TextureType::DIFFUSE, grassTex);
+    grassMaterial->addTexture(Material::TextureType::DIFFUSE, AssetManager::getAsset<Texture>(grassTex));
     grassMaterial->addFloat("alpha_cutoff", 0.1f);
 
     auto windowMaterial = AssetManagerOld::createMaterial("window");
-    windowMaterial->addTexture(Material::TextureType::DIFFUSE, windowTex);
+    windowMaterial->addTexture(Material::TextureType::DIFFUSE, AssetManager::getAsset<Texture>(windowTex));
     windowMaterial->setRenderQueue(Material::RenderQueue::RQ_TRANSPARENT);
 
     auto bricks2Material = AssetManagerOld::createMaterial("bricks2");
-    bricks2Material->addTexture(Material::TextureType::DIFFUSE, bricks2);
+    bricks2Material->addTexture(Material::TextureType::DIFFUSE, AssetManager::getAsset<Texture>(bricks2));
 
     auto reflectiveSphereMaterial = AssetManagerOld::createMaterial("reflectiveSphere");
     reflectiveSphereMaterial->setRenderQueue(Material::RenderQueue::RQ_ENVIRO_MAPPING_STATIC);
@@ -266,7 +297,7 @@ void Sandbox::onInit()
     spotLight.setLocalRotation(-45, 45, 45);
     spotLight.getComponent<SpotLightComponent>().setCastsShadows(true);
 
-    SceneSerializer::serialize(m_mainScene, "NewSandbox.mango");
+    SceneSerializer::serialize(m_mainScene, Project::getActiveAssetDirectory() / "scenes" / "NewSandbox.mango");
 }
 
 void Sandbox::onDestroy()
@@ -360,7 +391,7 @@ void Sandbox::onGui()
     ImGuiSystem::text(AssetManagerOld::getFont("Droid48"), "Hello ImGUI Text Demo2!", { ImGui::GetIO().DisplaySize.x / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
     #endif
     auto window = Services::application()->getWindow();
-    ImGuiSystem::image(AssetManagerOld::getTexture2D("textures/opengl.png"), { window->getWidth() - 200, 0 }, { window->getWidth(), 100 }, { 1.0f, 1.0f, 1.0f, 0.5f });
+    ImGuiSystem::image(AssetManager::getAsset<Texture>(openglLogo), {window->getWidth() - 200, 0}, {window->getWidth(), 100}, {1.0f, 1.0f, 1.0f, 0.5f});
 
     ImGuiSystem::endHUD();
 }

@@ -259,12 +259,12 @@ namespace mango
     {
         MG_PROFILE_ZONE_SCOPED;
 
-        auto filepath = VFI::getFilepath(filename);
+        auto filepath = VFI::getFilepath(filename).generic_string();
         
         if (flip) stbi_set_flip_vertically_on_load(true);
 
         int width, height, channelsCount;
-        uint8_t* data = stbi_load(filepath.string().c_str(), &width, &height, &channelsCount, 0);
+        uint8_t* data = stbi_load(filepath.c_str(), &width, &height, &channelsCount, 0);
         
         if (flip) stbi_set_flip_vertically_on_load(false);
 
@@ -324,7 +324,7 @@ namespace mango
 
         if (!data)
         {
-            MG_CORE_ERROR("Texture failed to load at path: {}", VFI::getFilepath(filename));
+            MG_CORE_ERROR("Texture failed to load at path: {}", VFI::getFilepath(filename).generic_string());
             return false;
         }
 

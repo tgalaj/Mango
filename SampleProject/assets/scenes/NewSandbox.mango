@@ -1,0 +1,2009 @@
+Scene: Sandbox Scene
+Materials:
+  - Name: window
+    Textures:
+      Diffuse: 4902186636656358493
+      Specular: 4424399015936338451
+      Normal: 2625667007463002174
+      Emission: 12474992315735831756
+      Displacement: 14205430577138455955
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 20
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.200000003
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: Transparent
+  - Name: reflectiveSphere
+    Textures:
+      Diffuse: 2897265496117660306
+      Specular: 4424399015936338451
+      Normal: 2625667007463002174
+      Emission: 12474992315735831756
+      Displacement: 14205430577138455955
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 20
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.200000003
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: StaticEnvMapping
+  - Name: bricks2
+    Textures:
+      Diffuse: 12775585981386787528
+      Specular: 4424399015936338451
+      Normal: 2625667007463002174
+      Emission: 12474992315735831756
+      Displacement: 14205430577138455955
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 20
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.200000003
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: Opaque
+  - Name: grass
+    Textures:
+      Diffuse: 3712561486710589535
+      Specular: 4424399015936338451
+      Normal: 2625667007463002174
+      Emission: 12474992315735831756
+      Displacement: 14205430577138455955
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 20
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.100000001
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: Opaque
+  - Name: bricks
+    Textures:
+      Diffuse: 12775585981386787528
+      Specular: 4424399015936338451
+      Normal: 6702920972822066078
+      Emission: 12474992315735831756
+      Displacement: 17845774228132327374
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 20
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.200000003
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: Opaque
+  - Name: brickwall
+    Textures:
+      Diffuse: 7710075438973196777
+      Specular: 4424399015936338451
+      Normal: 14466539409569424137
+      Emission: 12474992315735831756
+      Displacement: 14205430577138455955
+    Vec3Map:
+      {}
+    FloatMap:
+      specular_power: 20
+      specular_intensity: 5
+      m_depth_scale: 0.0149999997
+      alpha_cutoff: 0.200000003
+      alpha: 1
+    BoolMap:
+      {}
+    BlendMode: None
+    RenderQueue: Opaque
+Entities:
+  - Entity: 9641656509034132664
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [1.5, 5, 1.5]
+      Rotation: [-45, 45, 45]
+      Orientation: [0.732537746, -0.461939812, 0.191341713, 0.461939812]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    SpotLightComponent:
+      Color: [1, 0.807843149, 0.980392158]
+      Intensity: 1000
+      CutOffAngle: 30.0000019
+      Attenuation:
+        Constant: 0
+        Linear: 0
+        Quadratic: 1
+      ShadowNearPlane: 0.00100000005
+      ShadowFarPlane: 100
+      CastsShadows: true
+  - Entity: 17246138425785855820
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0, 1.20000005, -8]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    PointLightComponent:
+      Color: [1, 1, 0]
+      Intensity: 200
+      Attenuation:
+        Constant: 3
+        Linear: 4
+        Quadratic: 10
+      ShadowNearPlane: 0.00100000005
+      ShadowFarPlane: 100
+      CastsShadows: true
+  - Entity: 5283693821540843930
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0, 1.20000005, 8]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    PointLightComponent:
+      Color: [0, 0, 1]
+      Intensity: 200
+      Attenuation:
+        Constant: 3
+        Linear: 4
+        Quadratic: 10
+      ShadowNearPlane: 0.00100000005
+      ShadowFarPlane: 100
+      CastsShadows: true
+  - Entity: 17081521518959221217
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [8, 1.20000005, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    PointLightComponent:
+      Color: [0, 1, 0]
+      Intensity: 200
+      Attenuation:
+        Constant: 3
+        Linear: 4
+        Quadratic: 10
+      ShadowNearPlane: 0.00100000005
+      ShadowFarPlane: 100
+      CastsShadows: true
+  - Entity: 11718487751524353434
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-8, 1.20000005, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    PointLightComponent:
+      Color: [1, 0, 0]
+      Intensity: 200
+      Attenuation:
+        Constant: 3
+        Linear: 4
+        Quadratic: 10
+      ShadowNearPlane: 0.00100000005
+      ShadowFarPlane: 100
+      CastsShadows: true
+  - Entity: 16730952284831023468
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [45, 180, 0]
+      Orientation: [-4.03840552e-08, -1.67276255e-08, 0.923879504, -0.382683456]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    DirectionalLightComponent:
+      Color: [1, 1, 1]
+      Intensity: 4
+      Size: 200
+      CastsShadows: true
+  - Entity: 18402594877985447078
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8243854702638315823
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 2707707325144641880
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 18213750105965735394
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8148358869474324859
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 10506974700628375575
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1148446911472368952
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8884061427793940984
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 17910929477359158794
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 13737903173404506620
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [6.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 15502888255817466315
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 10876497232926156247
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 2728734471586273585
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3318790361243266583
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 9874907635286869619
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1076807144804302537
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 9802250467748727306
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8260884636439094794
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16139982381065753864
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 10058446977773614850
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5.25, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 9777811719148874959
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3995353117968863517
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16024256017362099373
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 4099081406223996201
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 17513795329000687616
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 11369072593910876484
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3565726916544218735
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 10220998624000024856
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14255964843978260892
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1593450182269329332
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14079132281377159980
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 15438104734111176884
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3854484010358560467
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16894985139555851758
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 553079005356757055
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3230019342737349845
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 12626463222214152626
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 7152140709643099373
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 9122015473808629572
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 5080753426321281979
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [2.25, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8100778367629441068
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 17595338357640652129
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16016484961704072593
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16483472706536132880
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6742834552727451858
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 856890811886955732
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6977466688365771371
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 15430378042689485571
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6990771558469750795
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1640111515742140362
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8694392361129728027
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1444717129017004622
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 13890588455353057250
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16907695724109612672
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 9271921393610006807
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 12964402433184531116
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3695329459805411649
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8094092524110926730
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14394746107561528512
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14809649960280518499
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-0.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 15906711058551759338
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 15616726262008136288
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6647874633079606959
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 11116167711952555727
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3550847306662246402
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6772713511055175948
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1025260619430808935
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 7806097894846093228
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 9301277399897935437
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 13000548045715774854
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-2.25, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 10678076640753443194
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 18007422383743889460
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 825211549956898865
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 18399230484411139153
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 9992626637179802739
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14384894518042545524
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 15939282856243512859
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16538362053321921369
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 2110221789338026729
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        0: window
+  - Entity: 7904784127901407737
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 18079381387741780414
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14924944698803109247
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 5886857843255882965
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 12303519983075691691
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1697350651761199591
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 10372928083148237936
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 6452810786507327956
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16611064987713320530
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1157880922757831354
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 16370462140120636947
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 14356205420724537094
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5.25, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 7361237297152214531
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, 6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 12428498548489329352
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, 5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3836370769859583096
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, 3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 1997286774198090880
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, 2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 13193705838063657318
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, 0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8343449090175926180
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, -0.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 4676463740228975926
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, -2.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3994561972933149013
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, -3.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 9399228832996032170
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, -5.25]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 3617508789302691815
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-6.75, 0.5, -6.75]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.75, 0.75, 0.75]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 8460845212068280109
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5, 3, -12.5]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        {}
+  - Entity: 4587109182464741363
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5, 20, -11.5]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Sphere
+      Materials:
+        0: reflectiveSphere
+    RigidBody3DComponent:
+      MotionType: Dynamic
+      Friction: 0.100000001
+      Restitution: 0.699999988
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    SphereColliderComponent:
+      Offset: [0, 0, 0]
+      Radius: 0.5
+  - Entity: 8920980856976808125
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5, 0.5, -11.5]
+      Rotation: [-89.5, 0, 0]
+      Orientation: [0.710185409, -0.704014719, 0, 0]
+      Scale: [5, 5, 5]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: bricks2
+    RigidBody3DComponent:
+      MotionType: Static
+      Friction: 0.200000003
+      Restitution: 0
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      Activated: true
+    BoxCollider3DComponent:
+      Offset: [0, -0.100000001, 0]
+      Extent: [2.5, 0.100000001, 2.5]
+  - Entity: 17436616862612936487
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5, 3, -14]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [5, 5, 5]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: bricks2
+  - Entity: 7843568272133168223
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [5, 1.20000005, 9]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [2.5, 2.5, 2.5]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: window
+  - Entity: 5531733591429015373
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3, 1.20000005, 13]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [2.5, 2.5, 2.5]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: window
+  - Entity: 11136073599435353044
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0, 1.20000005, 9]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [2.5, 2.5, 2.5]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: window
+  - Entity: 6265638960405854674
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5, 1.20000005, 9]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [2.5, 2.5, 2.5]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: grass
+  - Entity: 2727526748967589844
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-5, 2, -9]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [5, 5, 5]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: bricks
+  - Entity: 16344900694533711424
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0, 2, -9]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [5, 5, 5]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: Quad
+      Materials:
+        0: brickwall
+  - Entity: 7434146690827502120
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-1.5, 0, 10]
+      Rotation: [0, -90, 0]
+      Orientation: [0.707106829, 0, -0.707106829, 0]
+      Scale: [6, 6, 6]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: models/sponza/Sponza.gltf
+      Materials:
+        {}
+  - Entity: 7594571959251368140
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [3, 2.5, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: models/damaged_helmet/DamagedHelmet.gltf
+      Materials:
+        {}
+  - Entity: 9775117782517663484
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [-3, -2.29999995, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [0.0179999992, 0.0179999992, 0.0179999992]
+      ParentID: 0
+      Children:
+        []
+    StaticMeshComponent:
+      Filename: models/Zen3C/Zen3C.X
+      Materials:
+        {}
+  - Entity: 2110221789338026729
+    TagComponent:
+      Name: Entity
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        - 16538362053321921369
+    StaticMeshComponent:
+      Filename: models/cyborg/cyborg.obj
+      Materials:
+        {}
+  - Entity: 2786857665083329524
+    TagComponent:
+      Name: MainCamera2
+    TransformComponent:
+      Position: [0, 4, -30]
+      Rotation: [180, -5.00895612e-06, 180]
+      Orientation: [-4.37113883e-08, 0, 1, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    CameraComponent:
+      ProjectionType: Perspective
+      PerspectiveFOV: 45
+      PerspectiveNear: 0.100000001
+      PerspectiveFar: 1000
+      OrthographicSize: 10
+      OrthographicNear: 0.00999999978
+      OrthographicFar: 1000
+      IsPrimary: false
+  - Entity: 5681958637869750888
+    TagComponent:
+      Name: MainCamera
+    TransformComponent:
+      Position: [0, 4, 30]
+      Rotation: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+      Scale: [1, 1, 1]
+      ParentID: 0
+      Children:
+        []
+    CameraComponent:
+      ProjectionType: Perspective
+      PerspectiveFOV: 45
+      PerspectiveNear: 0.100000001
+      PerspectiveFar: 1000
+      OrthographicSize: 10
+      OrthographicNear: 0.00999999978
+      OrthographicFar: 1000
+      IsPrimary: true

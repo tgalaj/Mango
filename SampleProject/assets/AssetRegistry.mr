@@ -1,13 +1,28 @@
 AssetRegistry:
-  - Handle: 8344456993626168423
-    FilePath: textures/stripes.png
+  - Handle: 12204044224632246474
+    FilePath: textures/trak_tile_g.jpg
     Type: Texture
-  - Handle: 8047913494817325759
+  - Handle: 14466539409569424137
+    FilePath: textures/brickwall_normal.jpg
+    Type: Texture
+  - Handle: 7710075438973196777
+    FilePath: textures/brickwall.dds
+    Type: Texture
+  - Handle: 15775599128264762312
+    FilePath: textures/opengl.png
+    Type: Texture
+  - Handle: 12775585981386787528
     FilePath: textures/bricks2.jpg
-    Type: None
-  - Handle: 8056229132570238215
+    Type: Texture
+  - Handle: 6702920972822066078
     FilePath: textures/bricks2_normal.jpg
-    Type: None
-  - Handle: 17778564682383582963
+    Type: Texture
+  - Handle: 17845774228132327374
+    FilePath: textures/bricks2_disp.jpg
+    Type: Texture
+  - Handle: 4902186636656358493
+    FilePath: textures/window.png
+    Type: Texture
+  - Handle: 3712561486710589535
     FilePath: textures/grass.png
-    Type: None
+    Type: Texture

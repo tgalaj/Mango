@@ -223,16 +223,16 @@ namespace mango
 
         auto realDir = PHYSFS_getRealDir(fname.c_str());
 
-        std::string dir = "";
-        if (realDir != NULL)
+        std::string dir;
+        if (realDir != nullptr)
         {
             dir = std::string(realDir);
+            return dir + "/" + fname;
         }
         else
         {
             MG_CORE_WARN("Could not find file {}", fname);
+            return fname;
         }
-
-        return std::filesystem::path(dir + "/" + fname);
     }
 }
