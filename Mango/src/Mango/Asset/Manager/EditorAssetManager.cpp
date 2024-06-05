@@ -244,6 +244,12 @@ namespace mango
     {
         auto path = Project::getActiveAssetRegistryPath();
 
+        // If AssetRegistry file doesn't exist, create one
+        if (!std::filesystem::exists(path))
+        {
+            std::ofstream assetRegistryFile(path);
+        }
+
         YAML::Node data;
         try
         {
@@ -251,7 +257,7 @@ namespace mango
         }
         catch (YAML::ParserException e)
         {
-            MG_CORE_ERROR("Failed to load project file '{}'\n    {}", path.string(), e.what());
+            MG_CORE_ERROR("Failed to load asset registry file '{}'\n    {}", path.string(), e.what());
             return false;
         }
 
