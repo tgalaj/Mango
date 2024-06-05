@@ -16,6 +16,13 @@ namespace mango
             return std::static_pointer_cast<T>(asset);
         }
 
+        template<typename T>
+        static ref<T> getAssetByName(const std::string& name)
+        {
+            ref<Asset> asset = Project::getActive()->getAssetManager()->getAssetByName(name);
+            return std::static_pointer_cast<T>(asset);
+        }
+
         static AssetType getAssetType(AssetHandle handle)
         {
             return  Project::getActive()->getAssetManager()->getAssetType(handle);
@@ -40,13 +47,6 @@ namespace mango
         void removeAsset(AssetHandle handle)
         {
             Project::getActive()->getAssetManager()->removeAsset(handle);
-        }
-
-        template<typename T>
-        static ref<T> getAssetByName(const std::string& assetName)
-        {
-            //ref<Asset> asset = Project::getActive()->getAssetManager()->getAsset(handle);
-            //return std::static_pointer_cast<T>(asset);
         }
 
         template<typename T>

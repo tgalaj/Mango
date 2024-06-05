@@ -100,15 +100,15 @@ void Sandbox::onInit()
     auto damagedHelmetModel = AssetManagerOld::createMeshFromFile("models/damaged_helmet/DamagedHelmet.gltf");
     auto sponzaModel        = AssetManagerOld::createMeshFromFile("models/sponza/Sponza.gltf");
     
-    auto groundTex          = Project::getActive()->getEditorAssetManager()->importAsset("textures/trak_tile_g.jpg");
-    auto brickwallTex       = Project::getActive()->getEditorAssetManager()->importAsset("textures/brickwall.dds");
-    auto brickwallNormalTex = Project::getActive()->getEditorAssetManager()->importAsset("textures/brickwall_normal.jpg");
-    auto bricks2            = Project::getActive()->getEditorAssetManager()->importAsset("textures/bricks2.jpg");
-    auto bricks2Depth       = Project::getActive()->getEditorAssetManager()->importAsset("textures/bricks2_disp.jpg");
-    auto bricks2Normal      = Project::getActive()->getEditorAssetManager()->importAsset("textures/bricks2_normal.jpg");
-    auto windowTex          = Project::getActive()->getEditorAssetManager()->importAsset("textures/window.png");
-    auto grassTex           = Project::getActive()->getEditorAssetManager()->importAsset("textures/grass.png");
-         openglLogo         = Project::getActive()->getEditorAssetManager()->importAsset("textures/opengl.png");
+    auto groundTex          = Project::getActive()->getEditorAssetManager()->getAssetHandleByFilePath("textures/trak_tile_g.jpg");
+    auto brickwallTex       = Project::getActive()->getEditorAssetManager()->getAssetHandleByFilePath("textures/brickwall.dds");
+    auto brickwallNormalTex = Project::getActive()->getEditorAssetManager()->getAssetHandleByFilePath("textures/brickwall_normal.jpg");
+    auto bricks2            = Project::getActive()->getEditorAssetManager()->getAssetHandleByFilePath("textures/bricks2.jpg");
+    auto bricks2Depth       = Project::getActive()->getEditorAssetManager()->getAssetHandleByFilePath("textures/bricks2_disp.jpg");
+    auto bricks2Normal      = Project::getActive()->getEditorAssetManager()->getAssetHandleByFilePath("textures/bricks2_normal.jpg");
+    auto windowTex          = Project::getActive()->getEditorAssetManager()->getAssetHandleByFilePath("textures/window.png");
+    auto grassTex           = Project::getActive()->getEditorAssetManager()->getAssetHandleByFilePath("textures/grass.png");
+         openglLogo         = Project::getActive()->getEditorAssetManager()->getAssetHandleByFilePath("textures/opengl.png");
     
     auto brickwallMaterial = AssetManagerOld::createMaterial("brickwall");
     brickwallMaterial->addTexture(Material::TextureType::DIFFUSE, AssetManager::getAsset<Texture>(brickwallTex));
@@ -391,7 +391,7 @@ void Sandbox::onGui()
     ImGuiSystem::text(AssetManagerOld::getFont("Droid48"), "Hello ImGUI Text Demo2!", { ImGui::GetIO().DisplaySize.x / 2.0f, pos}, 48.0f, glm::vec4(1.0, 0.0, 0.0, 1.0), true, false);
     #endif
     auto window = Services::application()->getWindow();
-    ImGuiSystem::image(AssetManager::getAsset<Texture>(openglLogo), {window->getWidth() - 200, 0}, {window->getWidth(), 100}, {1.0f, 1.0f, 1.0f, 0.5f});
+    ImGuiSystem::image(AssetManager::getAssetByName<Texture>("textures/opengl.png"), {window->getWidth() - 200, 0}, {window->getWidth(), 100}, {1.0f, 1.0f, 1.0f, 0.5f});
 
     ImGuiSystem::endHUD();
 }
