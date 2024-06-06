@@ -132,14 +132,27 @@ namespace mango
         return m_assetRegistry.get(handle);
     }
 
-    const std::filesystem::path& EditorAssetManager::getFilePath(AssetHandle handle) const
+    std::filesystem::path EditorAssetManager::getFilePath(AssetHandle handle) const
     {
         return getMetadata(handle).filepath;
     }
 
-    AssetHandle EditorAssetManager::getAssetHandleByFilePath(const std::string& filepath) const
+    std::filesystem::path EditorAssetManager::getRelativePath(const std::filesystem::path& filepath) const
     {
         auto relativePath = std::filesystem::relative(filepath, Project::getActiveAssetDirectory());
+
+        if (relativePath.empty())
+        {
+            relativePath = filepath.lexically_normal();
+        }
+
+        return relativePath;
+    }
+
+    AssetHandle EditorAssetManager::getAssetHandleByFilePath(const std::string& filepath) const
+    {
+        auto assetDirectory = Project::getActiveAssetDirectory();
+        auto relativePath   = getRelativePath(filepath);
 
         for (const auto& [handle, metadata] : m_assetRegistry)
         {

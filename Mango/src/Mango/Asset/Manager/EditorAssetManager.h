@@ -31,8 +31,10 @@ namespace mango
 
         AssetHandle importAsset(const std::filesystem::path& filepath);
 
-        const AssetMetadata&         getMetadata(AssetHandle handle) const;
-        const std::filesystem::path& getFilePath(AssetHandle handle) const;
+        const AssetMetadata& getMetadata(AssetHandle handle) const;
+        
+        std::filesystem::path getFilePath    (      AssetHandle            handle)   const;
+        std::filesystem::path getRelativePath(const std::filesystem::path& filepath) const;
 
         AssetHandle getAssetHandleByFilePath     (const std::string& filepath) const;
         AssetType   getAssetTypeFromFileExtension(const std::string& extension);
