@@ -2,11 +2,11 @@ Scene: Sandbox Scene
 Materials:
   - Name: window
     Textures:
-      Diffuse: 16626528945724510517
-      Specular: 13388790622327747496
-      Normal: 7447098151303309037
-      Emission: 7347196971794862878
-      Displacement: 4726220496009231662
+      Diffuse: 2302011742211896187
+      Specular: 7297422223477321958
+      Normal: 16434933510012360996
+      Emission: 4152763355798843812
+      Displacement: 9520794152048382432
     Vec3Map:
       {}
     FloatMap:
@@ -21,11 +21,11 @@ Materials:
     RenderQueue: Transparent
   - Name: reflectiveSphere
     Textures:
-      Diffuse: 2564060786895569129
-      Specular: 13388790622327747496
-      Normal: 7447098151303309037
-      Emission: 7347196971794862878
-      Displacement: 4726220496009231662
+      Diffuse: 10381778144542365172
+      Specular: 7297422223477321958
+      Normal: 16434933510012360996
+      Emission: 4152763355798843812
+      Displacement: 9520794152048382432
     Vec3Map:
       {}
     FloatMap:
@@ -40,11 +40,11 @@ Materials:
     RenderQueue: StaticEnvMapping
   - Name: bricks2
     Textures:
-      Diffuse: 7293193606637649049
-      Specular: 13388790622327747496
-      Normal: 7447098151303309037
-      Emission: 7347196971794862878
-      Displacement: 4726220496009231662
+      Diffuse: 4938261105464412556
+      Specular: 7297422223477321958
+      Normal: 16434933510012360996
+      Emission: 4152763355798843812
+      Displacement: 9520794152048382432
     Vec3Map:
       {}
     FloatMap:
@@ -59,11 +59,11 @@ Materials:
     RenderQueue: Opaque
   - Name: grass
     Textures:
-      Diffuse: 8910906559971596307
-      Specular: 13388790622327747496
-      Normal: 7447098151303309037
-      Emission: 7347196971794862878
-      Displacement: 4726220496009231662
+      Diffuse: 6056052240318247421
+      Specular: 7297422223477321958
+      Normal: 16434933510012360996
+      Emission: 4152763355798843812
+      Displacement: 9520794152048382432
     Vec3Map:
       {}
     FloatMap:
@@ -78,11 +78,11 @@ Materials:
     RenderQueue: Opaque
   - Name: bricks
     Textures:
-      Diffuse: 7293193606637649049
-      Specular: 13388790622327747496
-      Normal: 14969888343965694458
-      Emission: 7347196971794862878
-      Displacement: 11203844165800733082
+      Diffuse: 4938261105464412556
+      Specular: 7297422223477321958
+      Normal: 8929058348895732729
+      Emission: 4152763355798843812
+      Displacement: 15901086086646427123
     Vec3Map:
       {}
     FloatMap:
@@ -97,11 +97,11 @@ Materials:
     RenderQueue: Opaque
   - Name: brickwall
     Textures:
-      Diffuse: 6210707193377244126
-      Specular: 13388790622327747496
-      Normal: 5803376711487164464
-      Emission: 7347196971794862878
-      Displacement: 4726220496009231662
+      Diffuse: 15887367595180427058
+      Specular: 7297422223477321958
+      Normal: 3298868648149829578
+      Emission: 4152763355798843812
+      Displacement: 9520794152048382432
     Vec3Map:
       {}
     FloatMap:
@@ -115,7 +115,7 @@ Materials:
     BlendMode: None
     RenderQueue: Opaque
 Entities:
-  - Entity: 14944578377034376510
+  - Entity: 3364873252443903390
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -137,7 +137,7 @@ Entities:
       ShadowNearPlane: 0.00100000005
       ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 8529147101329107337
+  - Entity: 2883515105998933505
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -158,7 +158,7 @@ Entities:
       ShadowNearPlane: 0.00100000005
       ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 1287840280005326857
+  - Entity: 4430687404535338602
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -179,7 +179,7 @@ Entities:
       ShadowNearPlane: 0.00100000005
       ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 7864921331756422737
+  - Entity: 9311194220902967941
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -200,7 +200,7 @@ Entities:
       ShadowNearPlane: 0.00100000005
       ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 9462622157195137834
+  - Entity: 4160149983144844282
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -221,7 +221,7 @@ Entities:
       ShadowNearPlane: 0.00100000005
       ShadowFarPlane: 100
       CastsShadows: true
-  - Entity: 8186221342422412962
+  - Entity: 8069794073916904864
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -237,7 +237,7 @@ Entities:
       Intensity: 4
       Size: 200
       CastsShadows: true
-  - Entity: 10967478224813014313
+  - Entity: 10225665515286765294
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -252,7 +252,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 4796789212928904568
+  - Entity: 15756357168190437316
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -267,7 +267,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 9692746613876426878
+  - Entity: 6257275390980077539
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -282,7 +282,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 907966242393342758
+  - Entity: 11935180989779835114
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -297,7 +297,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 11479141559422926762
+  - Entity: 17399165132513920263
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -312,7 +312,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 17249860640585863766
+  - Entity: 12145079777987684802
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -327,7 +327,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 16650516032235546002
+  - Entity: 4141705557790084054
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -342,7 +342,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 1860290046788948457
+  - Entity: 7623506569676686426
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -357,7 +357,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 17310629334171454706
+  - Entity: 15982778499964035331
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -372,7 +372,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 17475111715345559345
+  - Entity: 11006174806961397066
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -387,7 +387,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 2884112942035658463
+  - Entity: 8724786788887357859
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -402,7 +402,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 5538812302620222369
+  - Entity: 1411912484520222366
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -417,7 +417,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 14133604877827039662
+  - Entity: 2750088733206823430
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -432,7 +432,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 17965521376943662498
+  - Entity: 568728906808336363
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -447,7 +447,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 12723567033585343494
+  - Entity: 5536350704703559557
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -462,7 +462,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 13313838169156666779
+  - Entity: 15487452657862380853
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -477,7 +477,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 13169996650716484010
+  - Entity: 12605847093099762045
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -492,7 +492,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 11591341278940205111
+  - Entity: 9884789035324670604
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -507,7 +507,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 5395112998956543683
+  - Entity: 5142215019493496292
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -522,7 +522,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 14650551684473137456
+  - Entity: 10072067876605637305
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -537,7 +537,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 4123367282146245023
+  - Entity: 11760852132302782918
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -552,7 +552,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 10393982533317769076
+  - Entity: 1535319019215898853
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -567,7 +567,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 13362114649722419289
+  - Entity: 7293307299745944982
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -582,7 +582,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 4696582204604884596
+  - Entity: 17261663304767406757
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -597,7 +597,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 50727575206654819
+  - Entity: 3304472301440082041
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -612,7 +612,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 8683387241542835327
+  - Entity: 1528594592957789573
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -627,7 +627,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 9339983407540092056
+  - Entity: 7296453964955604264
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -642,7 +642,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 8789264004760427655
+  - Entity: 14549192940344682460
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -657,7 +657,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 11685796398611746510
+  - Entity: 12133496071418555341
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -672,7 +672,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 5579626688153125484
+  - Entity: 3664655434685757719
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -687,7 +687,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 16918472374503742643
+  - Entity: 16026709415910212890
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -702,7 +702,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 16023048940236773983
+  - Entity: 16588998701464188822
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -717,7 +717,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 16225346614011953125
+  - Entity: 15793843356713083715
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -732,7 +732,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 13486518050974789364
+  - Entity: 16524980973784010080
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -747,7 +747,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 14544495640972295646
+  - Entity: 5531775463438784706
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -762,7 +762,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 4787118331308625471
+  - Entity: 4569057668793876823
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -777,7 +777,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 3663538339971563753
+  - Entity: 12953765431670067749
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -792,7 +792,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 4447814450585686140
+  - Entity: 6672597455487795015
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -807,7 +807,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 8950914891370305911
+  - Entity: 13104637882097388147
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -822,7 +822,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 18402700234124163697
+  - Entity: 16491702998544524784
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -837,7 +837,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 3874479676638707724
+  - Entity: 9815257513283805417
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -852,7 +852,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 10525480949219470356
+  - Entity: 3291285305091184138
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -867,7 +867,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 14540670127554639566
+  - Entity: 12106921076317885273
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -882,7 +882,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 17139557737312780588
+  - Entity: 4402883228055143906
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -897,7 +897,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 6956038910934142159
+  - Entity: 7931283882481753257
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -912,7 +912,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 11072127616214078331
+  - Entity: 15309479492146093353
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -927,7 +927,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 14144376330259150850
+  - Entity: 9510862912070838102
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -942,7 +942,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 13278081818446107590
+  - Entity: 4591772789092362500
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -957,7 +957,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 7123703148679749425
+  - Entity: 2787983911200701675
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -972,7 +972,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 13554881042575765176
+  - Entity: 8359719610025555508
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -987,7 +987,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 6892127254764534797
+  - Entity: 12229629229036389972
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1002,7 +1002,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 12778583809658532875
+  - Entity: 11581513676027500125
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1017,7 +1017,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 16324495019331463374
+  - Entity: 664261013032426119
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1032,7 +1032,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 533037132438589204
+  - Entity: 7901496517074693840
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1047,7 +1047,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 379964478587005835
+  - Entity: 10823002161028877602
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1062,7 +1062,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 2175298437396281997
+  - Entity: 7154905039750981449
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1077,7 +1077,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 12514064656770068200
+  - Entity: 3308682783691762081
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1092,7 +1092,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 12822186057907648697
+  - Entity: 8643724761408123823
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1107,7 +1107,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 13986939514514955629
+  - Entity: 7735739888615058238
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1122,7 +1122,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 10351220344992971266
+  - Entity: 3384158802780870067
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1137,7 +1137,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 5696453280632928598
+  - Entity: 16759558322370663684
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1152,7 +1152,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 961919532781965414
+  - Entity: 15936270519858237173
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1167,7 +1167,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 5216693798151686941
+  - Entity: 3926978171886103813
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1182,7 +1182,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 6714703830954620692
+  - Entity: 2321535691453582283
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1197,7 +1197,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 15010132438357102795
+  - Entity: 13186960469327305066
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1212,7 +1212,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 2527842023968391547
+  - Entity: 9403136106115574257
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1227,7 +1227,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 14834737772790344964
+  - Entity: 15187344373496091686
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1242,7 +1242,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 2515757198423338350
+  - Entity: 13783639294207469974
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1257,7 +1257,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 2132942191610471817
+  - Entity: 5147854833147130622
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1272,7 +1272,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 3536103453674330992
+  - Entity: 8774723602486626504
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1287,7 +1287,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 1520870484564630777
+  - Entity: 9234344870545245967
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1302,7 +1302,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 14919287338438232004
+  - Entity: 6767016151575887191
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1317,7 +1317,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 1236722784520971292
+  - Entity: 7965974603788193808
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1332,7 +1332,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 12292051318587725467
+  - Entity: 13881018439999642050
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1347,7 +1347,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 6586058241971971168
+  - Entity: 13848953059450485635
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1362,7 +1362,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 16729052747105292852
+  - Entity: 9600860237195033846
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1377,7 +1377,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 9505562256318123615
+  - Entity: 6095165126073641359
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1392,7 +1392,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 828216731368482591
+  - Entity: 10231760806031182015
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1400,14 +1400,14 @@ Entities:
       Rotation: [0, -0, 0]
       Orientation: [1, 0, 0, 0]
       Scale: [1, 1, 1]
-      ParentID: 371888186830970476
+      ParentID: 14604809742229308673
       Children:
         []
     StaticMeshComponent:
       Filename: Sphere
       Materials:
         0: window
-  - Entity: 2917224355545630077
+  - Entity: 17046182069903410015
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1422,7 +1422,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 16450202048378527708
+  - Entity: 7157122570466174805
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1437,7 +1437,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 15478319225489237276
+  - Entity: 2831504800094446236
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1452,7 +1452,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 1979916864004553337
+  - Entity: 10088578232724726915
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1467,7 +1467,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 9202312028446837460
+  - Entity: 8753526565672428559
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1482,7 +1482,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 5910772587650171345
+  - Entity: 8229712250603554883
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1497,7 +1497,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 5995780582628016405
+  - Entity: 16949546601922276009
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1512,7 +1512,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 11782593859572643705
+  - Entity: 10256058568078963920
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1527,7 +1527,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 7417295896808099085
+  - Entity: 16764343162215445307
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1542,7 +1542,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 12834200671326450491
+  - Entity: 17670683732510165211
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1557,7 +1557,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 15156689013871067369
+  - Entity: 7195923130479925708
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1572,7 +1572,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 1910340871736352821
+  - Entity: 5059310162030965074
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1587,7 +1587,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 3756912780733221301
+  - Entity: 1755963712951764899
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1602,7 +1602,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 2772337739057793764
+  - Entity: 14895722340955994680
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1617,7 +1617,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 7811320605668274392
+  - Entity: 3251734086291218362
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1632,7 +1632,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 15442291303572743424
+  - Entity: 14117743868536338332
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1647,7 +1647,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 4136489615959429137
+  - Entity: 7230734055923834376
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1662,7 +1662,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 5577501916083943466
+  - Entity: 5440755758393569611
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1677,7 +1677,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 11523495191074165519
+  - Entity: 15168165209391213680
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1692,7 +1692,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 7603137601903304696
+  - Entity: 16964915294664720449
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1707,7 +1707,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 815507370352004031
+  - Entity: 6442420522445324712
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1722,7 +1722,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 3155226955730020261
+  - Entity: 15644267545028043631
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1737,7 +1737,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 1917186110750479118
+  - Entity: 12796739960808048257
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1752,7 +1752,7 @@ Entities:
       Filename: Sphere
       Materials:
         {}
-  - Entity: 9529688715582109684
+  - Entity: 17650764132964076624
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1777,7 +1777,7 @@ Entities:
     SphereColliderComponent:
       Offset: [0, 0, 0]
       Radius: 0.5
-  - Entity: 9901359953354325069
+  - Entity: 17587699072098652373
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1802,7 +1802,7 @@ Entities:
     BoxCollider3DComponent:
       Offset: [0, -0.100000001, 0]
       Extent: [2.5, 0.100000001, 2.5]
-  - Entity: 3749229448129971738
+  - Entity: 12085350788706452766
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1817,7 +1817,7 @@ Entities:
       Filename: Quad
       Materials:
         0: bricks2
-  - Entity: 3747552373273933331
+  - Entity: 10236427731282820890
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1832,7 +1832,7 @@ Entities:
       Filename: Quad
       Materials:
         0: window
-  - Entity: 14881982373319984389
+  - Entity: 12338332078900242355
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1847,7 +1847,7 @@ Entities:
       Filename: Quad
       Materials:
         0: window
-  - Entity: 534174108885845357
+  - Entity: 9235672254885818618
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1862,7 +1862,7 @@ Entities:
       Filename: Quad
       Materials:
         0: window
-  - Entity: 2601551221181472379
+  - Entity: 2325453160085454203
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1877,7 +1877,7 @@ Entities:
       Filename: Quad
       Materials:
         0: grass
-  - Entity: 9657115881398450817
+  - Entity: 10526959254533285291
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1892,7 +1892,7 @@ Entities:
       Filename: Quad
       Materials:
         0: bricks
-  - Entity: 5798432898464919730
+  - Entity: 10603821820285659031
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1907,7 +1907,7 @@ Entities:
       Filename: Quad
       Materials:
         0: brickwall
-  - Entity: 15247535402427631159
+  - Entity: 9696640908523482423
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1922,7 +1922,7 @@ Entities:
       Filename: models/sponza/Sponza.gltf
       Materials:
         {}
-  - Entity: 15964451222687221657
+  - Entity: 4276118601185387172
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1937,7 +1937,7 @@ Entities:
       Filename: models/damaged_helmet/DamagedHelmet.gltf
       Materials:
         {}
-  - Entity: 14126677831357118411
+  - Entity: 17848550819759547982
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1952,7 +1952,7 @@ Entities:
       Filename: models/Zen3C/Zen3C.X
       Materials:
         {}
-  - Entity: 371888186830970476
+  - Entity: 14604809742229308673
     TagComponent:
       Name: Entity
     TransformComponent:
@@ -1962,12 +1962,12 @@ Entities:
       Scale: [1, 1, 1]
       ParentID: 0
       Children:
-        - 828216731368482591
+        - 10231760806031182015
     StaticMeshComponent:
       Filename: models/cyborg/cyborg.obj
       Materials:
         {}
-  - Entity: 5013366376472065663
+  - Entity: 7550454271417943550
     TagComponent:
       Name: MainCamera2
     TransformComponent:
@@ -1987,7 +1987,7 @@ Entities:
       OrthographicNear: 0.00999999978
       OrthographicFar: 1000
       IsPrimary: false
-  - Entity: 10844117864152473551
+  - Entity: 1770713811818901610
     TagComponent:
       Name: MainCamera
     TransformComponent:

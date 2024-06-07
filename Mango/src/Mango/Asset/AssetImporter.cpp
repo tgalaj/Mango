@@ -50,11 +50,11 @@ namespace mango
 
         if (filepath.extension() == ".dds")
         {
-            asset->createTextureDDS(filepath.string()); // TODO: is srgb + miplevel
+            asset->createTextureDDS(filepath.string());
         }
         else
         {
-            asset->createTexture2d(filepath.string(), false, 0); // TODO: is srgb + miplevel
+            asset->createTexture2d(filepath.string(), true, 12);
         }
 
         return asset;
