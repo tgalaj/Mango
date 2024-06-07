@@ -224,20 +224,42 @@ namespace mango
 
     void EditorAssetManager::serializeAssetRegistry()
     {
-        // TODO: sorting asset registry when serializing!!
+        // Sort Asset Registry unordered map
+        struct AssetRegistryEntry
+        {
+            std::string filepath;
+            AssetType   type;
+        };
 
+        std::map<AssetHandle, AssetRegistryEntry> sortedAssetRegistry;
+        for (const auto& [handle, metadata] : m_assetRegistry)
+        {
+            if (!std::filesystem::exists(Project::getActiveAssetDirectory() / metadata.filepath))
+            {
+                continue;
+            }
+
+            if (metadata.isMemoryOnlyAsset)
+            {
+                continue;
+            }
+
+            sortedAssetRegistry[handle] = { metadata.filepath.generic_string(), metadata.type };
+        }
+
+        // Write sorted Asset Registry to file
         YAML::Emitter out;
         out << YAML::BeginMap; // Root
         out << YAML::Key << "AssetRegistry" << YAML::Value;
 
         out << YAML::BeginSeq;
-        for (const auto& [handle, metadata] : m_assetRegistry)
+        for (const auto& [handle, entry] : sortedAssetRegistry)
         {
             out << YAML::BeginMap;
             {
                 out << YAML::Key << "Handle"   << YAML::Value << handle;
-                out << YAML::Key << "FilePath" << YAML::Value << metadata.filepath.generic_string();
-                out << YAML::Key << "Type"     << YAML::Value << assetTypeToString(metadata.type);
+                out << YAML::Key << "FilePath" << YAML::Value << entry.filepath;
+                out << YAML::Key << "Type"     << YAML::Value << assetTypeToString(entry.type);
             }
             out << YAML::EndMap;
         }
