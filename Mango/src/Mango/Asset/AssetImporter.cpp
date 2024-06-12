@@ -5,7 +5,7 @@
 
 namespace mango
 {
-    std::unordered_map<mango::AssetType, mango::scope<mango::AssetImporterBase>> AssetImporter::s_importers;
+    std::unordered_map<AssetType, scope<AssetImporterBase>> AssetImporter::s_importers;
 
     void AssetImporter::init()
     {

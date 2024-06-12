@@ -5,6 +5,8 @@
 
 namespace mango
 {
+    // NOTE(tgalaj): drop it for now, when Vulkan renderer comes in, support only HDRI maps (equirectangular) as a skylight component
+    // TODO: skylight
     Skybox::Skybox(const std::string & skyboxDirectory,
                    const std::string & leftFace,
                    const std::string & rightFace,
@@ -25,7 +27,7 @@ namespace mango
             skyboxDirectory + "/" + frontFace,
             skyboxDirectory + "/" + backFace
         };
-        m_cubeMapTexture = AssetManagerOld::createCubeMapTexture(filenames, true);
+        //m_cubeMapTexture = AssetManagerOld::createCubeMapTexture(filenames, true);
 
         /* Create skybox shader object */
         m_skyboxShader = AssetManagerOld::createShader("Skybox", "Skybox.vert", "Skybox.frag");
@@ -43,7 +45,7 @@ namespace mango
         m_skyboxShader->bind();
         m_skyboxShader->setUniform("view_projection", projection * glm::mat4(glm::mat3(view)));
 
-        m_cubeMapTexture->bind(0);
+        //m_cubeMapTexture->bind(0);
         m_skyboxMesh->bind();
 
         glDepthFunc(GL_LEQUAL);
@@ -56,6 +58,6 @@ namespace mango
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Skybox::bindSkyboxTexture");
 
-        m_cubeMapTexture->bind(unit);
+        //m_cubeMapTexture->bind(unit);
     }
 }

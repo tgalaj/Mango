@@ -9,7 +9,7 @@ namespace mango
     std::unordered_map<std::string, ref<Material>> AssetManagerOld::m_loadedMaterials;
     std::unordered_map<std::string, ref<Shader>>   AssetManagerOld::m_loadedShaders;
     std::unordered_map<std::string, ref<Mesh>>     AssetManagerOld::m_loadedStaticMeshes;
-    std::unordered_map<std::string, ref<Texture>>  AssetManagerOld::m_loadedTextures;
+    //std::unordered_map<std::string, ref<Texture>>  AssetManagerOld::m_loadedTextures;
 
     ref<Font> AssetManagerOld::createFont(const std::string & fontNname, const std::string& filename, GLuint fontHeight)
     {
@@ -65,41 +65,41 @@ namespace mango
     //    return texture2D;
     //}
 
-    ref<Texture> AssetManagerOld::createTexture2D1x1(const std::string& textureName, const glm::uvec4& color)
-    {
-        MG_PROFILE_ZONE_SCOPED;
+    //ref<Texture> AssetManagerOld::createTexture2D1x1(const std::string& textureName, const glm::uvec4& color)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
 
-        if (m_loadedTextures.contains(textureName))
-        {
-            return m_loadedTextures[textureName];
-        }
+    //    if (m_loadedTextures.contains(textureName))
+    //    {
+    //        return m_loadedTextures[textureName];
+    //    }
 
-        auto texture2D = createRef<Texture>();
-        texture2D->createTexture2d1x1(color);
-        texture2D->setName(textureName);
-        m_loadedTextures[textureName] = texture2D;
+    //    auto texture2D = createRef<Texture>();
+    //    texture2D->createTexture2d1x1(color);
+    //    texture2D->setName(textureName);
+    //    m_loadedTextures[textureName] = texture2D;
 
-        return texture2D;
-    }
+    //    return texture2D;
+    //}
 
-    ref<Texture> AssetManagerOld::createCubeMapTexture(const std::string* filenames, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
-    {
-        MG_PROFILE_ZONE_SCOPED;
+    //ref<Texture> AssetManagerOld::createCubeMapTexture(const std::string* filenames, bool isSrgb /*= false*/, GLint numMipmaps /*= 1*/)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
 
-        auto filepath = VFI::getFilepath(filenames[0]);
-        std::string filepathString = filepath.parent_path().string();
+    //    auto filepath = VFI::getFilepath(filenames[0]);
+    //    std::string filepathString = filepath.parent_path().string();
 
-        if (m_loadedTextures.contains(filepathString))
-        {
-            return m_loadedTextures[filepathString];
-        }
+    //    if (m_loadedTextures.contains(filepathString))
+    //    {
+    //        return m_loadedTextures[filepathString];
+    //    }
 
-        auto textureCube = createRef<Texture>();
-        textureCube->createTextureCubeMap(filenames, isSrgb, numMipmaps);
-        m_loadedTextures[filepathString] = textureCube;
+    //    auto textureCube = createRef<Texture>();
+    //    textureCube->createTextureCubeMap(filenames, isSrgb, numMipmaps);
+    //    m_loadedTextures[filepathString] = textureCube;
 
-        return textureCube;
-    }
+    //    return textureCube;
+    //}
 
     ref<Mesh> AssetManagerOld::createMesh(const std::string& meshName)
     {
@@ -247,25 +247,26 @@ namespace mango
         return nullptr;
     }
 
-    ref<Texture> AssetManagerOld::getTexture2D(const std::string& textureName)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        if (m_loadedTextures.contains(textureName))
-        {
-            return m_loadedTextures[textureName];
-        }
+    //ref<Texture> AssetManagerOld::getTexture2D(const std::string& textureName)
+    //{
+    //    MG_PROFILE_ZONE_SCOPED;
+    //    if (m_loadedTextures.contains(textureName))
+    //    {
+    //        return m_loadedTextures[textureName];
+    //    }
 
-        return nullptr;
-    }
+    //    return nullptr;
+    //}
 
     void AssetManagerOld::initDefaultAssets()
     {
+        // TODO(tgalaj): find a place for it in a new asset manager
         // Default textures
-        auto defaultDiffuse      = createTexture2D1x1("DefaultDiffuse",      glm::uvec4(255, 255, 255, 255));
-        auto defaultSpecular     = createTexture2D1x1("DefaultSpecular",     glm::uvec4(0,   0,   0,   255));
-        auto defaultNormal       = createTexture2D1x1("DefaultNormal",       glm::uvec4(128, 127, 254, 255));
-        auto defaultEmission     = createTexture2D1x1("DefaultEmission",     glm::uvec4(0,   0,   0,   255));
-        auto defaultDisplacement = createTexture2D1x1("DefaultDisplacement", glm::uvec4(0,   0,   0,   255));
+        //auto defaultDiffuse      = createTexture2D1x1("DefaultDiffuse",      glm::uvec4(255, 255, 255, 255));
+        //auto defaultSpecular     = createTexture2D1x1("DefaultSpecular",     glm::uvec4(0,   0,   0,   255));
+        //auto defaultNormal       = createTexture2D1x1("DefaultNormal",       glm::uvec4(128, 127, 254, 255));
+        //auto defaultEmission     = createTexture2D1x1("DefaultEmission",     glm::uvec4(0,   0,   0,   255));
+        //auto defaultDisplacement = createTexture2D1x1("DefaultDisplacement", glm::uvec4(0,   0,   0,   255));
 
         // Default material
         auto material = createMaterial("DefaultMaterial");
@@ -351,9 +352,8 @@ namespace mango
         m_loadedMaterials.clear();
         m_loadedShaders.clear();
         m_loadedStaticMeshes.clear();
-        m_loadedTextures.clear();
+        //m_loadedTextures.clear();
 
         initDefaultAssets();
     }
-
 }

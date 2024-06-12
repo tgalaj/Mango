@@ -16,8 +16,8 @@ namespace mango
         static ref<Mesh>       createMesh          (const std::string & meshName);
         static ref<Mesh>       createMeshFromFile  (const std::string & filename);
         //static ref<Texture>    createTexture2D     (const std::string & filename, bool isSrgb = false, GLint numMipmaps = 1);
-        static ref<Texture>    createTexture2D1x1  (const std::string & textureName, const glm::uvec4 & color);
-        static ref<Texture>    createCubeMapTexture(const std::string * filenames, bool isSrgb = false, GLint numMipmaps = 1);
+        //static ref<Texture>    createTexture2D1x1  (const std::string & textureName, const glm::uvec4 & color);
+        //static ref<Texture>    createCubeMapTexture(const std::string * filenames, bool isSrgb = false, GLint numMipmaps = 1);
 
         static ref<Shader> createShader(const std::string & shaderName,
                                         const std::string & computeShaderFilename);
@@ -48,7 +48,7 @@ namespace mango
         static ref<Material>   getMaterial  (const std::string & materialName);
         static ref<Shader>     getShader    (const std::string & shaderName);
         static ref<Mesh>       getMesh      (const std::string & staticMeshName);
-        static ref<Texture>    getTexture2D (const std::string & textureName);
+        //static ref<Texture>    getTexture2D (const std::string & textureName);
 
         static void initDefaultAssets();
         static void unload();
@@ -64,6 +64,6 @@ namespace mango
         static std::unordered_map<std::string, ref<Material>> m_loadedMaterials;
         static std::unordered_map<std::string, ref<Shader>>   m_loadedShaders;
         static std::unordered_map<std::string, ref<Mesh>>     m_loadedStaticMeshes;
-        static std::unordered_map<std::string, ref<Texture>>  m_loadedTextures;
+        //static std::unordered_map<std::string, ref<Texture>>  m_loadedTextures;
     };
 }

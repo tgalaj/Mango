@@ -22,19 +22,21 @@ namespace mango
     class AssetImporterBase
     {
     public:
+        virtual ~AssetImporterBase() = default;
+
         virtual void       serialize(const AssetMetadata& metadata, const ref<Asset>&    asset)    const = 0;
         virtual ref<Asset> import(         AssetHandle    handle,   const AssetMetadata& metadata) const = 0;
     };
 
     class TextureImporter : public AssetImporterBase
     {
-        virtual void       serialize(const AssetMetadata& metadata, const ref<Asset>&    asset)    const override;
-        virtual ref<Asset> import   (      AssetHandle    handle,   const AssetMetadata& metadata) const override;
+        void       serialize(const AssetMetadata& metadata, const ref<Asset>&    asset)    const override;
+        ref<Asset> import   (      AssetHandle    handle,   const AssetMetadata& metadata) const override;
     };
 
     class SceneImporter : public AssetImporterBase
     {
-        virtual void       serialize(const AssetMetadata& metadata, const ref<Asset>&    asset)    const override;
-        virtual ref<Asset> import   (      AssetHandle    handle,   const AssetMetadata& metadata) const override;
+        void       serialize(const AssetMetadata& metadata, const ref<Asset>&    asset)    const override;
+        ref<Asset> import   (      AssetHandle    handle,   const AssetMetadata& metadata) const override;
     };
 }

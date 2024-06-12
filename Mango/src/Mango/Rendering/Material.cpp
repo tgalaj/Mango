@@ -2,6 +2,7 @@
 
 #include "Material.h"
 #include "Mango/Systems/RenderingSystem.h"
+#include "Mango/Asset/AssetManager.h"
 
 namespace mango
 {
@@ -16,11 +17,12 @@ namespace mango
 
         m_blendMode = BlendMode::NONE;
 
-        m_textureMap[TextureType::DIFFUSE]      = AssetManagerOld::getTexture2D("DefaultDiffuse");
-        m_textureMap[TextureType::SPECULAR]     = AssetManagerOld::getTexture2D("DefaultSpecular");
-        m_textureMap[TextureType::NORMAL]       = AssetManagerOld::getTexture2D("DefaultNormal");
-        m_textureMap[TextureType::EMISSION]     = AssetManagerOld::getTexture2D("DefaultEmission");
-        m_textureMap[TextureType::DISPLACEMENT] = AssetManagerOld::getTexture2D("DefaultDisplacement");
+        // TODO(tgalaj): create default textures when the engine starts
+        m_textureMap[TextureType::DIFFUSE]      = AssetManager::getAssetByName<Texture>("DefaultDiffuse");
+        m_textureMap[TextureType::SPECULAR]     = AssetManager::getAssetByName<Texture>("DefaultSpecular");
+        m_textureMap[TextureType::NORMAL]       = AssetManager::getAssetByName<Texture>("DefaultNormal");
+        m_textureMap[TextureType::EMISSION]     = AssetManager::getAssetByName<Texture>("DefaultEmission");
+        m_textureMap[TextureType::DISPLACEMENT] = AssetManager::getAssetByName<Texture>("DefaultDisplacement");
     }
 
 

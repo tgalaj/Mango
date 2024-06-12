@@ -1,7 +1,5 @@
 #pragma once
-
 #include "Manager/AssetManagerBase.h"
-
 #include "Mango/Project/Project.h"
 
 namespace mango
@@ -22,6 +20,9 @@ namespace mango
             ref<Asset> asset = Project::getActive()->getAssetManager()->getAssetByName(name);
             return std::static_pointer_cast<T>(asset);
         }
+
+        static ref<Asset> getDefaultAsset(AssetType type);
+
 
         static AssetType getAssetType(AssetHandle handle)
         {
