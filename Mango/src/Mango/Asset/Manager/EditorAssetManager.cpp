@@ -19,22 +19,22 @@ namespace mango
         AssetImporter::init();
     }
 
-    bool EditorAssetManager::isAssetHandleValid(AssetHandle handle) const
+    bool EditorAssetManager::isAssetHandleValid(AssetHandle handle)
     {
         return handle != 0 && m_assetRegistry.contains(handle);
     }
 
-    bool EditorAssetManager::isAssetLoaded(AssetHandle handle) const
+    bool EditorAssetManager::isAssetLoaded(AssetHandle handle)
     {
         return m_loadedAssets.contains(handle);
     }
 
-    bool EditorAssetManager::isMemoryOnlyAsset(AssetHandle handle) const
+    bool EditorAssetManager::isMemoryOnlyAsset(AssetHandle handle)
     {
         return m_memoryAssets.contains(handle);
     }
 
-    AssetType EditorAssetManager::getAssetType(AssetHandle handle) const
+    AssetType EditorAssetManager::getAssetType(AssetHandle handle)
     {
         if (!isAssetHandleValid(handle))
         {
@@ -44,9 +44,25 @@ namespace mango
         return m_assetRegistry.get(handle).type;
     }
 
+    void EditorAssetManager::addAsset(const ref<Asset>& asset, const std::filesystem::path& filepath)
+    {
+        AssetMetadata metadata;
+        metadata.handle            = asset->assetHandle;
+        metadata.isMemoryOnlyAsset = true;
+        metadata.filepath          = filepath;
+        metadata.type              = asset->getAssetType();
+
+        m_assetRegistry[asset->assetHandle] = metadata;
+        m_loadedAssets [asset->assetHandle] = asset;
+
+        serializeAssetRegistry();
+        AssetImporter::serialize(metadata, asset);
+    }
+
     void EditorAssetManager::addMemoryOnlyAsset(const ref<Asset>& asset, const std::string& assetName /*= ""*/)
     {
         AssetMetadata metadata;
+        metadata.handle            = asset->assetHandle;
         metadata.isMemoryOnlyAsset = true;
         metadata.filepath          = assetName;
         metadata.type              = asset->getAssetType();
@@ -69,7 +85,7 @@ namespace mango
         serializeAssetRegistry();
     }
 
-    std::unordered_set<AssetHandle> EditorAssetManager::getAllAssetsOfType(AssetType type) const
+    std::unordered_set<AssetHandle> EditorAssetManager::getAllAssetsOfType(AssetType type)
     {
         std::unordered_set<AssetHandle> result;
 
@@ -84,12 +100,12 @@ namespace mango
         return result;
     }
 
-    const AssetMap& EditorAssetManager::getLoadedAssets() const
+    const AssetMap& EditorAssetManager::getLoadedAssets()
     {
         return m_loadedAssets;
     }
 
-    const AssetMap& EditorAssetManager::getMemoryOnlyAssets() const
+    const AssetMap& EditorAssetManager::getMemoryOnlyAssets()
     {
         return m_memoryAssets;
     }
@@ -99,10 +115,14 @@ namespace mango
         AssetHandle handle = getAssetHandleByFilePath(filepath.string());
 
         if (isAssetHandleValid(handle)) 
+        {
             return handle;
+        }
 
-                      handle = AssetHandle{}; // generate new handle
+        handle = AssetHandle(); // generate a new handle
+
         AssetMetadata metadata;
+                      metadata.handle   = handle;
                       metadata.filepath = filepath;
                       metadata.type     = getAssetTypeFromFileExtension(filepath.extension().string());
         
@@ -122,24 +142,24 @@ namespace mango
         return 0; // invalid handle
     }
 
-    const AssetMetadata& EditorAssetManager::getMetadata(AssetHandle handle) const
+    const AssetMetadata& EditorAssetManager::getMetadata(AssetHandle handle)
     {
-        if (!m_assetRegistry.contains(handle))
+        if (m_assetRegistry.contains(handle))
         {
-            return s_nullMetadata;
+            return m_assetRegistry[handle];
         }
 
-        return m_assetRegistry.get(handle);
+        return s_nullMetadata;
     }
 
-    std::filesystem::path EditorAssetManager::getFilePath(AssetHandle handle) const
+    std::filesystem::path EditorAssetManager::getFilePath(AssetHandle handle)
     {
         return getMetadata(handle).filepath;
     }
 
-    std::filesystem::path EditorAssetManager::getRelativePath(const std::filesystem::path& filepath) const
+    std::filesystem::path EditorAssetManager::getRelativePath(const std::filesystem::path& filepath)
     {
-        auto relativePath = std::filesystem::relative(filepath, Project::getActiveAssetDirectory());
+        auto relativePath = std::filesystem::relative(filepath, Project::getAssetDirectory());
 
         if (relativePath.empty())
         {
@@ -149,9 +169,9 @@ namespace mango
         return relativePath;
     }
 
-    AssetHandle EditorAssetManager::getAssetHandleByFilePath(const std::string& filepath) const
+    AssetHandle EditorAssetManager::getAssetHandleByFilePath(const std::string& filepath)
     {
-        auto assetDirectory = Project::getActiveAssetDirectory();
+        auto assetDirectory = Project::getAssetDirectory();
         auto relativePath   = getRelativePath(filepath);
 
         for (const auto& [handle, metadata] : m_assetRegistry)
@@ -185,8 +205,10 @@ namespace mango
         }
 
         // 1. check if handle is valid
-        if (!isAssetHandleValid(handle)) 
+        if (!isAssetHandleValid(handle))
+        {
             return nullptr;
+        }
 
         // 2. check if asset needs load (and if so, load)
         ref<Asset> asset = nullptr;
@@ -203,7 +225,8 @@ namespace mango
             if (!asset) 
             {
                 // import failed
-                MG_CORE_ERROR("EditorAssetManager::getAsset - asset import failed!");
+                MG_CORE_ERROR("EditorAssetManager::getAsset - asset import failed! Loading default asset for the {} asset type", assetTypeToString(asset->getAssetType()));
+                AssetManager::getDefaultAsset(asset->getAssetType());
             }
             else
             {
@@ -224,7 +247,7 @@ namespace mango
 
     void EditorAssetManager::serializeAssetRegistry()
     {
-        // Sort Asset Registry unordered map
+        // Sort Asset Registry
         struct AssetRegistryEntry
         {
             std::string filepath;
@@ -234,7 +257,7 @@ namespace mango
         std::map<AssetHandle, AssetRegistryEntry> sortedAssetRegistry;
         for (const auto& [handle, metadata] : m_assetRegistry)
         {
-            if (!std::filesystem::exists(Project::getActiveAssetDirectory() / metadata.filepath))
+            if (!std::filesystem::exists(Project::getAssetDirectory() / metadata.filepath))
             {
                 continue;
             }
@@ -266,7 +289,7 @@ namespace mango
         out << YAML::EndSeq;
         out << YAML::EndMap; // Root
 
-        auto path = Project::getActiveAssetRegistryPath().string();
+        auto path = Project::getAssetRegistryPath().string();
         std::ofstream fout(path);
         if (fout.is_open())
         {
@@ -277,7 +300,7 @@ namespace mango
 
     bool EditorAssetManager::deserializeAssetRegistry()
     {
-        auto path = Project::getActiveAssetRegistryPath();
+        auto path = Project::getAssetRegistryPath();
 
         // If AssetRegistry file doesn't exist, create one
         if (!std::filesystem::exists(path))

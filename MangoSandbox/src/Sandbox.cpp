@@ -76,6 +76,8 @@ void Sandbox::onInit()
 
     auto font = AssetManagerOld::createFont("Droid48", "fonts/Roboto-Regular.ttf", 48.0f);
 
+    // TODO(tgalaj): Create default skybox in the Renderer
+
     /*auto skybox = createRef<Skybox>("skyboxes/stormydays/",
                                       "stormydays_lf.tga",
                                       "stormydays_rt.tga",

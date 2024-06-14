@@ -9,8 +9,10 @@ namespace mango
         { AssetType::Texture, [](){  } },
     };
 
-    ref<Asset> getDefaultAsset(AssetType type)
+    ref<Asset> AssetManager::getDefaultAsset(AssetType type)
     {
-
+        // TODO(tgalaj): Implement this
+        MG_CORE_ASSERT_FAIL("Not yet implemented!");
+        return nullptr;
     }
 }

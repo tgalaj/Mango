@@ -18,39 +18,44 @@ namespace mango
 
         std::filesystem::path assetDirectory;
         std::filesystem::path assetRegistryPath; // Relative to assetDirectory
+        std::filesystem::path meshPath;
+        std::filesystem::path materialPath;
+
+        // not serialized
+        std::filesystem::path projectDirectory;
     };
 
     class Project
     {
     public:
-        const std::filesystem::path& getProjectDirectory   ()                                  { return m_projectDirectory; }
-              std::filesystem::path  getAssetDirectory     ()                                  { return getProjectDirectory() / s_activeProject->m_config.assetDirectory; }
-              std::filesystem::path  getAssetRegistryPath  ()                                  { return getAssetDirectory() / s_activeProject->m_config.assetRegistryPath; }
-              std::filesystem::path  getAssetFileSystemPath(const std::filesystem::path& path) { return getAssetDirectory() / path; }
-              std::filesystem::path  getAssetAbsolutePath  (const std::filesystem::path& path) { return getAssetDirectory() / path; }
-
-        static const std::filesystem::path& getActiveProjectDirectory()
+        static const std::filesystem::path& getProjectDirectory()
         {
             MG_CORE_VERIFY(s_activeProject);
-            return s_activeProject->getProjectDirectory();
+            return s_activeProject->getConfig().projectDirectory;
         }
         
-        static std::filesystem::path getActiveAssetDirectory()
+        static std::filesystem::path getAssetDirectory()
         {
             MG_CORE_VERIFY(s_activeProject);
-            return s_activeProject->getAssetDirectory();
+            return getProjectDirectory() / s_activeProject->m_config.assetDirectory;
         }
 
-        static std::filesystem::path getActiveAssetRegistryPath()
+        static std::filesystem::path getAssetRegistryPath()
         {
             MG_CORE_VERIFY(s_activeProject);
-            return s_activeProject->getAssetRegistryPath();
+            return getAssetDirectory() / s_activeProject->m_config.assetRegistryPath;
         }
 
-        static std::filesystem::path getActiveAssetFileSystemPath(const std::filesystem::path& path)
+        static std::filesystem::path getMeshPath()
         {
             MG_CORE_VERIFY(s_activeProject);
-            return s_activeProject->getAssetFileSystemPath(path);
+            return getAssetDirectory() / s_activeProject->m_config.meshPath;
+        }
+
+        static std::filesystem::path getMaterialPath()
+        {
+            MG_CORE_VERIFY(s_activeProject);
+            return getAssetDirectory() / s_activeProject->m_config.materialPath;
         }
 
         static ProjectConfig& getConfig() { return s_activeProject->m_config; }
@@ -68,7 +73,6 @@ namespace mango
 
     private:
         ProjectConfig m_config;
-        std::filesystem::path m_projectDirectory;
         ref<AssetManagerBase> m_assetManager;
 
         inline static ref<Project> s_activeProject;

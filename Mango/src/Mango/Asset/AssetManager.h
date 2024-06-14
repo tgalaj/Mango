@@ -4,6 +4,7 @@
 
 namespace mango
 {
+    // User's interface
     class AssetManager
     {
     public:
@@ -22,7 +23,6 @@ namespace mango
         }
 
         static ref<Asset> getDefaultAsset(AssetType type);
-
 
         static AssetType getAssetType(AssetHandle handle)
         {
@@ -50,14 +50,6 @@ namespace mango
             Project::getActive()->getAssetManager()->removeAsset(handle);
         }
 
-        template<typename T>
-        static void addMemoryOnlyAsset(const ref<Asset>& asset, const std::string& assetName = "")
-        {
-            static_assert(std::is_base_of_v<Asset, T>, "T must be a subclass of Asset");
-
-            Project::getActive()->getAssetManager()->addMemoryOnlyAsset(asset, assetName);
-        }
-
         static std::unordered_set<AssetHandle> getAllAssetsOfType(AssetType type)
         {
             return Project::getActive()->getAssetManager()->getAllAssetsOfType(type);
@@ -73,6 +65,35 @@ namespace mango
             return Project::getActive()->getAssetManager()->getMemoryOnlyAssets();
         }
 
+        template<typename T>
+        static void addAsset(const ref<Asset>& asset, const std::filesystem::path& filepath)
+        {
+            static_assert(std::is_base_of_v<Asset, T>, "T must be a subclass of Asset");
+
+            Project::getActive()->getAssetManager()->addAsset(asset, filepath);
+        }
+
+        template<typename T, typename... Args>
+        static AssetHandle createAsset(Args&&... args, const std::filesystem::path& filepath)
+        {
+            static_assert(std::is_base_of_v<Asset, T>, "T must be a subclass of Asset");
+
+            ref<T> asset  = createRef<T>(std::forward<Args>(args)...);
+            asset->handle = AssetHandle(); // generate a new handle
+
+            Project::getActive()->getAssetManager()->addAsset<T>(asset, filepath);
+
+            return asset->handle;
+        }
+
+        template<typename T>
+        static void addMemoryOnlyAsset(const ref<Asset>& asset, const std::string& assetName = "")
+        {
+            static_assert(std::is_base_of_v<Asset, T>, "T must be a subclass of Asset");
+
+            Project::getActive()->getAssetManager()->addMemoryOnlyAsset(asset, assetName);
+        } 
+
         template<typename T, typename... Args>
         static AssetHandle createMemoryOnlyAsset(Args&&... args, const std::string& assetName = "")
         {
@@ -85,6 +106,5 @@ namespace mango
 
             return asset->handle;
         }
-
     };
 }

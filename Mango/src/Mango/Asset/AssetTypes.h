@@ -23,7 +23,7 @@ namespace mango
         Script,
     };
 
-    inline const char* assetTypeToString(AssetType type)
+    constexpr inline const char* assetTypeToString(AssetType type)
     {
         switch (type)
         {
@@ -46,7 +46,7 @@ namespace mango
 
     }
 
-    inline AssetType assetTypeFromString(std::string_view type)
+    constexpr inline AssetType assetTypeFromString(std::string_view type)
     {
         if (type == "None")            return AssetType::None;
         if (type == "Scene")           return AssetType::Scene;

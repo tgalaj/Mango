@@ -20,6 +20,11 @@ namespace mango
         return m_assetRegistry.at(handle);
     }
 
+    size_t AssetRegistry::size() const
+    {
+        return m_assetRegistry.size();
+    }
+
     bool AssetRegistry::contains(const AssetHandle handle) const
     {
         return m_assetRegistry.contains(handle);
@@ -34,5 +39,4 @@ namespace mango
     {
         m_assetRegistry.clear();
     }
-
 }

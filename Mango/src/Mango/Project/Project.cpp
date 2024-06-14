@@ -28,19 +28,20 @@ namespace mango
     {
         if (s_activeProject)
         {
-            VFI::removeFromSearchPath(getActiveProjectDirectory());
-            VFI::removeFromSearchPath(getActiveAssetDirectory());
+            VFI::removeFromSearchPath(getProjectDirectory());
+            VFI::removeFromSearchPath(getAssetDirectory());
         }
         
         s_activeProject = createRef<Project>();
-        
-        s_activeProject->m_projectDirectory = path / name;
 
         auto& config             = s_activeProject->getConfig();
         config.name              = name;
         config.assetDirectory    = "Assets";
         config.startScene        = "Scenes/SampleScene.mango";
         config.assetRegistryPath = "AssetRegistry.mr";
+        config.meshPath          = "Meshes";
+        config.materialPath      = "Materials";
+        config.projectDirectory  = path / name;
 
         auto startScenePath = std::filesystem::path(config.startScene);
 
@@ -50,7 +51,7 @@ namespace mango
         auto startSceneName = startScenePath.stem().string();
         auto scene          = Services::sceneManager()->createScene(startSceneName);
 
-        std::ofstream assetRegistryFile(getActiveAssetRegistryPath());
+        std::ofstream assetRegistryFile(getAssetRegistryPath());
 
         Services::sceneManager()->setActiveScene(scene);
 
@@ -63,15 +64,15 @@ namespace mango
     {
         if (s_activeProject)
         {
-            VFI::removeFromSearchPath(getActiveProjectDirectory());
-            VFI::removeFromSearchPath(getActiveAssetDirectory());
+            VFI::removeFromSearchPath(getProjectDirectory());
+            VFI::removeFromSearchPath(getAssetDirectory());
         }
 
         s_activeProject = ProjectSerializer::deserialize(filepath);
 
         if (s_activeProject)
         {
-            s_activeProject->m_projectDirectory = filepath.parent_path();
+            s_activeProject->getConfig().projectDirectory = filepath.parent_path();
             ref<EditorAssetManager> editorAssetManager = createRef<EditorAssetManager>();
             s_activeProject->m_assetManager = editorAssetManager;
             editorAssetManager->deserializeAssetRegistry();
@@ -84,7 +85,7 @@ namespace mango
     {
         if (ProjectSerializer::serialize(s_activeProject, filepath))
         {
-            s_activeProject->m_projectDirectory = filepath.parent_path();
+            s_activeProject->getConfig().projectDirectory = filepath.parent_path();
             return true;
         }
         return false;

@@ -9,10 +9,12 @@ namespace mango
     // It only exists in the Editor
     struct AssetMetadata
     {
-        std::filesystem::path filepath          = "";
+        AssetHandle           handle            = 0;
         AssetType             type              = AssetType::None;
+        std::filesystem::path filepath          = "";
+
         bool                  isMemoryOnlyAsset = false;
 
-        bool isValid() const { return type != AssetType::None && !isMemoryOnlyAsset; }
+        bool isValid() const { return handle != 0 && !isMemoryOnlyAsset; }
     };
 }

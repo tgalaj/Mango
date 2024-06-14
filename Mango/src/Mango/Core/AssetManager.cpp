@@ -235,6 +235,7 @@ namespace mango
 
         return nullptr;
     }
+    
 
     ref<Material> AssetManagerOld::getMaterial(const std::string& materialName)
     {
@@ -261,6 +262,8 @@ namespace mango
     void AssetManagerOld::initDefaultAssets()
     {
         // TODO(tgalaj): find a place for it in a new asset manager
+        // Place them in the Renderer (static)
+
         // Default textures
         //auto defaultDiffuse      = createTexture2D1x1("DefaultDiffuse",      glm::uvec4(255, 255, 255, 255));
         //auto defaultSpecular     = createTexture2D1x1("DefaultSpecular",     glm::uvec4(0,   0,   0,   255));

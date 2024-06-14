@@ -13,16 +13,16 @@ namespace mango
               AssetMetadata& get       (const AssetHandle handle);
         const AssetMetadata& get       (const AssetHandle handle) const;
 
-        size_t size() const { return m_assetRegistry.size(); }
+        size_t size() const;
         
         bool   contains(const AssetHandle handle) const;
         size_t remove  (const AssetHandle handle);
         void   clear   ();
 
-        auto begin()       { return m_assetRegistry.begin(); }
-        auto end  ()       { return m_assetRegistry.end();   }
-        auto begin() const { return m_assetRegistry.begin(); }
-        auto end  () const { return m_assetRegistry.end();   }
+        auto begin()       { return m_assetRegistry.begin();  }
+        auto end  ()       { return m_assetRegistry.end();    }
+        auto begin() const { return m_assetRegistry.cbegin(); }
+        auto end  () const { return m_assetRegistry.cend();   }
 
     private:
         std::unordered_map<AssetHandle, AssetMetadata> m_assetRegistry;

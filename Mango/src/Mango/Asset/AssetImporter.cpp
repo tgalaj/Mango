@@ -44,7 +44,7 @@ namespace mango
 
     ref<Asset> TextureImporter::import(AssetHandle handle, const AssetMetadata & metadata) const
     {
-        auto filepath = Project::getActiveAssetDirectory() / metadata.filepath;
+        auto filepath = Project::getAssetDirectory() / metadata.filepath;
 
         ref<Texture> asset = createRef<Texture>();
 
