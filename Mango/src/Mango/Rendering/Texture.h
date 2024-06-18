@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <string>
+#include <span>
 
 #include "glad/glad.h"
 #include "glm/vec4.hpp"
@@ -90,15 +91,17 @@ namespace mango
     {
         TextureDescriptor() {}
 
-        GLenum             type           = 0;
-        GLenum             format         = 0;
-        GLenum             internalFormat = 0;
-        GLuint             mipLevels      = 1;
-        GLuint             width          = 0;
-        GLuint             height         = 0;
-        GLuint             depth          = 1;
-        glm::ivec4         swizzles       = glm::ivec4(GL_TEXTURE_SWIZZLE_R, GL_TEXTURE_SWIZZLE_G, GL_TEXTURE_SWIZZLE_B, GL_TEXTURE_SWIZZLE_A);
-        bool               compressed     = false;
+        GLenum             type            = 0;
+        GLenum             format          = 0;
+        GLenum             internalFormat  = 0;
+        GLuint             mipLevels       = 1;
+        GLuint             width           = 0;
+        GLuint             height          = 0;
+        GLuint             depth           = 1;
+        glm::ivec4         swizzles        = glm::ivec4(GL_TEXTURE_SWIZZLE_R, GL_TEXTURE_SWIZZLE_G, GL_TEXTURE_SWIZZLE_B, GL_TEXTURE_SWIZZLE_A);
+        bool               compressed      = false;
+        bool               generateMipMaps = true;
+        bool               isSRGB          = false;
     };
 
     class Texture final : public Asset
@@ -140,12 +143,10 @@ namespace mango
         void setCompareFunc   (TextureCompareFunc func);
         void setAnisotropy    (float anisotropy);
 
-        bool createTexture2d          (const std::string& filename, bool isSrgb = false, uint32_t mipmapLevels = 0);
-        bool createTexture2d1x1       (const glm::uvec4& color);
-        bool createTexture2dFromMemory(uint8_t* memory_data, uint64_t dataSize, bool isSrgb = false, uint32_t mipmapLevels = 0);
-        bool createTexture2dHDR       (const std::string& filename, uint32_t mipmapLevels = 0);
-        bool createTextureDDS         (const std::string& filename);
-        bool createTextureCubeMap     (const std::string* filenames, bool isSrgb = false, uint32_t mipmapLevels = 0);
+        // TODO(tgalaj): Rename below create methods (to static create(Args...)) and add documentation describing the purpose of each one
+        static ref<Texture> create(const TextureDescriptor descriptor, const std::filesystem::path& filepath);
+        static ref<Texture> create(const TextureDescriptor descriptor, const std::filesystem::path  filepaths[6]);
+        static ref<Texture> create(const TextureDescriptor descriptor, std::span<uint8_t> buffer);
 
         TextureDescriptor getDescriptor() const { return m_descriptor; }
         std::string&      getFilename()         { return m_filename;   }
@@ -165,9 +166,18 @@ namespace mango
                AssetType getAssetType() const override { return getStaticAssetType(); };
 
     private:
-        uint8_t* load(const std::string& filename, bool isSrgb, bool flip = true);
-        uint8_t* load(uint8_t* memoryData, uint64_t dataSize, bool isSrgb);
+        uint8_t* load (const std::string& filename, bool isSrgb, bool flip = true);
+        uint8_t* load (uint8_t* memoryData, uint64_t dataSize, bool isSrgb);
         float*   loadf(const std::string& filename, bool flip = true);
+
+        // TODO: merge below functions, as some of them are redundant
+        bool createTexture2d          (const std::string& filename, bool isSrgb = false, uint32_t mipmapLevels = 0);
+        bool createTexture2dHDR       (const std::string& filename, uint32_t mipmapLevels = 0);
+        bool createTextureDDS         (const std::string& filename);
+
+        bool createTexture2dFromMemory(uint8_t* memory_data, uint64_t dataSize, bool isSrgb = false, uint32_t mipmapLevels = 0);
+
+        bool createTextureCubeMap     (const std::string* filenames, bool isSrgb = false, uint32_t mipmapLevels = 0);
 
         void release()
         {

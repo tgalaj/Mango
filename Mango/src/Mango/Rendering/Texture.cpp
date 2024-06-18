@@ -314,6 +314,21 @@ namespace mango
         return data;
     }
 
+    ref<Texture> Texture::create(const TextureDescriptor descriptor, const std::filesystem::path& filepath)
+    {
+
+    }
+
+    ref<Texture> Texture::create(const TextureDescriptor descriptor, const std::filesystem::path filepaths[6])
+    {
+
+    }
+
+    ref<Texture> Texture::create(const TextureDescriptor descriptor, std::span<uint8_t> buffer)
+    {
+
+    }
+
     bool Texture::createTexture2d(const std::string& filename, bool isSrgb, uint32_t mipmapLevels)
     {
         MG_PROFILE_ZONE_SCOPED;
@@ -347,49 +362,6 @@ namespace mango
         return true;
     }
 
-    bool Texture::createTexture2d1x1(const glm::uvec4& color)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        MG_PROFILE_GL_ZONE("Texture::createTexture2d1x1");
-
-        m_descriptor.width    = 1;
-        m_descriptor.height   = 1;
-
-        m_descriptor.type           = GL_TEXTURE_2D;
-        m_descriptor.format         = GL_RGBA;
-        m_descriptor.internalFormat = GL_RGBA8;
-
-        GLubyte pixelData[] = { static_cast<GLubyte>(color.r),
-                                static_cast<GLubyte>(color.g),
-                                static_cast<GLubyte>(color.b),
-                                static_cast<GLubyte>(color.a) };
-
-        /* Generate GL texture object */
-        glCreateTextures(m_descriptor.type, 1, &m_id);
-        glTextureStorage2D(m_id,
-                           m_descriptor.mipLevels,
-                           m_descriptor.internalFormat,
-                           m_descriptor.width,
-                           m_descriptor.height);
-
-        glTextureSubImage2D(m_id,
-                            0 /*level*/,
-                            0 /*xoffset*/,
-                            0 /*yoffset*/,
-                            m_descriptor.width,
-                            m_descriptor.height,
-                            m_descriptor.format,
-                            GL_UNSIGNED_BYTE,
-                            pixelData);
-
-        setFiltering(TextureFiltering::MIN,       TextureFilteringParam::NEAREST);
-        setFiltering(TextureFiltering::MAG,       TextureFilteringParam::NEAREST);
-        setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::CLAMP_TO_EDGE);
-        setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::CLAMP_TO_EDGE);
-
-        return true;
-    }
-
     bool Texture::createTexture2dFromMemory(uint8_t* memoryData, uint64_t dataSize, bool isSrgb, uint32_t mipmapLevels)
     {
         MG_PROFILE_ZONE_SCOPED;
@@ -403,12 +375,12 @@ namespace mango
             return false;
         }
 
-        const GLuint maxMipmapLevels = calcMaxMipMapsLevels(m_descriptor.width, m_descriptor.height, 0);
-                     mipmapLevels    = mipmapLevels == 0 ? maxMipmapLevels : glm::clamp(mipmapLevels, 1u, maxMipmapLevels);
+        const GLuint maxMipmapLevels        = calcMaxMipMapsLevels(m_descriptor.width, m_descriptor.height, 0);
+                     m_descriptor.mipLevels = mipmapLevels == 0 ? maxMipmapLevels : glm::clamp(mipmapLevels, 1u, maxMipmapLevels);
 
 
         glCreateTextures       (GLenum(TextureType::Texture2D), 1, &m_id);
-        glTextureStorage2D     (m_id, mipmapLevels /* levels */, m_descriptor.internalFormat, m_descriptor.width, m_descriptor.height);
+        glTextureStorage2D     (m_id, m_descriptor.mipLevels /* levels */, m_descriptor.internalFormat, m_descriptor.width, m_descriptor.height);
         glTextureSubImage2D    (m_id, 0 /* level */, 0 /* xoffset */, 0 /* yoffset */, m_descriptor.width, m_descriptor.height, m_descriptor.format, GL_UNSIGNED_BYTE, data);
         glGenerateTextureMipmap(m_id);
 
