@@ -81,7 +81,7 @@ namespace mango
             ref<T> asset  = createRef<T>(std::forward<Args>(args)...);
             asset->handle = AssetHandle(); // generate a new handle
 
-            Project::getActive()->getAssetManager()->addAsset<T>(asset, filepath);
+            Project::getActive()->getAssetManager()->addAsset(asset, filepath);
 
             return asset->handle;
         }
@@ -102,7 +102,7 @@ namespace mango
             ref<T> asset         = createRef<T>(std::forward<Args>(args)...);
                    asset->handle = AssetHandle();
 
-            Project::getActive()->getAssetManager()->addMemoryOnlyAsset<T>(asset, assetName);
+            Project::getActive()->getAssetManager()->addMemoryOnlyAsset(asset, assetName);
 
             return asset->handle;
         }

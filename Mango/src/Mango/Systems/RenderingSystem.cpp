@@ -157,17 +157,12 @@ namespace mango
         m_omniShadowMap = createRef<RenderTarget>();
         m_omniShadowMap->create(512, 512, RenderTarget::DepthInternalFormat::DEPTH24, RenderTarget::RenderTargetType::TexCube);
 
-        m_dirLightSpriteTexture = createRef<Texture>();
-        m_dirLightSpriteTexture->createTexture2d("textures/DirLightSprite.png", false, 8);
-        
-        m_pointLightSpriteTexture = createRef<Texture>();
-        m_pointLightSpriteTexture->createTexture2d("textures/PointLightSprite.png", false, 8);
+        TextureDescriptor desc = { .mipMapLevels = 8, .isSrgb = false };
 
-        m_spotLightSpriteTexture = createRef<Texture>();
-        m_spotLightSpriteTexture->createTexture2d("textures/SpotLightSprite.png", false, 8);
-
-        m_cameraSpriteTexture = createRef<Texture>();
-        m_cameraSpriteTexture->createTexture2d("textures/CameraSprite.png", false, 8);
+        m_dirLightSpriteTexture   = Texture::create(desc, "textures/DirLightSprite.png");
+        m_pointLightSpriteTexture = Texture::create(desc, "textures/PointLightSprite.png");
+        m_spotLightSpriteTexture  = Texture::create(desc, "textures/SpotLightSprite.png");
+        m_cameraSpriteTexture     = Texture::create(desc, "textures/CameraSprite.png");
 
         initRenderingStates();
     }

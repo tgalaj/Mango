@@ -263,70 +263,83 @@ namespace mango
         
         if (flip) stbi_set_flip_vertically_on_load(true);
 
-        int width, height, channelsCount;
-        uint8_t* data = stbi_load(filepath.c_str(), &width, &height, &channelsCount, 0);
-        
-        if (flip) stbi_set_flip_vertically_on_load(false);
-
-        if (data)
+        uint8_t* data;
+        if (stbi_is_hdr(filepath.c_str()))
         {
-            m_descriptor = createDescriptor(width, height, channelsCount, isSrgb);
+            int width, height, channelsCount;
+            data = (uint8_t*)stbi_loadf(filepath.c_str(), &width, &height, &channelsCount, STBI_rgb_alpha);
+
+            if (data)
+            {
+                m_descriptor.width          = width;
+                m_descriptor.height         = height;
+                m_descriptor.format         = GL_RGBA;
+                m_descriptor.internalFormat = GL_RGBA32F;
+                m_descriptor.isSrgb         = isSrgb;
+            }
         }
-
-        return data;
-    }
-
-    uint8_t* Texture::load(uint8_t* memoryData, uint64_t dataSize, bool isSrgb)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-
-        int width, height, channelsCount;
-        uint8_t* data = stbi_load_from_memory(memoryData, dataSize, &width, &height, &channelsCount, 0);
-
-        if (data)
+        else
         {
-            m_descriptor = createDescriptor(width, height, channelsCount, isSrgb);
+            int width, height, channelsCount;
+            data = stbi_load(filepath.c_str(), &width, &height, &channelsCount, STBI_rgb_alpha);
+
+            if (data)
+            {
+                m_descriptor = createDescriptor(width, height, channelsCount, isSrgb);
+            }
         }
-
-        return data;
-    }
-
-    float* Texture::loadf(const std::string& filename, bool flip /*= true*/)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-
-        auto filepath = VFI::getFilepath(filename);
-        if (flip) stbi_set_flip_vertically_on_load(true);
-
-        int width, height, channelsCount;
-        float* data = stbi_loadf(filepath.string().c_str(), &width, &height, &channelsCount, 3);
 
         if (flip) stbi_set_flip_vertically_on_load(false);
 
-        if (data)
+        return data;
+    }
+
+    uint8_t* Texture::load(std::span<uint8_t> buffer, bool isSrgb)
+    {
+        MG_PROFILE_ZONE_SCOPED;
+
+        uint8_t* data;
+        if (stbi_is_hdr_from_memory(buffer.data(), buffer.size()))
         {
-            m_descriptor.width          = width;
-            m_descriptor.height         = height;
-            m_descriptor.format         = GL_RGB;
-            m_descriptor.internalFormat = GL_RGB32F;
+            int width, height, channelsCount;
+            data = (uint8_t*)stbi_loadf_from_memory(buffer.data(), buffer.size(), &width, &height, &channelsCount, STBI_rgb_alpha);
+
+            if (data)
+            {
+                m_descriptor.width          = width;
+                m_descriptor.height         = height;
+                m_descriptor.format         = GL_RGBA;
+                m_descriptor.internalFormat = GL_RGBA32F;
+                m_descriptor.isSrgb         = isSrgb;
+            }
+        }
+        else
+        {
+            int width, height, channelsCount;
+            data = stbi_load_from_memory(buffer.data(), buffer.size(), &width, &height, &channelsCount, STBI_rgb_alpha);
+
+            if (data)
+            {
+                m_descriptor = createDescriptor(width, height, channelsCount, isSrgb);
+            }
         }
 
         return data;
     }
 
-    ref<Texture> Texture::create(const TextureDescriptor descriptor, const std::filesystem::path& filepath)
+    ref<Texture> Texture::create(const TextureDescriptor& descriptor, const std::filesystem::path& filepath)
     {
-
+        return nullptr;
     }
 
-    ref<Texture> Texture::create(const TextureDescriptor descriptor, const std::filesystem::path filepaths[6])
+    ref<Texture> Texture::create(const TextureDescriptor& descriptor, const std::filesystem::path filepaths[6])
     {
-
+        return nullptr;
     }
 
-    ref<Texture> Texture::create(const TextureDescriptor descriptor, std::span<uint8_t> buffer)
+    ref<Texture> Texture::create(const TextureDescriptor& descriptor, std::span<uint8_t> buffer)
     {
-
+        return nullptr;
     }
 
     bool Texture::createTexture2d(const std::string& filename, bool isSrgb, uint32_t mipmapLevels)
@@ -362,12 +375,12 @@ namespace mango
         return true;
     }
 
-    bool Texture::createTexture2dFromMemory(uint8_t* memoryData, uint64_t dataSize, bool isSrgb, uint32_t mipmapLevels)
+    bool Texture::createTexture2dFromMemory(std::span<uint8_t> buffer, bool isSrgb, uint32_t mipmapLevels)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::createTexture2dFromMemory");
 
-        auto data = load(memoryData, dataSize, isSrgb);
+        auto data = load(buffer, isSrgb);
 
         if (!data)
         {
@@ -375,12 +388,12 @@ namespace mango
             return false;
         }
 
-        const GLuint maxMipmapLevels        = calcMaxMipMapsLevels(m_descriptor.width, m_descriptor.height, 0);
-                     m_descriptor.mipLevels = mipmapLevels == 0 ? maxMipmapLevels : glm::clamp(mipmapLevels, 1u, maxMipmapLevels);
+        const GLuint maxMipmapLevels           = calcMaxMipMapsLevels(m_descriptor.width, m_descriptor.height, 0);
+                     m_descriptor.mipMapLevels = mipmapLevels == 0 ? maxMipmapLevels : glm::clamp(mipmapLevels, 1u, maxMipmapLevels);
 
 
         glCreateTextures       (GLenum(TextureType::Texture2D), 1, &m_id);
-        glTextureStorage2D     (m_id, m_descriptor.mipLevels /* levels */, m_descriptor.internalFormat, m_descriptor.width, m_descriptor.height);
+        glTextureStorage2D     (m_id, m_descriptor.mipMapLevels /* levels */, m_descriptor.internalFormat, m_descriptor.width, m_descriptor.height);
         glTextureSubImage2D    (m_id, 0 /* level */, 0 /* xoffset */, 0 /* yoffset */, m_descriptor.width, m_descriptor.height, m_descriptor.format, GL_UNSIGNED_BYTE, data);
         glGenerateTextureMipmap(m_id);
 
@@ -400,7 +413,7 @@ namespace mango
         MG_PROFILE_GL_ZONE("Texture::createTexture2dHDR");
 
         m_filename = filename;
-        float* data = loadf(filename);
+        float* data = (float*)load(filename, false);
 
         if (!data)
         {
@@ -470,7 +483,7 @@ namespace mango
 
         m_descriptor.format         = format.format;
         m_descriptor.internalFormat = format.internalFormat;
-        m_descriptor.mipLevels      = dds.GetMipCount();
+        m_descriptor.mipMapLevels   = dds.GetMipCount();
         m_descriptor.width          = dds.GetWidth();
         m_descriptor.height         = dds.GetHeight();
         m_descriptor.depth          = dds.GetDepth();
@@ -483,10 +496,10 @@ namespace mango
         setFiltering     (TextureFiltering::MAG, TextureFilteringParam::LINEAR);
         setWraping       (TextureWrapingCoordinate::S, TextureWrapingParam::REPEAT);
         setWraping       (TextureWrapingCoordinate::T, TextureWrapingParam::REPEAT);
-        setMaxMipmapLevel(m_descriptor.mipLevels - 1);
+        setMaxMipmapLevel(m_descriptor.mipMapLevels - 1);
         setSwizzle       (format.swizzle);
 
-        glTextureStorage2D(m_id, m_descriptor.mipLevels, format.internalFormat, m_descriptor.width, m_descriptor.height);
+        glTextureStorage2D(m_id, m_descriptor.mipMapLevels, format.internalFormat, m_descriptor.width, m_descriptor.height);
         dds.Flip();
 
         for (uint32_t level = 0; level < dds.GetMipCount(); level++)

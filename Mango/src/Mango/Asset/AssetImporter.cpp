@@ -46,16 +46,9 @@ namespace mango
     {
         auto filepath = Project::getAssetDirectory() / metadata.filepath;
 
-        ref<Texture> asset = createRef<Texture>();
+        TextureDescriptor desc { .isSrgb = true };
 
-        if (filepath.extension() == ".dds")
-        {
-            asset->createTextureDDS(filepath.string());
-        }
-        else
-        {
-            asset->createTexture2d(filepath.string(), true, 12);
-        }
+        ref<Texture> asset = Texture::create(desc, metadata.filepath); // NOTE: should be filepath, but we are currently using VFI
 
         return asset;
     }

@@ -89,26 +89,24 @@ namespace mango
 
     struct TextureDescriptor
     {
-        TextureDescriptor() {}
-
         GLenum             type            = 0;
         GLenum             format          = 0;
         GLenum             internalFormat  = 0;
-        GLuint             mipLevels       = 1;
+        GLuint             mipMapLevels    = 0;
         GLuint             width           = 0;
         GLuint             height          = 0;
         GLuint             depth           = 1;
         glm::ivec4         swizzles        = glm::ivec4(GL_TEXTURE_SWIZZLE_R, GL_TEXTURE_SWIZZLE_G, GL_TEXTURE_SWIZZLE_B, GL_TEXTURE_SWIZZLE_A);
         bool               compressed      = false;
         bool               generateMipMaps = true;
-        bool               isSRGB          = false;
+        bool               isSrgb          = false;
     };
 
     class Texture final : public Asset
     {
     public:
-        Texture() : m_id(0) {}
-        ~Texture() { release(); };
+        Texture() = default;
+        ~Texture() override { release(); }
 
         Texture(const Texture&) = delete;
         Texture& operator=(const Texture&) = delete;
@@ -131,6 +129,19 @@ namespace mango
             return *this;
         }
 
+        static ref<Texture> create(const TextureDescriptor& descriptor, const std::filesystem::path& filepath);
+        static ref<Texture> create(const TextureDescriptor& descriptor, const std::filesystem::path  filepaths[6]);
+        static ref<Texture> create(const TextureDescriptor& descriptor, std::span<uint8_t>           buffer);
+
+        static uint8_t calcMaxMipMapsLevels(uint32_t width, uint32_t height, uint32_t depth)
+        {
+            uint8_t num_levels = 1 + std::floor(std::log2(std::max(width, std::max(height, depth))));
+            return  num_levels;
+        }
+
+        static AssetType getStaticAssetType()          { return AssetType::Texture; }
+               AssetType getAssetType() const override { return getStaticAssetType(); }
+
         void bind             (uint32_t unit) const { glBindTextureUnit(unit, m_id); }
         void setFiltering     (TextureFiltering type, TextureFilteringParam param);
         void setMinLod        (float min);
@@ -143,39 +154,24 @@ namespace mango
         void setCompareFunc   (TextureCompareFunc func);
         void setAnisotropy    (float anisotropy);
 
-        // TODO(tgalaj): Rename below create methods (to static create(Args...)) and add documentation describing the purpose of each one
-        static ref<Texture> create(const TextureDescriptor descriptor, const std::filesystem::path& filepath);
-        static ref<Texture> create(const TextureDescriptor descriptor, const std::filesystem::path  filepaths[6]);
-        static ref<Texture> create(const TextureDescriptor descriptor, std::span<uint8_t> buffer);
-
         TextureDescriptor getDescriptor() const { return m_descriptor; }
         std::string&      getFilename()         { return m_filename;   }
         uint32_t          getRendererID() const { return m_id;         }
 
         void setName(const std::string& name) { m_filename = name; }
 
-        static uint8_t calcMaxMipMapsLevels(uint32_t width, uint32_t height, uint32_t depth)
-        {
-            uint8_t num_levels = 1 + std::floor(std::log2(std::max(width, std::max(height, depth))));
-            return  num_levels;
-        }
-
-        static  TextureDescriptor createDescriptor(int width, int height, int channelsCount, bool isSrgb);
-
-        static AssetType getStaticAssetType() { return AssetType::Texture; };
-               AssetType getAssetType() const override { return getStaticAssetType(); };
-
     private:
         uint8_t* load (const std::string& filename, bool isSrgb, bool flip = true);
-        uint8_t* load (uint8_t* memoryData, uint64_t dataSize, bool isSrgb);
-        float*   loadf(const std::string& filename, bool flip = true);
+        uint8_t* load (std::span<uint8_t> buffer, bool isSrgb);
+
+        TextureDescriptor createDescriptor(int width, int height, int channelsCount, bool isSrgb);
 
         // TODO: merge below functions, as some of them are redundant
         bool createTexture2d          (const std::string& filename, bool isSrgb = false, uint32_t mipmapLevels = 0);
         bool createTexture2dHDR       (const std::string& filename, uint32_t mipmapLevels = 0);
         bool createTextureDDS         (const std::string& filename);
 
-        bool createTexture2dFromMemory(uint8_t* memory_data, uint64_t dataSize, bool isSrgb = false, uint32_t mipmapLevels = 0);
+        bool createTexture2dFromMemory(std::span<uint8_t> buffer, bool isSrgb = false, uint32_t mipmapLevels = 0);
 
         bool createTextureCubeMap     (const std::string* filenames, bool isSrgb = false, uint32_t mipmapLevels = 0);
 
