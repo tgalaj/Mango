@@ -165,6 +165,8 @@ namespace mango
         m_cameraSpriteTexture     = Texture::create(desc, "textures/CameraSprite.png");
 
         initRenderingStates();
+
+        glBindTextureUnit(0, 0);
     }
 
     void RenderingSystem::onUpdate(float dt)

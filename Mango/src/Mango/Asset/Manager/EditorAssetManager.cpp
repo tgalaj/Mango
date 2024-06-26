@@ -226,7 +226,8 @@ namespace mango
             {
                 // import failed
                 MG_CORE_ERROR("EditorAssetManager::getAsset - asset import failed! Loading default asset for the {} asset type", assetTypeToString(asset->getAssetType()));
-                AssetManager::getDefaultAsset(asset->getAssetType());
+                // TODO
+                // AssetManager::getDefaultAsset(asset->getAssetType());
             }
             else
             {

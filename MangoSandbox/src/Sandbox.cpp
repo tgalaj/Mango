@@ -23,8 +23,8 @@ void Sandbox::onInit()
     if (Project::load(projectPath))
     {
         // Populate VFI search path
-        VFI::addToSearchPath(Project::getActiveProjectDirectory());
-        VFI::addToSearchPath(Project::getActiveAssetDirectory());
+        VFI::addToSearchPath(Project::getProjectDirectory());
+        VFI::addToSearchPath(Project::getAssetDirectory());
 
         auto searchpath = VFI::getSearchPath();
         for (auto& p : searchpath)
@@ -42,6 +42,9 @@ void Sandbox::onInit()
     }
 
     auto scenePathString = Project::getActive()->getConfig().startScene;
+
+    // Old...
+    AssetManagerOld::initDefaultAssets();
 
     m_mainScene = Services::sceneManager()->createScene("Sandbox Scene");
     Services::sceneManager()->setActiveScene(m_mainScene);
@@ -299,7 +302,7 @@ void Sandbox::onInit()
     spotLight.setLocalRotation(-45, 45, 45);
     spotLight.getComponent<SpotLightComponent>().setCastsShadows(true);
 
-    SceneSerializer::serialize(m_mainScene, Project::getActiveAssetDirectory() / "scenes" / "NewSandbox.mango");
+    SceneSerializer::serialize(m_mainScene, Project::getAssetDirectory() / "scenes" / "NewSandbox.mango");
 }
 
 void Sandbox::onDestroy()

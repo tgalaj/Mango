@@ -17,12 +17,31 @@ namespace mango
 
         m_blendMode = BlendMode::NONE;
 
-        // TODO(tgalaj): create default textures when the engine starts
-        m_textureMap[TextureType::DIFFUSE]      = AssetManager::getAssetByName<Texture>("DefaultDiffuse");
-        m_textureMap[TextureType::SPECULAR]     = AssetManager::getAssetByName<Texture>("DefaultSpecular");
+        // TODO: move to asset manager
+        static bool f = true;
+
+        if (f)
+        {
+            uint32_t blackTextureData  = 0xFF000000;
+            uint32_t whiteTextureData  = 0xFFFFFFFF;
+            uint32_t defaultNormalData = 0xFFFF8080;
+
+            auto defaultBlack  = Texture::create(TextureDescriptor{ .width = 1, .height = 1, .isSrgb = true }, { &blackTextureData,  1 });
+            auto defaultWhite  = Texture::create(TextureDescriptor{ .width = 1, .height = 1, .isSrgb = true }, { &whiteTextureData,  1 });
+            auto defaultNormal = Texture::create(TextureDescriptor{ .width = 1, .height = 1, .isSrgb = true }, { &defaultNormalData, 1 });
+
+            AssetManager::addMemoryOnlyAsset<Texture>(defaultBlack,  "DefaultBlack");
+            AssetManager::addMemoryOnlyAsset<Texture>(defaultWhite,  "DefaultWhite");
+            AssetManager::addMemoryOnlyAsset<Texture>(defaultNormal, "DefaultNormal");
+
+            f = false;
+        }
+
+        m_textureMap[TextureType::DIFFUSE]      = AssetManager::getAssetByName<Texture>("DefaultWhite");
+        m_textureMap[TextureType::SPECULAR]     = AssetManager::getAssetByName<Texture>("DefaultBlack");
         m_textureMap[TextureType::NORMAL]       = AssetManager::getAssetByName<Texture>("DefaultNormal");
-        m_textureMap[TextureType::EMISSION]     = AssetManager::getAssetByName<Texture>("DefaultEmission");
-        m_textureMap[TextureType::DISPLACEMENT] = AssetManager::getAssetByName<Texture>("DefaultDisplacement");
+        m_textureMap[TextureType::EMISSION]     = AssetManager::getAssetByName<Texture>("DefaultBlack");
+        m_textureMap[TextureType::DISPLACEMENT] = AssetManager::getAssetByName<Texture>("DefaultBlack");
     }
 
 

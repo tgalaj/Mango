@@ -22,7 +22,7 @@ namespace mango
             return std::static_pointer_cast<T>(asset);
         }
 
-        static ref<Asset> getDefaultAsset(AssetType type);
+        //static ref<Asset> getDefaultAsset(AssetType type);
 
         static AssetType getAssetType(AssetHandle handle)
         {

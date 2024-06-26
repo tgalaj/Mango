@@ -226,17 +226,16 @@ namespace mango
             // Only one texture of a given type is being loaded
             if (material->GetTexture(aiType, 0, &path, NULL, NULL, NULL, NULL, textureMapMode) == AI_SUCCESS)
             {
-                bool isSrgb = (aiType == aiTextureType_DIFFUSE) || (aiType == aiTextureType_EMISSIVE) || (aiType == aiTextureType_BASE_COLOR);
-
-                      ref<Texture> texture    = createRef<Texture>();
-                const aiTexture*   paiTexture = scene->GetEmbeddedTexture(path.C_Str());
+                bool             isSrgb     = (aiType == aiTextureType_DIFFUSE) || (aiType == aiTextureType_EMISSIVE) || (aiType == aiTextureType_BASE_COLOR);
+                const aiTexture* paiTexture = scene->GetEmbeddedTexture(path.C_Str());
 
                 if (paiTexture)
                 {
                     // Load embedded
                     uint32_t dataSize = paiTexture->mHeight > 0 ? paiTexture->mWidth * paiTexture->mHeight : paiTexture->mWidth;
                     
-                    if (texture->createTexture2dFromMemory(reinterpret_cast<unsigned char*>(paiTexture->pcData), dataSize, isSrgb))
+                    auto texture = Texture::create(TextureDescriptor{ .isSrgb = isSrgb }, { (uint32_t*)paiTexture->pcData, dataSize });
+                    if (texture)
                     {
                         mangoMaterial->addTexture(textureType, texture);
 
@@ -256,7 +255,9 @@ namespace mango
                 {
                     // Load from file
                     auto fullPath = parentDirectory / path.C_Str();
-                    if (!texture->createTexture2d(fullPath.string(), isSrgb))
+                    auto texture  = Texture::create(TextureDescriptor{ .isSrgb = isSrgb }, fullPath.string());
+
+                    if (!texture)
                     {
                         MG_CORE_ERROR("AssimpMeshImporter: error while loading texture {}.", fullPath);
                         return false;

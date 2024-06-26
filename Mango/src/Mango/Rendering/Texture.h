@@ -131,7 +131,7 @@ namespace mango
 
         static ref<Texture> create(const TextureDescriptor& descriptor, const std::filesystem::path& filepath);
         static ref<Texture> create(const TextureDescriptor& descriptor, const std::filesystem::path  filepaths[6]);
-        static ref<Texture> create(const TextureDescriptor& descriptor, std::span<uint8_t>           buffer);
+        static ref<Texture> create(const TextureDescriptor& descriptor, std::span<uint32_t>          buffer);
 
         static uint8_t calcMaxMipMapsLevels(uint32_t width, uint32_t height, uint32_t depth)
         {
@@ -161,19 +161,15 @@ namespace mango
         void setName(const std::string& name) { m_filename = name; }
 
     private:
-        uint8_t* load (const std::string& filename, bool isSrgb, bool flip = true);
-        uint8_t* load (std::span<uint8_t> buffer, bool isSrgb);
+        uint8_t* load (const std::string& filename, bool flip = true);
+        uint8_t* load (std::span<uint32_t> buffer);
 
-        TextureDescriptor createDescriptor(int width, int height, int channelsCount, bool isSrgb);
+        bool createTexture2d (const const std::filesystem::path& filepath, uint32_t mipmapLevels = 0);
+        bool createTextureDDS(const const std::filesystem::path& filepath);
 
-        // TODO: merge below functions, as some of them are redundant
-        bool createTexture2d          (const std::string& filename, bool isSrgb = false, uint32_t mipmapLevels = 0);
-        bool createTexture2dHDR       (const std::string& filename, uint32_t mipmapLevels = 0);
-        bool createTextureDDS         (const std::string& filename);
+        bool createTexture2dFromMemory(std::span<uint32_t> buffer, uint32_t mipmapLevels = 0);
 
-        bool createTexture2dFromMemory(std::span<uint8_t> buffer, bool isSrgb = false, uint32_t mipmapLevels = 0);
-
-        bool createTextureCubeMap     (const std::string* filenames, bool isSrgb = false, uint32_t mipmapLevels = 0);
+        bool createTextureCubeMap(const std::filesystem::path* filepaths, uint32_t mipmapLevels = 0);
 
         void release()
         {

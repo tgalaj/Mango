@@ -255,7 +255,7 @@ namespace mango
 
     // --------------------- Texture creation methods -------------------------
 
-    uint8_t* Texture::load(const std::string& filename, bool isSrgb, bool flip /*= true*/)
+    uint8_t* Texture::load(const std::string& filename, bool flip /*= true*/)
     {
         MG_PROFILE_ZONE_SCOPED;
 
@@ -275,7 +275,6 @@ namespace mango
                 m_descriptor.height         = height;
                 m_descriptor.format         = GL_RGBA;
                 m_descriptor.internalFormat = GL_RGBA32F;
-                m_descriptor.isSrgb         = isSrgb;
             }
         }
         else
@@ -285,7 +284,10 @@ namespace mango
 
             if (data)
             {
-                m_descriptor = createDescriptor(width, height, channelsCount, isSrgb);
+                m_descriptor.width          = width;
+                m_descriptor.height         = height;
+                m_descriptor.format         = GL_RGBA;
+                m_descriptor.internalFormat = m_descriptor.isSrgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
             }
         }
 
@@ -294,15 +296,15 @@ namespace mango
         return data;
     }
 
-    uint8_t* Texture::load(std::span<uint8_t> buffer, bool isSrgb)
+    uint8_t* Texture::load(std::span<uint32_t> buffer)
     {
         MG_PROFILE_ZONE_SCOPED;
 
         uint8_t* data;
-        if (stbi_is_hdr_from_memory(buffer.data(), buffer.size()))
+        if (stbi_is_hdr_from_memory((const stbi_uc*)buffer.data(), buffer.size_bytes()))
         {
             int width, height, channelsCount;
-            data = (uint8_t*)stbi_loadf_from_memory(buffer.data(), buffer.size(), &width, &height, &channelsCount, STBI_rgb_alpha);
+            data = (uint8_t*)stbi_loadf_from_memory((const stbi_uc*)buffer.data(), buffer.size_bytes(), &width, &height, &channelsCount, STBI_rgb_alpha);
 
             if (data)
             {
@@ -310,17 +312,19 @@ namespace mango
                 m_descriptor.height         = height;
                 m_descriptor.format         = GL_RGBA;
                 m_descriptor.internalFormat = GL_RGBA32F;
-                m_descriptor.isSrgb         = isSrgb;
             }
         }
         else
         {
             int width, height, channelsCount;
-            data = stbi_load_from_memory(buffer.data(), buffer.size(), &width, &height, &channelsCount, STBI_rgb_alpha);
+            data = stbi_load_from_memory((const stbi_uc*)buffer.data(), buffer.size_bytes(), &width, &height, &channelsCount, STBI_rgb_alpha);
 
             if (data)
             {
-                m_descriptor = createDescriptor(width, height, channelsCount, isSrgb);
+                m_descriptor.width          = width;
+                m_descriptor.height         = height;
+                m_descriptor.format         = GL_RGBA;
+                m_descriptor.internalFormat = m_descriptor.isSrgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
             }
         }
 
@@ -329,30 +333,58 @@ namespace mango
 
     ref<Texture> Texture::create(const TextureDescriptor& descriptor, const std::filesystem::path& filepath)
     {
-        return nullptr;
+        auto texture      = createRef<Texture>();
+        auto mipMapLevels = descriptor.generateMipMaps ? descriptor.mipMapLevels : 1;
+
+        texture->m_descriptor = descriptor;
+
+        if (filepath.extension() == ".dds")
+        {
+            texture->createTextureDDS(filepath);
+        }
+        else
+        {
+            texture->createTexture2d(filepath, mipMapLevels);
+        }
+        
+        return texture;
     }
 
     ref<Texture> Texture::create(const TextureDescriptor& descriptor, const std::filesystem::path filepaths[6])
     {
-        return nullptr;
+        auto texture      = createRef<Texture>();
+        auto mipMapLevels = descriptor.generateMipMaps ? descriptor.mipMapLevels : 1;
+
+        texture->m_descriptor = descriptor;
+
+        texture->createTextureCubeMap(filepaths, mipMapLevels);
+        
+        return texture;
     }
 
-    ref<Texture> Texture::create(const TextureDescriptor& descriptor, std::span<uint8_t> buffer)
+    ref<Texture> Texture::create(const TextureDescriptor& descriptor, std::span<uint32_t> buffer)
     {
-        return nullptr;
+        auto texture      = createRef<Texture>();
+        auto mipMapLevels = descriptor.generateMipMaps ? descriptor.mipMapLevels : 1;
+
+        texture->m_descriptor = descriptor;
+
+        texture->createTexture2dFromMemory(buffer, mipMapLevels);
+        
+        return texture;
     }
 
-    bool Texture::createTexture2d(const std::string& filename, bool isSrgb, uint32_t mipmapLevels)
+    bool Texture::createTexture2d(const std::filesystem::path& filename, uint32_t mipmapLevels)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::createTexture2d");
 
-        m_filename = filename;
-        auto data = load(filename, isSrgb);
+        m_filename = filename.generic_string();
+        auto data = load(m_filename);
 
         if (!data)
         {
-            MG_CORE_ERROR("Texture failed to load at path: {}", VFI::getFilepath(filename).generic_string());
+            MG_CORE_ERROR("Texture failed to load at path: {}", VFI::getFilepath(m_filename).generic_string());
             return false;
         }
 
@@ -361,7 +393,15 @@ namespace mango
 
         glCreateTextures       (GLenum(TextureType::Texture2D), 1, &m_id);
         glTextureStorage2D     (m_id, mipmapLevels, m_descriptor.internalFormat, m_descriptor.width, m_descriptor.height);
-        glTextureSubImage2D    (m_id, 0 /* level */, 0 /* xoffset */, 0 /* yoffset */, m_descriptor.width, m_descriptor.height, m_descriptor.format, GL_UNSIGNED_BYTE, data);
+        glTextureSubImage2D    (m_id, 
+                                0 /* level */, 
+                                0 /* xoffset */, 
+                                0 /* yoffset */, 
+                                m_descriptor.width, 
+                                m_descriptor.height, 
+                                m_descriptor.format, 
+                                m_descriptor.internalFormat == GL_RGBA32F ? GL_FLOAT : GL_UNSIGNED_BYTE,
+                                data);
         glGenerateTextureMipmap(m_id);
 
         setFiltering (TextureFiltering::MIN,       TextureFilteringParam::LINEAR_MIP_LINEAR);
@@ -375,12 +415,23 @@ namespace mango
         return true;
     }
 
-    bool Texture::createTexture2dFromMemory(std::span<uint8_t> buffer, bool isSrgb, uint32_t mipmapLevels)
+    bool Texture::createTexture2dFromMemory(std::span<uint32_t> buffer, uint32_t mipmapLevels)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::createTexture2dFromMemory");
 
-        auto data = load(buffer, isSrgb);
+        uint8_t* data;
+        if (m_descriptor.height == 0)
+        {
+            data = load(buffer);
+        }
+        else
+        {
+            data = (uint8_t*)buffer.data();
+            
+            m_descriptor.format         = GL_RGBA;
+            m_descriptor.internalFormat = m_descriptor.isSrgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
+        }
 
         if (!data)
         {
@@ -394,7 +445,15 @@ namespace mango
 
         glCreateTextures       (GLenum(TextureType::Texture2D), 1, &m_id);
         glTextureStorage2D     (m_id, m_descriptor.mipMapLevels /* levels */, m_descriptor.internalFormat, m_descriptor.width, m_descriptor.height);
-        glTextureSubImage2D    (m_id, 0 /* level */, 0 /* xoffset */, 0 /* yoffset */, m_descriptor.width, m_descriptor.height, m_descriptor.format, GL_UNSIGNED_BYTE, data);
+        glTextureSubImage2D    (m_id, 
+                                0 /* level */, 
+                                0 /* xoffset */, 
+                                0 /* yoffset */, 
+                                m_descriptor.width, 
+                                m_descriptor.height, 
+                                m_descriptor.format, 
+                                m_descriptor.internalFormat == GL_RGBA32F ? GL_FLOAT : GL_UNSIGNED_BYTE,
+                                data);
         glGenerateTextureMipmap(m_id);
 
         setFiltering(TextureFiltering::MIN,       TextureFilteringParam::LINEAR_MIP_LINEAR);
@@ -402,50 +461,21 @@ namespace mango
         setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::REPEAT);
         setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::REPEAT);
 
-        stbi_image_free(data);
-
-        return true;
-    }
-
-    bool Texture::createTexture2dHDR(const std::string & filename, uint32_t mipmapLevels)
-    {
-        MG_PROFILE_ZONE_SCOPED;
-        MG_PROFILE_GL_ZONE("Texture::createTexture2dHDR");
-
-        m_filename = filename;
-        float* data = (float*)load(filename, false);
-
-        if (!data)
+        if (m_descriptor.height == 0)
         {
-            MG_CORE_ERROR("Texture failed to load at path: {}", VFI::getFilepath(filename));
-            return false;
+            stbi_image_free(data);
         }
 
-        const GLuint maxMipmapLevels = calcMaxMipMapsLevels(m_descriptor.width, m_descriptor.height, 0);
-                     mipmapLevels    = mipmapLevels == 0 ? maxMipmapLevels : glm::clamp(mipmapLevels, 1u, maxMipmapLevels);
-
-        glCreateTextures       (GLenum(TextureType::Texture2D), 1, &m_id);
-        glTextureStorage2D     (m_id, 1 /* levels */, m_descriptor.internalFormat, m_descriptor.width, m_descriptor.height);
-        glTextureSubImage2D    (m_id, 0 /* level */, 0 /* xoffset */, 0 /* yoffset */, m_descriptor.width, m_descriptor.height, m_descriptor.format, GL_FLOAT, data);
-        glGenerateTextureMipmap(m_id);
-
-        setFiltering(TextureFiltering::MIN,       TextureFilteringParam::LINEAR);
-        setFiltering(TextureFiltering::MAG,       TextureFilteringParam::LINEAR);
-        setWraping  (TextureWrapingCoordinate::S, TextureWrapingParam::CLAMP_TO_EDGE);
-        setWraping  (TextureWrapingCoordinate::T, TextureWrapingParam::CLAMP_TO_EDGE);
-        
-        stbi_image_free(data);
-
         return true;
     }
 
-    bool Texture::createTextureDDS(const std::string& filename)
+    bool Texture::createTextureDDS(const std::filesystem::path& filename)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::createTextureDDS");
 
-        m_filename = filename;
-        auto filepath = VFI::getFilepath(filename);
+        m_filename = filename.generic_string();
+        auto filepath = VFI::getFilepath(m_filename);
 
         DDSFile dds;
         auto ret = dds.Load(filepath.string().c_str());
@@ -560,7 +590,7 @@ namespace mango
         return true;
     }
 
-    bool Texture::createTextureCubeMap(const std::string* filenames, bool isSrgb, uint32_t mipmapLevels)
+    bool Texture::createTextureCubeMap(const std::filesystem::path* filenames, uint32_t mipmapLevels)
     {
         MG_PROFILE_ZONE_SCOPED;
         MG_PROFILE_GL_ZONE("Texture::createTextureCubeMap");
@@ -571,11 +601,11 @@ namespace mango
 
         for (int i = 0; i < NUM_FACES; ++i)
         {
-            images_data[i] = load(filenames[i], isSrgb, false);
+            images_data[i] = load(filenames[i].generic_string(), false);
 
             if (!images_data[i])
             {
-                MG_CORE_ERROR("Texture failed to load at path: {}", VFI::getFilepath(filenames[i]));
+                MG_CORE_ERROR("Texture failed to load at path: {}", VFI::getFilepath(filenames[i].generic_string()));
                 return false;
             }
         }
@@ -616,30 +646,4 @@ namespace mango
 
         return true;
     }
-
-    TextureDescriptor Texture::createDescriptor(int width, int height, int channelsCount, bool isSrgb)
-    {
-        TextureDescriptor desc        = {};
-                          desc.width  = width;
-                          desc.height = height;
-
-        if (channelsCount == 1)
-        {
-            desc.format         = GL_RED;
-            desc.internalFormat = GL_R8;
-        }
-        else if (channelsCount == 3)
-        {
-            desc.format         = GL_RGB;
-            desc.internalFormat = isSrgb ? GL_SRGB8 : GL_RGB8;
-        }
-        else if (channelsCount == 4)
-        {
-            desc.format         = GL_RGBA;
-            desc.internalFormat = isSrgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
-        }
-
-        return desc;
-    }
-
 }
